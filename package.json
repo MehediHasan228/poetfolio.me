@@ -1,5 +1,5 @@
 {
-  "name": "poetfolio.me",
+  "name": "portfolio.me",
   "version": "1.1.0",
   "description": "`webclone.js` is a Node.js script designed to archive websites and download videos.",
   "main": "webclone.js",

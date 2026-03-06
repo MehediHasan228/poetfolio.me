@@ -1,4 +1,4 @@
-# 🌐 poetfolio.me - A Robust Website and Video Archiver
+# 🌐 portfolio.me - A Robust Website and Video Archiver
 
 ![Node.js](https://img.shields.io/badge/Node.js-v18%2B-green?style=for-the-badge&logo=node.js)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
