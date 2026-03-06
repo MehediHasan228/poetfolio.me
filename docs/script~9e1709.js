@@ -380,8 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cliCommands = {
             'help': 'Available commands: help, about, skills, projects, clear, exit, vault, solarsmash, hw-scan, deep-dive',
-            'about': 'System Architect & Full-Stack Developer specializing in high-performance web applications and AI APIs.',
-            'skills': 'Languages: PHP, JavaScript, SQL, Liquid.\nFrameworks: Tailwind, Laravel.\nTools: Git, VS Code, Cloudflare.',
+            'about': 'High-impact Senior Video Content Developer & AI Solutions Engineer specialized in AI-powered video production, automation engineering, and scalable digital systems.',
+            'skills': 'Languages: Python, PHP, JavaScript, SQL.\nAI & Automation: ChatGPT, Google Gemini, FB & WhatsApp Automation, AI Bot Building.\nVideo Production: Premiere Pro, CapCut, DaVinci Resolve.\nTools: Git, VS Code, Cloudflare, openclaw, Antigravity, claude.',
             'projects': 'Accessing secure database... Use the GUI interface on the main portal to view VIP projects.',
             'sudo': 'Nice try. This incident will be reported.',
             'ls': 'index.php  style.css  script.js  db_connect.php  nuclear.php',
