@@ -854,12 +854,23 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ==========================================
        13. TYPEWRITER EFFECT
     ========================================== */
-    const tArr = ["AI Solutions.", "Video Production.", "Automation."];
+    const tArr = [
+        "Senior Video Content Developer & AI Solutions Engineer",
+        "AI Solutions.",
+        "Video Production.",
+        "Automation."
+    ];
     let tIdx = 0, cIdx = 0;
     const typingSpan = document.querySelector(".typing-text");
+    const prefixSpan = document.querySelector(".prefix-text");
 
     if (typingSpan) {
         function type() {
+            // Update prefix based on the index
+            if (prefixSpan) {
+                prefixSpan.textContent = tIdx === 0 ? "I am a" : "I engineer";
+            }
+
             if (cIdx < tArr[tIdx].length) {
                 typingSpan.textContent += tArr[tIdx].charAt(cIdx);
                 cIdx++; setTimeout(type, 100);
