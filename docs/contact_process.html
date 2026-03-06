@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mehedi Hasan | React Developer &amp; AI Solutions Engineer</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://mehedi.pro.bd/favicon/favicon-96x96.png?v=3">
+    <link rel="icon" href="./favicon/favicon~7b096a.ico">
+    <link rel="manifest" href="./favicon/site.webmanifest">
+    <link href="../fonts.googleapis.com/css2/index~a5ef49.html" rel="stylesheet">
+    <link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="./style~1f83e8.css">
+</head>
+
+<body>
+    <div class="scroll-progress" id="scroll-progress" style="width: 2.54839%;"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div id="sys-monitor" class="sys-monitor">
+        <div class="mon-title draggable-header">
+            <span><i class="fa-solid fa-server"></i> SYS_MONITOR</span>
+            <i class="fa-solid fa-xmark hover-sound" id="close-sys-monitor" style="color:#ef4444; cursor:none;"
+                title="Close Monitor"></i>
+        </div>
+        <div class="mon-stat">CPU: <span id="mon-cpu">2%</span>
+            <div class="mon-bar">
+                <div id="mon-cpu-bar" style="width: 2%; background-color: var(--accent-1);"></div>
+            </div>
+        </div>
+        <div class="mon-stat">RAM: <span id="mon-ram">13%</span>
+            <div class="mon-bar">
+                <div id="mon-ram-bar" style="width: 13%;"></div>
+            </div>
+        </div>
+        <div class="mon-stat">NET: <span id="mon-net" class="ping-idle">IDLE</span></div>
+        <div class="mon-stat"
+            style="margin-top: 10px; border-top: 1px dashed #334155; padding-top: 8px; flex-direction: row; justify-content: space-between; align-items: center;">
+            <span>UPTIME:</span>
+            <span style="display: flex; align-items: center;"><span id="uptime-counter" style="color: #4ade80;">12d 0h
+                    44m 34s</span><span class="blink-dot" style="margin-top: 0;"></span></span>
+        </div>
+        <div class="mon-stat" style="margin-top: 5px; flex-direction: row; justify-content: space-between;">
+            <span>CLR:</span> <span id="clearance-level" style="color: #fbbf24; font-weight: bold;">LVL 1 (GUEST)</span>
+        </div>
+    </div>
+
+    <div class="ui-controls">
+        <a href="https://wa.me/8801799447594" target="_blank" class="control-btn whatsapp-btn magnetic-element"
+            title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <button id="sound-toggler" class="control-btn magnetic-element" title="Toggle UI Audio"><i
+                class="fa-solid fa-volume-high"></i></button>
+        <button id="theme-toggler" class="control-btn magnetic-element" title="Toggle Theme"><i
+                class="fa-solid fa-palette"></i></button>
+    </div>
+
+    <div id="ai-chat-widget" class="chat-collapsed">
+        <div class="chat-header" id="chat-header">
+            <span><i class="fa-solid fa-robot"></i> Ask My AI</span>
+            <i class="fa-solid fa-chevron-up" id="chat-toggle-icon"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="message bot-msg">System initialized. Ask me about Mehedi's tech stack, e-commerce experience, or
+                deployed projects.</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Type a query...">
+            <button id="voice-btn" class="magnetic-element hover-sound"
+                style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:none;"
+                title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
+            <button id="chat-send" class="magnetic-element hover-sound"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <nav>
+        <a href="./index.html" class="logo-link glitch-hover">
+            <img src="./logo.png" alt="Mehedi Logo" class="site-logo">
+        </a>
+        <ul class="nav-links">
+            <li><a href="./index.html#about" class="magnetic-element hover-sound">Architecture</a></li>
+            <li><a href="./index.html#skills" class="magnetic-element hover-sound">Stack</a></li>
+            <li><a href="./index.html#projects" class="magnetic-element hover-sound">Ventures</a></li>
+            <li><a href="./index.html#contact" class="magnetic-element hover-sound">Contact</a></li>
+            <li><a href="./index.html#archives" class="magnetic-element hover-sound">Archives</a></li>
+            <li><a href="./contact_process.html" id="cli-toggle" class="magnetic-element hover-sound"
+                    title="Open Terminal"><i class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="home">
+        <canvas id="particle-canvas" width="762" height="484"></canvas>
+        <div class="hero-content hidden show">
+            <div class="hero-layout">
+
+                <div class="hero-text-side">
+                    <h1 class="decrypt-text" data-value="Hi, I'm Mehedi Hasan">Hi, I'm <span
+                            class="gradient-text">Mehedi Hasan</span></h1>
+                    <h2>I am a <span class="typing-text">Senior Video Content Developer & AI Solutions
+                            Engineer</span><span class="cursor">&nbsp;</span></h2>
+
+                    <div class="terminal-feed">
+                        <div class="terminal-header"><i class="fa-solid fa-terminal"></i> Live System Logs</div>
+                        <div class="terminal-body" id="terminal-ticker">
+                            <p>&gt; [03:15 PM] (Version 2.0): AI-driven content workflows optimized (60% time
+                                reduction).</p>
+                            <p>&gt; [03:14 PM] Scalable marketing automation pipeline deployed.</p>
+                            <p>&gt; [08:59 PM] Successfully integrated Gemini API for automated scripting.</p>
+                            <p>&gt; [12:14 AM] New B2B tech solution documentation complete.</p>
+                        </div>
+                    </div>
+
+                    <div class="hero-buttons">
+                        <a href="./contact_process.html"
+                            class="btn primary-btn glow-effect magnetic-element hover-sound">Explore Systems</a>
+
+                        <a href="./uploads/Mehedi_Hasan_Content_Developer_Video_Editor_Resume.pdf"
+                            download="Mehedi_Resume.pdf" class="btn secondary-btn magnetic-element hover-sound"
+                            style="border-color: #4ade80; color: #4ade80;"><i class="fa-solid fa-file-pdf"></i> Extract
+                            CV</a>
+
+                        <a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank"
+                            class="btn secondary-btn magnetic-element hover-sound">Hire Me</a>
+                    </div>
+                    <div style="margin-top: 1.5rem; text-align: left;" class="mobile-center">
+                        <a href="https://wa.me/8801799447594" target="_blank"
+                            class="btn support-btn magnetic-element hover-sound">
+                            <i class="fa-solid fa-bolt" style="color: #fbbf24;"></i> Initiate Support Protocol
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-image-side">
+                    <div class="hero-image-wrapper magnetic-element">
+                        <img src="./uploads/hero_profile_1771668518.png" alt="Mehedi Profile">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="about-section">
+        <div class="section-title hidden">
+            <h2 class="decrypt-text glitch-hover" data-value="System Architecture">System <span
+                    class="gradient-text">Architecture</span></h2>
+        </div>
+        <div class="about-container hidden tilt-card">
+            <p>High-impact **Senior Video Content Developer & AI Solutions Engineer** with 4+ years of experience in
+                AI-powered video production, automation engineering, and scalable digital content systems. Expert in
+                Premiere Pro, CapCut, DaVinci Resolve, Python automation, ChatGPT, and Google Gemini. Specialized in
+                building AI-driven content workflows that reduce production time by up to 60% and increase digital
+                engagement performance. Strong background in **Facebook & WhatsApp Automation** and **AI Bot Building**
+                to streamline enterprise-level operations.</p>
+        </div>
+    </section>
+
+    <section id="skills" class="skills-section">
+        <div class="section-title hidden">
+            <h2 class="decrypt-text glitch-hover" data-value="Technical Arsenal">Technical <span
+                    class="gradient-text">Arsenal</span></h2>
+        </div>
+
+        <div class="ide-container hidden tilt-card">
+            <div class="ide-header">
+                <div class="mac-btns"><span class="close"></span><span class="min"></span><span class="max"></span>
+                </div>
+                <div class="ide-title">mehedi_workspace - VS Code</div>
+            </div>
+            <div class="ide-tabs">
+                <div class="ide-tab active" id="active-tab-display"><i class="fa-brands fa-php"
+                        style="color: #777BB4;"></i> core_logic.php <i class="fa-solid fa-xmark close-tab"></i></div>
+            </div>
+            <div class="ide-body">
+                <div class="ide-sidebar">
+                    <div class="sidebar-title">EXPLORER</div>
+                    <ul class="file-list" id="ide-file-list">
+                        <!-- Dynamic Content Inject -->
+                    </ul>
+                </div>
+                <div class="ide-editor-wrapper">
+                    <div class="ide-line-numbers" id="line-numbers">
+                        <div>1</div>
+                        <div>2</div>
+                        <div>3</div>
+                        <div>4</div>
+                        <div>5</div>
+                        <div>6</div>
+                        <div>7</div>
+                        <div>8</div>
+                    </div>
+                    <div class="ide-editor" id="ide-editor-container">
+                        <!-- Dynamic Code Blocks -->
+                    </div>
+                </div>
+            </div>
+            <div class="ide-status-bar">
+                <div class="status-left"><span><i class="fa-solid fa-code-branch"></i> main*</span></div>
+                <div class="status-right"><span id="status-lang">PHP</span></div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid hidden">
+            <div class="telemetry-card tilt-card magnetic-element">
+                <div class="tel-header">
+                    <h3><i class="fa-solid fa-satellite-dish" style="color:var(--accent-1);"></i> Live Code Telemetry
+                    </h3>
+                    <span style="color:var(--text-secondary); font-size:0.75rem;">Last 7 Days</span>
+                </div>
+
+                <div class="tel-row">
+                    <div class="tel-label"><span class="lang">Video Editing (Premiere/DaVinci)</span> <span>40%</span>
+                    </div>
+                    <div class="tel-bar-bg">
+                        <div class="tel-bar-fill" data-width="40%"></div>
+                    </div>
+                </div>
+                <div class="tel-row">
+                    <div class="tel-label"><span class="lang">AI Automation (Python/APIs)</span> <span>35%</span></div>
+                    <div class="tel-bar-bg">
+                        <div class="tel-bar-fill" data-width="35%"></div>
+                    </div>
+                </div>
+                <div class="tel-row">
+                    <div class="tel-label"><span class="lang">Technical Documentation</span> <span>15%</span></div>
+                    <div class="tel-bar-bg">
+                        <div class="tel-bar-fill" data-width="15%"></div>
+                    </div>
+                </div>
+                <div class="tel-row">
+                    <div class="tel-label"><span class="lang">Digital Strategy</span> <span>10%</span></div>
+                    <div class="tel-bar-bg">
+                        <div class="tel-bar-fill" data-width="10%"></div>
+                    </div>
+                </div>
+                <div
+                    style="margin-top: 1.5rem; text-align: center; color: var(--accent-1); font-weight: bold; font-size: 0.9rem;">
+                    &gt; Experience: 4+ Years
+                </div>
+            </div>
+
+            <div class="api-sandbox tilt-card magnetic-element">
+                <div class="api-header">
+                    <select id="api-method" class="hover-sound">
+                        <option>GET</option>
+                        <option>POST</option>
+                    </select>
+                    <input type="text" id="api-endpoint" value="https://api.mehedi.pro/v1/systems" readonly="">
+                    <button id="api-send" class="hover-sound">SEND</button>
+                </div>
+                <div class="api-body">
+                    <pre id="api-response"
+                        class="json-output"><span style="color:var(--text-secondary);">// System standby. Awaiting API request...</span></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects-section">
+        <div class="section-title hidden">
+            <h2 class="decrypt-text glitch-hover" data-value="Deployed Ventures">Deployed <span
+                    class="gradient-text">Ventures</span></h2>
+        </div>
+
+        <div class="ai-dropzone hidden" id="ai-dropzone">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-family: 'Fira Code', monospace;">&gt;_ AI
+                Requirements Parser</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Drag &amp; drop a project requirements .txt file
+                here to auto-generate a system architecture map.</p>
+            <input type="file" id="fileInput" accept=".txt" style="display: none;">
+            <div id="ai-parse-result" class="parse-result"></div>
+        </div>
+
+        <div class="project-filters hidden">
+            <button class="filter-btn active hover-sound" data-filter="all">ALL DEPLOYMENTS</button>
+            <button class="filter-btn hover-sound" data-filter="php">PHP &amp; SQL</button>
+            <button class="filter-btn hover-sound" data-filter="ai">AI SAAS</button>
+            <button class="filter-btn hover-sound" data-filter="shopify">SHOPIFY</button>
+        </div>
+
+        <div class="project-card hidden tilt-card" data-code="" data-stack="react, ai, tailwind, python">
+            <div class="project-info">
+                <div class="project-preview placeholder-preview">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <div class="project-details">
+                    <h3 class="decrypt-text" data-value="Savora AI">Savora AI</h3>
+                    <span class="status-badge progress-badge">Lead Project</span>
+                    <p class="project-desc">An AI-powered meal planning and grocery management ecosystem designed for
+                        efficiency.</p>
+                    <div class="tech-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">AI Solutions</span>
+                        <span class="tag">Next.js</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card hidden tilt-card" data-stack="react, sql, pos">
+            <div class="project-info">
+                <div class="project-preview placeholder-preview"
+                    style="background: linear-gradient(135deg, #4f46e5, #06b6d4);">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <div class="project-details">
+                    <h3 class="decrypt-text" data-value="HR Payroll Solution">HR Payroll Solution</h3>
+                    <span class="status-badge progress-badge">Under Development</span>
+                    <p class="project-desc">A comprehensive system for managing employee payroll, attendance, and
+                        corporate benefits with high security.</p>
+                    <div class="tech-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">SQL</span>
+                        <span class="tag">Enterprise</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-card hidden tilt-card" data-stack="php, sql, education">
+            <div class="project-info">
+                <div class="project-preview placeholder-preview"
+                    style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+                    <i class="fa-solid fa-school"></i>
+                </div>
+                <div class="project-details">
+                    <h3 class="decrypt-text" data-value="School Management Software">School Management Software</h3>
+                    <span class="status-badge progress-badge">Under Development</span>
+                    <p class="project-desc">Automated educational platform for student grading, library management, and
+                        administrative workflows.</p>
+                    <div class="tech-tags">
+                        <span class="tag">Automation</span>
+                        <span class="tag">Educational Tech</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section id="archives" class="archives-section">
+        <div class="section-title hidden">
+            <h2 class="decrypt-text glitch-hover" data-value="Offline Archives">Offline <span
+                    class="gradient-text">Archives</span></h2>
+            <p>Personal logs of media consumption, gaming completions, and real-world explorations.</p>
+        </div>
+        <div class="archives-grid">
+            <div class="archive-card hidden tilt-card magnetic-element hover-sound">
+                <div class="archive-icon"><i class="fa-solid fa-microchip"></i></div>
+                <div class="archive-info">
+                    <span class="archive-cat">Tech Exploration</span>
+                    <h4>GPU Benchmarking</h4>
+                    <p>Testing high-performance RTX sequences</p>
+                </div>
+            </div>
+            <div class="archive-card hidden tilt-card magnetic-element hover-sound">
+                <div class="archive-icon"><i class="fa-solid fa-brain"></i></div>
+                <div class="archive-info">
+                    <span class="archive-cat">AI Experiments</span>
+                    <h4>Local LLMs</h4>
+                    <p>Ollama & Claude workflow automation</p>
+                </div>
+            </div>
+            <div class="archive-card hidden tilt-card magnetic-element hover-sound">
+                <div class="archive-icon"><i class="fa-solid fa-clapperboard"></i></div>
+                <div class="archive-info">
+                    <span class="archive-cat">Creative Media</span>
+                    <h4>Cinematic Storytelling</h4>
+                    <p>Hyper-realistic image generation</p>
+                </div>
+            </div>
+            <div class="archive-card hidden tilt-card magnetic-element hover-sound">
+                <div class="archive-icon"><i class="fa-solid fa-gear"></i></div>
+                <div class="archive-info">
+                    <span class="archive-cat">Strategy</span>
+                    <h4>Digital Workflows</h4>
+                    <p>Automating repetitive systems</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="section-title hidden">
+            <h2 class="decrypt-text glitch-hover" data-value="Service Terminal">Service <span
+                    class="gradient-text">Terminal</span></h2>
+            <p>Select required systems to generate a deployment invoice.</p>
+        </div>
+
+
+        <div class="pos-container hidden tilt-card">
+            <div class="pos-menu">
+                <button class="pos-item magnetic-element hover-sound" data-name="Web Development" data-price="25">
+                    <i class="fa-solid fa-code"></i>
+                    <span>Web Development</span>
+                    <span class="price">$25+</span>
+                </button>
+                <button class="pos-item magnetic-element hover-sound" data-name="AI Integration" data-price="40">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>AI Integration</span>
+                    <span class="price">$40+</span>
+                </button>
+                <button class="pos-item magnetic-element hover-sound" data-name="SEO & Tech Audit" data-price="20">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>SEO & Tech Audit</span>
+                    <span class="price">$20+</span>
+                </button>
+                <button class="pos-item magnetic-element hover-sound" data-name="Video Production" data-price="15">
+                    <i class="fa-solid fa-video"></i>
+                    <span>Video Production</span>
+                    <span class="price">$15+</span>
+                </button>
+            </div>
+
+            <div class="pos-receipt">
+                <div class="receipt-header">
+                    <div>* MEHEDI.DEV SERVICES *</div>
+                    <div style="font-size: 0.7rem; margin-top: 5px;">TID: 8945-260305</div>
+                </div>
+                <div class="receipt-body">
+                    <ul id="receipt-items">
+                        <li class="empty-cart">Awaiting item selection...</li>
+                    </ul>
+                </div>
+                <div class="receipt-footer">
+                    <div class="receipt-total">EST. TOTAL: $<span id="receipt-total-val">0</span></div>
+
+                    <form action="./contact_process.html" method="POST" id="pos-form">
+                        <input type="text" name="name" class="pos-input" placeholder="Client ID (Your Name)"
+                            required="">
+                        <input type="email" name="email" class="pos-input" placeholder="Ping Address (Your Email)"
+                            required="">
+                        <textarea name="message" id="pos-hidden-msg" style="display:none;"></textarea>
+
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button type="button" id="clear-cart" class="btn secondary-btn hover-sound"
+                                style="padding: 0.8rem; flex: 1; margin:0;"><i class="fa-solid fa-trash"></i>
+                                VOID</button>
+                            <button type="submit" class="btn primary-btn glow-effect magnetic-element hover-sound"
+                                style="flex: 2; padding: 0.8rem; border:none; margin:0;">PROCESS ORDER</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="classic-contact hidden tilt-card"
+            style="max-width: 900px; margin: 3rem auto 0; background: #1e293b; padding: 2rem; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <h3
+                style="text-align: center; margin-bottom: 1.5rem; color: var(--text-primary); font-family: 'Fira Code', monospace; font-size: 1.2rem;">
+                &gt;_ DIRECT_MESSAGE_OVERRIDE</h3>
+            <form action="./contact_process.html" method="POST" class="contact-form"
+                style="display: flex; flex-direction: column; gap: 1rem;">
+                <input type="text" name="name" placeholder="Client ID (Your Name)" required=""
+                    style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace;">
+                <input type="email" name="email" placeholder="Ping Address (Your Email)" required=""
+                    style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace;">
+                <textarea name="message" rows="4" placeholder="Data Payload (Your Message)" required=""
+                    style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace; resize: vertical;"></textarea>
+                <button type="submit" class="btn primary-btn glow-effect magnetic-element hover-sound"
+                    style="border: none; width: 100%; padding: 1rem; cursor: none;">TRANSMIT MESSAGE</button>
+            </form>
+        </div>
+
+        <div class="social-links" style="margin-top: 4rem;">
+            <a href="https://github.com/MehediHasan228" target="_blank" class="magnetic-element hover-sound"><i
+                    class="fa-brands fa-github"></i></a>
+            <a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank"
+                class="magnetic-element hover-sound"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="mailto:mehedihasan228.cse@gmail.com" class="magnetic-element hover-sound"><i
+                    class="fa-solid fa-envelope"></i></a>
+            <a href="tel:+8801799447594" class="magnetic-element hover-sound"><i class="fa-solid fa-phone"></i></a>
+        </div>
+    </section>
+
+    <div style="text-align: center; padding-bottom: 2rem;">
+        <button id="launch-mines-btn" class="btn secondary-btn magnetic-element hover-sound"
+            style="font-size: 0.8rem; border-color: rgba(0, 242, 254, 0.3); color: var(--text-secondary);">[ Initiate
+            Diagnostic Protocol ]</button>
+    </div>
+
+    <div id="mines-overlay" class="hidden-overlay">
+        <div class="mines-container">
+            <div class="mines-header draggable-header">
+                <h3>System Diagnostic <span style="color:var(--accent-1);">(Find 3 Safe Nodes)</span></h3>
+                <span id="close-mines" class="hover-sound"><i class="fa-solid fa-xmark"></i></span>
+            </div>
+            <div class="mines-grid" id="mines-grid"></div>
+            <div class="mines-status" id="mines-status">Awaiting input...</div>
+            <div id="promo-code-box"
+                style="display:none; margin-top:1rem; padding:1rem; background: rgba(74, 222, 128, 0.2); border: 1px dashed #4ade80; color: #4ade80; border-radius: 8px; font-weight: bold; font-size: 1.1rem;">
+                Congrats </div>
+            <button id="reset-mines" class="btn primary-btn full-width-btn hover-sound"
+                style="margin-top: 1rem; display:none;">Reboot System</button>
+        </div>
+    </div>
+
+    <div id="cli-terminal" class="hidden-overlay" style="background: rgba(0,0,0,0.95); z-index: 9999999;">
+        <div class="cli-container">
+            <div class="cli-header draggable-header">
+                <span>root@mehedi.pro:~</span>
+                <i class="fa-solid fa-xmark hover-sound" id="close-cli" style="cursor:none; color:#ef4444;"></i>
+            </div>
+            <div class="cli-output" id="cli-output">
+                <div>Mehedi.pro OS v2.0.4 loaded.</div>
+                <div>Type <span style="color:var(--accent-1);">help</span> for a list of available commands.</div>
+            </div>
+            <div class="cli-input-line">
+                <span class="cli-prompt">root@mehedi.pro:~$</span>
+                <input type="text" id="cli-input" autocomplete="off" spellcheck="false" autofocus="">
+            </div>
+        </div>
+    </div>
+
+    <div id="easter-egg-overlay" class="hidden-overlay">
+        <div id="hack-terminal"><span class="hack-cursor"></span></div>
+    </div>
+
+    <footer>
+        <p>© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
+        <div style="margin-top: 25px;">
+            <button id="self-destruct-btn" class="hover-sound"
+                style="width: 12px; height: 12px; background: #ef4444; border: none; border-radius: 50%; cursor: none; box-shadow: 0 0 10px #ef4444;"
+                title="Initiate Self Destruct"></button>
+        </div>
+    </footer>
+    <script src="./script~9e1709.js"></script>
+
+</body>
+
+</html>
