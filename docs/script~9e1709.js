@@ -853,7 +853,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ==========================================
        13. TYPEWRITER EFFECT
-    const tArr = ["Senior Video Content Developer.", "Systems & AI Engineer.", "Workflow Automation Expert.", "Creative Technologist."];
+    ========================================== */
+    const tArr = ["AI Solutions.", "Video Production.", "Automation."];
     let tIdx = 0, cIdx = 0;
     const typingSpan = document.querySelector(".typing-text");
 
