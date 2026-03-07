@@ -4,7 +4,9 @@
   "description": "`webclone.js` is a Node.js script designed to archive websites and download videos.",
   "main": "webclone.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +19,8 @@
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.71.0"
   }
 }
