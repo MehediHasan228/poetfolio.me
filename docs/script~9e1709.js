@@ -568,11 +568,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = document.createElement('div');
             container.className = 'smart-btn-container';
             const buttons = [
-                { text: 'Services', icon: 'fa-briefcase' },
-                { text: 'Projects', icon: 'fa-code' },
-                { text: 'Contact', icon: 'fa-paper-plane' },
-                { text: 'Skills', icon: 'fa-laptop-code' }
-            ];
+            { text: "CredenceX Lab", icon: "fa-microscope" },
+            { text: "Who is Mehedi?", icon: "fa-user" },
+            { text: "Experience Protocol", icon: "fa-briefcase" },
+            { text: "Contact Handshake", icon: "fa-handshake" }
+        ];
 
             buttons.forEach(btn => {
                 const b = document.createElement('button');
@@ -1344,9 +1344,8 @@ Server: Cloudflare Edge Network Routing
             initMinesGame();
         });
     }
-});
 
-/* ==========================================
+    /* ==========================================
        20. CLEAN URL SMOOTH SCROLLING
     ========================================== */
 // 1. Handle clicking the links
@@ -1501,13 +1500,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }, { threshold: 0.1 });
         radarObserver.observe(radarSection);
     }
+    // 2. Handle page refreshes or direct links
+    const path = window.location.pathname.substring(1);
+    if (path && document.getElementById(path)) {
+        // Scroll to the section if it exists on the page
+        setTimeout(() => {
+            document.getElementById(path).scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    }
 });
-
-// 2. Handle page refreshes or direct links
-const path = window.location.pathname.substring(1);
-if (path && document.getElementById(path)) {
-    // Scroll to the section if it exists on the page
-    setTimeout(() => {
-        document.getElementById(path).scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-}
