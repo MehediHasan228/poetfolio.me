@@ -1418,31 +1418,43 @@ section {
 .chat-suggestion-chips {
     display: flex;
     overflow-x: auto;
-    padding: 8px 12px;
+    padding: 10px 12px 6px;
     gap: 8px;
-    border-top: 1px solid rgba(150, 150, 150, 0.1);
-    background: rgba(0, 0, 0, 0.2);
-    scrollbar-width: none; /* Hide scrollbar Firefox */
+    border-top: 1px solid rgba(150, 150, 150, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+    scrollbar-width: none; 
 }
-.chat-suggestion-chips::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome/Safari */
+.chat-suggestion-chips::-webkit-scrollbar { display: none; }
+
+.chat-suggestion-chips::before {
+    content: "SUGGESTIONS:";
+    font-size: 0.65rem;
+    color: var(--accent-1);
+    opacity: 0.7;
+    font-weight: bold;
+    align-self: center;
+    margin-right: 4px;
+    white-space: nowrap;
+}
 
 .chip {
     white-space: nowrap;
-    background: rgba(150, 150, 150, 0.1);
-    border: 1px solid rgba(150, 150, 150, 0.3);
-    color: var(--text-primary);
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    cursor: none; /* Site has custom cursor */
-    transition: all 0.2s ease;
+    background: rgba(var(--accent-1-rgb), 0.05); /* Use accent color subtly */
+    border: 1px solid rgba(150, 150, 150, 0.4);
+    color: #fff !important; /* Force white for high contrast */
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    cursor: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .chip:hover {
-    background: rgba(var(--accent-1-rgb), 0.15);
+    background: var(--accent-1);
     border-color: var(--accent-1);
-    box-shadow: 0 0 10px rgba(var(--accent-1-rgb), 0.3);
-    color: var(--accent-1);
+    color: #000 !important;
+    box-shadow: 0 0 15px var(--accent-1);
+    transform: translateY(-2px);
 }
 .chat-input-area {
     display: flex;
@@ -2764,6 +2776,7 @@ footer {
         max-width: 350px !important;
     }
     #ai-chat-widget.chat-collapsed .chat-body,
+    #ai-chat-widget.chat-collapsed .chat-suggestion-chips,
     #ai-chat-widget.chat-collapsed .chat-input-area { display: none !important; }
     #ai-chat-widget.chat-collapsed .chat-header {
         padding: 0 !important; width: 100% !important; height: 100% !important;
