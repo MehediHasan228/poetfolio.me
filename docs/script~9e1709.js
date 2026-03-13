@@ -579,6 +579,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chatSend.addEventListener('click', sendChat);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChat(); });
+
+        // Chip click logic
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                chatInput.value = chip.textContent;
+                sendChat();
+            });
+        });
     }
 
 

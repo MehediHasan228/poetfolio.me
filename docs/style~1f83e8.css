@@ -1414,7 +1414,36 @@ section {
     font-weight: 600;
 }
 
-/* Input area */
+/* Suggestion Chips */
+.chat-suggestion-chips {
+    display: flex;
+    overflow-x: auto;
+    padding: 8px 12px;
+    gap: 8px;
+    border-top: 1px solid rgba(150, 150, 150, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+.chat-suggestion-chips::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome/Safari */
+
+.chip {
+    white-space: nowrap;
+    background: rgba(150, 150, 150, 0.1);
+    border: 1px solid rgba(150, 150, 150, 0.3);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    cursor: none; /* Site has custom cursor */
+    transition: all 0.2s ease;
+}
+
+.chip:hover {
+    background: rgba(var(--accent-1-rgb), 0.15);
+    border-color: var(--accent-1);
+    box-shadow: 0 0 10px rgba(var(--accent-1-rgb), 0.3);
+    color: var(--accent-1);
+}
 .chat-input-area {
     display: flex;
     align-items: center;
