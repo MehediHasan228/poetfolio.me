@@ -250,10 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('touchend', dragEnd);
 
             // IMPORTANT: If the element is centered via CSS transform, 
-            // we must capture its actual top and clear the transform to avoid jumping.
+            // we must capture its actual top and use a CSS variable for the Y offset to avoid jumping.
             const rect = element.getBoundingClientRect();
             element.style.top = rect.top + 'px';
-            element.style.transform = 'none'; 
+            element.style.setProperty('--lb-ty', 'translateY(0)'); 
 
             // Optimization: Remove transitions during drag for smoothness
             element.style.transition = 'none';
@@ -305,10 +305,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isDragging) {
                 // DON'T dispatch if we clicked on a button or interactive element that should handle itself
                 const path = e.composedPath ? e.composedPath() : [];
-                const isControlClick = path.some(el => el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList?.contains('radar-tab'));
+                const isControlClick = path.some(el => el && el.tagName && (el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList?.contains('radar-tab')));
                 
                 if (!isControlClick) {
-                    element.dispatchEvent(new CustomEvent('lb-click'));
+                    element.dispatchEvent(new CustomEvent('lb-click', { bubbles: true, composed: true }));
                 }
             }
         }
@@ -1615,7 +1615,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     if (lbWidget && lbToggleBtn) {
         // Use custom event from draggable logic to avoid click conflict
-        lbWidget.addEventListener('lb-click', () => {
+        lbWidget.addEventListener('lb-click', (e) => {
             toggleLeaderboard();
         });
 

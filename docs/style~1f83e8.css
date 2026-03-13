@@ -2023,7 +2023,10 @@ footer {
     position: fixed;
     right: 0;
     top: 50%;
-    transform: translateY(-50%);
+    /* Use variables for independent control of X and Y transforms */
+    --lb-ty: translateY(-50%);
+    --lb-tx: 0;
+    transform: var(--lb-ty) translateX(var(--lb-tx));
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -2031,11 +2034,11 @@ footer {
 }
 
 #leaderboard-widget.lb-collapsed {
-    transform: translateY(-50%) translateX(calc(100% - 60px));
+    --lb-tx: calc(100% - 60px);
 }
 
 #leaderboard-widget.lb-expanded {
-    transform: translateY(-50%) translateX(0);
+    --lb-tx: 0;
 }
 
 .lb-toggle {
@@ -2245,7 +2248,7 @@ footer {
     }
     
     #leaderboard-widget.lb-collapsed {
-        transform: translateY(-50%) translateX(calc(100% - 45px));
+        --lb-tx: calc(100% - 45px);
     }
     
     #lb-toggle-icon {
