@@ -456,7 +456,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const voiceBtn = document.getElementById('voice-btn');
 
     let chatHistory = [
-        { role: 'system', content: 'You are Mehedi\'s virtual assistant.' }
+        { 
+            role: 'system', 
+            content: `You are Mehedi's Technical AI Assistant. 
+            Mehedi Hasan is a results-driven Full-Stack Web Developer and AI Automation Engineer with 2+ years of experience.
+            Skills: React, PHP, Python, LLM Integration (OpenAI, Gemini, Claude), API Automation, Security Clearance Systems, and UI/UX Design.
+            Accomplishments: reduced production times by 60% with AI-driven content workflows.
+            Projects to mention:
+            - Sierraromeo.ai (AI Research Agent)
+            - Retune.so (AI Chat Web App)
+            - HR & Payroll System (Web-based management)
+            - AI Hostel Management (Automated records)
+            Personal values: Divine Architecture/Systems based on Islamic principles.
+            Your tone: Highly technical, futuristic (D-I-P system inspired), professional yet approachable. 
+            Use phrases like 'Query received', 'Data retrieved', and 'Deployment complete' where appropriate.` 
+        }
     ];
 
     if (chatWidget && chatHeader) {
@@ -513,17 +527,32 @@ document.addEventListener('DOMContentLoaded', () => {
             chatBody.scrollTop = chatBody.scrollHeight;
 
             setTimeout(async () => {
-                let reply = "System Error: Cannot reach local matrix.";
+                let reply = "System Error: Local Matrix Link Offline. Contact Mehedi via WhatsApp for direct protocol.";
                 try {
-                    const response = await fetch('ai_endpoint.php', {
+                    // Using Local DuckDuckGo Bridge (OpenAI Compatible)
+                    const response = await fetch('http://localhost:8000/v1/chat/completions', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: txt, history: chatHistory })
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer local-dev-key' // Generic key for local bridge
+                        },
+                        body: JSON.stringify({ 
+                            model: "gpt-3.5-turbo", // Map to local model
+                            messages: chatHistory,
+                            temperature: 0.7
+                        })
                     });
-                    const data = await response.json();
-                    if (data.reply) reply = data.reply;
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.choices && data.choices[0].message.content) {
+                            reply = data.choices[0].message.content;
+                        }
+                    } else {
+                        console.warn('Bridge returned error status:', response.status);
+                    }
                 } catch (e) {
-                    console.error('API Error:', e);
+                    console.error('Bridge Connection Error:', e);
                 }
 
                 const typingEl = document.getElementById(typingId);
@@ -534,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatBody.innerHTML += `<div class="message bot-msg">${reply}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
 
-            }, 1200);
+            }, 800);
         }
 
         chatSend.addEventListener('click', sendChat);
