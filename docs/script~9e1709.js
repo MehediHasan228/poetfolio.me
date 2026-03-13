@@ -446,7 +446,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================
-       9. AI CHAT WIDGET (WITH VOICE JARVIS)
+       9. AI CHAT WIDGET — GEMINI AI (REAL CHATBOT)
+       ==========================================
+       Powered by Google Gemini 1.5 Flash (Free API)
+       Get your free key → https://aistudio.google.com/app/apikey
     ========================================== */
     const chatWidget = document.getElementById('ai-chat-widget');
     const chatHeader = document.getElementById('chat-header');
@@ -455,24 +458,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatSend = document.getElementById('chat-send');
     const voiceBtn = document.getElementById('voice-btn');
 
-    let chatHistory = [
-        { 
-            role: 'system', 
-            content: `You are Mehedi's Technical AI Assistant. 
-            Mehedi Hasan is a results-driven Full-Stack Web Developer and AI Automation Engineer with 2+ years of experience.
-            Skills: React, PHP, Python, LLM Integration (OpenAI, Gemini, Claude), API Automation, Security Clearance Systems, and UI/UX Design.
-            Accomplishments: reduced production times by 60% with AI-driven content workflows.
-            Projects to mention:
-            - Sierraromeo.ai (AI Research Agent)
-            - Retune.so (AI Chat Web App)
-            - HR & Payroll System (Web-based management)
-            - AI Hostel Management (Automated records)
-            Personal values: Divine Architecture/Systems based on Islamic principles.
-            Your tone: Highly technical, futuristic (D-I-P system inspired), professional yet approachable. 
-            Use phrases like 'Query received', 'Data retrieved', and 'Deployment complete' where appropriate.` 
-        }
-    ];
+    // ── CONFIG ─────────────────────────────────────────────────────────────────
+    const GEMINI_API_KEY = 'AIzaSyDjnTZBf7Kfb7ZM5v_n4V7-E2EaIj0Vy5Y'; // ← Replace with your key
+    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
+    // ── SYSTEM PROMPT: Mehedi's Full Technical Persona ─────────────────────────
+    const SYSTEM_INSTRUCTION = `You are an advanced AI assistant representing Mehedi Hasan on his personal portfolio site (mehedi.pro.bd).
+Your role: Be his technical representative — answer questions about his skills, projects, experience and availability to hire.
+
+== IDENTITY ==
+Name: Mehedi Hasan
+Title: Full-Stack Web Developer & AI Automation Engineer
+Location: Bangladesh
+Experience: 2+ years
+Email: mehedihasan228.cse@gmail.com
+Phone/WhatsApp: +880 1799-447594
+LinkedIn: linkedin.com/in/mehedi-hasan-2859383b4
+GitHub: github.com/MehediHasan228
+
+== SKILLS & STACK ==
+Frontend: HTML5, CSS3, React.js, Bootstrap, JavaScript (ES6+)
+Backend: PHP, Node.js, Python
+AI/LLM: OpenAI API, Google Gemini API, Claude (Anthropic), LangChain, Ollama (local LLMs), Hugging Face
+Automation: Facebook Graph API, WhatsApp Business API, Puppeteer, Selenium, Python scripting
+Databases: MySQL, MongoDB
+Tools: Git, GitHub, VS Code, Linux CLI, Postman, n8n, Zapier
+Cloud/Deploy: GitHub Pages, VPS, cPanel
+
+== ACHIEVEMENTS ==
+- Reduced content production time by 60% using AI-driven automation workflows
+- Integrated LLM APIs into enterprise systems for scalable AI-driven operations
+- Built Facebook & WhatsApp automation bots serving enterprise clients
+- Deployed multi-LLM orchestration pipelines (ChatGPT + Claude + Gemini)
+
+== ACTIVE PROJECTS ==
+1. Sierraromeo.ai — AI Research Agent: Python + LLM APIs, generates research summaries & marketing content (~50% work reduction)
+2. Retune.so — AI Chat Web App: HTML/CSS/JS + Bootstrap, conversational AI web interface
+3. HR & Payroll System — Full-stack HRMS with attendance, payroll, reporting (Ongoing)
+4. AI Hostel Management — AI-assisted room allocation and student records (Ongoing)
+5. AI Meal Planner (Savora) — AI-powered meal planning and grocery management app
+
+== SERVICES OFFERED (with prices) ==
+- Basic Web Development: $150
+- E-commerce Development: $300
+- AI Integration Service: $400
+- Full-Stack Web App: $500
+- API Development: $200
+- UI/UX Design: $120
+- Marketing Automation Bot: $250
+
+== PERSONAL VALUES ==
+Mehedi approaches work with discipline rooted in Islamic principles — precision, integrity, and delivering excellence. He practices Daily Quran recitation (Tafakkur) and sees technology as a trust to be used responsibly.
+
+== YOUR TONE ==
+- Technical and futuristic (this is a dev portfolio with a D-I-P cyberpunk aesthetic)
+- Professional but approachable
+- Use occasional tech-themed phrases: "Query received", "Processing...", "Data retrieved", "System online"
+- Keep responses concise (2-4 sentences unless asked for more detail)
+- If asked to hire, always share: WhatsApp +8801799447594 or email mehedihasan228.cse@gmail.com
+- NEVER make up projects or skills not listed above`;
+
+    // ── CONVERSATION STATE ─────────────────────────────────────────────────────
+    let geminiHistory = []; // stores { role: 'user'|'model', parts: [{text}] }
+
+    // ── CHAT WIDGET TOGGLE ─────────────────────────────────────────────────────
     if (chatWidget && chatHeader) {
 
         chatHeader.addEventListener('click', () => {
@@ -483,6 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof playSound === 'function') playSound('click');
         });
 
+        // ── VOICE INPUT ────────────────────────────────────────────────────────
         if (voiceBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
@@ -493,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
             voiceBtn.addEventListener('click', () => {
                 voiceBtn.classList.add('mic-active');
                 recognition.start();
-                playSound('click');
+                if (typeof playSound === 'function') playSound('click');
             });
 
             recognition.onresult = (e) => {
@@ -505,74 +555,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
             recognition.onerror = () => {
                 voiceBtn.classList.remove('mic-active');
-                playSound('error');
+                if (typeof playSound === 'function') playSound('error');
             };
         } else if (voiceBtn) {
             voiceBtn.style.display = 'none';
         }
 
+        // ── HELPER: Append a message bubble ────────────────────────────────────
+        function appendMsg(text, role) {
+            const div = document.createElement('div');
+            div.className = `message ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
+            div.textContent = text;
+            chatBody.appendChild(div);
+            chatBody.scrollTop = chatBody.scrollHeight;
+            return div;
+        }
+
+        // ── SEND MESSAGE ────────────────────────────────────────────────────────
         async function sendChat() {
             const txt = chatInput.value.trim();
             if (!txt) return;
 
             if (typeof playSound === 'function') playSound('type');
-
-            chatHistory.push({ role: 'user', content: txt });
-            chatBody.innerHTML += `<div class="message user-msg">${txt}</div>`;
             chatInput.value = '';
-            chatBody.scrollTop = chatBody.scrollHeight;
 
-            const typingId = 'typing-' + Date.now();
-            chatBody.innerHTML += `<div class="message bot-msg" id="${typingId}">...</div>`;
-            chatBody.scrollTop = chatBody.scrollHeight;
+            // Show user message
+            appendMsg(txt, 'user');
 
-            setTimeout(async () => {
-                let reply = "System Error: Local Matrix Link Offline. Contact Mehedi via WhatsApp for direct protocol.";
-                try {
-                    // Using Local DuckDuckGo Bridge (OpenAI Compatible)
-                    const response = await fetch('http://localhost:8000/v1/chat/completions', {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer local-dev-key' // Generic key for local bridge
-                        },
-                        body: JSON.stringify({ 
-                            model: "gpt-3.5-turbo", // Map to local model
-                            messages: chatHistory,
-                            temperature: 0.7
-                        })
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.choices && data.choices[0].message.content) {
-                            reply = data.choices[0].message.content;
-                        }
-                    } else {
-                        console.warn('Bridge returned error status:', response.status);
+            // Push to Gemini history (user turn)
+            geminiHistory.push({ role: 'user', parts: [{ text: txt }] });
+
+            // Show typing indicator
+            const typingEl = appendMsg('⬤ ⬤ ⬤', 'bot');
+
+            try {
+                // Build Gemini API request body
+                const reqBody = {
+                    system_instruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+                    contents: geminiHistory,
+                    generationConfig: {
+                        temperature: 0.75,
+                        maxOutputTokens: 512
                     }
-                } catch (e) {
-                    console.error('Bridge Connection Error:', e);
+                };
+
+                const response = await fetch(GEMINI_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reqBody)
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error?.message || `Status ${response.status}`);
                 }
 
-                const typingEl = document.getElementById(typingId);
-                if (typingEl) typingEl.remove();
+                const data = await response.json();
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
+                    || 'No response received from AI core.';
 
-                if (typeof playSound === 'function') playSound('type');
-                chatHistory.push({ role: 'assistant', content: reply });
-                chatBody.innerHTML += `<div class="message bot-msg">${reply}</div>`;
-                chatBody.scrollTop = chatBody.scrollHeight;
+                // Push AI reply to history
+                geminiHistory.push({ role: 'model', parts: [{ text: reply }] });
 
-            }, 800);
+                // Replace typing indicator with response
+                typingEl.textContent = reply;
+
+            } catch (err) {
+                console.error('Gemini API Error:', err);
+                typingEl.textContent = `⚠ System Error: ${err.message}. Try messaging Mehedi directly via WhatsApp: +8801799447594`;
+            }
+
+            chatBody.scrollTop = chatBody.scrollHeight;
+            if (typeof playSound === 'function') playSound('type');
         }
 
         chatSend.addEventListener('click', sendChat);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChat(); });
     }
 
+
+
+
     /* ==========================================
        10. D-I-P HACK & KONAMI GOD MODE
     ========================================== */
+
     let sCode = ['d', 'i', 'p'], sPos = 0;
     const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     let konamiIndex = 0;
