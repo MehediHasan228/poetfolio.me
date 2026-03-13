@@ -1377,6 +1377,89 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+    /* ==========================================
+       12. AI POWER RADAR — LEADERBOARD LOGIC
+    ========================================== */
+    const leaderboardBody = document.getElementById('leaderboard-body');
+    const radarSyncVal = document.getElementById('radar-sync-val');
+
+    const AI_MODELS = [
+        { rank: 1, name: "OpenAI o1-preview", strength: "Best for Reasoning & Logic", elo: 1354 },
+        { rank: 2, name: "Claude 3.5 Sonnet", strength: "Best for Coding & Writing", elo: 1324 },
+        { rank: 3, name: "GPT-4o", strength: "Best for Multimodal & Speed", elo: 1318 },
+        { rank: 4, name: "Gemini 1.5 Pro", strength: "Best for Long Context", elo: 1292 },
+        { rank: 5, name: "Llama 3.1 405B", strength: "Best Open Weights Model", elo: 1285 },
+    ];
+
+    function renderLeaderboard() {
+        if (!leaderboardBody) return;
+        
+        leaderboardBody.innerHTML = '';
+        
+        AI_MODELS.forEach(model => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-blue-500/5 transition-colors';
+            
+            const rankClass = model.rank === 1 ? 'rank-1' : model.rank === 2 ? 'rank-2' : model.rank === 3 ? 'rank-3' : 'rank-other';
+            const eloWidth = (model.elo / 1400) * 100;
+
+            tr.innerHTML = `
+                <td>
+                    <div class="rank-pill ${rankClass}">${model.rank}</div>
+                </td>
+                <td>
+                    <div class="model-info-cell">
+                        <span class="model-name">${model.name}</span>
+                        <span class="model-meta">ARENA.AI VERIFIED</span>
+                    </div>
+                </td>
+                <td>
+                    <span class="strength-tag">${model.strength}</span>
+                </td>
+                <td>
+                    <div class="elo-cell">
+                        <div class="elo-bar-bg">
+                            <div class="elo-bar-fill" style="width: ${eloWidth}%"></div>
+                        </div>
+                        <span class="elo-val">${model.elo}</span>
+                    </div>
+                </td>
+            `;
+            leaderboardBody.appendChild(tr);
+        });
+
+        if (radarSyncVal) {
+            radarSyncVal.innerText = new Date().toLocaleTimeString();
+        }
+    }
+
+    // Initialize Leaderboard
+    renderLeaderboard();
+    
+    // Auto-update every 60s (Simulated real-time)
+    setInterval(() => {
+        // Slightly vary ELO to simulate "Live" changes
+        AI_MODELS.forEach(m => {
+            m.elo += Math.floor(Math.random() * 3) - 1;
+        });
+        renderLeaderboard();
+    }, 60000);
+
+    // Intersection Observer for AI Radar Reveal
+    const radarSection = document.getElementById('ai-radar');
+    if (radarSection) {
+        const radarObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                    // Add staggered animation logic if needed here
+                }
+            });
+        }, { threshold: 0.1 });
+        radarObserver.observe(radarSection);
+    }
+});
+
 // 2. Handle page refreshes or direct links
 const path = window.location.pathname.substring(1);
 if (path && document.getElementById(path)) {

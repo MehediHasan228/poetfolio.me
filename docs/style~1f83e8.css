@@ -1951,6 +1951,234 @@ footer {
     position: relative;
 }
 
+/* --- AI POWER RADAR --- */
+.ai-radar-section {
+    padding: 6rem 5% 4rem;
+}
+
+.radar-container {
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.radar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+}
+
+.radar-title-group h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.radar-title-group p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.sync-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.live-badge {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.ping-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #3b82f6;
+    border-radius: 50%;
+    position: relative;
+}
+
+.ping-dot::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: inherit;
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+    75%, 100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+.badge-text {
+    color: #60a5fa;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.sync-time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.sync-label {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+}
+
+.sync-val {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    font-family: 'Fira Code', monospace;
+}
+
+.radar-table-wrapper {
+    overflow-x: auto;
+    border-radius: 1rem;
+    border: 1px solid rgba(30, 41, 59, 0.5);
+    background: rgba(15, 23, 42, 0.4);
+}
+
+#ai-leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+#ai-leaderboard-table th {
+    background: rgba(15, 23, 42, 0.8);
+    padding: 1rem 1.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    border-bottom: 1px solid #1e293b;
+}
+
+#ai-leaderboard-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+}
+
+.rank-pill {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.rank-1 { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+.rank-2 { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+.rank-3 { background: rgba(194, 65, 12, 0.2); color: #fb923c; border: 1px solid rgba(194, 65, 12, 0.3); }
+.rank-other { background: #1e293b; color: #94a3b8; }
+
+.model-info-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.model-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.model-meta {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+}
+
+.strength-tag {
+    background: rgba(30, 41, 59, 0.5);
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.4rem;
+    border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.elo-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.elo-bar-bg {
+    height: 0.4rem;
+    width: 4rem;
+    background: #1e293b;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.elo-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, #2563eb, #6366f1);
+}
+
+.elo-val {
+    color: #60a5fa;
+    font-family: 'Fira Code', monospace;
+    font-weight: 700;
+}
+
+.radar-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #475569;
+    letter-spacing: 0.1em;
+}
+
+.source-info {
+    display: flex;
+    gap: 1rem;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.status-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #22c55e;
+}
+
 /* --- SOCIAL & ARCHIVES --- */
 .social-links {
     display: flex;

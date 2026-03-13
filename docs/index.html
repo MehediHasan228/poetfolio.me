@@ -413,6 +413,60 @@
         </div>
     </section>
 
+    <section id="ai-radar" class="ai-radar-section">
+        <div class="section-title hidden">
+            <h2 class="decrypt-text glitch-hover" data-value="AI Power Radar">AI <span class="gradient-text">Power Radar</span></h2>
+            <p>Intelligence Benchmarking & Leaderboard (LMSYS / Arena.ai)</p>
+        </div>
+
+        <div class="radar-container hidden tilt-card">
+            <div class="radar-header">
+                <div class="radar-title-group">
+                    <h3><i class="fa-solid fa-microchip"></i> System Leaderboard</h3>
+                    <p>Top Performing AI Models Optimized for Deployment</p>
+                </div>
+                <div class="sync-indicator">
+                    <div class="live-badge">
+                        <span class="ping-dot"></span>
+                        <span class="badge-text">LIVE UPDATE</span>
+                    </div>
+                    <div class="sync-time">
+                        <span class="sync-label">LAST SYNC</span>
+                        <span id="radar-sync-val" class="sync-val">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="radar-table-wrapper">
+                <table id="ai-leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>RANK</th>
+                            <th>MODEL ENGINE</th>
+                            <th>CORE STRENGTH</th>
+                            <th>ELO SCORE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <!-- Dynamic Content Inject -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="radar-footer">
+                <div class="source-info">
+                    <span>SOURCE: ARENA.AI / LMSYS</span>
+                    <span class="separator">|</span>
+                    <span>INTERVAL: 60S</span>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM_ONLINE</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="archives" class="archives-section">
         <div class="section-title hidden">
             <h2 class="decrypt-text glitch-hover" data-value="Archival Telemetry">Archival <span
