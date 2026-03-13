@@ -2040,9 +2040,9 @@ footer {
 
 .lb-toggle {
     width: 60px;
-    height: 80px;
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid var(--accent-1);
+    height: 90px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(var(--accent-rgb), 0.5);
     border-right: none;
     border-radius: 12px 0 0 12px;
     display: flex;
@@ -2050,64 +2050,107 @@ footer {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    backdrop-filter: blur(10px);
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.4);
     position: relative;
     z-index: 2;
+    transition: all 0.3s ease;
+    gap: 8px;
+}
+
+.lb-toggle:hover {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: var(--accent-1);
+    width: 65px;
+}
+
+.lb-live-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.lb-live-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10b981;
+    animation: lb-pulse 2s infinite;
+}
+
+.lb-live-text {
+    font-size: 0.5rem;
+    color: #10b981;
+    font-weight: 800;
+    letter-spacing: 0.1rem;
+}
+
+@keyframes lb-pulse {
+    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1.1); opacity: 0.8; box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
 #lb-toggle-icon {
-    color: var(--accent-2);
-    font-size: 1.5rem;
+    color: var(--accent-1);
+    font-size: 1.3rem;
     transition: transform 0.3s;
 }
 
 .lb-tooltip {
     position: absolute;
     left: -140px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(2, 6, 23, 0.95);
     color: #fff;
-    padding: 6px 10px;
+    padding: 8px 12px;
     border-radius: 6px;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
     border: 1px solid var(--accent-1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 .lb-toggle:hover .lb-tooltip {
     opacity: 1;
+    left: -145px;
 }
 
 #leaderboard-widget .radar-container {
-    width: 500px;
-    max-width: 90vw;
-    height: 70vh;
-    max-height: 800px;
-    background: rgba(2, 6, 23, 0.85);
-    border: 1px solid rgba(30, 41, 59, 0.8);
+    width: 550px;
+    max-width: 95vw;
+    height: 75vh;
+    max-height: 850px;
+    background: rgba(2, 6, 23, 0.9);
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
     border-right: none;
     border-radius: 1.5rem 0 0 1.5rem;
-    padding: 1.5rem;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.6);
     position: relative;
     overflow-y: auto;
-    backdrop-filter: blur(25px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(200%);
     display: flex;
     flex-direction: column;
 }
 
 /* Adjustments for the smaller widget context */
 .lb-content .radar-header {
-    margin-bottom: 1.5rem;
-    gap: 1rem;
-    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 1.5rem;
 }
 
 .lb-content .radar-title-group h3 {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
+    letter-spacing: 0.05rem;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4);
 }
 
 .lb-content .radar-filters {
@@ -2127,17 +2170,33 @@ footer {
 }
 
 .lb-content #ai-leaderboard-table th {
-    padding: 1rem;
+    padding: 1.2rem 1rem;
     position: sticky;
     top: 0;
-    background: rgba(2, 6, 23, 0.95);
+    background: rgba(2, 6, 23, 0.98);
     z-index: 10;
     white-space: nowrap;
+    font-size: 0.75rem;
+    letter-spacing: 0.1rem;
+    color: var(--accent-1);
+    border-bottom: 1px solid rgba(var(--accent-rgb), 0.2);
 }
 
 .lb-content #ai-leaderboard-table td {
-    padding: 1rem;
+    padding: 1.2rem 1rem;
     white-space: nowrap;
+    vertical-align: middle;
+}
+
+.lb-content #ai-leaderboard-table .rank-cell {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.lb-content #ai-leaderboard-table .score-cell {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--accent-2);
+    font-weight: 600;
 }
 
 /* --- LEADERBOARD WIDGET MOBILE RESPONSIVENESS --- */

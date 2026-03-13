@@ -1426,7 +1426,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             const statusClass = `badge-${model.status}`;
 
             tr.innerHTML = `
-                <td>
+                <td class="rank-cell">
                     <div class="rank-pill ${rankClass}">${model.rank}</div>
                 </td>
                 <td>
@@ -1438,7 +1438,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 <td>
                     <span class="strength-tag">${model.strength}</span>
                 </td>
-                <td>
+                <td class="score-cell">
                     <div class="elo-cell">
                         <div class="elo-bar-bg">
                             <div class="elo-bar-fill" style="width: ${eloWidth}%"></div>
