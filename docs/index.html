@@ -68,10 +68,10 @@
 
     <div class="ui-controls">
         <a href="https://wa.me/8801799447594" target="_blank" class="control-btn whatsapp-btn magnetic-element"
-            title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <button id="sound-toggler" class="control-btn magnetic-element" title="Toggle UI Audio"><i
+            aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <button id="sound-toggler" class="control-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
                 class="fa-solid fa-volume-high"></i></button>
-        <button id="theme-toggler" class="control-btn magnetic-element" title="Toggle Theme"><i
+        <button id="theme-toggler" class="control-btn magnetic-element" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
                 class="fa-solid fa-palette"></i></button>
     </div>
 
@@ -554,8 +554,7 @@
             </div>
         </div>
 
-        <div class="classic-contact hidden tilt-card"
-            style="max-width: 900px; margin: 3rem auto 0; background: #1e293b; padding: 2rem; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div class="classic-contact hidden tilt-card">
             <h3
                 style="text-align: center; margin-bottom: 1.5rem; color: var(--text-primary); font-family: 'Fira Code', monospace; font-size: 1.2rem;">
                 &gt;_ DIRECT_MESSAGE_OVERRIDE</h3>
@@ -564,24 +563,24 @@
                 <input type="hidden" name="_subject" value="DIRECT_MESSAGE_OVERRIDE Received">
                 <input type="hidden" name="_next" value="https://mehedi.pro.bd/contact_process.html">
                 <input type="text" name="name" placeholder="Client ID (Your Name)" required=""
-                    style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace;">
+                    class="contact-form-input">
                 <input type="email" name="email" placeholder="Ping Address (Your Email)" required=""
-                    style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace;">
+                    class="contact-form-input">
                 <textarea name="message" rows="4" placeholder="Data Payload (Your Message)" required=""
-                    style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace; resize: vertical;"></textarea>
-                <button type="submit" class="btn primary-btn glow-effect magnetic-element hover-sound"
-                    style="border: none; width: 100%; padding: 1rem; cursor: none;">TRANSMIT MESSAGE</button>
+                    class="contact-form-input" style="resize: vertical;"></textarea>
+                <button type="submit" class="btn primary-btn glow-effect magnetic-element hover-sound contact-form-button"
+                    aria-label="Transmit Message Data">TRANSMIT MESSAGE</button>
             </form>
         </div>
 
         <div class="social-links" style="margin-top: 4rem;">
-            <a href="https://github.com/MehediHasan228" target="_blank" class="magnetic-element hover-sound"><i
+            <a href="https://github.com/MehediHasan228" target="_blank" class="magnetic-element hover-sound" aria-label="GitHub Repository Terminal"><i
                     class="fa-brands fa-github"></i></a>
             <a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank"
-                class="magnetic-element hover-sound"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="mailto:mehedihasan228.cse@gmail.com" class="magnetic-element hover-sound"><i
+                class="magnetic-element hover-sound" aria-label="LinkedIn Professional Node"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="mailto:mehedihasan228.cse@gmail.com" class="magnetic-element hover-sound" aria-label="Direct Email Link"><i
                     class="fa-solid fa-envelope"></i></a>
-            <a href="tel:+8801799447594" class="magnetic-element hover-sound"><i class="fa-solid fa-phone"></i></a>
+            <a href="tel:+8801799447594" class="magnetic-element hover-sound" aria-label="Voice Protocol: Phone Call"><i class="fa-solid fa-phone"></i></a>
         </div>
     </section>
 
