@@ -211,104 +211,91 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Specialized Sidebar Draggable (Vertical Only, Right Locked) ---
-    function makeVerticalSidebarDraggable(element, handles) {
-        if (!element || !handles || handles.length === 0) return;
-        let pos2 = 0, pos4 = 0;
-        let startX = 0, startY = 0;
-        const threshold = 5; // Pixels to move before it's a drag
-        let isDragging = false;
-
-        handles.forEach(handle => {
-            handle.classList.add('draggable-header');
-            handle.onmousedown = dragMouseDown;
-            handle.ontouchstart = dragMouseDown;
-        });
-
-        function dragMouseDown(e) {
-            // Only left click
-            if (e.type === 'mousedown' && e.button !== 0) return;
-            
-            startX = e.clientX || (e.touches && e.touches[0].clientX);
-            startY = e.clientY || (e.touches && e.touches[0].clientY);
-            pos4 = startY;
-            isDragging = false;
-
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-            document.ontouchend = closeDragElement;
-            document.ontouchmove = elementDrag;
-        }
-
-        function elementDrag(e) {
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            const dist = Math.sqrt(Math.pow(clientX - startX, 2) + Math.pow(clientY - startY, 2));
-            
-            if (!isDragging && dist > threshold) {
-                isDragging = true;
-                element.classList.add('is-dragging');
-                
-                // Transition to fixed vertical side position
-                element.style.position = 'fixed';
-                element.style.left = 'auto';
-                element.style.transform = 'none'; // Remove any centering transform
-                element.style.margin = '0';
-                
-                // Maintain the correct right offset based on state
-                if (element.classList.contains('lb-collapsed')) {
-                    element.style.right = '-600px';
-                } else if (element.classList.contains('lb-full-view')) {
-                    element.style.right = '5vw';
-                } else {
-                    element.style.right = '0';
-                }
-            }
-
-            if (isDragging) {
-                e.preventDefault();
-                pos2 = pos4 - clientY;
-                pos4 = clientY;
-                
-                let newTop = element.offsetTop - pos2;
-                // Boundary check (keep on screen)
-                const viewportHeight = window.innerHeight;
-                const elementHeight = element.offsetHeight;
-                newTop = Math.max(0, Math.min(newTop, viewportHeight - elementHeight));
-                
-                element.style.top = newTop + "px";
-            }
-        }
-
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
-            document.ontouchend = null;
-            document.ontouchmove = null;
-            
-            setTimeout(() => {
-                element.classList.remove('is-dragging');
-                // Clean up inline styles that might conflict with expansion
-                if (isDragging) {
-                    element.style.right = ''; 
-                }
-                isDragging = false;
-            }, 10);
-        }
-    }
-
     makeDraggable(document.querySelector('.cli-container'), document.querySelector('.cli-header'));
     makeDraggable(document.querySelector('.mines-container'), document.querySelector('.mines-header'));
     makeDraggable(document.getElementById('sys-monitor'), document.querySelector('#sys-monitor .mon-title'));
     
-    // AI Leaderboard uses vertical-only draggable
+    function makeVerticalEdgeDraggable(element, handles) {
+        if (!element || !handles) return;
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        let isDragging = false;
+        let startY = 0;
+
+        handles.forEach(handle => {
+            handle.style.cursor = 'move';
+            handle.addEventListener('mousedown', dragStart);
+            handle.addEventListener('touchstart', dragStart, { passive: false });
+        });
+
+        function dragStart(e) {
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            
+            startY = clientY;
+            isDragging = false;
+            pos4 = clientY;
+
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+            document.addEventListener('touchmove', dragMove, { passive: false });
+            document.addEventListener('touchend', dragEnd);
+
+            // Optimization: Remove transitions during drag for smoothness
+            element.style.transition = 'none';
+        }
+
+        function dragMove(e) {
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            // Flag as dragging if moved more than 3px
+            if (Math.abs(clientY - startY) > 3) {
+                isDragging = true;
+                if (e.cancelable) e.preventDefault();
+            }
+
+            if (!isDragging) return;
+
+            pos2 = pos4 - clientY;
+            pos4 = clientY;
+
+            let newTop = element.offsetTop - pos2;
+            
+            // Bound checking (optional but good for UX)
+            const padding = 20;
+            const viewHeight = window.innerHeight;
+            if (newTop < padding) newTop = padding;
+            if (newTop > viewHeight - element.offsetHeight - padding) 
+                newTop = viewHeight - element.offsetHeight - padding;
+
+            element.style.top = newTop + "px";
+            element.style.bottom = 'auto';
+            element.style.left = 'auto'; // Force pin to the side defined in CSS (usually right: 0)
+            element.style.right = '0';
+            element.style.transform = 'none'; 
+        }
+
+        function dragEnd(e) {
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('mouseup', dragEnd);
+            document.removeEventListener('touchmove', dragMove);
+            document.removeEventListener('touchend', dragEnd);
+            
+            element.style.transition = ''; // Restore transitions
+
+            // If we didn't drag, it's a click. Signal to other listeners.
+            if (!isDragging) {
+                element.dispatchEvent(new CustomEvent('lb-click'));
+            }
+        }
+    }
+
     const lbWidget = document.getElementById('leaderboard-widget');
-    const lbHandles = [
-        document.querySelector('#leaderboard-widget .lb-toggle'),
-        document.querySelector('#leaderboard-widget .radar-title-group')
-    ];
-    makeVerticalSidebarDraggable(lbWidget, lbHandles.filter(h => h !== null));
+    const lbToggleBtn = document.querySelector('.lb-toggle');
+    const lbHeaderHandle = document.querySelector('#leaderboard-widget .radar-title-group');
+    
+    if (lbWidget && lbToggleBtn && lbHeaderHandle) {
+        makeVerticalEdgeDraggable(lbWidget, [lbToggleBtn, lbHeaderHandle]);
+    }
 
     /* ==========================================
        5. MAGNETIC ELEMENTS & 3D TILT
@@ -1583,16 +1570,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         renderLeaderboard(currentCategory);
     }, 60000);
 
-    // --- LEADERBOARD WIDGET TOGGLE LOGIC ---
-    const lbWidget = document.getElementById('leaderboard-widget');
-    const lbToggleBtn = document.querySelector('.lb-toggle');
     const lbToggleIcon = document.getElementById('lb-toggle-icon');
 
     if (lbWidget && lbToggleBtn) {
-        lbToggleBtn.addEventListener('click', (e) => {
-            // Prevent toggle if we were just dragging
-            if (lbWidget.classList.contains('is-dragging')) return;
+        // Use custom event from draggable logic to avoid click conflict
+        lbWidget.addEventListener('lb-click', () => {
+            toggleLeaderboard();
+        });
 
+        // Still allow direct click if not dragging (for desktop reliability)
+        // Note: The draggable logic handles this via lb-click, but keeping direct for simple clicks.
+        // We check if it was a drag in the handle's listener.
+        
+        function toggleLeaderboard() {
             // If already in full view, close full view first when collapsing
             if (lbWidget.classList.contains('lb-full-view') && lbWidget.classList.contains('lb-expanded')) {
                 lbWidget.classList.remove('lb-full-view');
@@ -1613,7 +1603,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             }
 
             if (typeof playSound === 'function') playSound('click');
-        });
+        }
     }
 
     // --- LEADERBOARD FULL VIEW TOGGLE ---

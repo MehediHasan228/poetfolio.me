@@ -2021,25 +2021,20 @@ footer {
 /* --- AI SYSTEM LEADERBOARD WIDGET --- */
 #leaderboard-widget {
     position: fixed;
-    top: 50%;
     right: 0;
-    transform: translateY(-50%);
+    top: 30%;
     z-index: 1000;
     display: flex;
     align-items: center;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), right 0.4s cubic-bezier(0.4, 0, 0.2, 1), top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #leaderboard-widget.lb-collapsed {
-    right: -600px; /* Hide container, show toggle */
-}
-
-#leaderboard-widget.lb-collapsed .lb-toggle {
-    margin-right: -1px; /* Ensure border overlaps */
+    transform: translateX(calc(100% - 60px));
 }
 
 #leaderboard-widget.lb-expanded {
-    right: 0;
+    transform: translateX(0);
 }
 
 .lb-toggle {
@@ -2152,23 +2147,10 @@ footer {
     border-radius: 1.5rem;
 }
 
-#leaderboard-widget.lb-full-view:not(.is-dragging) {
-    right: 5vw;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-/* Ensure collapsed state doesn't show full view */
-#leaderboard-widget.lb-collapsed.lb-full-view {
-    right: -600px;
-}
-
-#leaderboard-widget.is-dragging {
-    transition: none !important;
-}
-
-#leaderboard-widget.is-dragging .radar-container {
-    transition: none !important;
+#leaderboard-widget.lb-full-view {
+    right: 5vw !important;
+    left: auto !important;
+    /* Respect top position from dragging if possible, or center it */
 }
 
 /* Adjustments for the smaller widget context */
@@ -2241,24 +2223,9 @@ footer {
     }
     
     #leaderboard-widget.lb-collapsed {
-        right: -85vw; /* Position container off-screen */
-        transform: translateY(-50%); /* Default centering if not dragged */
+        transform: translateY(-50%) translateX(calc(100% - 45px));
     }
     
-    /* When being dragged, don't use the centering transform */
-    #leaderboard-widget.is-dragging {
-        transform: none !important;
-    }
-
-    #leaderboard-widget.lb-collapsed .lb-toggle {
-        margin-right: -1px;
-    }
-
-    #leaderboard-widget.lb-expanded {
-        right: 0;
-        transform: translateY(-50%);
-    }
-
     #lb-toggle-icon {
         font-size: 1.1rem;
     }
@@ -2268,10 +2235,10 @@ footer {
     }
     
     #leaderboard-widget .radar-container {
-        width: 85vw; /* More controlled width on mobile */
-        height: 70vh;
+        width: calc(100vw - 45px); /* Take up remaining horizontal space minus toggle */
+        height: 60vh;
         padding: 1rem;
-        border-radius: 1.5rem 0 0 1.5rem;
+        border-radius: 1rem 0 0 1rem;
     }
     
     .lb-content .radar-header {
@@ -2872,7 +2839,7 @@ footer {
         display: none !important;
     }
 
-    /* Center the contents of the header */
+    /* Center the contents of the header and remove background */
     #ai-chat-widget.chat-collapsed .chat-header {
         padding: 0 !important;
         width: 100% !important;
@@ -2880,21 +2847,30 @@ footer {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        background: var(--accent-1) !important;
-        border-radius: 50%;
+        background: transparent !important;
     }
 
-    /* Hide 'Ask My AI' label when collapsed */
-    #ai-chat-widget.chat-collapsed .header-info {
+    /* Hide the chevron arrow completely when collapsed */
+    #ai-chat-widget.chat-collapsed .chat-header>i {
         display: none !important;
     }
 
-    /* Show only the toggle icon centered */
-    #ai-chat-widget.chat-collapsed #chat-toggle-icon {
-        display: block !important;
+    /* Target the span to vaporize the "Ask My AI" text */
+    #ai-chat-widget.chat-collapsed .chat-header span {
+        font-size: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Bring back ONLY the size of the robot icon inside that span */
+    #ai-chat-widget.chat-collapsed .chat-header span i {
         font-size: 24px !important;
         color: #000 !important;
         margin: 0 !important;
+        display: block !important;
     }
 }
 
@@ -3398,14 +3374,8 @@ footer {
     .mine-tile { height: 42px; font-size: 1.2rem; }
 
     /* UI Controls Placement */
-    .ui-controls { 
-        bottom: 15px; 
-        left: 15px; 
-        gap: 12px; 
-        display: flex;
-        flex-direction: column; 
-    }
-    .control-btn { width: 42px; height: 42px; font-size: 1.1rem; }
+    .ui-controls { bottom: 15px; left: 15px; gap: 10px; }
+    .control-btn { width: 40px; height: 40px; font-size: 1rem; }
 
     /* Chat Widget */
     #ai-chat-widget { right: 15px; bottom: 15px; }
@@ -3421,21 +3391,19 @@ footer {
     #ai-chat-widget.chat-collapsed .chat-body,
     #ai-chat-widget.chat-collapsed .chat-input-area { display: none !important; }
     #ai-chat-widget.chat-collapsed .chat-header {
-        padding: 0 !important; 
-        width: 100% !important; 
-        height: 100% !important;
-        display: flex !important; 
-        justify-content: center !important;
-        align-items: center !important; 
-        background: var(--accent-1) !important; /* Premium colored bubble */
-        border-radius: 50%;
+        padding: 0 !important; width: 100% !important; height: 100% !important;
+        display: flex !important; justify-content: center !important;
+        align-items: center !important; background: transparent !important;
     }
-    #ai-chat-widget.chat-collapsed .header-info { display: none !important; }
-    #ai-chat-widget.chat-collapsed #chat-toggle-icon {
-        display: block !important;
-        font-size: 24px !important;
-        color: #000 !important;
-        margin: 0 !important;
+    #ai-chat-widget.chat-collapsed .chat-header > i { display: none !important; }
+    #ai-chat-widget.chat-collapsed .chat-header span {
+        font-size: 0 !important; display: flex !important;
+        justify-content: center !important; align-items: center !important;
+        margin: 0 !important; padding: 0 !important;
+    }
+    #ai-chat-widget.chat-collapsed .chat-header span i {
+        font-size: 24px !important; color: #000 !important;
+        margin: 0 !important; display: block !important;
     }
 
     /* System monitor already hidden on mobile via earlier rule */
