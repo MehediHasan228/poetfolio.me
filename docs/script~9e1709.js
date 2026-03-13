@@ -122,9 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const skillName = bar.parentElement.previousElementSibling.querySelector('.lang').textContent;
                     let targetWidth = bar.getAttribute('data-width');
 
-                    if (skillName.includes('Video Editing')) targetWidth = '90%';
-                    if (skillName.includes('AI Integration')) targetWidth = '85%';
-                    if (skillName.includes('Automation')) targetWidth = '75%';
+                    if (skillName.includes('Full-Stack')) targetWidth = '90%';
+                    if (skillName.includes('AI & Automation')) targetWidth = '85%';
+                    if (skillName.includes('System Architecture')) targetWidth = '75%';
 
                     bar.style.width = targetWidth;
                 });
