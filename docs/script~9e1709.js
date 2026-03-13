@@ -457,6 +457,12 @@ document.addEventListener('DOMContentLoaded', () => {
        Powered by OpenRouter (Gemini, Llama, etc.)
        Get your key → https://openrouter.ai/keys
     ========================================== */
+    /* ==========================================
+       9. AI CHAT WIDGET — OPENROUTER AI
+       ==========================================
+       Powered by OpenRouter (Gemini, Llama, etc.)
+       Get your key → https://openrouter.ai/keys
+    ========================================== */
     const chatWidget = document.getElementById('ai-chat-widget');
     const chatHeader = document.getElementById('chat-header');
     const chatBody = document.getElementById('chat-body');
@@ -467,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── CONFIG ─────────────────────────────────────────────────────────────────
     const OPENROUTER_API_KEY = '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';
     const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
-    const AI_MODEL = "meta-llama/llama-3.1-8b-instruct:free"; // 100% free, no credits needed
+    const AI_MODEL = "meta-llama/llama-3.2-3b-instruct:free"; 
 
     // ── SYSTEM PROMPT: Mehedi's Full Technical Persona ─────────────────────────
     const SYSTEM_INSTRUCTION = `You are an advanced AI assistant representing Mehedi Hasan on his personal portfolio site (mehedi.pro.bd).
@@ -579,7 +585,9 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
             div.className = `message ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
             div.textContent = text;
             chatBody.appendChild(div);
-            chatBody.scrollTop = chatBody.scrollHeight;
+            if (chatBody.lastElementChild) {
+                chatBody.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+            }
             return div;
         }
 
@@ -601,11 +609,14 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
             const typingEl = appendMsg('⬤ ⬤ ⬤', 'bot');
 
             try {
+                console.log('Initiating OpenRouter Request...', { model: AI_MODEL, messages: chatMessages.length });
                 const response = await fetch(OPENROUTER_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                        'HTTP-Referer': 'https://mehedi.pro.bd',
+                        'X-Title': 'Mehedi Portfolio'
                     },
                     body: JSON.stringify({
                         model: AI_MODEL,
@@ -617,16 +628,14 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
 
                 if (!response.ok) {
                     const errData = await response.json();
-                    console.error('OpenRouter raw error:', JSON.stringify(errData));
+                    console.error('OpenRouter Error Response:', errData);
                     const code = response.status;
                     const msg = errData.error?.message || errData.message || `HTTP ${code}`;
-                    if (code === 401 || code === 403) {
-                        throw new Error(`API key error (${code}): ${msg}. Please check your OpenRouter account at openrouter.ai`);
-                    }
-                    throw new Error(msg);
+                    throw new Error(`[${code}] ${msg}`);
                 }
 
                 const data = await response.json();
+                console.log('OpenRouter Success:', data);
                 const reply = data.choices?.[0]?.message?.content
                     || 'No response received from AI core.';
 
@@ -637,17 +646,20 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
                 typingEl.textContent = reply;
 
             } catch (err) {
-                console.error('OpenRouter Error:', err.message);
+                console.error('Final Chat Error Detail:', err);
                 typingEl.textContent = `⚠ ${err.message}`;
             }
 
-            chatBody.scrollTop = chatBody.scrollHeight;
+            if (chatBody.lastElementChild) {
+                chatBody.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+            }
             if (typeof playSound === 'function') playSound('type');
         }
 
         chatSend.addEventListener('click', sendChat);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChat(); });
     }
+
 
 
 
