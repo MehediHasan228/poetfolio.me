@@ -2081,7 +2081,7 @@ footer {
     opacity: 1;
 }
 
-.lb-content .radar-container {
+#leaderboard-widget .radar-container {
     width: 500px;
     max-width: 90vw;
     height: 70vh;
@@ -2132,10 +2132,12 @@ footer {
     top: 0;
     background: rgba(2, 6, 23, 0.95);
     z-index: 10;
+    white-space: nowrap;
 }
 
 .lb-content #ai-leaderboard-table td {
     padding: 1rem;
+    white-space: nowrap;
 }
 
 /* --- LEADERBOARD WIDGET MOBILE RESPONSIVENESS --- */
@@ -2157,7 +2159,7 @@ footer {
         display: none; /* Hide hover tooltip on touch devices */
     }
     
-    .lb-content .radar-container {
+    #leaderboard-widget .radar-container {
         width: calc(100vw - 45px); /* Take up remaining horizontal space minus toggle */
         height: 60vh;
         padding: 1rem;
@@ -2174,15 +2176,23 @@ footer {
         font-size: 1rem;
     }
     
+    .lb-content .radar-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+    
     .lb-content .radar-tab {
         padding: 0.3rem 0.5rem;
         font-size: 0.55rem;
+        white-space: nowrap;
     }
     
     .lb-content #ai-leaderboard-table th,
     .lb-content #ai-leaderboard-table td {
         padding: 0.6rem;
         font-size: 0.8rem;
+        white-space: nowrap;
     }
 }
 
