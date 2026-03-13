@@ -1535,12 +1535,12 @@ section {
         padding: 0 5% !important;
     }
 
-    /* Floating Controls: Move to bottom left but with more clearance or horizontal stack */
+    /* Floating Controls: Vertical stack for mobile */
     .ui-controls {
-        bottom: 80px; /* Raise to avoid footer/chat button overlap */
-        left: 15px;
-        flex-direction: row; /* Stack horizontally to save vertical space */
-        gap: 10px;
+        bottom: 20px; 
+        left: 20px;
+        flex-direction: column; 
+        gap: 15px;
     }
     
     .control-btn {
@@ -1617,6 +1617,10 @@ section {
         border-radius: 0;
         padding: 14px 18px;
         font-size: 0.95rem;
+        height: 100%; /* Ensure header covers the whole button area */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .chat-body {
@@ -1646,18 +1650,27 @@ section {
     }
 
     #ai-chat-widget.chat-collapsed {
-        width: 50px !important; /* Circular on very small screens */
-        height: 50px !important;
+        width: 60px !important; /* Slightly wider circle for better click target */
+        height: 60px !important;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    #ai-chat-widget.chat-collapsed .header-info span {
+    #ai-chat-widget.chat-collapsed .chat-header span {
         display: none; /* Hide text on very small screens */
     }
 
+    #ai-chat-widget.chat-collapsed #chat-toggle-icon {
+        display: none; /* Hide toggle icon in circular state */
+    }
+
     #ai-chat-widget.chat-expanded {
-        height: 90vh !important;
+        top: 0 !important;
+        height: 100dvh !important; /* Use dynamic viewport height for mobile keyboards */
         max-height: none !important;
+        border-radius: 0 !important; /* Full screen, no rounded top corners */
     }
 
     .chat-body {

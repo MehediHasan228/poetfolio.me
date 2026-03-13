@@ -571,46 +571,49 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── KNOWLEDGE BASE ─────────────────────────────────────────────────────────
     const KNOWLEDGE_BASE = {
         greetings: {
-            keywords: ['hi', 'hello', 'hey', 'greetings', 'who are you'],
-            response: "System Online. Query received. I am Mehedi's AI assistant. How can I help you navigate his portfolio today?"
+            keywords: [/\b(hi|hello|hey|greetings|howdy|sup|hola)\b/i, /\bhow are you\b/i, /\bwho are you\b/i],
+            response: "System Online. I am Mehedi's AI assistant. How can I help you navigate his portfolio today?"
         },
         identity: {
-            keywords: ['mehedi', 'about', 'who', 'profile', 'bio', 'background'],
+            keywords: [/\b(mehedi|about|who|profile|bio|background|developer|engineer)\b/i],
             response: "Mehedi Hasan is a Full-Stack Developer and AI Automation Engineer with 2+ years of experience. He specializes in building autonomous workflows that reduce production time by up to 60% using LLMs like ChatGPT and Gemini."
         },
         skills: {
-            keywords: ['skill', 'stack', 'tech', 'language', 'toolkit', 'expert'],
+            keywords: [/\b(skill|stack|tech|language|toolkit|expert|react|javascript|python|php|node)\b/i],
             response: "Technical Arsenal: HTML5, CSS3, React.js, JavaScript (ES6+), PHP, Node.js, Python, OpenAI API, Gemini API, and specialized automation tools like Puppeteer and n8n."
         },
         services: {
-            keywords: ['service', 'hire', 'price', 'cost', 'work', 'offer', 'buy'],
+            keywords: [/\b(service|hire|price|cost|work|offer|buy|freelance)\b/i],
             response: "Available Services: Basic Web Dev ($150), E-commerce ($300), AI Integration ($400), Full-Stack Apps ($500), API Dev ($200), and Marketing Automation ($250)."
         },
         projects: {
-            keywords: ['project', 'portfolio', 'build', 'create', 'done', 'example', 'work'],
+            keywords: [/\b(project|portfolio|build|create|done|example|work|app)\b/i],
             response: "Key Projects: CredenceX AI Lab (Trustworthy MedAI), Sierraromeo.ai (AI Research Agent), Retune.so (AI Chat UI), and specialized enterprise automation bots."
         },
         credencex: {
-            keywords: ['credencex', 'medical', 'imaging', 'healthcare', 'lab', 'research'],
-            response: "CredenceX AI Research Lab advances trustworthy, explainable (XAI), and deployment-aware AI for medical imaging and clinical decision support in high-stakes healthcare environments. You can explore it at credencex.ai."
+            keywords: [/\b(credencex|medical|imaging|healthcare|lab|research|xai)\b/i],
+            response: "CredenceX AI Research Lab advances trustworthy, explainable (XAI), and deployment-aware AI for medical imaging and clinical decision support in high-stakes healthcare environments. Explore it at credencex.ai."
         },
         contact: {
-            keywords: ['contact', 'email', 'phone', 'whatsapp', 'reach', 'talk', 'linkedin', 'github'],
-            response: "Data Retrieved: You can reach Mehedi via WhatsApp at +880 1799-447594 or email at mehedihasan228.cse@gmail.com. Check his GitHub: github.com/MehediHasan228"
+            keywords: [/\b(contact|email|phone|whatsapp|reach|talk|linkedin|github|connect)\b/i],
+            response: "Data Retrieved: Reach Mehedi via WhatsApp at +880 1799-447594 or email at mehedihasan228.cse@gmail.com. GitHub: github.com/MehediHasan228"
         },
         automation: {
-            keywords: ['automation', 'bot', 'facebook', 'whatsapp', 'workflow', 'llm'],
+            keywords: [/\b(automation|bot|facebook|whatsapp bot|workflow|llm|agent)\b/i],
             response: "Automation Expertise: Mehedi builds autonomous workflows that reduce production time by up to 60%. He specializes in Facebook & WhatsApp API integrations and LLM orchestration."
+        },
+        smalltalk: {
+            keywords: [/\b(joke|funny|laugh)\b/i],
+            response: "Why do programmers prefer dark mode? Because light attracts bugs!"
         }
     };
 
-    const DEFAULT_RESPONSE = "Query complete. I have limited data on that specific topic. Try asking about Mehedi's skills, projects, services, or how to contact him directly.";
+    const DEFAULT_RESPONSE = "Query complete. I currently lack sufficient data to process that request offline. Try asking about Mehedi's skills, projects, services, or how to contact him. For complex queries, please connect via WhatsApp.";
 
     // ── CHAT FUNCTIONS ─────────────────────────────────────────────────────────
     function getBotResponse(input) {
-        const query = input.toLowerCase();
         for (const key in KNOWLEDGE_BASE) {
-            if (KNOWLEDGE_BASE[key].keywords.some(k => query.includes(k))) {
+            if (KNOWLEDGE_BASE[key].keywords.some(regex => regex.test(input))) {
                 return KNOWLEDGE_BASE[key].response;
             }
         }
@@ -619,15 +622,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (chatWidget && chatHeader) {
         chatHeader.addEventListener('click', () => {
+            console.log("[AI_CHAT] Toggle Initiated via Header Click");
+            toggleChat();
+        });
+
+        function toggleChat() {
             chatWidget.classList.toggle('chat-expanded');
             chatWidget.classList.toggle('chat-collapsed');
-            const icon = document.getElementById('chat-toggle-icon') || document.querySelector('.chat-toggle-icon');
+            
+            const icon = document.getElementById('chat-toggle-icon');
             if (icon) {
-                icon.classList.toggle('fa-comment-dots');
-                icon.classList.toggle('fa-chevron-down');
+                if (chatWidget.classList.contains('chat-expanded')) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                } else {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
             }
             if (typeof playSound === 'function') playSound('click');
-        });
+        }
 
         // ── VOICE INPUT ────────────────────────────────────────────────────────
         if (voiceBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
@@ -700,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
             welcomeMsg.appendChild(createSmartButtons());
         }, 500);
 
-        function sendChat() {
+        async function sendChat() {
             const txt = chatInput.value.trim();
             if (!txt) return;
 
@@ -710,15 +724,58 @@ document.addEventListener('DOMContentLoaded', () => {
             // User Message
             appendMsg(txt, 'user');
 
-            // Bot Response (Simulated Delay)
+            // Bot Response (Simulated Delay for typing feel)
             const typingEl = appendMsg('⬤ ⬤ ⬤', 'bot');
-            
-            setTimeout(() => {
-                const reply = getBotResponse(txt);
-                typingEl.textContent = reply;
+            typingEl.classList.add('typing-indicator');
+
+            try {
+                // Primary: Try Local AI Bridge
+                const primaryResponse = await fetch('http://localhost:8000/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            { role: "system", content: "You are Mehedi's professional AI assistant. You help users navigate his portfolio. Keep responses concise and technical. Mehedi is a Full-Stack Developer & AI Automation Engineer with 2+ years exp. If you don't know something, suggest contacting him via WhatsApp." },
+                            { role: "user", content: txt }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+
+                if (primaryResponse.ok) {
+                    const data = await primaryResponse.json();
+                    typingEl.textContent = data.choices[0].message.content;
+                    return; // Exit if primary succeeds
+                }
+                throw new Error("Primary Handshake Failed");
+
+            } catch (primaryError) {
+                console.warn("[AI_CHAT] Local Bridge Offline. Attempting Secondary Cloud AI...");
+                
+                try {
+                    // Secondary: Free Public AI Fallback (Direct Text Endpoint)
+                    const systemPrompt = "You are Mehedi's helpful AI assistant on his portfolio website. Keep responses short (1-2 sentences). Mehedi is a Full-Stack Developer & AI Automation Engineer.\n\nUser: ";
+                    const encodedPrompt = encodeURIComponent(systemPrompt + txt);
+                    const secondaryResponse = await fetch(`https://text.pollinations.ai/${encodedPrompt}`);
+
+                    if (secondaryResponse.ok) {
+                        const reply = await secondaryResponse.text();
+                        typingEl.textContent = reply;
+                        return; // Exit if secondary succeeds
+                    }
+                    throw new Error("Secondary API Failed");
+
+                } catch (secondaryError) {
+                    // Tertiary: Hardcoded Rule-Based Fallback
+                    console.warn("[AI_CHAT] All APIs Offline. Reverting to Offline Rule-Based Protocol.");
+                    typingEl.innerHTML = getBotResponse(txt);
+                }
+            } finally {
+                typingEl.classList.remove('typing-indicator');
                 chatBody.scrollTop = chatBody.scrollHeight;
                 if (typeof playSound === 'function') playSound('type');
-            }, 600);
+            }
         }
 
         chatSend.addEventListener('click', sendChat);
