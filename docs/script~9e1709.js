@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cliCommands = {
             'help': 'Available commands: help, about, skills, projects, clear, exit, vault, solarsmash, hw-scan, deep-dive',
-            'about': 'Results-driven Full-Stack Web Developer and AI Automation Engineer with over 2+ years of experience architecting modern web applications and intelligent systems. Specialist in LLM integration, scalable automation pipelines, and AI-driven content workflows.',
+            'about': 'I am a Full-Stack Developer and AI Automation Engineer with 2+ years of experience building intelligent web systems. I specialize in integrating LLMs (ChatGPT, Claude, Gemini) to create autonomous workflows that reduce production time by up to 60%. From scalable React applications to advanced Facebook & WhatsApp automation, I build high-performance tools that eliminate manual work and drive digital engagement at scale.',
             'skills': 'Languages: PHP, JavaScript, SQL, Liquid.\nFrameworks: Tailwind, Laravel.\nTools: Git, VS Code, Cloudflare, openclaw, Antigravity, claude.',
             'projects': 'Accessing secure database... Use the GUI interface on the main portal to view VIP projects.',
             'sudo': 'Nice try. This incident will be reported.',
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         identity: {
             keywords: ['mehedi', 'about', 'who', 'profile', 'bio', 'background'],
-            response: "Mehedi Hasan is a Full-Stack Developer and AI Automation Engineer with 2+ years of experience. He specializes in building autonomous workflows and scalable web systems."
+            response: "Mehedi Hasan is a Full-Stack Developer and AI Automation Engineer with 2+ years of experience. He specializes in building autonomous workflows that reduce production time by up to 60% using LLMs like ChatGPT and Gemini."
         },
         skills: {
             keywords: ['skill', 'stack', 'tech', 'language', 'toolkit', 'expert'],
