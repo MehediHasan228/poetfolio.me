@@ -467,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── CONFIG ─────────────────────────────────────────────────────────────────
     const OPENROUTER_API_KEY = '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';
     const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
-    const AI_MODEL = "google/gemini-flash-1.5"; // You can change this to "meta-llama/llama-3-8b-instruct:free" etc.
+    const AI_MODEL = "meta-llama/llama-3.1-8b-instruct:free"; // 100% free, no credits needed
 
     // ── SYSTEM PROMPT: Mehedi's Full Technical Persona ─────────────────────────
     const SYSTEM_INSTRUCTION = `You are an advanced AI assistant representing Mehedi Hasan on his personal portfolio site (mehedi.pro.bd).
@@ -617,8 +617,10 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
                 });
 
                 if (!response.ok) {
-                    const err = await response.json();
-                    throw new Error(err.error?.message || `Status ${response.status}`);
+                    const errData = await response.json();
+                    console.error('OpenRouter raw error:', JSON.stringify(errData));
+                    const msg = errData.error?.message || errData.message || `HTTP ${response.status}`;
+                    throw new Error(msg);
                 }
 
                 const data = await response.json();
@@ -632,8 +634,8 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
                 typingEl.textContent = reply;
 
             } catch (err) {
-                console.error('OpenRouter API Error:', err);
-                typingEl.textContent = `⚠ System Error: ${err.message}. Try messaging Mehedi directly via WhatsApp: +8801799447594`;
+                console.error('OpenRouter Error:', err.message);
+                typingEl.textContent = `⚠ ${err.message}`;
             }
 
             chatBody.scrollTop = chatBody.scrollHeight;
