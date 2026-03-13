@@ -2121,7 +2121,7 @@ footer {
 }
 
 #leaderboard-widget .radar-container {
-    width: 550px;
+    width: 600px;
     max-width: 95vw;
     height: 75vh;
     max-height: 850px;
@@ -2132,10 +2132,27 @@ footer {
     padding: 2rem;
     box-shadow: -15px 0 40px rgba(0, 0, 0, 0.6);
     position: relative;
-    overflow-y: auto;
+    overflow-y: hidden;
     backdrop-filter: blur(30px) saturate(200%);
     display: flex;
     flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Full View Mode Extension */
+#leaderboard-widget.lb-full-view .radar-container {
+    width: 90vw;
+    height: 85vh;
+    max-height: none;
+    max-width: none;
+    border-radius: 1.5rem;
+}
+
+#leaderboard-widget.lb-full-view {
+    right: 5vw !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    left: auto !important;
 }
 
 /* Adjustments for the smaller widget context */
@@ -2144,6 +2161,7 @@ footer {
     gap: 1.5rem;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     padding-bottom: 1.5rem;
+    user-select: none;
 }
 
 .lb-content .radar-title-group h3 {

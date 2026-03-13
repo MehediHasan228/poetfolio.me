@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     makeDraggable(document.querySelector('.cli-container'), document.querySelector('.cli-header'));
     makeDraggable(document.querySelector('.mines-container'), document.querySelector('.mines-header'));
     makeDraggable(document.getElementById('sys-monitor'), document.querySelector('#sys-monitor .mon-title'));
+    makeDraggable(document.getElementById('leaderboard-widget'), document.querySelector('#leaderboard-widget .radar-title-group'));
 
     /* ==========================================
        5. MAGNETIC ELEMENTS & 3D TILT
@@ -1495,8 +1496,23 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     if (lbWidget && lbToggleBtn) {
         lbToggleBtn.addEventListener('click', () => {
+            // If already in full view, close full view first when collapsing
+            if (lbWidget.classList.contains('lb-full-view') && lbWidget.classList.contains('lb-expanded')) {
+                lbWidget.classList.remove('lb-full-view');
+            }
+
             lbWidget.classList.toggle('lb-expanded');
             lbWidget.classList.toggle('lb-collapsed');
+
+            // Reset positioning if collapsing and it was dragged (optional: let it stay where it was)
+            // if (lbWidget.classList.contains('lb-collapsed')) {
+            //     lbWidget.style.position = 'fixed';
+            //     lbWidget.style.top = '50%';
+            //     lbWidget.style.right = '0';
+            //     lbWidget.style.left = 'auto';
+            //     lbWidget.style.bottom = 'auto';
+            //     lbWidget.style.transform = 'translateY(-50%)';
+            // }
 
             // Optionally change the icon state when expanded
             if (lbToggleIcon) {
@@ -1509,6 +1525,27 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 }
             }
 
+            if (typeof playSound === 'function') playSound('click');
+        });
+    }
+
+    // --- LEADERBOARD FULL VIEW TOGGLE ---
+    const lbExpandBtn = document.getElementById('lb-expand-btn');
+    if (lbExpandBtn && lbWidget) {
+        lbExpandBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Don't trigger the toggle collapse
+            lbWidget.classList.toggle('lb-full-view');
+            
+            // Icon transition
+            const icon = lbExpandBtn.querySelector('i');
+            if (lbWidget.classList.contains('lb-full-view')) {
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+            } else {
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+            }
+            
             if (typeof playSound === 'function') playSound('click');
         });
     }
