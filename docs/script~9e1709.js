@@ -605,21 +605,24 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                        'HTTP-Referer': window.location.origin,
-                        'X-Title': 'Mehedi Portfolio Chat'
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: AI_MODEL,
                         messages: chatMessages,
-                        temperature: 0.7
+                        temperature: 0.7,
+                        max_tokens: 512
                     })
                 });
 
                 if (!response.ok) {
                     const errData = await response.json();
                     console.error('OpenRouter raw error:', JSON.stringify(errData));
-                    const msg = errData.error?.message || errData.message || `HTTP ${response.status}`;
+                    const code = response.status;
+                    const msg = errData.error?.message || errData.message || `HTTP ${code}`;
+                    if (code === 401 || code === 403) {
+                        throw new Error(`API key error (${code}): ${msg}. Please check your OpenRouter account at openrouter.ai`);
+                    }
                     throw new Error(msg);
                 }
 
