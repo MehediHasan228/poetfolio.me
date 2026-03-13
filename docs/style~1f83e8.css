@@ -1519,24 +1519,80 @@ section {
     color: #ef4444 !important;
 }
 
-/* ── TABLET (max 900px) ── */
-@media (max-width: 900px) {
-    #ai-chat-widget {
-        bottom: 16px;
-        right: 16px;
-    }
-    .chat-expanded {
-        width: 300px;
-        height: 420px;
-    }
-    .chat-collapsed {
-        width: 140px;
+/* ── TABLET (max 1024px) ── */
+@media (max-width: 1024px) {
+    .running-projects-grid, 
+    .telemetry-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 }
 
 /* ── MOBILE (max 768px) ── */
 @media (max-width: 768px) {
-    /* Collapsed: compact pill */
+    /* Hero container width guard */
+    .hero-container {
+        width: 100% !important;
+        padding: 0 5% !important;
+    }
+
+    /* Floating Controls: Move to bottom left but with more clearance or horizontal stack */
+    .ui-controls {
+        bottom: 80px; /* Raise to avoid footer/chat button overlap */
+        left: 15px;
+        flex-direction: row; /* Stack horizontally to save vertical space */
+        gap: 10px;
+    }
+    
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    /* Hero Text Scaling */
+    .hero-container h1 {
+        font-size: 2.2rem !important;
+        line-height: 1.2;
+    }
+    
+    .prefix-text, .typing-text {
+        font-size: 1rem !important;
+    }
+
+    /* Grid Layouts */
+    .running-projects-grid, 
+    .telemetry-grid, 
+    .archives-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem;
+    }
+
+    .telemetry-card { padding: 1.5rem !important; }
+
+    /* Tables: Enable horizontal scroll */
+    .radar-table-wrapper, 
+    .archive-card table {
+        overflow-x: auto;
+        display: block;
+        width: 100%;
+    }
+
+    #ai-leaderboard-table {
+        min-width: 600px; /* Ensure table doesn't collapse too much */
+    }
+
+    /* System Monitor: Move to top on mobile or hide */
+    .sys-monitor {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        width: 100%;
+        margin-bottom: 2rem;
+        display: none; /* Hide by default on mobile to declutter */
+    }
+
+    /* Collapsed Chat: compact pill */
     #ai-chat-widget.chat-collapsed {
         width: 130px !important;
         height: 46px !important;
@@ -1585,14 +1641,22 @@ section {
 
 /* ── SMALL MOBILE (max 480px) ── */
 @media (max-width: 480px) {
+    .hero-container h1 {
+        font-size: 1.8rem !important;
+    }
+
     #ai-chat-widget.chat-collapsed {
-        width: 120px !important;
-        right: 10px !important;
-        bottom: 10px !important;
+        width: 50px !important; /* Circular on very small screens */
+        height: 50px !important;
+        overflow: hidden;
+    }
+
+    #ai-chat-widget.chat-collapsed .header-info span {
+        display: none; /* Hide text on very small screens */
     }
 
     #ai-chat-widget.chat-expanded {
-        height: 80vh !important;
+        height: 90vh !important;
         max-height: none !important;
     }
 
