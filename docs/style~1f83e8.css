@@ -2267,4 +2267,380 @@ footer {
     * {
         cursor: auto !important;
     }
-}
+}
+
+/* ==========================================
+   COMPREHENSIVE RESPONSIVE ARCHITECTURE v2
+   Full coverage for all site modules
+   ========================================== */
+
+/* === TABLET (max 900px) === */
+@media (max-width: 900px) {
+
+    /* IDE: Hide sidebar, show full editor */
+    .ide-body {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .ide-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #333;
+        padding: 8px 0;
+        overflow-x: auto;
+    }
+
+    .file-list {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 4px;
+        padding: 0 10px;
+        white-space: nowrap;
+    }
+
+    .file {
+        padding: 5px 10px;
+        flex-shrink: 0;
+        border-radius: 4px;
+    }
+
+    .ide-editor-wrapper {
+        height: 280px;
+        overflow: auto;
+    }
+
+    /* POS Terminal: Stack vertically */
+    .pos-container {
+        flex-direction: column;
+        height: auto;
+        max-width: 100%;
+    }
+
+    .pos-menu {
+        grid-template-columns: repeat(3, 1fr);
+        height: auto;
+        max-height: 350px;
+    }
+
+    .pos-receipt {
+        border-left: none;
+        border-top: 2px dashed #ccc;
+        min-height: 250px;
+    }
+
+    /* Dashboard Grid: Single column */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* API Sandbox: Wrap input row */
+    .api-header {
+        flex-wrap: wrap;
+    }
+
+    .api-header input {
+        width: 100%;
+        order: 3;
+    }
+
+    /* Archives Grid: 2 columns */
+    .archives-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* === MOBILE (max 768px) === */
+@media (max-width: 768px) {
+
+    /* Global Overflow Fix */
+    body, html {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* Hero */
+    .hero {
+        padding: 80px 5% 40px;
+        min-height: auto;
+    }
+
+    .hero-layout {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 2.5rem;
+    }
+
+    .hero-text-side {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .hero-image-side {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .hero-image-wrapper {
+        max-width: 240px;
+        margin: 0 auto;
+    }
+
+    h1 { font-size: 2.2rem !important; }
+    h2 { font-size: 1.5rem !important; }
+
+    .decrypt-text { word-break: break-word; }
+
+    /* Hero Buttons: 2-col grid */
+    .hero-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+
+    .hero-buttons .btn { width: 100%; margin: 0 !important; }
+    .hero-buttons .primary-btn { grid-column: span 2; }
+    .hero-buttons .secondary-btn {
+        grid-column: span 1;
+        padding: 0.6rem 0.2rem;
+        font-size: 0.75rem;
+    }
+
+    /* Terminal Feed */
+    .terminal-feed {
+        font-size: 0.72rem;
+        height: 130px;
+        margin: 1.5rem 0;
+    }
+
+    /* Nav */
+    .nav-links { display: none; }
+    nav { padding: 1rem 5%; }
+    section { padding: 4rem 5% 2rem; }
+
+    /* IDE: Full-width, minimal sidebar */
+    .ide-container { max-width: 100%; }
+
+    .ide-sidebar { display: none; } /* hide on small mobile */
+
+    .ide-body {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .ide-editor-wrapper {
+        height: 250px;
+        overflow: auto;
+    }
+
+    .ide-title { font-size: 0.72rem; }
+
+    /* Dashboard Grid */
+    .dashboard-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+
+    /* API Sandbox */
+    .api-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .api-header input {
+        width: 100%;
+        order: 3;
+        min-width: 0;
+    }
+
+    .api-header select { flex-shrink: 0; }
+    .api-body { height: 160px; }
+
+    /* Project Filters: Scrollable row */
+    .project-filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 0.5rem;
+        gap: 0.6rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-btn {
+        flex-shrink: 0;
+        padding: 0.5rem 1rem;
+        font-size: 0.72rem;
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .project-card {
+        width: 100%;
+        max-width: 100%;
+        flex: 1 1 auto;
+    }
+
+    /* AI Dropzone */
+    .ai-dropzone {
+        padding: 2rem 1rem;
+        margin: 0 0 2rem 0 !important;
+    }
+
+    .ai-dropzone i { font-size: 2rem; }
+
+    /* Archive Grid: 1 column */
+    .archives-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Archive Card: More compact */
+    .archive-card { padding: 1rem; }
+
+    /* POS Terminal: Stack layout */
+    .pos-container {
+        flex-direction: column;
+        height: auto;
+        max-width: 100%;
+    }
+
+    .pos-menu {
+        grid-template-columns: repeat(2, 1fr);
+        height: auto;
+        max-height: none;
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .pos-item {
+        padding: 12px 8px;
+        font-size: 0.8rem;
+    }
+
+    .pos-item i { font-size: 1.5rem; }
+
+    .pos-receipt {
+        border-left: none;
+        border-top: 2px dashed #ccc;
+        min-height: 220px;
+        padding: 15px;
+    }
+
+    /* Contact Form */
+    .classic-contact {
+        padding: 1.5rem 1rem;
+        margin: 1.5rem auto 0;
+    }
+
+    .contact-form-input, .contact-form-button {
+        font-size: 0.9rem;
+    }
+
+    /* Social Links */
+    .social-links {
+        gap: 1.2rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .social-links a { font-size: 1.5rem; }
+
+    /* CLI Terminal Overlay */
+    .cli-container {
+        max-width: 100%;
+        height: 80vh;
+        padding: 12px;
+        border-radius: 0;
+    }
+
+    .cli-prompt { font-size: 0.75rem; }
+    #cli-input { font-size: 0.8rem; }
+    .cli-output { font-size: 0.8rem; }
+
+    /* Mines/Diagnostic Overlay */
+    .mines-container { width: 95%; padding: 1.5rem 1rem; }
+    .mines-grid { gap: 6px; }
+    .mine-tile { height: 42px; font-size: 1.2rem; }
+
+    /* UI Controls Placement */
+    .ui-controls { bottom: 15px; left: 15px; gap: 10px; }
+    .control-btn { width: 40px; height: 40px; font-size: 1rem; }
+
+    /* Chat Widget */
+    #ai-chat-widget { right: 15px; bottom: 15px; }
+    #ai-chat-widget.chat-collapsed {
+        width: 55px !important;
+        height: 55px !important;
+        border-radius: 50% !important;
+    }
+    #ai-chat-widget.chat-expanded {
+        width: calc(100vw - 30px) !important;
+        max-width: 350px !important;
+    }
+    #ai-chat-widget.chat-collapsed .chat-body,
+    #ai-chat-widget.chat-collapsed .chat-input-area { display: none !important; }
+    #ai-chat-widget.chat-collapsed .chat-header {
+        padding: 0 !important; width: 100% !important; height: 100% !important;
+        display: flex !important; justify-content: center !important;
+        align-items: center !important; background: transparent !important;
+    }
+    #ai-chat-widget.chat-collapsed .chat-header > i { display: none !important; }
+    #ai-chat-widget.chat-collapsed .chat-header span {
+        font-size: 0 !important; display: flex !important;
+        justify-content: center !important; align-items: center !important;
+        margin: 0 !important; padding: 0 !important;
+    }
+    #ai-chat-widget.chat-collapsed .chat-header span i {
+        font-size: 24px !important; color: #000 !important;
+        margin: 0 !important; display: block !important;
+    }
+
+    /* System monitor already hidden on mobile via earlier rule */
+    .sys-monitor { display: none; }
+}
+
+/* === SMALL MOBILE (max 480px) === */
+@media (max-width: 480px) {
+
+    h1 { font-size: 1.9rem !important; }
+
+    .mobile-center { text-align: center !important; }
+
+    .support-btn { width: 100%; font-size: 0.8rem; }
+
+    /* Hero: Further compact */
+    .hero-image-wrapper { max-width: 200px; }
+
+    /* Single column filter (wrap + center) */
+    .project-filters {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* POS: 1 column on very small */
+    .pos-menu {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 10px;
+    }
+
+    /* Reduce section padding even more */
+    section { padding: 3.5rem 4% 1.5rem; }
+
+    /* Classic contact full-width */
+    .classic-contact { border-radius: 8px; }
+
+    /* Archive cards: Smaller text */
+    .archive-info h4 { font-size: 0.95rem; }
+
+    /* Telemetry card */
+    .telemetry-card { padding: 15px; }
+    .tel-header h3 { font-size: 0.9rem; }
+
+    /* Footer */
+    footer { padding: 1.5rem 5%; }
+}
+
