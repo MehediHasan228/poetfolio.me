@@ -2152,6 +2152,7 @@ footer {
     display: flex;
     align-items: center;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 
 #leaderboard-widget.lb-collapsed {
@@ -2369,7 +2370,18 @@ footer {
     }
     
     #leaderboard-widget.lb-collapsed {
-        --lb-tx: calc(100% - 45px);
+        --lb-tx: calc(100% - 46px); /* 45px toggle + 1px border nudge */
+    }
+
+    #leaderboard-widget .radar-container {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    #leaderboard-widget.lb-expanded .radar-container {
+        opacity: 1;
+        visibility: visible;
     }
     
     #lb-toggle-icon {

@@ -268,8 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
         function dragMove(e) {
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
             
-            // Flag as dragging if moved more than 5px
-            if (Math.abs(clientY - startY) > 5) {
+            // Threshold: 5px for mouse, 15px for touch to prevent accidental drags during taps
+            const threshold = e.type.startsWith('touch') ? 15 : 5;
+            
+            if (Math.abs(clientY - startY) > threshold) {
                 isDragging = true;
                 if (e.cancelable) e.preventDefault();
             }
@@ -310,8 +312,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // If we didn't drag, it's a click. Signal to other listeners.
             if (!isDragging) {
                 // DON'T dispatch if we clicked on a button or interactive element that should handle itself
-                const path = e.composedPath ? e.composedPath() : [];
-                const isControlClick = path.some(el => el && el.tagName && (el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList?.contains('radar-tab')));
+                const isControlClick = path.some(el => el && el.tagName && (
+                    el.tagName === 'BUTTON' || 
+                    el.tagName === 'A' || 
+                    el.classList?.contains('radar-tab') ||
+                    el.classList?.contains('lb-expand-btn')
+                ));
                 
                 if (!isControlClick) {
                     element.dispatchEvent(new CustomEvent('lb-click', { bubbles: true, composed: true }));
@@ -1704,8 +1710,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             lbWidget.classList.toggle('lb-collapsed');
 
             // Optionally change the icon state when expanded
+            const isExpanded = lbWidget.classList.contains('lb-expanded');
+
+            // Optionally change the icon state when expanded
             if (lbToggleIcon) {
-                if (lbWidget.classList.contains('lb-expanded')) {
+                if (isExpanded) {
                     lbToggleIcon.classList.remove('fa-trophy');
                     lbToggleIcon.classList.add('fa-chevron-right');
                 } else {
