@@ -2030,11 +2030,11 @@ footer {
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.lb-collapsed {
+#leaderboard-widget.lb-collapsed {
     transform: translateY(-50%) translateX(calc(100% - 60px));
 }
 
-.lb-expanded {
+#leaderboard-widget.lb-expanded {
     transform: translateY(-50%) translateX(0);
 }
 
