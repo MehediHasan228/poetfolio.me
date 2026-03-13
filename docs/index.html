@@ -423,15 +423,19 @@
             <div class="radar-header">
                 <div class="radar-title-group">
                     <h3><i class="fa-solid fa-microchip"></i> System Leaderboard</h3>
-                    <p>Top Performing AI Models Optimized for Deployment</p>
+                    <div class="radar-filters">
+                        <button class="radar-tab active" data-category="overall">OVERALL</button>
+                        <button class="radar-tab" data-category="coding">CODING</button>
+                        <button class="radar-tab" data-category="reasoning">REASONING</button>
+                    </div>
                 </div>
                 <div class="sync-indicator">
                     <div class="live-badge">
                         <span class="ping-dot"></span>
-                        <span class="badge-text">LIVE UPDATE</span>
+                        <span class="badge-text">LIVE TELEMETRY</span>
                     </div>
                     <div class="sync-time">
-                        <span class="sync-label">LAST SYNC</span>
+                        <span class="sync-label">LAST REFRESH</span>
                         <span id="radar-sync-val" class="sync-val">--:--:--</span>
                     </div>
                 </div>
@@ -443,8 +447,9 @@
                         <tr>
                             <th>RANK</th>
                             <th>MODEL ENGINE</th>
-                            <th>CORE STRENGTH</th>
+                            <th>PRIMARY STRENGTH</th>
                             <th>ELO SCORE</th>
+                            <th>STATUS</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-body">
@@ -457,11 +462,11 @@
                 <div class="source-info">
                     <span>SOURCE: ARENA.AI / LMSYS</span>
                     <span class="separator">|</span>
-                    <span>INTERVAL: 60S</span>
+                    <span>INTERVAL: 60S SYNC</span>
                 </div>
                 <div class="status-indicator">
                     <span class="status-dot"></span>
-                    <span>SYSTEM_ONLINE</span>
+                    <span>HARDWARE_ACCELERATED</span>
                 </div>
             </div>
         </div>

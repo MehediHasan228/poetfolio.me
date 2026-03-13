@@ -1378,30 +1378,53 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
     /* ==========================================
-       12. AI POWER RADAR — LEADERBOARD LOGIC
+       12. AI POWER RADAR — PREMIUM LEADERBOARD
     ========================================== */
     const leaderboardBody = document.getElementById('leaderboard-body');
     const radarSyncVal = document.getElementById('radar-sync-val');
+    const radarTabs = document.querySelectorAll('.radar-tab');
 
-    const AI_MODELS = [
-        { rank: 1, name: "OpenAI o1-preview", strength: "Best for Reasoning & Logic", elo: 1354 },
-        { rank: 2, name: "Claude 3.5 Sonnet", strength: "Best for Coding & Writing", elo: 1324 },
-        { rank: 3, name: "GPT-4o", strength: "Best for Multimodal & Speed", elo: 1318 },
-        { rank: 4, name: "Gemini 1.5 Pro", strength: "Best for Long Context", elo: 1292 },
-        { rank: 5, name: "Llama 3.1 405B", strength: "Best Open Weights Model", elo: 1285 },
-    ];
+    const AI_DATA = {
+        overall: [
+            { rank: 1, name: "GPT-4o (2024-05-13)", strength: "Versatility & Multimodal", elo: 1287, status: "stable" },
+            { rank: 2, name: "Claude 3.5 Sonnet", strength: "Nuance & Context", elo: 1271, status: "trending" },
+            { rank: 3, name: "Gemini 1.5 Pro", strength: "Long Context (2M tokens)", elo: 1265, status: "stable" },
+            { rank: 4, name: "GPT-4 Turbo", strength: "General Intelligence", elo: 1258, status: "stable" },
+            { rank: 5, name: "Llama 3.1 405B", strength: "Leading Open Weights", elo: 1252, status: "new" },
+        ],
+        coding: [
+            { rank: 1, name: "Claude 3.5 Sonnet", strength: "Advanced Code Generation", elo: 1324, status: "trending" },
+            { rank: 2, name: "GPT-4o", strength: "Debugging & Architecture", elo: 1312, status: "stable" },
+            { rank: 3, name: "DeepSeek Coder V2", strength: "Specialized Coding", elo: 1285, status: "new" },
+            { rank: 4, name: "Gemini 1.5 Pro", strength: "Repository-wide Context", elo: 1278, status: "stable" },
+            { rank: 5, name: "Codestral 22B", strength: "Fast FIM & Completion", elo: 1245, status: "new" },
+        ],
+        reasoning: [
+            { rank: 1, name: "OpenAI o1-preview", strength: "Chain-of-Thought Logic", elo: 1354, status: "new" },
+            { rank: 2, name: "OpenAI o1-mini", strength: "Fast Logical Reasoning", elo: 1332, status: "new" },
+            { rank: 3, name: "GPT-4o", strength: "General Logic", elo: 1285, status: "stable" },
+            { rank: 4, name: "Claude 3.5 Sonnet", strength: "Analytical Thinking", elo: 1281, status: "stable" },
+            { rank: 5, name: "Llama 3.1 405B", strength: "Complex Instruction", elo: 1264, status: "trending" },
+        ]
+    };
 
-    function renderLeaderboard() {
+    let currentCategory = 'overall';
+
+    function renderLeaderboard(category = 'overall') {
         if (!leaderboardBody) return;
         
         leaderboardBody.innerHTML = '';
+        const data = AI_DATA[category];
         
-        AI_MODELS.forEach(model => {
+        data.forEach((model, index) => {
             const tr = document.createElement('tr');
-            tr.className = 'hover:bg-blue-500/5 transition-colors';
+            tr.style.opacity = '0';
+            tr.style.transform = 'translateY(10px)';
+            tr.style.transition = `all 0.4s ease ${index * 0.1}s`;
             
             const rankClass = model.rank === 1 ? 'rank-1' : model.rank === 2 ? 'rank-2' : model.rank === 3 ? 'rank-3' : 'rank-other';
             const eloWidth = (model.elo / 1400) * 100;
+            const statusClass = `badge-${model.status}`;
 
             tr.innerHTML = `
                 <td>
@@ -1410,7 +1433,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 <td>
                     <div class="model-info-cell">
                         <span class="model-name">${model.name}</span>
-                        <span class="model-meta">ARENA.AI VERIFIED</span>
+                        <span class="model-meta">ARENA_v2.0_CERTIFIED</span>
                     </div>
                 </td>
                 <td>
@@ -1424,8 +1447,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                         <span class="elo-val">${model.elo}</span>
                     </div>
                 </td>
+                <td>
+                    <span class="status-badge ${statusClass}">${model.status}</span>
+                </td>
             `;
             leaderboardBody.appendChild(tr);
+            
+            // Trigger animation
+            setTimeout(() => {
+                tr.style.opacity = '1';
+                tr.style.transform = 'translateY(0)';
+            }, 50);
         });
 
         if (radarSyncVal) {
@@ -1433,26 +1465,37 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     }
 
-    // Initialize Leaderboard
+    // Tab Logic
+    radarTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            radarTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentCategory = tab.dataset.category;
+            renderLeaderboard(currentCategory);
+        });
+    });
+
+    // Initialize
     renderLeaderboard();
     
-    // Auto-update every 60s (Simulated real-time)
+    // Pulse update logic (every 60s)
     setInterval(() => {
-        // Slightly vary ELO to simulate "Live" changes
-        AI_MODELS.forEach(m => {
-            m.elo += Math.floor(Math.random() * 3) - 1;
+        // Subtle Elo Jitter for "Live" effect across all cats
+        Object.keys(AI_DATA).forEach(cat => {
+            AI_DATA[cat].forEach(m => {
+                m.elo += Math.floor(Math.random() * 3) - 1;
+            });
         });
-        renderLeaderboard();
+        renderLeaderboard(currentCategory);
     }, 60000);
 
-    // Intersection Observer for AI Radar Reveal
+    // Observer for reveal
     const radarSection = document.getElementById('ai-radar');
     if (radarSection) {
         const radarObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('show');
-                    // Add staggered animation logic if needed here
                 }
             });
         }, { threshold: 0.1 });
