@@ -2230,3 +2230,41 @@ footer {
 .activity-amount {
     color: #4ade80;
 }
+
+/* --- REFACTORED SECTIONS --- */
+.classic-contact {
+    max-width: 900px;
+    margin: 3rem auto 0;
+    background: #1e293b;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.contact-form-input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: white;
+    font-family: 'Fira Code', monospace;
+}
+
+.contact-form-button {
+    border: none;
+    width: 100%;
+    padding: 1rem;
+    cursor: none;
+}
+
+/* --- FALLBACKS --- */
+@media (max-width: 1024px) {
+    .cursor-dot, .cursor-outline {
+        display: none !important;
+    }
+    * {
+        cursor: auto !important;
+    }
+}
