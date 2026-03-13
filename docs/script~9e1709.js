@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const voiceBtn = document.getElementById('voice-btn');
 
     // ── CONFIG ─────────────────────────────────────────────────────────────────
-    const OPENROUTER_API_KEY = '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';
+    const OPENROUTER_API_KEY = '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';
     const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
     const AI_MODEL = "meta-llama/llama-3.1-8b-instruct:free"; // 100% free, no credits needed
 
