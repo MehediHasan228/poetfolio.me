@@ -743,44 +743,47 @@ document.addEventListener('DOMContentLoaded', () => {
     ========================================== */
     const TECHNICAL_ARSENAL = [
         {
-            id: 'file-python',
-            name: 'automation.py',
+            id: 'file-ai-pipeline',
+            name: 'ai_pipeline_v2.py',
             lang: 'Python',
             icon: 'fa-python',
             color: '#3776AB',
-            code: `<span class="keyword">import</span> fb_api, whatsapp_bot
-<span class="comment"># Facebook & WhatsApp Automation</span>
-<span class="keyword">def</span> <span class="function">deploy_bot</span>():
-    client = fb_api.connect(<span class="string">"mehedi_api_key"</span>)
-    bot = whatsapp_bot.init(mode=<span class="string">"enterprise"</span>)
-    <span class="keyword">return</span> <span class="string">"Automation active on port 8080"</span>`
+            code: `<span class="keyword">import</span> gemini_agent, workflow_orchestrator
+<span class="comment"># Scalable AI Automation Pipeline</span>
+<span class="keyword">def</span> <span class="function">optimize_workflow</span>(data_stream):
+    agent = gemini_agent.load_model(<span class="string">"gemini-1.5-pro"</span>)
+    pipeline = workflow_orchestrator.Pipeline(step=<span class="string">"content-gen"</span>)
+    <span class="comment">// Reducing production time by up to 60%</span>
+    <span class="keyword">return</span> pipeline.execute(agent, data_stream)`
         },
         {
-            id: 'file-js',
-            name: 'ai_bot.js',
+            id: 'file-llm-bot',
+            name: 'multi_llm_bot.js',
             lang: 'JavaScript',
             icon: 'fa-js',
             color: '#F7DF1E',
-            code: `<span class="keyword">const</span> genAI = <span class="keyword">require</span>(<span class="string">'@google/generative-ai'</span>);
-<span class="comment">// Advanced AI Bot Integration</span>
-<span class="keyword">async function</span> <span class="function">processQuery</span>(<span class="variable">prompt</span>) {
-    <span class="keyword">const</span> model = genAI.getGenerativeModel({ model: <span class="string">"gemini-1.5-flash"</span> });
-    <span class="keyword">const</span> result = <span class="keyword">await</span> model.generateContent(prompt);
-    <span class="keyword">return</span> result.response.text();
+            code: `<span class="keyword">import</span> { ChatGPT, Claude } <span class="keyword">from</span> <span class="string">"@mehedi/ai-core"</span>;
+<span class="comment">// High-Performance Intelligent System</span>
+<span class="keyword">async function</span> <span class="function">intelligentGateway</span>(query) {
+    <span class="keyword">const</span> bot = <span class="keyword">new</span> ChatGPT({ role: <span class="string">"expert-architect"</span> });
+    <span class="keyword">const</span> insights = <span class="keyword">await</span> bot.analyze(query);
+    <span class="keyword">return</span> Claude.refine(insights, { precision: <span class="string">"max"</span> });
 }`
         },
         {
-            id: 'file-pr',
-            name: 'video_prod.prproj',
-            lang: 'Editing',
-            icon: 'fa-video',
-            color: '#EA4335',
-            code: `<span class="comment">/* Cinematic Post-Production Workflow */</span>
-.project-settings {
-    resolution: <span class="string">"4K Ultra HD"</span>;
-    frame-rate: <span class="string">"24fps Cinematic"</span>;
-    software: [<span class="string">"Premiere Pro"</span>, <span class="string">"CapCut AI"</span>];
-    color-grade: <span class="string">"True-to-Life AI Enhancement"</span>;
+            id: 'file-social-auto',
+            name: 'meta_automation.php',
+            lang: 'PHP',
+            icon: 'fa-php',
+            color: '#777BB4',
+            code: `<span class="keyword">&lt;?php</span>
+<span class="comment">// Bespoke Facebook & WhatsApp Automation</span>
+<span class="keyword">class</span> <span class="variable">SocialBot</span> {
+    <span class="keyword">public function</span> <span class="function">syncAPI</span>(<span class="variable">$meta_token</span>) {
+        <span class="variable">$whatsapp</span> = WhatsApp::connect(<span class="variable">$meta_token</span>);
+        <span class="comment">// Eliminating manual inefficiencies</span>
+        <span class="keyword">return</span> <span class="variable">$whatsapp</span>->deploy_autonomous_handler();
+    }
 }`
         }
     ];

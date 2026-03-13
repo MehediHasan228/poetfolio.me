@@ -367,12 +367,11 @@ nav {
 }
 
 .site-logo {
-    max-height: 45px;
-    /* You can increase or decrease this to fit your navbar perfectly */
+    max-height: 50px;
     width: auto;
     display: block;
-    border-radius: 8px;
-    /* Optional: smooths the corners if your logo has a background */
+    aspect-ratio: auto;
+    object-fit: contain;
 }
 
 .logo-link {

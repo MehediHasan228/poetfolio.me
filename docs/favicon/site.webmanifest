@@ -3,13 +3,13 @@
   "short_name": "Mehedi.Pro",
   "icons": [
     {
-      "src": "https://mehedi.pro.bd/web-app-manifest-192x192.png",
+      "src": "../mehedi-logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://mehedi.pro.bd/web-app-manifest-512x512.png",
+      "src": "../mehedi-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
