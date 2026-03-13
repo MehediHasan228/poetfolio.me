@@ -1499,6 +1499,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
         }, { threshold: 0.1 });
         radarObserver.observe(radarSection);
+    }
     // 2. Handle page refreshes or direct links
     const path = window.location.pathname.substring(1);
     if (path && document.getElementById(path)) {
