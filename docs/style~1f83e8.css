@@ -1327,41 +1327,87 @@ section {
 }
 
 /* --- AI CHATBOT (FULLY RESPONSIVE) --- */
+
+/* Keyframe: pulsing glow ring on collapsed pill */
+@keyframes chatPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.5), 0 8px 30px rgba(0,0,0,0.4); }
+    50%       { box-shadow: 0 0 0 8px rgba(0, 242, 254, 0), 0 8px 30px rgba(0,0,0,0.4); }
+}
+
+/* Keyframe: slide up from bottom when expanding */
+@keyframes chatSlideUp {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Keyframe: spring bounce for messages */
+@keyframes msgPop {
+    0%   { opacity: 0; transform: scale(0.88) translateY(10px); }
+    60%  { opacity: 1; transform: scale(1.03) translateY(-2px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Keyframe: shimmer sweep on chat header */
+@keyframes headerShimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+/* Keyframe: typing dots bounce */
+@keyframes typingDot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30%            { transform: translateY(-5px); opacity: 1; }
+}
+
 #ai-chat-widget {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 340px;
+    bottom: 24px;
+    right: 24px;
+    width: 360px;
     background: var(--card-bg);
-    border: 1px solid var(--accent-1);
-    border-radius: 16px;
+    border: 1px solid rgba(0, 242, 254, 0.5);
+    border-radius: 20px;
     z-index: 10000;
     overflow: hidden;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 242, 254, 0.1);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55), 0 0 24px rgba(0, 242, 254, 0.12);
+    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-radius 0.35s ease,
+                box-shadow 0.35s ease;
     display: flex;
     flex-direction: column;
+    will-change: transform, height, width;
 }
 
 .chat-collapsed {
-    height: 50px;
+    height: 52px;
     border-radius: 50px;
-    width: 160px;
+    width: 166px;
+    animation: chatPulse 2.6s ease-in-out infinite;
 }
 
 .chat-expanded {
-    height: 460px;
-    border-radius: 16px;
-    width: 340px;
+    height: 500px;
+    border-radius: 20px;
+    width: 360px;
+    animation: chatSlideUp 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 /* Header */
 .chat-header {
-    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    background: linear-gradient(
+        110deg,
+        var(--accent-1) 0%,
+        var(--accent-2) 40%,
+        var(--accent-1) 60%,
+        var(--accent-2) 100%
+    );
+    background-size: 200% auto;
+    animation: headerShimmer 6s linear infinite;
     color: #000;
-    padding: 12px 16px;
-    font-weight: bold;
+    padding: 13px 18px;
+    font-weight: 700;
     font-size: 0.9rem;
     display: flex;
     justify-content: space-between;
@@ -1369,38 +1415,50 @@ section {
     cursor: pointer;
     user-select: none;
     flex-shrink: 0;
-    min-height: 48px;
-    transition: all 0.3s ease;
+    min-height: 50px;
+    letter-spacing: 0.3px;
+    transition: filter 0.2s ease;
 }
 
+.chat-header:hover { filter: brightness(1.1); }
 .chat-header i { margin-right: 6px; }
+
+#chat-toggle-icon {
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chat-expanded #chat-toggle-icon { transform: rotate(180deg); }
 
 /* Body */
 .chat-body {
-    padding: 12px;
-    flex-grow: 1;
+    padding: 14px 14px 8px;
+    flex: 1 1 0;
+    min-height: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 242, 254, 0.3) transparent;
+}
+
+.chat-body::-webkit-scrollbar { width: 4px; }
+.chat-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 242, 254, 0.3);
+    border-radius: 4px;
 }
 
 /* Message bubbles */
 .message {
-    padding: 9px 13px;
-    border-radius: 12px;
+    padding: 10px 14px;
+    border-radius: 14px;
     max-width: 88%;
-    line-height: 1.5;
+    line-height: 1.55;
     word-break: break-word;
-    animation: msgPop 0.2s ease;
+    animation: msgPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-@keyframes msgPop {
-    from { opacity: 0; transform: scale(0.95) translateY(6px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-}
 
 .bot-msg {
     background: rgba(150, 150, 150, 0.2);
