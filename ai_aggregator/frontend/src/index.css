@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+:root {
+  background-color: #020205;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
