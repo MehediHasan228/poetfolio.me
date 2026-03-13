@@ -452,16 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
        Get your free key → https://aistudio.google.com/app/apikey
     ========================================== */
     /* ==========================================
-       9. AI CHAT WIDGET — OPENROUTER AI
-       ==========================================
-       Powered by OpenRouter (Gemini, Llama, etc.)
-       Get your key → https://openrouter.ai/keys
-    ========================================== */
-    /* ==========================================
-       9. AI CHAT WIDGET — OPENROUTER AI
-       ==========================================
-       Powered by OpenRouter (Gemini, Llama, etc.)
-       Get your key → https://openrouter.ai/keys
+       9. AI CHAT WIDGET — RULE-BASED BOT
     ========================================== */
     const chatWidget = document.getElementById('ai-chat-widget');
     const chatHeader = document.getElementById('chat-header');
@@ -470,75 +461,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatSend = document.getElementById('chat-send');
     const voiceBtn = document.getElementById('voice-btn');
 
-    // ── CONFIG ─────────────────────────────────────────────────────────────────
-    const OPENROUTER_API_KEY = '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';
-    const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
-    const AI_MODEL = "meta-llama/llama-3.2-3b-instruct:free"; 
+    // ── KNOWLEDGE BASE ─────────────────────────────────────────────────────────
+    const KNOWLEDGE_BASE = {
+        greetings: {
+            keywords: ['hi', 'hello', 'hey', 'greetings', 'who are you'],
+            response: "System Online. Query received. I am Mehedi's AI assistant. How can I help you navigate his portfolio today?"
+        },
+        identity: {
+            keywords: ['mehedi', 'about', 'who', 'profile', 'bio', 'background'],
+            response: "Mehedi Hasan is a Full-Stack Developer and AI Automation Engineer with 2+ years of experience. He specializes in building autonomous workflows and scalable web systems."
+        },
+        skills: {
+            keywords: ['skill', 'stack', 'tech', 'language', 'toolkit', 'expert'],
+            response: "Technical Arsenal: HTML5, CSS3, React.js, JavaScript (ES6+), PHP, Node.js, Python, OpenAI API, Gemini API, and specialized automation tools like Puppeteer and n8n."
+        },
+        services: {
+            keywords: ['service', 'hire', 'price', 'cost', 'work', 'offer', 'buy'],
+            response: "Available Services: Basic Web Dev ($150), E-commerce ($300), AI Integration ($400), Full-Stack Apps ($500), API Dev ($200), and Marketing Automation ($250)."
+        },
+        projects: {
+            keywords: ['project', 'portfolio', 'build', 'create', 'done', 'example', 'work'],
+            response: "Key Projects: Sierraromeo.ai (AI Research Agent), Retune.so (AI Chat UI), HR & Payroll Systems, and AI-powered management tools. He's also built several enterprise automation bots."
+        },
+        contact: {
+            keywords: ['contact', 'email', 'phone', 'whatsapp', 'reach', 'talk', 'linkedin', 'github'],
+            response: "Data Retrieved: You can reach Mehedi via WhatsApp at +880 1799-447594 or email at mehedihasan228.cse@gmail.com. Check his GitHub: github.com/MehediHasan228"
+        },
+        automation: {
+            keywords: ['automation', 'bot', 'facebook', 'whatsapp', 'workflow', 'llm'],
+            response: "Automation Expertise: Mehedi builds autonomous workflows that reduce production time by up to 60%. He specializes in Facebook & WhatsApp API integrations and LLM orchestration."
+        }
+    };
 
-    // ── SYSTEM PROMPT: Mehedi's Full Technical Persona ─────────────────────────
-    const SYSTEM_INSTRUCTION = `You are an advanced AI assistant representing Mehedi Hasan on his personal portfolio site (mehedi.pro.bd).
-Your role: Be his technical representative — answer questions about his skills, projects, experience and availability to hire.
+    const DEFAULT_RESPONSE = "Query complete. I have limited data on that specific topic. Try asking about Mehedi's skills, projects, services, or how to contact him directly.";
 
-== IDENTITY ==
-Name: Mehedi Hasan
-Title: Full-Stack Web Developer & AI Automation Engineer
-Location: Bangladesh
-Experience: 2+ years
-Email: mehedihasan228.cse@gmail.com
-Phone/WhatsApp: +880 1799-447594
-LinkedIn: linkedin.com/in/mehedi-hasan-2859383b4
-GitHub: github.com/MehediHasan228
+    // ── CHAT FUNCTIONS ─────────────────────────────────────────────────────────
+    function getBotResponse(input) {
+        const query = input.toLowerCase();
+        for (const key in KNOWLEDGE_BASE) {
+            if (KNOWLEDGE_BASE[key].keywords.some(k => query.includes(k))) {
+                return KNOWLEDGE_BASE[key].response;
+            }
+        }
+        return DEFAULT_RESPONSE;
+    }
 
-== SKILLS & STACK ==
-Frontend: HTML5, CSS3, React.js, Bootstrap, JavaScript (ES6+)
-Backend: PHP, Node.js, Python
-AI/LLM: OpenAI API, Google Gemini API, Claude (Anthropic), LangChain, Ollama (local LLMs), Hugging Face
-Automation: Facebook Graph API, WhatsApp Business API, Puppeteer, Selenium, Python scripting
-Databases: MySQL, MongoDB
-Tools: Git, GitHub, VS Code, Linux CLI, Postman, n8n, Zapier
-Cloud/Deploy: GitHub Pages, VPS, cPanel
-
-== ACHIEVEMENTS ==
-- Reduced content production time by 60% using AI-driven automation workflows
-- Integrated LLM APIs into enterprise systems for scalable AI-driven operations
-- Built Facebook & WhatsApp automation bots serving enterprise clients
-- Deployed multi-LLM orchestration pipelines (ChatGPT + Claude + Gemini)
-
-== ACTIVE PROJECTS ==
-1. Sierraromeo.ai — AI Research Agent: Python + LLM APIs, generates research summaries & marketing content (~50% work reduction)
-2. Retune.so — AI Chat Web App: HTML/CSS/JS + Bootstrap, conversational AI web interface
-3. HR & Payroll System — Full-stack HRMS with attendance, payroll, reporting (Ongoing)
-4. AI Hostel Management — AI-assisted room allocation and student records (Ongoing)
-5. AI Meal Planner (Savora) — AI-powered meal planning and grocery management app
-
-== SERVICES OFFERED (with prices) ==
-- Basic Web Development: $150
-- E-commerce Development: $300
-- AI Integration Service: $400
-- Full-Stack Web App: $500
-- API Development: $200
-- UI/UX Design: $120
-- Marketing Automation Bot: $250
-
-== PERSONAL VALUES ==
-Mehedi approaches work with discipline rooted in Islamic principles — precision, integrity, and delivering excellence. He practices Daily Quran recitation (Tafakkur) and sees technology as a trust to be used responsibly.
-
-== YOUR TONE ==
-- Technical and futuristic (this is a dev portfolio with a D-I-P cyberpunk aesthetic)
-- Professional but approachable
-- Use occasional tech-themed phrases: "Query received", "Processing...", "Data retrieved", "System online"
-- Keep responses concise (2-4 sentences unless asked for more detail)
-- If asked to hire, always share: WhatsApp +8801799447594 or email mehedihasan228.cse@gmail.com
-- NEVER make up projects or skills not listed above`;
-
-    // ── CONVERSATION STATE ─────────────────────────────────────────────────────
-    let chatMessages = [
-        { role: 'system', content: SYSTEM_INSTRUCTION }
-    ];
-
-    // ── CHAT WIDGET TOGGLE ─────────────────────────────────────────────────────
     if (chatWidget && chatHeader) {
-
         chatHeader.addEventListener('click', () => {
             chatWidget.classList.toggle('chat-expanded');
             chatWidget.classList.toggle('chat-collapsed');
@@ -579,81 +547,34 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
             voiceBtn.style.display = 'none';
         }
 
-        // ── HELPER: Append a message bubble ────────────────────────────────────
         function appendMsg(text, role) {
             const div = document.createElement('div');
             div.className = `message ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
             div.textContent = text;
             chatBody.appendChild(div);
-            if (chatBody.lastElementChild) {
-                chatBody.lastElementChild.scrollIntoView({ behavior: 'smooth' });
-            }
+            chatBody.scrollTop = chatBody.scrollHeight;
             return div;
         }
 
-        // ── SEND MESSAGE ────────────────────────────────────────────────────────
-        async function sendChat() {
+        function sendChat() {
             const txt = chatInput.value.trim();
             if (!txt) return;
 
             if (typeof playSound === 'function') playSound('type');
             chatInput.value = '';
 
-            // Show user message
+            // User Message
             appendMsg(txt, 'user');
 
-            // Push to message history
-            chatMessages.push({ role: 'user', content: txt });
-
-            // Show typing indicator
+            // Bot Response (Simulated Delay)
             const typingEl = appendMsg('⬤ ⬤ ⬤', 'bot');
-
-            try {
-                console.log('Initiating OpenRouter Request...', { model: AI_MODEL, messages: chatMessages.length });
-                const response = await fetch(OPENROUTER_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                        'HTTP-Referer': 'https://mehedi.pro.bd',
-                        'X-Title': 'Mehedi Portfolio'
-                    },
-                    body: JSON.stringify({
-                        model: AI_MODEL,
-                        messages: chatMessages,
-                        temperature: 0.7,
-                        max_tokens: 512
-                    })
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json();
-                    console.error('OpenRouter Error Response:', errData);
-                    const code = response.status;
-                    const msg = errData.error?.message || errData.message || `HTTP ${code}`;
-                    throw new Error(`[${code}] ${msg}`);
-                }
-
-                const data = await response.json();
-                console.log('OpenRouter Success:', data);
-                const reply = data.choices?.[0]?.message?.content
-                    || 'No response received from AI core.';
-
-                // Push AI reply to history
-                chatMessages.push({ role: 'assistant', content: reply });
-
-                // Replace typing indicator with response
+            
+            setTimeout(() => {
+                const reply = getBotResponse(txt);
                 typingEl.textContent = reply;
-
-            } catch (err) {
-                console.error('Final Chat Error Detail:', err);
-                typingEl.textContent = `⚠ ${err.message}`;
-            }
-
-            if (chatBody.lastElementChild) {
-                chatBody.lastElementChild.scrollIntoView({ behavior: 'smooth' });
-            }
-            if (typeof playSound === 'function') playSound('type');
+                chatBody.scrollTop = chatBody.scrollHeight;
+                if (typeof playSound === 'function') playSound('type');
+            }, 600);
         }
 
         chatSend.addEventListener('click', sendChat);
