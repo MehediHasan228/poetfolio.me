@@ -303,12 +303,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         setInterval(() => {
-            mouseSpeed = Math.max(mouseSpeed - 5, 2);
-            let cpuDisplay = Math.floor(mouseSpeed);
+            // More organic fluctuations
+            mouseSpeed = Math.max(mouseSpeed - 2, Math.random() * 5 + 2);
+            let cpuDisplay = Math.floor(mouseSpeed + (Math.sin(Date.now() / 1000) * 5));
+            cpuDisplay = Math.max(2, Math.min(100, cpuDisplay));
+            
             cpuVal.innerText = cpuDisplay + '%';
             cpuBar.style.width = cpuDisplay + '%';
-            cpuBar.style.backgroundColor = cpuDisplay > 80 ? '#ef4444' : 'var(--accent-1)';
-        }, 100);
+            
+            // Color shifting based on load
+            if (cpuDisplay > 85) cpuBar.style.backgroundColor = '#f43f5e';
+            else if (cpuDisplay > 60) cpuBar.style.backgroundColor = '#fbbf24';
+            else cpuBar.style.backgroundColor = 'var(--accent-1)';
+        }, 150);
 
         window.addEventListener('scroll', () => {
             let scrollY = window.scrollY || document.documentElement.scrollTop;
@@ -322,7 +329,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('click', () => {
             netVal.innerText = "TX/RX";
             netVal.className = "ping-active";
-            setTimeout(() => { netVal.innerText = "IDLE"; netVal.className = "ping-idle"; }, 200);
+            // Realistic packet simulation
+            setTimeout(() => { netVal.innerText = (Math.random() * 100).toFixed(1) + "ms"; }, 150);
+            setTimeout(() => { netVal.innerText = "IDLE"; netVal.className = "ping-idle"; }, 800);
         });
     }
 
@@ -855,10 +864,10 @@ document.addEventListener('DOMContentLoaded', () => {
        13. TYPEWRITER EFFECT
     ========================================== */
     const tArr = [
-        "Senior Video Content Developer & AI Solutions Engineer",
-        "AI Solutions.",
-        "Video Production.",
-        "Automation."
+        "Full-Stack Web Developer.",
+        "AI Automation Engineer.",
+        "Scalable Digital Systems.",
+        "Intelligent Workflows."
     ];
     let tIdx = 0, cIdx = 0;
     const typingSpan = document.querySelector(".typing-text");
