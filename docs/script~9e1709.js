@@ -311,12 +311,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // If we didn't drag, it's a click. Signal to other listeners.
             if (!isDragging) {
+                const path = e.composedPath ? e.composedPath() : (e.path || []);
                 // DON'T dispatch if we clicked on a button or interactive element that should handle itself
                 const isControlClick = path.some(el => el && el.tagName && (
                     el.tagName === 'BUTTON' || 
                     el.tagName === 'A' || 
-                    el.classList?.contains('radar-tab') ||
-                    el.classList?.contains('lb-expand-btn')
+                    (el.classList && el.classList.contains('radar-tab')) ||
+                    (el.classList && el.classList.contains('lb-expand-btn'))
                 ));
                 
                 if (!isControlClick) {
@@ -1757,42 +1758,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }, 100);
     }
 
-    // --- AI INSIGHTS: DYNAMIC CMS & ANIMATION LOGIC ---
-    async function loadInsighsTeaser() {
-        const grid = document.querySelector('.insights-grid');
-        if (!grid) return;
-
-        try {
-            const res = await fetch('./data/posts.json?v=' + Date.now());
-            const posts = await res.json();
-            const latestPosts = posts.slice(0, 3); // Take latest 3
-
-            grid.innerHTML = latestPosts.map((post, idx) => `
-                <a href="./ai-insights/index.html" class="insight-card glass-card hidden magnetic-element hover-sound fade-in" style="text-decoration: none; color: inherit; display: flex; animation-delay: ${idx * 0.1}s">
-                    <div class="card-header">
-                        <span class="neural-tag">${post.model}</span>
-                        ${post.isNew ? '<div class="pulse-container"><span class="ai-pulse"></span></div>' : ''}
-                    </div>
-                    <h4>${post.title}</h4>
-                    <p>${post.excerpt}</p>
-                    <div class="read-more">READ_FULL_TRANSCRIPT <i class="fa-solid fa-chevron-right"></i></div>
-                </a>
-            `).join('');
-
-            // Trigger animations if section is already in view (fallback)
-            const entries = await new Promise(resolve => {
-                const observer = new IntersectionObserver(entries => {
-                    resolve(entries);
-                    observer.disconnect();
-                });
-                observer.observe(document.getElementById('ai-insights'));
-            });
-            
-        } catch (err) {
-            console.error('Teaser CMS Error:', err);
-        }
-    }
-
+    // --- AI INSIGHTS: TYPEWRITER & TERMINAL LOGIC ---
     function typewriterEffect(element, text, speed = 40, callback = null) {
         if (!element) return;
         let i = 0;
@@ -1817,21 +1783,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         const insightsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Load dynamic content
-                    loadInsighsTeaser();
-
                     // Trigger Header Typewriter
                     typewriterEffect(aiSubtitle, "Exploring the frontier of Autonomous Agents and Neural Networks.", 50);
                     
-                    // Trigger Terminal Typewriter
+                    // Trigger Terminal Typewriter with a small delay
                     setTimeout(() => {
                         typewriterEffect(terminalText, "Analyzing 'AI Insights'... [SYSTEM]: This section decodes the complexities of neural architectures and the future of machine cognition. Status: ACTIVE.", 30);
                     }, 1500);
                     
+                    // Unobserve to run only once
                     insightsObserver.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.2 });
+        }, { threshold: 0.3 });
         
         insightsObserver.observe(insightsSection);
     }
