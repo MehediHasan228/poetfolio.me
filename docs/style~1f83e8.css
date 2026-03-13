@@ -354,10 +354,6 @@ p {
     line-height: 1.6;
 }
 
-.about-container p {
-    text-align: justify;
-}
-
 nav {
     display: flex;
     justify-content: space-between;
@@ -839,6 +835,12 @@ section {
 }
 
 .tilt-card {
+    margin: 0 auto;
+}
+
+.about-container {
+    text-align: center;
+    max-width: 900px;
     margin: 0 auto;
 }
 
