@@ -220,11 +220,21 @@ document.addEventListener('DOMContentLoaded', () => {
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
         let isDragging = false;
         let startY = 0;
+        let lastDragTime = 0;
 
         handles.forEach(handle => {
             handle.style.cursor = 'move';
             handle.addEventListener('mousedown', dragStart);
             handle.addEventListener('touchstart', dragStart, { passive: false });
+            
+            // Prevent standard click if we were dragging
+            handle.addEventListener('click', (e) => {
+                const now = Date.now();
+                if (isDragging || (now - lastDragTime < 150)) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                }
+            }, true);
         });
 
         function dragStart(e) {
@@ -252,8 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
         function dragMove(e) {
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
             
-            // Flag as dragging if moved more than 3px
-            if (Math.abs(clientY - startY) > 3) {
+            // Flag as dragging if moved more than 5px
+            if (Math.abs(clientY - startY) > 5) {
                 isDragging = true;
                 if (e.cancelable) e.preventDefault();
             }
@@ -285,7 +295,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.removeEventListener('touchmove', dragMove);
             document.removeEventListener('touchend', dragEnd);
             
-            element.style.transition = ''; // Restore transitions
+            element.style.transition = ''; 
+
+            if (isDragging) {
+                lastDragTime = Date.now();
+            }
 
             // If we didn't drag, it's a click. Signal to other listeners.
             if (!isDragging) {
