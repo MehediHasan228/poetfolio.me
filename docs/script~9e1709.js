@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const voiceBtn = document.getElementById('voice-btn');
 
     // ── CONFIG ─────────────────────────────────────────────────────────────────
-    const OPENROUTER_API_KEY = 'sk-or-v1-xxxxxxxxxx'; // ← Replace with your key
+    const OPENROUTER_API_KEY = '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';
     const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
     const AI_MODEL = "google/gemini-flash-1.5"; // You can change this to "meta-llama/llama-3-8b-instruct:free" etc.
 
