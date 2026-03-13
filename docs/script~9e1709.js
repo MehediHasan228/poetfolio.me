@@ -303,7 +303,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // If we didn't drag, it's a click. Signal to other listeners.
             if (!isDragging) {
-                element.dispatchEvent(new CustomEvent('lb-click'));
+                // DON'T dispatch if we clicked on a button or interactive element that should handle itself
+                const path = e.composedPath ? e.composedPath() : [];
+                const isControlClick = path.some(el => el.tagName === 'BUTTON' || el.tagName === 'A' || el.classList?.contains('radar-tab'));
+                
+                if (!isControlClick) {
+                    element.dispatchEvent(new CustomEvent('lb-click'));
+                }
             }
         }
     }
@@ -1486,25 +1492,41 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     const AI_DATA = {
         overall: [
-            { rank: 1, name: "GPT-4o (2024-05-13)", strength: "Versatility & Multimodal", elo: 1287, status: "stable" },
-            { rank: 2, name: "Claude 3.5 Sonnet", strength: "Nuance & Context", elo: 1271, status: "trending" },
-            { rank: 3, name: "Gemini 1.5 Pro", strength: "Long Context (2M tokens)", elo: 1265, status: "stable" },
-            { rank: 4, name: "GPT-4 Turbo", strength: "General Intelligence", elo: 1258, status: "stable" },
-            { rank: 5, name: "Llama 3.1 405B", strength: "Leading Open Weights", elo: 1252, status: "new" },
+            { rank: 1, name: "o1-high (2024-12-17)", strength: "Deep Reasoning & Logic", elo: 1352, status: "stable" },
+            { rank: 2, name: "GPT-4o (2024-11-20)", strength: "Multimodal King", elo: 1324, status: "trending" },
+            { rank: 3, name: "Claude 3.5 Sonnet", strength: "Nuance & Coding", elo: 1318, status: "stable" },
+            { rank: 4, name: "o1-mini", strength: "Fast Reasoning", elo: 1310, status: "stable" },
+            { rank: 5, name: "Gemini 1.5 Pro (002)", strength: "2M Token Context", elo: 1298, status: "stable" },
+            { rank: 6, name: "Llama 3.1 405B", strength: "Open Source Frontier", elo: 1285, status: "trending" },
+            { rank: 7, name: "Grok-2", strength: "Real-time X Data", elo: 1276, status: "new" },
+            { rank: 8, name: "Mistral Large 2", strength: "Efficient Powerhouse", elo: 1269, status: "stable" },
+            { rank: 9, name: "DeepSeek-V3", strength: "Reasoning & Value", elo: 1262, status: "new" },
+            { rank: 10, name: "Claude 3 Opus", strength: "Creative Writing", elo: 1255, status: "stable" },
+            { rank: 11, name: "Qwen2.5 72B", strength: "Knowledge & Coding", elo: 1248, status: "trending" }
         ],
         coding: [
-            { rank: 1, name: "Claude 3.5 Sonnet", strength: "Advanced Code Generation", elo: 1324, status: "trending" },
-            { rank: 2, name: "GPT-4o", strength: "Debugging & Architecture", elo: 1312, status: "stable" },
-            { rank: 3, name: "DeepSeek Coder V2", strength: "Specialized Coding", elo: 1285, status: "new" },
-            { rank: 4, name: "Gemini 1.5 Pro", strength: "Repository-wide Context", elo: 1278, status: "stable" },
-            { rank: 5, name: "Codestral 22B", strength: "Fast FIM & Completion", elo: 1245, status: "new" },
+            { rank: 1, name: "Claude 3.5 Sonnet", strength: "Advanced Code Generation", elo: 1345, status: "stable" },
+            { rank: 2, name: "GPT-4o", strength: "Versatile Debugging", elo: 1322, status: "trending" },
+            { rank: 3, name: "o1-high", strength: "Algorithmic Problems", elo: 1315, status: "stable" },
+            { rank: 4, name: "DeepSeek Coder V2", strength: "Coding Specialist", elo: 1308, status: "new" },
+            { rank: 5, name: "Gemini 1.5 Pro", strength: "Context-aware Coding", elo: 1292, status: "stable" },
+            { rank: 6, name: "Llama 3.1 405B", strength: "Logic & Structuring", elo: 1278, status: "trending" },
+            { rank: 7, name: "Codestral 22B", strength: "Fast FIM Patterns", elo: 1265, status: "stable" },
+            { rank: 8, name: "CodeLlama 70B", strength: "Legacy Support", elo: 1242, status: "stable" },
+            { rank: 9, name: "Phind-CodeLlama", strength: "Search Integration", elo: 1235, status: "stable" },
+            { rank: 10, name: "Stable Code 3B", strength: "Edge Intelligence", elo: 1210, status: "new" }
         ],
         reasoning: [
-            { rank: 1, name: "OpenAI o1-preview", strength: "Chain-of-Thought Logic", elo: 1354, status: "new" },
-            { rank: 2, name: "OpenAI o1-mini", strength: "Fast Logical Reasoning", elo: 1332, status: "new" },
-            { rank: 3, name: "GPT-4o", strength: "General Logic", elo: 1285, status: "stable" },
-            { rank: 4, name: "Claude 3.5 Sonnet", strength: "Analytical Thinking", elo: 1281, status: "stable" },
-            { rank: 5, name: "Llama 3.1 405B", strength: "Complex Instruction", elo: 1264, status: "trending" },
+            { rank: 1, name: "OpenAI o1-high", strength: "Chain-of-Thought Pro", elo: 1368, status: "stable" },
+            { rank: 2, name: "OpenAI o1-mini", strength: "Logical Performance", elo: 1342, status: "stable" },
+            { rank: 3, name: "GPT-4o", strength: "General Reasoning", elo: 1310, status: "trending" },
+            { rank: 4, name: "Claude 3.5 Sonnet", strength: "Analytical Context", elo: 1302, status: "stable" },
+            { rank: 5, name: "Gemini 1.5 Pro", strength: "Reasoning with Data", elo: 1288, status: "stable" },
+            { rank: 6, name: "Llama 3.1 405B", strength: "Complex Logic", elo: 1281, status: "trending" },
+            { rank: 7, name: "DeepSeek-V3", strength: "Logical Inference", elo: 1272, status: "new" },
+            { rank: 8, name: "Grok-2", strength: "Dynamic Reasoning", elo: 1265, status: "new" },
+            { rank: 9, name: "Mistral Large 2", strength: "Structured Logic", elo: 1258, status: "stable" },
+            { rank: 10, name: "Claude 3 Opus", strength: "Holistic Reasoning", elo: 1245, status: "stable" }
         ]
     };
 

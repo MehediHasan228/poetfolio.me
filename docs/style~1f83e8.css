@@ -2184,6 +2184,26 @@ footer {
     overflow-y: auto;
     overflow-x: auto;
     border-radius: 0.75rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--accent-rgb), 0.3) transparent;
+}
+
+.lb-content .radar-table-wrapper::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.lb-content .radar-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lb-content .radar-table-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(var(--accent-rgb), 0.3);
+    border-radius: 10px;
+}
+
+.lb-content .radar-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--accent-rgb), 0.5);
 }
 
 .lb-content #ai-leaderboard-table th {
@@ -2191,12 +2211,13 @@ footer {
     position: sticky;
     top: 0;
     background: rgba(2, 6, 23, 0.98);
+    backdrop-filter: blur(10px);
     z-index: 10;
     white-space: nowrap;
     font-size: 0.75rem;
     letter-spacing: 0.1rem;
     color: var(--accent-1);
-    border-bottom: 1px solid rgba(var(--accent-rgb), 0.2);
+    border-bottom: 2px solid rgba(var(--accent-rgb), 0.3);
 }
 
 .lb-content #ai-leaderboard-table td {
