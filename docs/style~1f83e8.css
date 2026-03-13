@@ -1,15 +1,13 @@
 /* --- THEME VARIABLES --- */
 :root[data-theme="dark"] {
-    --bg-color: #030712;
-    --card-bg: rgba(17, 24, 39, 0.7);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --text-primary: #f9fafb;
-    --text-secondary: #9ca3af;
-    --accent-1: #22d3ee;
-    --accent-2: #3b82f6;
+    --bg-color: #0b1120;
+    --card-bg: rgba(30, 41, 59, 0.6);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-1: #00f2fe;
+    --accent-2: #4facfe;
     --accent-3: #8b5cf6;
-    --particle-color: #22d3ee;
-    --glass-blur: blur(16px);
+    --particle-color: #00f2fe;
 }
 
 :root[data-theme="light"] {
@@ -50,8 +48,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', 'Inter', sans-serif;
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 body {
@@ -339,10 +337,8 @@ html {
 }
 
 h1 {
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    font-size: 4rem;
+    line-height: 1.2;
     position: relative;
     z-index: 1;
 }
@@ -356,6 +352,10 @@ h2 {
 p {
     color: var(--text-secondary);
     line-height: 1.6;
+}
+
+.about-container p {
+    text-align: justify;
 }
 
 nav {
@@ -402,44 +402,17 @@ nav {
 
 /* --- BUTTONS & HERO --- */
 .btn {
-    padding: 0.8rem 2.2rem;
-    border-radius: 12px;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+    transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     z-index: 1;
     position: relative;
     border: none;
     cursor: none;
-    overflow: hidden;
-}
-
-.btn::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-    transform: rotate(45deg);
-    transition: 0.6s;
-    pointer-events: none;
-}
-
-.btn:hover::after {
-    left: 100%;
 }
 
 .primary-btn {
@@ -940,35 +913,14 @@ section {
     margin-top: 0.5rem;
 }
 
+.progress-badge {
+    background: rgba(217, 119, 6, 0.2);
+    color: #fbbf24;
+}
+
 .finished-badge {
     background: rgba(22, 163, 74, 0.2);
     color: #4ade80;
-    border: 1px solid rgba(74, 222, 128, 0.2);
-}
-
-/* Pulsing Status for "Running" Projects */
-.progress-badge::before {
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: #fbbf24;
-    border-radius: 50%;
-    margin-right: 8px;
-    box-shadow: 0 0 10px #fbbf24;
-    animation: statusPulse 1.5s infinite;
-}
-
-@keyframes statusPulse {
-    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 5px #fbbf24; }
-    50% { transform: scale(1.2); opacity: 0.7; box-shadow: 0 0 15px #fbbf24; }
-    100% { transform: scale(1); opacity: 1; box-shadow: 0 0 5px #fbbf24; }
-}
-
-.project-card:hover {
-    transform: perspective(1000px) translateY(-10px) rotateX(2deg);
-    border-color: var(--accent-1);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(34, 211, 238, 0.1);
 }
 
 .tag {
@@ -2039,107 +1991,6 @@ footer {
         max-width: 100%;
     }
 
-    .about-section {
-    position: relative;
-    overflow: hidden;
-}
-
-.summary-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 3rem;
-    backdrop-filter: var(--glass-blur);
-    max-width: 1000px;
-    margin: 0 auto;
-    position: relative;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-}
-
-.summary-text {
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    margin-bottom: 2.5rem;
-    text-align: center;
-    line-height: 1.8;
-}
-
-.expertise-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-bottom: 3rem;
-}
-
-.expertise-item {
-    text-align: center;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    transition: all 0.3s ease;
-}
-
-.expertise-item:hover {
-    background: rgba(34, 211, 238, 0.05);
-    border-color: var(--accent-1);
-    transform: translateY(-5px);
-}
-
-.expertise-item i {
-    font-size: 2.5rem;
-    color: var(--accent-1);
-    margin-bottom: 1rem;
-}
-
-.expertise-item h4 {
-    font-family: 'Fira Code', monospace;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-}
-
-.expertise-item p {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.impact-metrics {
-    display: flex;
-    justify-content: center;
-    gap: 4rem;
-    border-top: 1px dashed var(--card-border);
-    padding-top: 2rem;
-}
-
-.metric {
-    text-align: center;
-}
-
-.metric-value {
-    display: block;
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--accent-1);
-    font-family: 'Fira Code', monospace;
-}
-
-.metric-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-secondary);
-}
-
-@media (max-width: 768px) {
-    .expertise-grid {
-        grid-template-columns: 1fr;
-    }
-    .impact-metrics {
-        flex-direction: column;
-        gap: 2rem;
-    }
-}
     /* UI Controls Mobile Placement */
     .ui-controls {
         bottom: 15px;
