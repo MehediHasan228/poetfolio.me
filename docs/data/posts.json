@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "\"System 2\" Reasoning in LLMs: Beyond Pattern Matching",
+    "excerpt": "Exploring how chain-of-thought processing and internal deliberation are transforming modern language models into true reasoning engines...",
+    "content": "Exploring how chain-of-thought processing and internal deliberation are transforming modern language models into true reasoning engines. System 2 reasoning refers to the slower, more analytical thinking process that AI can now simulate using advanced prompting and architecture...",
+    "model": "GPT-4o",
+    "category": "Research",
+    "date": "MAR 14, 2026",
+    "readTime": "5 MIN READ",
+    "image": "./ai-insights/img/reasoning.png",
+    "isNew": true
+  },
+  {
+    "id": 2,
+    "title": "Autonomous Agent Swarms: The Future of Production",
+    "excerpt": "Why single-prompt interactions are legacy. The era of multi-agent collaboration for complex engineering tasks has arrived...",
+    "content": "Why single-prompt interactions are legacy. The era of multi-agent collaboration for complex engineering tasks has arrived. Autonomous agents can now break down goals, plan steps, and execute tasks across different environments with minimal human intervention...",
+    "model": "Claude 3.5",
+    "category": "Automation",
+    "date": "MAR 12, 2026",
+    "readTime": "8 MIN READ",
+    "image": "./ai-insights/img/agents.png",
+    "isNew": false
+  },
+  {
+    "id": 3,
+    "title": "Local LLMs & Data Sovereignty: Private Intelligence",
+    "excerpt": "Running high-performance models on personal hardware using Ollama and local RAG pipelines for total data security...",
+    "content": "Running high-performance models on personal hardware using Ollama and local RAG pipelines for total data security. As privacy concerns grow, the ability to deploy powerful intelligence on your own workstation is becoming a critical skill for developers...",
+    "model": "Llama 3",
+    "category": "Data Security",
+    "date": "MAR 10, 2026",
+    "readTime": "6 MIN READ",
+    "image": "./ai-insights/img/local_llm.png",
+    "isNew": false
+  },
+  {
+    "id": 4,
+    "title": "Generative Video Revolution: The Impact of Sora",
+    "excerpt": "Analyzing the rapid evolution of cinematic AI video generation and its implications for the creative industry...",
+    "content": "Analyzing the rapid evolution of cinematic AI video generation and its implications for the creative industry. Models like Sora and Kling are pushing the boundaries of what is possible in visual synthesis, creating high-fidelity video from simple text prompts...",
+    "model": "Sora / Kling",
+    "category": "Creative AI",
+    "date": "MAR 08, 2026",
+    "readTime": "10 MIN READ",
+    "image": "./ai-insights/img/video.png",
+    "isNew": false
+  },
+  {
+    "id": 5,
+    "title": "Multi-Modal Fusion: Bridging Vision and Voice",
+    "excerpt": "The unified intelligence architecture that allows AI to see, hear, and speak simultaneously in complex environments...",
+    "content": "The unified intelligence architecture that allows AI to see, hear, and speak simultaneously in complex environments. This fusion of sensory inputs enables AI systems to understand context in a way that was previously only possible for humans...",
+    "model": "GPT-4o / Claude",
+    "category": "Architecture",
+    "date": "MAR 05, 2026",
+    "readTime": "7 MIN READ",
+    "image": "./ai-insights/img/fusion.png",
+    "isNew": false
+  }
+]

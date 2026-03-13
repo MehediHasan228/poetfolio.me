@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI_INSIGHTS | Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=7">
+    <style>
+        :root {
+            --bg-admin: #050508;
+            --card-admin: rgba(255, 255, 255, 0.05);
+            --accent-glow: rgba(0, 242, 254, 0.4);
+        }
+        body {
+            background: var(--bg-admin);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+        .admin-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .glass-card {
+            background: var(--card-admin);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        h1 { font-size: 1.5rem; letter-spacing: 2px; }
+        .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 8px 15px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+        
+        .login-view { text-align: center; padding: 60px 0; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        input[type="text"], input[type="password"], textarea, select {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus { border-color: var(--accent-1); }
+        
+        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .status-badge { font-size: 0.7rem; font-family: 'Fira Code', monospace; padding: 4px 10px; border-radius: 4px; background: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1px solid #4ade80; }
+        
+        .posts-list { list-style: none; padding: 0; }
+        .post-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .post-item:last-child { border-bottom: none; }
+        .post-info h3 { font-size: 1rem; margin-bottom: 5px; }
+        .post-info p { font-size: 0.75rem; color: #666; }
+        .post-actions { display: flex; gap: 10px; }
+        .icon-btn { background: transparent; border: none; color: #888; cursor: pointer; transition: color 0.3s; }
+        .icon-btn:hover { color: #fff; }
+        .icon-btn.delete:hover { color: #ef4444; }
+
+        .hidden { display: none !important; }
+        .loading-spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Uploader */
+        .drop-zone { border: 2px dashed rgba(255,255,255,0.1); border-radius: 10px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .drop-zone:hover { border-color: var(--accent-1); background: rgba(0, 242, 254, 0.05); }
+        .preview-img { max-width: 100%; max-height: 200px; margin-top: 15px; border-radius: 8px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        
+        <!-- HEADER -->
+        <div class="admin-header">
+            <h1 class="gradient-text">ADMIN_PANNEL_V1.0</h1>
+            <div id="user-info" class="hidden">
+                <span id="repo-name" style="margin-right: 20px; font-size: 0.8rem; color: #888;"></span>
+                <button class="btn-logout" onclick="logout()">LOGOUT</button>
+            </div>
+        </div>
+
+        <!-- LOGIN VIEW -->
+        <div id="login-view" class="glass-card login-view">
+            <h2>Authentication Required</h2>
+            <p style="color: #666; font-size: 0.85rem; margin-bottom: 30px;">Enter your GitHub Personal Access Token to access the CMS.</p>
+            <div class="input-group" style="max-width: 400px; margin: 0 auto 20px;">
+                <label>GitHub Access Token</label>
+                <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx">
+            </div>
+            <button class="btn primary-btn glow-effect" onclick="login()">AUTHORIZE_ACCESS</button>
+            <p id="login-error" style="color: #ef4444; font-size: 0.8rem; margin-top: 15px;" class="hidden"></p>
+        </div>
+
+        <!-- MAIN DASHBOARD -->
+        <div id="dashboard-view" class="hidden">
+            <div class="editor-header">
+                <h2>AI_INSIGHTS :: CONTENT_STORAGE</h2>
+                <button class="btn primary-btn glow-effect" onclick="openEditor()">+ CREATE_NEW_ARTICLE</button>
+            </div>
+            
+            <div class="glass-card">
+                <ul class="posts-list" id="posts-list">
+                    <!-- Dynamic Posts -->
+                    <li style="text-align: center; color: #666; padding: 20px;">Syncing data from GitHub...</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- EDITOR VIEW -->
+        <div id="editor-view" class="hidden">
+            <div class="editor-header">
+                <h2 id="editor-title">NEW_ARTICLE_ENTRY</h2>
+                <button class="icon-btn" onclick="closeEditor()" style="font-size: 1.5rem;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="glass-card">
+                <div class="input-group">
+                    <label>Article Title</label>
+                    <input type="text" id="post-title" placeholder="Decoding Neural Swarms...">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="post-category">
+                            <option value="Research">Research</option>
+                            <option value="Automation">Automation</option>
+                            <option value="Robotics">Robotics</option>
+                            <option value="Architecture">Architecture</option>
+                            <option value="Creative AI">Creative AI</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>AI Model</label>
+                        <input type="text" id="post-model" placeholder="GPT-4o / Claude 3.5">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Excerpt (Short Description)</label>
+                    <textarea id="post-excerpt" rows="2" placeholder="Brief summary of the article..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Content (Full Disclosure)</label>
+                    <textarea id="post-content" rows="6" placeholder="Write the full article content here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Article Header Image</label>
+                    <div class="drop-zone" onclick="document.getElementById('post-image').click()">
+                        <p id="drop-text">Click or Drop Image Here (Max 1MB)</p>
+                        <input type="file" id="post-image" class="hidden" accept="image/*" onchange="previewImage(this)">
+                        <img id="img-preview" class="preview-img">
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; display: flex; gap: 15px;">
+                    <button id="btn-save" class="btn primary-btn glow-effect" onclick="savePost()">DEPLOY_ARTICLE</button>
+                    <button class="btn secondary-btn" onclick="closeEditor()" style="border-color: rgba(255,255,255,0.1);">CANCEL</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JS LOGIC -->
+    <script>
+        let GITHUB_TOKEN = localStorage.getItem('gh_token') || '';
+        let REPO_PATH = 'MehediHasan228/poetfolio.me'; // Your repo
+        let POSTS_DATA = [];
+        let EDITING_ID = null;
+        let CURRENT_JSON_SHA = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (GITHUB_TOKEN) {
+                checkAuth();
+            }
+        });
+
+        async function login() {
+            const token = document.getElementById('github-token').value;
+            if (!token) return;
+            GITHUB_TOKEN = token;
+            checkAuth();
+        }
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO_PATH}`, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+                if (res.ok) {
+                    localStorage.setItem('gh_token', GITHUB_TOKEN);
+                    document.getElementById('login-view').classList.add('hidden');
+                    document.getElementById('user-info').classList.remove('hidden');
+                    document.getElementById('dashboard-view').classList.remove('hidden');
+                    document.getElementById('repo-name').textContent = REPO_PATH.split('/')[1];
+                    loadPosts();
+                } else {
+                    throw new Error('Invalid Token');
+                }
+            } catch (err) {
+                document.getElementById('login-error').classList.remove('hidden');
+                document.getElementById('login-error').textContent = 'AUTH_FAILURE: Check your PAT or Repo Permission.';
+                localStorage.removeItem('gh_token');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('gh_token');
+            window.location.reload();
+        }
+
+        async function loadPosts() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO_PATH}/contents/docs/data/posts.json`, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+                const data = await res.json();
+                CURRENT_JSON_SHA = data.sha;
+                POSTS_DATA = JSON.parse(atob(data.content));
+                renderPosts();
+            } catch (err) {
+                console.error('Fetch Error:', err);
+                alert('SYNC_ERROR: Failed to retrieve posts.json');
+            }
+        }
+
+        function renderPosts() {
+            const list = document.getElementById('posts-list');
+            if (POSTS_DATA.length === 0) {
+                list.innerHTML = '<li style="text-align: center; color: #666; padding: 20px;">No articles found. Ready for deployment.</li>';
+                return;
+            }
+            list.innerHTML = POSTS_DATA.map(post => `
+                <li class="post-item">
+                    <div class="post-info">
+                        <h3>${post.title}</h3>
+                        <p>${post.category} • ${post.model} • ${post.date}</p>
+                    </div>
+                    <div class="post-actions">
+                        <button class="icon-btn" onclick="openEditor(${post.id})"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="icon-btn delete" onclick="deletePost(${post.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function openEditor(id = null) {
+            EDITING_ID = id;
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('editor-view').classList.remove('hidden');
+            
+            if (id) {
+                const post = POSTS_DATA.find(p => p.id === id);
+                document.getElementById('editor-title').textContent = 'MODIFY_EXISTING_ENTRY';
+                document.getElementById('post-title').value = post.title;
+                document.getElementById('post-category').value = post.category;
+                document.getElementById('post-model').value = post.model;
+                document.getElementById('post-excerpt').value = post.excerpt;
+                document.getElementById('post-content').value = post.content;
+                document.getElementById('btn-save').textContent = 'UPDATE_CHANGES';
+            } else {
+                document.getElementById('editor-title').textContent = 'NEW_ARTICLE_ENTRY';
+                resetForm();
+            }
+        }
+
+        function closeEditor() {
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            document.getElementById('editor-view').classList.add('hidden');
+        }
+
+        function resetForm() {
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-model').value = '';
+            document.getElementById('post-excerpt').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('img-preview').style.display = 'none';
+            document.getElementById('drop-text').style.display = 'block';
+            document.getElementById('btn-save').textContent = 'DEPLOY_ARTICLE';
+        }
+
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('img-preview').src = e.target.result;
+                    document.getElementById('img-preview').style.display = 'block';
+                    document.getElementById('drop-text').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function savePost() {
+            const btn = document.getElementById('btn-save');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch loading-spinner"></i> PROCESSING...';
+            btn.disabled = true;
+
+            const post = {
+                id: EDITING_ID || Date.now(),
+                title: document.getElementById('post-title').value,
+                category: document.getElementById('post-category').value,
+                model: document.getElementById('post-model').value,
+                excerpt: document.getElementById('post-excerpt').value,
+                content: document.getElementById('post-content').value,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase(),
+                readTime: Math.ceil(document.getElementById('post-content').value.split(' ').length / 200) + ' MIN READ',
+                isNew: true
+            };
+
+            // Image Upload Handling
+            const imgInput = document.getElementById('post-image');
+            if (imgInput.files.length > 0) {
+                const file = imgInput.files[0];
+                const base64 = await toBase64(file);
+                const pureBase64 = base64.split(',')[1];
+                const fileName = `post_${post.id}_${file.name.replace(/\s/g, '_')}`;
+                
+                await pushToGithub(`docs/data/img/${fileName}`, pureBase64, `Upload image for post ${post.id}`);
+                post.image = `./data/img/${fileName}`;
+            } else if (EDITING_ID) {
+                post.image = POSTS_DATA.find(p => p.id === EDITING_ID).image;
+            }
+
+            // Update JSON Array
+            if (EDITING_ID) {
+                const index = POSTS_DATA.findIndex(p => p.id === EDITING_ID);
+                POSTS_DATA[index] = post;
+            } else {
+                POSTS_DATA.unshift(post);
+            }
+
+            // Push updated JSON
+            const jsonContent = btoa(JSON.stringify(POSTS_DATA, null, 2));
+            await pushToGithub('docs/data/posts.json', jsonContent, `Update posts.json for post: ${post.title}`, CURRENT_JSON_SHA);
+
+            alert('DEPLOYMENT_SUCCESS: Your article is live.');
+            window.location.reload();
+        }
+
+        async function deletePost(id) {
+            if (!confirm('CONFIRM_DELETE: This article will be removed from system storage.')) return;
+            
+            POSTS_DATA = POSTS_DATA.filter(p => p.id !== id);
+            const jsonContent = btoa(JSON.stringify(POSTS_DATA, null, 2));
+            await pushToGithub('docs/data/posts.json', jsonContent, `Delete post ID: ${id}`, CURRENT_JSON_SHA);
+            
+            alert('REMOVAL_SUCCESS: Article deleted.');
+            window.location.reload();
+        }
+
+        async function pushToGithub(path, content, message, sha = null) {
+            const body = { message, content };
+            if (sha) body.sha = sha;
+
+            const res = await fetch(`https://api.github.com/repos/${REPO_PATH}/contents/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            return await res.json();
+        }
+
+        function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+    </script>
+
+</body>
+</html>
