@@ -1757,5 +1757,47 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }, 100);
     }
 
+    // --- AI INSIGHTS: TYPEWRITER & TERMINAL LOGIC ---
+    function typewriterEffect(element, text, speed = 40, callback = null) {
+        if (!element) return;
+        let i = 0;
+        element.textContent = '';
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            } else if (callback) {
+                callback();
+            }
+        }
+        type();
+    }
+
+    const insightsSection = document.getElementById('ai-insights');
+    const aiSubtitle = document.getElementById('ai-subtitle');
+    const terminalText = document.getElementById('terminal-text');
+    
+    if (insightsSection && aiSubtitle && terminalText) {
+        const insightsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Trigger Header Typewriter
+                    typewriterEffect(aiSubtitle, "Exploring the frontier of Autonomous Agents and Neural Networks.", 50);
+                    
+                    // Trigger Terminal Typewriter with a small delay
+                    setTimeout(() => {
+                        typewriterEffect(terminalText, "Analyzing 'AI Insights'... [SYSTEM]: This section decodes the complexities of neural architectures and the future of machine cognition. Status: ACTIVE.", 30);
+                    }, 1500);
+                    
+                    // Unobserve to run only once
+                    insightsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        insightsObserver.observe(insightsSection);
+    }
+
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });
