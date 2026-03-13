@@ -514,13 +514,14 @@ document.addEventListener('DOMContentLoaded', () => {
         chatHeader.addEventListener('click', () => {
             chatWidget.classList.toggle('chat-expanded');
             chatWidget.classList.toggle('chat-collapsed');
-            const icon = document.getElementById('chat-toggle-icon');
+            const icon = document.getElementById('chat-toggle-icon') || document.querySelector('.chat-toggle-icon');
             if (icon) {
+                icon.classList.toggle('fa-comment-dots');
                 icon.classList.toggle('fa-chevron-down');
-                icon.classList.toggle('fa-chevron-up');
             }
             if (typeof playSound === 'function') playSound('click');
         });
+    }
 
         // ── VOICE INPUT ────────────────────────────────────────────────────────
         if (voiceBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
@@ -1503,9 +1504,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     // 2. Handle page refreshes or direct links
     const path = window.location.pathname.substring(1);
     if (path && document.getElementById(path)) {
-        // Scroll to the section if it exists on the page
         setTimeout(() => {
-            document.getElementById(path).scrollIntoView({ behavior: 'smooth' });
+            const target = document.getElementById(path);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
         }, 100);
     }
+
+    console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });
