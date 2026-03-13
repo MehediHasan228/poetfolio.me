@@ -1488,18 +1488,31 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         renderLeaderboard(currentCategory);
     }, 60000);
 
-    // Observer for reveal
-    const radarSection = document.getElementById('ai-radar');
-    if (radarSection) {
-        const radarObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('show');
+    // --- LEADERBOARD WIDGET TOGGLE LOGIC ---
+    const lbWidget = document.getElementById('leaderboard-widget');
+    const lbToggleBtn = document.querySelector('.lb-toggle');
+    const lbToggleIcon = document.getElementById('lb-toggle-icon');
+
+    if (lbWidget && lbToggleBtn) {
+        lbToggleBtn.addEventListener('click', () => {
+            lbWidget.classList.toggle('lb-expanded');
+            lbWidget.classList.toggle('lb-collapsed');
+
+            // Optionally change the icon state when expanded
+            if (lbToggleIcon) {
+                if (lbWidget.classList.contains('lb-expanded')) {
+                    lbToggleIcon.classList.remove('fa-trophy');
+                    lbToggleIcon.classList.add('fa-chevron-right');
+                } else {
+                    lbToggleIcon.classList.remove('fa-chevron-right');
+                    lbToggleIcon.classList.add('fa-trophy');
                 }
-            });
-        }, { threshold: 0.1 });
-        radarObserver.observe(radarSection);
+            }
+
+            if (typeof playSound === 'function') playSound('click');
+        });
     }
+
     // 2. Handle page refreshes or direct links
     const path = window.location.pathname.substring(1);
     if (path && document.getElementById(path)) {

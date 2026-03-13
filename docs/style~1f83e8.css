@@ -2018,9 +2018,123 @@ footer {
     position: relative;
 }
 
-/* --- AI POWER RADAR --- */
-.ai-radar-section {
-    padding: 6rem 5% 4rem;
+/* --- AI SYSTEM LEADERBOARD WIDGET --- */
+#leaderboard-widget {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lb-collapsed {
+    transform: translateY(-50%) translateX(calc(100% - 60px));
+}
+
+.lb-expanded {
+    transform: translateY(-50%) translateX(0);
+}
+
+.lb-toggle {
+    width: 60px;
+    height: 80px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--accent-1);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+#lb-toggle-icon {
+    color: var(--accent-2);
+    font-size: 1.5rem;
+    transition: transform 0.3s;
+}
+
+.lb-tooltip {
+    position: absolute;
+    left: -140px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    border: 1px solid var(--accent-1);
+}
+
+.lb-toggle:hover .lb-tooltip {
+    opacity: 1;
+}
+
+.lb-content .radar-container {
+    width: 500px;
+    max-width: 90vw;
+    height: 70vh;
+    max-height: 800px;
+    background: rgba(2, 6, 23, 0.85);
+    border: 1px solid rgba(30, 41, 59, 0.8);
+    border-right: none;
+    border-radius: 1.5rem 0 0 1.5rem;
+    padding: 1.5rem;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow-y: auto;
+    backdrop-filter: blur(25px) saturate(180%);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Adjustments for the smaller widget context */
+.lb-content .radar-header {
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.lb-content .radar-title-group h3 {
+    font-size: 1.1rem;
+}
+
+.lb-content .radar-filters {
+    padding: 0.2rem;
+}
+
+.lb-content .radar-tab {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.6rem;
+}
+
+.lb-content .radar-table-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    border-radius: 0.75rem;
+}
+
+.lb-content #ai-leaderboard-table th {
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    background: rgba(2, 6, 23, 0.95);
+    z-index: 10;
+}
+
+.lb-content #ai-leaderboard-table td {
+    padding: 1rem;
 }
 
 .radar-container {

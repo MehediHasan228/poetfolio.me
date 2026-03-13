@@ -413,64 +413,7 @@
         </div>
     </section>
 
-    <section id="ai-radar" class="ai-radar-section">
-        <div class="section-title hidden">
-            <h2 class="decrypt-text glitch-hover" data-value="AI Power Radar">AI <span class="gradient-text">Power Radar</span></h2>
-            <p>Intelligence Benchmarking & Leaderboard (LMSYS / Arena.ai)</p>
-        </div>
-
-        <div class="radar-container hidden tilt-card">
-            <div class="radar-header">
-                <div class="radar-title-group">
-                    <h3><i class="fa-solid fa-microchip"></i> System Leaderboard</h3>
-                    <div class="radar-filters">
-                        <button class="radar-tab active" data-category="overall">OVERALL</button>
-                        <button class="radar-tab" data-category="coding">CODING</button>
-                        <button class="radar-tab" data-category="reasoning">REASONING</button>
-                    </div>
-                </div>
-                <div class="sync-indicator">
-                    <div class="live-badge">
-                        <span class="ping-dot"></span>
-                        <span class="badge-text">LIVE TELEMETRY</span>
-                    </div>
-                    <div class="sync-time">
-                        <span class="sync-label">LAST REFRESH</span>
-                        <span id="radar-sync-val" class="sync-val">--:--:--</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="radar-table-wrapper">
-                <table id="ai-leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>RANK</th>
-                            <th>MODEL ENGINE</th>
-                            <th>PRIMARY STRENGTH</th>
-                            <th>ELO SCORE</th>
-                            <th>STATUS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body">
-                        <!-- Dynamic Content Inject -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="radar-footer">
-                <div class="source-info">
-                    <span>SOURCE: ARENA.AI / LMSYS</span>
-                    <span class="separator">|</span>
-                    <span>INTERVAL: 60S SYNC</span>
-                </div>
-                <div class="status-indicator">
-                    <span class="status-dot"></span>
-                    <span>HARDWARE_ACCELERATED</span>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- AI System Leaderboard relocated to floating widget -->
 
     <section id="archives" class="archives-section">
         <div class="section-title hidden">
@@ -713,6 +656,58 @@
                 title="Initiate Self Destruct"></button>
         </div>
     </footer>
+    <!-- ==========================================
+         FLOATING AI LEADERBOARD WIDGET
+    ========================================== -->
+    <div id="leaderboard-widget" class="lb-collapsed">
+        <div class="lb-toggle magnetic-element hover-sound">
+            <i class="fa-solid fa-trophy" id="lb-toggle-icon"></i>
+            <span class="lb-tooltip">System Leaderboard</span>
+        </div>
+
+        <div class="radar-container lb-content">
+            <div class="radar-header">
+                <div class="radar-title-group">
+                    <h3><i class="fa-solid fa-microchip"></i> Leaderboard</h3>
+                    <div class="radar-filters">
+                        <button class="radar-tab active" data-category="overall">OVERALL</button>
+                        <button class="radar-tab" data-category="coding">CODING</button>
+                        <button class="radar-tab" data-category="reasoning">REASONING</button>
+                    </div>
+                </div>
+                <div class="sync-indicator">
+                    <div class="live-badge">
+                        <span class="ping-dot"></span>
+                        <span class="badge-text" style="font-size: 0.55rem;">LIVE</span>
+                    </div>
+                    <div class="sync-time">
+                        <span class="sync-label">LAST REFRESH</span>
+                        <span id="radar-sync-val" class="sync-val">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="radar-table-wrapper">
+                <table id="ai-leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>RANK</th>
+                            <th>MODEL ENGINE</th>
+                            <th>SCORE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <!-- Dynamic Content Inject -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="radar-footer" style="margin-top: 1rem;">
+                <div class="source-info"><span>ARENA.AI / LMSYS</span></div>
+                <div class="status-indicator"><span class="status-dot"></span><span>SYNC</span></div>
+            </div>
+        </div>
+    </div>
+
     <!-- AI CHAT WIDGET (Restored) -->
     <div id="ai-chat-widget" class="chat-collapsed magnetic-element hover-sound">
         <div class="chat-header" id="chat-header">
