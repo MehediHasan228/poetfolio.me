@@ -2122,6 +2122,7 @@ footer {
 .lb-content .radar-table-wrapper {
     flex-grow: 1;
     overflow-y: auto;
+    overflow-x: auto;
     border-radius: 0.75rem;
 }
 
@@ -2135,6 +2136,54 @@ footer {
 
 .lb-content #ai-leaderboard-table td {
     padding: 1rem;
+}
+
+/* --- LEADERBOARD WIDGET MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+    .lb-toggle {
+        width: 45px;
+        height: 60px;
+    }
+    
+    #leaderboard-widget.lb-collapsed {
+        transform: translateY(-50%) translateX(calc(100% - 45px));
+    }
+    
+    #lb-toggle-icon {
+        font-size: 1.1rem;
+    }
+    
+    .lb-tooltip {
+        display: none; /* Hide hover tooltip on touch devices */
+    }
+    
+    .lb-content .radar-container {
+        width: calc(100vw - 45px); /* Take up remaining horizontal space minus toggle */
+        height: 60vh;
+        padding: 1rem;
+        border-radius: 1rem 0 0 1rem;
+    }
+    
+    .lb-content .radar-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    
+    .lb-content .radar-title-group h3 {
+        font-size: 1rem;
+    }
+    
+    .lb-content .radar-tab {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.55rem;
+    }
+    
+    .lb-content #ai-leaderboard-table th,
+    .lb-content #ai-leaderboard-table td {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
 }
 
 .radar-container {
