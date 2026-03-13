@@ -760,9 +760,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     const secondaryResponse = await fetch(`https://text.pollinations.ai/${encodedPrompt}`);
 
                     if (secondaryResponse.ok) {
-                        const reply = await secondaryResponse.text();
-                        typingEl.textContent = reply;
-                        return; // Exit if secondary succeeds
+                        let reply = await secondaryResponse.text();
+                        // Strip any Pollinations deprecation notice injected at the top
+                        const noticeMarker = 'Note: Anonymous requests to text.pollinations.ai are NOT affected and will continue to work normally.';
+                        if (reply.includes(noticeMarker)) {
+                            reply = reply.substring(reply.indexOf(noticeMarker) + noticeMarker.length).trim();
+                        }
+                        if (reply) {
+                            typingEl.textContent = reply;
+                            return; // Exit if secondary succeeds
+                        }
+                        throw new Error("Reply was empty after stripping notice");
                     }
                     throw new Error("Secondary API Failed");
 
