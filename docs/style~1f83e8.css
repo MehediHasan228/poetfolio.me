@@ -2022,7 +2022,8 @@ footer {
 #leaderboard-widget {
     position: fixed;
     right: 0;
-    top: 30%;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -2030,11 +2031,11 @@ footer {
 }
 
 #leaderboard-widget.lb-collapsed {
-    transform: translateX(calc(100% - 60px));
+    transform: translateY(-50%) translateX(calc(100% - 60px));
 }
 
 #leaderboard-widget.lb-expanded {
-    transform: translateX(0);
+    transform: translateY(-50%) translateX(0);
 }
 
 .lb-toggle {

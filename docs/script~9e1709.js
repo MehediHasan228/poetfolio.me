@@ -229,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function dragStart(e) {
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             
             startY = clientY;
             isDragging = false;
@@ -239,6 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('mouseup', dragEnd);
             document.addEventListener('touchmove', dragMove, { passive: false });
             document.addEventListener('touchend', dragEnd);
+
+            // IMPORTANT: If the element is centered via CSS transform, 
+            // we must capture its actual top and clear the transform to avoid jumping.
+            const rect = element.getBoundingClientRect();
+            element.style.top = rect.top + 'px';
+            element.style.transform = 'none'; 
 
             // Optimization: Remove transitions during drag for smoothness
             element.style.transition = 'none';
@@ -269,9 +274,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             element.style.top = newTop + "px";
             element.style.bottom = 'auto';
-            element.style.left = 'auto'; // Force pin to the side defined in CSS (usually right: 0)
+            element.style.left = 'auto';
             element.style.right = '0';
-            element.style.transform = 'none'; 
+            // No transform: none needed here as it's cleared in dragStart
         }
 
         function dragEnd(e) {
