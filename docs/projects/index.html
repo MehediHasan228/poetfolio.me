@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore the portfolio projects and autonomous ventures of Mehedi Hasan. Detailed case studies on AI integration and full-stack engineering.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Mehedi Hasan">
+    <meta name="description" content="Explore the projects and autonomous ventures of Mehedi Hasan. Detailed case studies on AI integration and full-stack engineering.">
+    <link rel="canonical" href="https://mehedi.pro.bd/projects/">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -24,12 +27,35 @@
     <link rel="icon" type="image/png" sizes="96x96" href="../mehedi-logo.png">
     <link rel="icon" href="../mehedi-logo.png">
     <link rel="manifest" href="../favicon/site.webmanifest">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Performance: preconnect to external origins early -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <link rel="stylesheet" href="../style~1f83e8.css">
+    <!-- Non-blocking Google Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Non-blocking FontAwesome -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+    <link rel="stylesheet" href="../style~1f83e8.css?v=4">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Deployed Ventures",
+        "url": "https://mehedi.pro.bd/projects/",
+        "description": "Explore the technical portfolio of Mehedi Hasan - AI Automation & Full-Stack Engineer.",
+        "author": {
+            "@type": "Person",
+            "name": "Mehedi Hasan"
+        }
+    }
+    </script>
 </head>
 
 <body>
@@ -66,7 +92,7 @@
     </div>
 
     <div class="ui-controls">
-        <a href="https://wa.me/8801799447594" target="_blank" class="control-btn whatsapp-btn magnetic-element"
+        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn magnetic-element"
             aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
         <button id="sound-toggler" class="control-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
                 class="fa-solid fa-volume-high"></i></button>
@@ -74,27 +100,14 @@
                 class="fa-solid fa-palette"></i></button>
     </div>
 
-    <div id="ai-chat-widget" class="chat-collapsed">
-        <div class="chat-header" id="chat-header">
-            <span><i class="fa-solid fa-robot"></i> Ask My AI</span>
-            <i class="fa-solid fa-chevron-up" id="chat-toggle-icon"></i>
-        </div>
-        <div class="chat-body" id="chat-body">
-            <div class="message bot-msg">System initialized. Ask me about Mehedi's tech stack, e-commerce experience, or
-                deployed projects.</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Type a query...">
-            <button id="voice-btn" class="magnetic-element hover-sound"
-                style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:none;"
-                title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
-            <button id="chat-send" class="magnetic-element hover-sound"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
-    </div>
 
-    <nav>
+
+    <nav aria-label="Main navigation">
         <a href="../index.html" class="logo-link glitch-hover">
-            <img src="../mehedi-logo.png" alt="Mehedi Hasan - AI Automation Expert Logo" class="site-logo">
+            <picture>
+                <source srcset="../mehedi-logo.webp" type="image/webp">
+                <img src="../mehedi-logo.png" alt="Mehedi Hasan - AI Automation Expert Logo" class="site-logo" loading="eager">
+            </picture>
         </a>
         <ul class="nav-links">
             <li><a href="../index.html#about" class="magnetic-element hover-sound">Architecture</a></li>
@@ -108,7 +121,7 @@
     </nav>
 
     <header class="hero" id="home">
-        <canvas id="particle-canvas" width="762" height="484"></canvas>
+        <canvas id="particle-canvas" width="762" height="484" aria-hidden="true"></canvas>
         <div class="hero-content hidden show">
             <div class="hero-layout">
 
@@ -150,7 +163,10 @@
 
                 <div class="hero-image-side">
                     <div class="hero-image-wrapper magnetic-element">
-                        <img src="../uploads/hero_profile_1771668518.png" alt="Mehedi Profile">
+                        <picture>
+                            <source srcset="../uploads/hero_profile_1771668518.webp" type="image/webp">
+                            <img src="../uploads/hero_profile_1771668518.png" alt="Mehedi Hasan - Full-Stack Developer Profile" loading="eager" fetchpriority="high" decoding="async">
+                        </picture>
                     </div>
                 </div>
 
@@ -314,7 +330,7 @@
                             <span class="tag">XAI</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
-                            <a href="https://credencex.ai/" target="_blank" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
+                            <a href="https://credencex.ai/" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-rocket"></i> Launch Lab
                             </a>
                         </div>
@@ -337,7 +353,7 @@
                             <span class="tag">AI Automation</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
-                            <a href="https://sierraromeo.ai/" target="_blank" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
+                            <a href="https://sierraromeo.ai/" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-rocket"></i> Launch Project
                             </a>
                         </div>
@@ -360,7 +376,7 @@
                             <span class="tag">AI Interface</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
-                            <a href="https://retune.so" target="_blank" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
+                            <a href="https://retune.so" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-rocket"></i> Launch Project
                             </a>
                         </div>
@@ -406,7 +422,7 @@
                             <span class="tag">Management</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
-                            <a href="https://mehedihasan228.github.io/Savora-AI-Powered-Meal-Planning-GroceryManagement/" target="_blank" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
+                            <a href="https://mehedihasan228.github.io/Savora-AI-Powered-Meal-Planning-GroceryManagement/" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-rocket"></i> Launch Project
                             </a>
                         </div>
@@ -596,7 +612,7 @@
         </div>
 
         <div class="social-links" style="margin-top: 4rem;">
-            <a href="https://github.com/MehediHasan228" target="_blank" class="magnetic-element hover-sound" aria-label="GitHub Repository Terminal"><i
+            <a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="magnetic-element hover-sound" aria-label="GitHub Repository Terminal"><i
                     class="fa-brands fa-github"></i></a>
             <a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank"
                 class="magnetic-element hover-sound" aria-label="LinkedIn Professional Node"><i class="fa-brands fa-linkedin"></i></a>
@@ -676,7 +692,7 @@
         </div>
     </div>
 
-    <script src="../script~9e1709.js"></script>
+    <script src="../script~9e1709.js?v=2" defer></script>
 
 </body>
 
