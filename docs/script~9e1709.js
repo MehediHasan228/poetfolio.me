@@ -303,19 +303,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         setInterval(() => {
-            // More organic fluctuations
-            mouseSpeed = Math.max(mouseSpeed - 2, Math.random() * 5 + 2);
-            let cpuDisplay = Math.floor(mouseSpeed + (Math.sin(Date.now() / 1000) * 5));
-            cpuDisplay = Math.max(2, Math.min(100, cpuDisplay));
-            
+            mouseSpeed = Math.max(mouseSpeed - 5, 2);
+            let cpuDisplay = Math.floor(mouseSpeed);
             cpuVal.innerText = cpuDisplay + '%';
             cpuBar.style.width = cpuDisplay + '%';
-            
-            // Color shifting based on load
-            if (cpuDisplay > 85) cpuBar.style.backgroundColor = '#f43f5e';
-            else if (cpuDisplay > 60) cpuBar.style.backgroundColor = '#fbbf24';
-            else cpuBar.style.backgroundColor = 'var(--accent-1)';
-        }, 150);
+            cpuBar.style.backgroundColor = cpuDisplay > 80 ? '#ef4444' : 'var(--accent-1)';
+        }, 100);
 
         window.addEventListener('scroll', () => {
             let scrollY = window.scrollY || document.documentElement.scrollTop;
@@ -329,9 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('click', () => {
             netVal.innerText = "TX/RX";
             netVal.className = "ping-active";
-            // Realistic packet simulation
-            setTimeout(() => { netVal.innerText = (Math.random() * 100).toFixed(1) + "ms"; }, 150);
-            setTimeout(() => { netVal.innerText = "IDLE"; netVal.className = "ping-idle"; }, 800);
+            setTimeout(() => { netVal.innerText = "IDLE"; netVal.className = "ping-idle"; }, 200);
         });
     }
 
@@ -389,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cliCommands = {
             'help': 'Available commands: help, about, skills, projects, clear, exit, vault, solarsmash, hw-scan, deep-dive',
-            'about': 'High-impact Senior Video Content Developer & AI Solutions Engineer specialized in AI-powered video production, automation engineering, and scalable digital systems.',
+            'about': 'Results-driven Full-Stack Web Developer and AI Automation Engineer with over 2+ years of experience architecting modern web applications and intelligent systems. Specialist in LLM integration, scalable automation pipelines, and AI-driven content workflows.',
             'skills': 'Languages: PHP, JavaScript, SQL, Liquid.\nFrameworks: Tailwind, Laravel.\nTools: Git, VS Code, Cloudflare, openclaw, Antigravity, claude.',
             'projects': 'Accessing secure database... Use the GUI interface on the main portal to view VIP projects.',
             'sudo': 'Nice try. This incident will be reported.',
@@ -864,10 +855,10 @@ document.addEventListener('DOMContentLoaded', () => {
        13. TYPEWRITER EFFECT
     ========================================== */
     const tArr = [
-        "Full-Stack Web Developer.",
-        "AI Automation Engineer.",
-        "Scalable Digital Systems.",
-        "Intelligent Workflows."
+        "Full-Stack Web Developer",
+        "AI Automation Engineer",
+        "LLM Integration Specialist",
+        "Digital Efficiency Architect"
     ];
     let tIdx = 0, cIdx = 0;
     const typingSpan = document.querySelector(".typing-text");
@@ -1046,7 +1037,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     message: "Connection Secure",
                     data: {
                         engineer: "Mehedi",
-                        role: "Systems Architect",
+                        role: "Full-Stack & AI Engineer",
                         architecture: "Scalable",
                         uptime: "99.99%",
                         latency: "24ms",
