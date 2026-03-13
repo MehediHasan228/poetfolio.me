@@ -1414,44 +1414,44 @@ section {
     font-weight: 600;
 }
 
-/* Suggestion Chips */
-.chat-suggestion-chips {
+/* Smart Question Buttons (Inside Messages) */
+.smart-btn-container {
     display: flex;
-    overflow-x: auto;
-    padding: 10px 12px 6px;
+    flex-wrap: wrap;
     gap: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: #0f172a; /* Solid dark background for clarity */
-    scrollbar-width: none; 
-}
-.chat-suggestion-chips::-webkit-scrollbar { display: none; }
-
-.chat-suggestion-chips::before {
-    content: "HELP:";
-    font-size: 0.65rem;
-    color: #00f2fe; /* Cyan accent */
-    font-weight: bold;
-    align-self: center;
-    margin-right: 6px;
-    white-space: nowrap;
+    margin-top: 12px;
 }
 
-.chip {
-    white-space: nowrap;
-    background: rgba(0, 242, 254, 0.1);
-    border: 1px solid #00f2fe;
+.smart-btn {
+    background: rgba(var(--accent-1-rgb), 0.1);
+    border: 1px solid rgba(var(--accent-1-rgb), 0.3);
     color: #fff !important;
-    padding: 4px 12px;
-    border-radius: 20px;
+    padding: 6px 14px;
+    border-radius: 8px;
     font-size: 0.75rem;
     cursor: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
 }
 
-.chip:hover {
-    background: #00f2fe;
+.smart-btn i {
+    font-size: 0.7rem;
+    color: var(--accent-1);
+}
+
+.smart-btn:hover {
+    background: var(--accent-1);
     color: #000 !important;
-    box-shadow: 0 0 15px #00f2fe;
+    border-color: var(--accent-1);
+    box-shadow: 0 0 12px var(--accent-1);
+    transform: translateY(-2px);
+}
+
+.smart-btn:hover i {
+    color: #000;
 }
 .chat-input-area {
     display: flex;
@@ -2773,7 +2773,6 @@ footer {
         max-width: 350px !important;
     }
     #ai-chat-widget.chat-collapsed .chat-body,
-    #ai-chat-widget.chat-collapsed .chat-suggestion-chips,
     #ai-chat-widget.chat-collapsed .chat-input-area { display: none !important; }
     #ai-chat-widget.chat-collapsed .chat-header {
         padding: 0 !important; width: 100% !important; height: 100% !important;

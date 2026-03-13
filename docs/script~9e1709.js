@@ -547,14 +547,47 @@ document.addEventListener('DOMContentLoaded', () => {
             voiceBtn.style.display = 'none';
         }
 
-        function appendMsg(text, role) {
+        function appendMsg(text, role, isHTML = false) {
             const div = document.createElement('div');
             div.className = `message ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
-            div.textContent = text;
+            if (isHTML) {
+                div.innerHTML = text;
+            } else {
+                div.textContent = text;
+            }
             chatBody.appendChild(div);
             chatBody.scrollTop = chatBody.scrollHeight;
             return div;
         }
+
+        function createSmartButtons() {
+            const container = document.createElement('div');
+            container.className = 'smart-btn-container';
+            const buttons = [
+                { text: 'Services', icon: 'fa-briefcase' },
+                { text: 'Projects', icon: 'fa-code' },
+                { text: 'Contact', icon: 'fa-paper-plane' },
+                { text: 'Skills', icon: 'fa-laptop-code' }
+            ];
+
+            buttons.forEach(btn => {
+                const b = document.createElement('button');
+                b.className = 'smart-btn';
+                b.innerHTML = `<i class="fa-solid ${btn.icon}"></i> ${btn.text}`;
+                b.onclick = () => {
+                    chatInput.value = btn.text;
+                    sendChat();
+                };
+                container.appendChild(b);
+            });
+            return container;
+        }
+
+        // Initial Greeting with Buttons
+        setTimeout(() => {
+            const welcomeMsg = appendMsg("System Online. I am Mehedi's AI assistant. Select a protocol to begin:", 'bot');
+            welcomeMsg.appendChild(createSmartButtons());
+        }, 500);
 
         function sendChat() {
             const txt = chatInput.value.trim();
@@ -579,14 +612,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chatSend.addEventListener('click', sendChat);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChat(); });
-
-        // Chip click logic
-        document.querySelectorAll('.chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                chatInput.value = chip.textContent;
-                sendChat();
-            });
-        });
     }
 
 
