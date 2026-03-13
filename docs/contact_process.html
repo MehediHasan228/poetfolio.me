@@ -530,7 +530,9 @@
                 <div class="receipt-footer">
                     <div class="receipt-total">EST. TOTAL: $<span id="receipt-total-val">0</span></div>
 
-                    <form action="./contact_process.html" method="POST" id="pos-form">
+                    <form action="https://formspree.io/f/mwvrbjke" method="POST" id="pos-form">
+                        <input type="hidden" name="_subject" value="New Portfolio Service Order!">
+                        <input type="hidden" name="_next" value="https://mehedi.pro.bd/contact_process.html">
                         <input type="text" name="name" class="pos-input" placeholder="Client ID (Your Name)"
                             required="">
                         <input type="email" name="email" class="pos-input" placeholder="Ping Address (Your Email)"
@@ -554,8 +556,10 @@
             <h3
                 style="text-align: center; margin-bottom: 1.5rem; color: var(--text-primary); font-family: 'Fira Code', monospace; font-size: 1.2rem;">
                 &gt;_ DIRECT_MESSAGE_OVERRIDE</h3>
-            <form action="./contact_process.html" method="POST" class="contact-form"
+            <form action="https://formspree.io/f/mwvrbjke" method="POST" class="contact-form"
                 style="display: flex; flex-direction: column; gap: 1rem;">
+                <input type="hidden" name="_subject" value="DIRECT_MESSAGE_OVERRIDE Received">
+                <input type="hidden" name="_next" value="https://mehedi.pro.bd/contact_process.html">
                 <input type="text" name="name" placeholder="Client ID (Your Name)" required=""
                     style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace;">
                 <input type="email" name="email" placeholder="Ping Address (Your Email)" required=""

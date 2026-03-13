@@ -481,7 +481,11 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         projects: {
             keywords: ['project', 'portfolio', 'build', 'create', 'done', 'example', 'work'],
-            response: "Key Projects: Sierraromeo.ai (AI Research Agent), Retune.so (AI Chat UI), HR & Payroll Systems, and AI-powered management tools. He's also built several enterprise automation bots."
+            response: "Key Projects: CredenceX AI Lab (Trustworthy MedAI), Sierraromeo.ai (AI Research Agent), Retune.so (AI Chat UI), and specialized enterprise automation bots."
+        },
+        credencex: {
+            keywords: ['credencex', 'medical', 'imaging', 'healthcare', 'lab', 'research'],
+            response: "CredenceX AI Research Lab advances trustworthy, explainable (XAI), and deployment-aware AI for medical imaging and clinical decision support in high-stakes healthcare environments. You can explore it at credencex.ai."
         },
         contact: {
             keywords: ['contact', 'email', 'phone', 'whatsapp', 'reach', 'talk', 'linkedin', 'github'],
@@ -615,8 +619,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    /* ==========================================
+       9.5 FORMSPREE AJAX SUBMISSION (REPLACING REACT LOGIC)
+    ========================================== */
+    const fpForms = document.querySelectorAll('form[action^="https://formspree.io/f/"]');
+    fpForms.forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            // Disable button & visual feedback
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> TRANSMITTING...';
 
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'Accept': 'application/json' }
+                });
 
+                if (response.ok) {
+                    // Success logic (mimics React snippet's state.succeeded)
+                    form.innerHTML = `
+                        <div style="text-align:center; padding: 2.5rem; color: var(--accent-1); font-family: 'Fira Code', monospace; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px dashed var(--accent-1);">
+                            <i class="fa-solid fa-check-double" style="font-size: 3.5rem; margin-bottom: 1.5rem; display: block;"></i>
+                            <h3 style="margin-bottom: 0.5rem; letter-spacing: 2px;">SUCCESS: DATA_SYNC_COMPLETE</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Thanks for joining! Your payload has been successfully integrated into the system.</p>
+                            <button onclick="window.location.reload()" class="btn secondary-btn" style="margin-top: 1.5rem; padding: 0.5rem 1rem; font-size: 0.7rem; border-color: rgba(255,255,255,0.1);">[ RETURN_TO_TERMINAL ]</button>
+                        </div>
+                    `;
+                    if (typeof playSound === 'function') playSound('success');
+                    // Scroll to form to ensure success message is seen
+                    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    const data = await response.json();
+                    if (data.errors) {
+                        alert("UPLINK_ERROR: " + data.errors.map(error => error.message).join(", "));
+                    } else {
+                        alert("ERROR: UPLINK_FAILURE. Status: " + response.status);
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.innerHTML = originalBtnText;
+                    if (typeof playSound === 'function') playSound('error');
+                }
+            } catch (error) {
+                alert("CRITICAL_ERROR: CONNECTION_TIMEOUT. Check your uplink protocol.");
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.innerHTML = originalBtnText;
+                if (typeof playSound === 'function') playSound('error');
+            }
+        });
+    });
 
     /* ==========================================
        10. D-I-P HACK & KONAMI GOD MODE
