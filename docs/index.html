@@ -25,10 +25,19 @@
     <link rel="icon" type="image/png" sizes="96x96" href="./mehedi-logo.png">
     <link rel="icon" href="./mehedi-logo.png">
     <link rel="manifest" href="./favicon/site.webmanifest">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Performance: preconnect to external origins early -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Non-blocking Google Fonts (print/onload trick eliminates render-block) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Non-blocking FontAwesome -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
     <link rel="stylesheet" href="./style~1f83e8.css?v=2">
 </head>
@@ -134,7 +143,7 @@
 
                 <div class="hero-image-side">
                     <div class="hero-image-wrapper magnetic-element">
-                        <img src="./uploads/hero_profile_1771668518.png" alt="Mehedi Hasan - Full-Stack Developer Profile" loading="eager">
+                        <img src="./uploads/hero_profile_1771668518.png" alt="Mehedi Hasan - Full-Stack Developer Profile" loading="eager" fetchpriority="high" decoding="async">
                     </div>
                 </div>
 
@@ -719,7 +728,7 @@
             <button id="chat-send" class="magnetic-element hover-sound"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
-    <script src="./script~9e1709.js?v=2"></script>
+    <script src="./script~9e1709.js?v=2" defer></script>
 
 </body>
 

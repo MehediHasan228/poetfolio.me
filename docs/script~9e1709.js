@@ -141,11 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursorOutline = document.querySelector('.cursor-outline');
 
     if (cursorDot && cursorOutline) {
+        let rafPending = false;
         window.addEventListener('mousemove', (e) => {
-            cursorDot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-            cursorOutline.animate({
-                transform: `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
-            }, { duration: 400, fill: "forwards" });
+            if (rafPending) return;
+            rafPending = true;
+            requestAnimationFrame(() => {
+                cursorDot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+                cursorOutline.animate({
+                    transform: `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
+                }, { duration: 400, fill: "forwards" });
+                rafPending = false;
+            });
         });
 
         document.querySelectorAll('a, button, input, textarea, select, .chat-header, .file, .mine-tile, .pos-item, .control-btn, .ai-dropzone, .filter-btn, .cli-header, .mines-header, .draggable-header, .mon-title').forEach(el => {
