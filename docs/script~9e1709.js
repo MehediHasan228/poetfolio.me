@@ -451,6 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
        Powered by Google Gemini 1.5 Flash (Free API)
        Get your free key → https://aistudio.google.com/app/apikey
     ========================================== */
+    /* ==========================================
+       9. AI CHAT WIDGET — OPENROUTER AI
+       ==========================================
+       Powered by OpenRouter (Gemini, Llama, etc.)
+       Get your key → https://openrouter.ai/keys
+    ========================================== */
     const chatWidget = document.getElementById('ai-chat-widget');
     const chatHeader = document.getElementById('chat-header');
     const chatBody = document.getElementById('chat-body');
@@ -459,8 +465,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const voiceBtn = document.getElementById('voice-btn');
 
     // ── CONFIG ─────────────────────────────────────────────────────────────────
-    const GEMINI_API_KEY = 'AIzaSyDjnTZBf7Kfb7ZM5v_n4V7-E2EaIj0Vy5Y'; // ← Replace with your key
-    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const OPENROUTER_API_KEY = 'sk-or-v1-xxxxxxxxxx'; // ← Replace with your key
+    const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
+    const AI_MODEL = "google/gemini-flash-1.5"; // You can change this to "meta-llama/llama-3-8b-instruct:free" etc.
 
     // ── SYSTEM PROMPT: Mehedi's Full Technical Persona ─────────────────────────
     const SYSTEM_INSTRUCTION = `You are an advanced AI assistant representing Mehedi Hasan on his personal portfolio site (mehedi.pro.bd).
@@ -519,7 +526,9 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
 - NEVER make up projects or skills not listed above`;
 
     // ── CONVERSATION STATE ─────────────────────────────────────────────────────
-    let geminiHistory = []; // stores { role: 'user'|'model', parts: [{text}] }
+    let chatMessages = [
+        { role: 'system', content: SYSTEM_INSTRUCTION }
+    ];
 
     // ── CHAT WIDGET TOGGLE ─────────────────────────────────────────────────────
     if (chatWidget && chatHeader) {
@@ -527,8 +536,11 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
         chatHeader.addEventListener('click', () => {
             chatWidget.classList.toggle('chat-expanded');
             chatWidget.classList.toggle('chat-collapsed');
-            document.getElementById('chat-toggle-icon').classList.toggle('fa-chevron-down');
-            document.getElementById('chat-toggle-icon').classList.toggle('fa-chevron-up');
+            const icon = document.getElementById('chat-toggle-icon');
+            if (icon) {
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            }
             if (typeof playSound === 'function') playSound('click');
         });
 
@@ -582,27 +594,26 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
             // Show user message
             appendMsg(txt, 'user');
 
-            // Push to Gemini history (user turn)
-            geminiHistory.push({ role: 'user', parts: [{ text: txt }] });
+            // Push to message history
+            chatMessages.push({ role: 'user', content: txt });
 
             // Show typing indicator
             const typingEl = appendMsg('⬤ ⬤ ⬤', 'bot');
 
             try {
-                // Build Gemini API request body
-                const reqBody = {
-                    system_instruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-                    contents: geminiHistory,
-                    generationConfig: {
-                        temperature: 0.75,
-                        maxOutputTokens: 512
-                    }
-                };
-
-                const response = await fetch(GEMINI_ENDPOINT, {
+                const response = await fetch(OPENROUTER_ENDPOINT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(reqBody)
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                        'HTTP-Referer': window.location.origin,
+                        'X-Title': 'Mehedi Portfolio Chat'
+                    },
+                    body: JSON.stringify({
+                        model: AI_MODEL,
+                        messages: chatMessages,
+                        temperature: 0.7
+                    })
                 });
 
                 if (!response.ok) {
@@ -611,17 +622,17 @@ Mehedi approaches work with discipline rooted in Islamic principles — precisio
                 }
 
                 const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
+                const reply = data.choices?.[0]?.message?.content
                     || 'No response received from AI core.';
 
                 // Push AI reply to history
-                geminiHistory.push({ role: 'model', parts: [{ text: reply }] });
+                chatMessages.push({ role: 'assistant', content: reply });
 
                 // Replace typing indicator with response
                 typingEl.textContent = reply;
 
             } catch (err) {
-                console.error('Gemini API Error:', err);
+                console.error('OpenRouter API Error:', err);
                 typingEl.textContent = `⚠ System Error: ${err.message}. Try messaging Mehedi directly via WhatsApp: +8801799447594`;
             }
 
