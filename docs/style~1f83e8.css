@@ -2027,15 +2027,19 @@ footer {
     z-index: 1000;
     display: flex;
     align-items: center;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), right 0.4s cubic-bezier(0.4, 0, 0.2, 1), top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #leaderboard-widget.lb-collapsed {
-    transform: translateY(-50%) translateX(calc(100% - 60px));
+    right: -600px; /* Hide container, show toggle */
+}
+
+#leaderboard-widget.lb-collapsed .lb-toggle {
+    margin-right: -1px; /* Ensure border overlaps */
 }
 
 #leaderboard-widget.lb-expanded {
-    transform: translateY(-50%) translateX(0);
+    right: 0;
 }
 
 .lb-toggle {
@@ -2148,11 +2152,23 @@ footer {
     border-radius: 1.5rem;
 }
 
-#leaderboard-widget.lb-full-view {
-    right: 5vw !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    left: auto !important;
+#leaderboard-widget.lb-full-view:not(.is-dragging) {
+    right: 5vw;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Ensure collapsed state doesn't show full view */
+#leaderboard-widget.lb-collapsed.lb-full-view {
+    right: -600px;
+}
+
+#leaderboard-widget.is-dragging {
+    transition: none !important;
+}
+
+#leaderboard-widget.is-dragging .radar-container {
+    transition: none !important;
 }
 
 /* Adjustments for the smaller widget context */
@@ -2225,9 +2241,24 @@ footer {
     }
     
     #leaderboard-widget.lb-collapsed {
-        transform: translateY(-50%) translateX(calc(100% - 45px));
+        right: -85vw; /* Position container off-screen */
+        transform: translateY(-50%); /* Default centering if not dragged */
     }
     
+    /* When being dragged, don't use the centering transform */
+    #leaderboard-widget.is-dragging {
+        transform: none !important;
+    }
+
+    #leaderboard-widget.lb-collapsed .lb-toggle {
+        margin-right: -1px;
+    }
+
+    #leaderboard-widget.lb-expanded {
+        right: 0;
+        transform: translateY(-50%);
+    }
+
     #lb-toggle-icon {
         font-size: 1.1rem;
     }
@@ -2237,10 +2268,10 @@ footer {
     }
     
     #leaderboard-widget .radar-container {
-        width: calc(100vw - 45px); /* Take up remaining horizontal space minus toggle */
-        height: 60vh;
+        width: 85vw; /* More controlled width on mobile */
+        height: 70vh;
         padding: 1rem;
-        border-radius: 1rem 0 0 1rem;
+        border-radius: 1.5rem 0 0 1.5rem;
     }
     
     .lb-content .radar-header {

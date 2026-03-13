@@ -211,10 +211,104 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Specialized Sidebar Draggable (Vertical Only, Right Locked) ---
+    function makeVerticalSidebarDraggable(element, handles) {
+        if (!element || !handles || handles.length === 0) return;
+        let pos2 = 0, pos4 = 0;
+        let startX = 0, startY = 0;
+        const threshold = 5; // Pixels to move before it's a drag
+        let isDragging = false;
+
+        handles.forEach(handle => {
+            handle.classList.add('draggable-header');
+            handle.onmousedown = dragMouseDown;
+            handle.ontouchstart = dragMouseDown;
+        });
+
+        function dragMouseDown(e) {
+            // Only left click
+            if (e.type === 'mousedown' && e.button !== 0) return;
+            
+            startX = e.clientX || (e.touches && e.touches[0].clientX);
+            startY = e.clientY || (e.touches && e.touches[0].clientY);
+            pos4 = startY;
+            isDragging = false;
+
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+            document.ontouchend = closeDragElement;
+            document.ontouchmove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            const dist = Math.sqrt(Math.pow(clientX - startX, 2) + Math.pow(clientY - startY, 2));
+            
+            if (!isDragging && dist > threshold) {
+                isDragging = true;
+                element.classList.add('is-dragging');
+                
+                // Transition to fixed vertical side position
+                element.style.position = 'fixed';
+                element.style.left = 'auto';
+                element.style.transform = 'none'; // Remove any centering transform
+                element.style.margin = '0';
+                
+                // Maintain the correct right offset based on state
+                if (element.classList.contains('lb-collapsed')) {
+                    element.style.right = '-600px';
+                } else if (element.classList.contains('lb-full-view')) {
+                    element.style.right = '5vw';
+                } else {
+                    element.style.right = '0';
+                }
+            }
+
+            if (isDragging) {
+                e.preventDefault();
+                pos2 = pos4 - clientY;
+                pos4 = clientY;
+                
+                let newTop = element.offsetTop - pos2;
+                // Boundary check (keep on screen)
+                const viewportHeight = window.innerHeight;
+                const elementHeight = element.offsetHeight;
+                newTop = Math.max(0, Math.min(newTop, viewportHeight - elementHeight));
+                
+                element.style.top = newTop + "px";
+            }
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            document.ontouchend = null;
+            document.ontouchmove = null;
+            
+            setTimeout(() => {
+                element.classList.remove('is-dragging');
+                // Clean up inline styles that might conflict with expansion
+                if (isDragging) {
+                    element.style.right = ''; 
+                }
+                isDragging = false;
+            }, 10);
+        }
+    }
+
     makeDraggable(document.querySelector('.cli-container'), document.querySelector('.cli-header'));
     makeDraggable(document.querySelector('.mines-container'), document.querySelector('.mines-header'));
     makeDraggable(document.getElementById('sys-monitor'), document.querySelector('#sys-monitor .mon-title'));
-    makeDraggable(document.getElementById('leaderboard-widget'), document.querySelector('#leaderboard-widget .radar-title-group'));
+    
+    // AI Leaderboard uses vertical-only draggable
+    const lbWidget = document.getElementById('leaderboard-widget');
+    const lbHandles = [
+        document.querySelector('#leaderboard-widget .lb-toggle'),
+        document.querySelector('#leaderboard-widget .radar-title-group')
+    ];
+    makeVerticalSidebarDraggable(lbWidget, lbHandles.filter(h => h !== null));
 
     /* ==========================================
        5. MAGNETIC ELEMENTS & 3D TILT
@@ -1495,7 +1589,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const lbToggleIcon = document.getElementById('lb-toggle-icon');
 
     if (lbWidget && lbToggleBtn) {
-        lbToggleBtn.addEventListener('click', () => {
+        lbToggleBtn.addEventListener('click', (e) => {
+            // Prevent toggle if we were just dragging
+            if (lbWidget.classList.contains('is-dragging')) return;
+
             // If already in full view, close full view first when collapsing
             if (lbWidget.classList.contains('lb-full-view') && lbWidget.classList.contains('lb-expanded')) {
                 lbWidget.classList.remove('lb-full-view');
@@ -1503,16 +1600,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
             lbWidget.classList.toggle('lb-expanded');
             lbWidget.classList.toggle('lb-collapsed');
-
-            // Reset positioning if collapsing and it was dragged (optional: let it stay where it was)
-            // if (lbWidget.classList.contains('lb-collapsed')) {
-            //     lbWidget.style.position = 'fixed';
-            //     lbWidget.style.top = '50%';
-            //     lbWidget.style.right = '0';
-            //     lbWidget.style.left = 'auto';
-            //     lbWidget.style.bottom = 'auto';
-            //     lbWidget.style.transform = 'translateY(-50%)';
-            // }
 
             // Optionally change the icon state when expanded
             if (lbToggleIcon) {
