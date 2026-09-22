@@ -4,6 +4,10 @@
   "description": "`webclone.js` is a Node.js script designed to archive websites and download videos.",
   "main": "webclone.js",
   "scripts": {
+    "start": "python3 -m http.server 8000 --directory docs",
+    "serve": "python3 -m http.server 8000 --directory docs",
+    "sync:arena": "node scripts/sync_arena.js",
+    "mcp:arena": "node scripts/arena_mcp_server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

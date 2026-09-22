@@ -35,14 +35,14 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
     <!-- Non-blocking Google Fonts (print/onload trick eliminates render-block) -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"></noscript>
 
     <!-- Non-blocking FontAwesome -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=7">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=24">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -61,7 +61,7 @@
             "@type": "Organization",
             "name": "Freelance"
         },
-        "description": "Full-Stack Developer and AI Automation Engineer with 2+ years of experience building autonomous workflows using LLMs.",
+        "description": "Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect with 4+ years of experience building scalable systems and autonomous workflows.",
         "email": "mehedihasan228.cse@gmail.com",
         "telephone": "+8801799447594",
         "nationality": "Bangladesh"
@@ -76,30 +76,41 @@
 
     <div id="sys-monitor" class="sys-monitor">
         <div class="mon-title draggable-header">
-            <span><i class="fa-solid fa-server"></i> SYS_MONITOR</span>
-            <i class="fa-solid fa-xmark hover-sound" id="close-sys-monitor" style="color:#ef4444; cursor:none;"
-                title="Close Monitor"></i>
-        </div>
-        <div class="mon-stat">CPU: <span id="mon-cpu">2%</span>
-            <div class="mon-bar">
-                <div id="mon-cpu-bar" style="width: 2%; background-color: var(--accent-1);"></div>
+            <span><i class="fa-solid fa-microchip"></i> SYS_MONITOR</span>
+            <div class="mon-controls">
+                <button id="mon-minimize-btn" class="mon-btn hover-sound" title="Minimize Monitor" aria-label="Minimize Monitor"><i class="fa-solid fa-minus"></i></button>
             </div>
         </div>
-        <div class="mon-stat">RAM: <span id="mon-ram">12%</span>
-            <div class="mon-bar">
-                <div id="mon-ram-bar"></div>
-            </div>
+        <div class="mon-stat">
+            <div class="mon-stat-label"><span>FPS:</span> <span id="mon-fps" class="stat-highlight">60 FPS</span></div>
+            <div class="mon-bar"><div id="mon-fps-bar" style="width: 100%; background: #10b981;"></div></div>
         </div>
-        <div class="mon-stat">NET: <span id="mon-net" class="ping-idle">IDLE</span></div>
-        <div class="mon-stat"
-            style="margin-top: 10px; border-top: 1px dashed #334155; padding-top: 8px; flex-direction: row; justify-content: space-between; align-items: center;">
+        <div class="mon-stat">
+            <div class="mon-stat-label"><span>CPU:</span> <span id="mon-cpu">4%</span></div>
+            <div class="mon-bar"><div id="mon-cpu-bar" style="width: 4%;"></div></div>
+        </div>
+        <div class="mon-stat">
+            <div class="mon-stat-label"><span>RAM:</span> <span id="mon-ram">18%</span></div>
+            <div class="mon-bar"><div id="mon-ram-bar" style="width: 18%;"></div></div>
+        </div>
+        <div class="mon-stat mon-net-row">
+            <span>NET:</span> <span id="mon-net" class="ping-active">18ms • IDLE</span>
+        </div>
+        <div class="mon-divider"></div>
+        <div class="mon-stat mon-uptime-row">
             <span>UPTIME:</span>
-            <span style="display: flex; align-items: center;"><span id="uptime-counter" style="color: #4ade80;">12d 0h
-                    44m 33s</span><span class="blink-dot" style="margin-top: 0;"></span></span>
+            <span class="uptime-val-wrap"><span id="uptime-counter">212d 19h 50m</span><span class="blink-dot"></span></span>
         </div>
-        <div class="mon-stat" style="margin-top: 5px; flex-direction: row; justify-content: space-between;">
-            <span>CLR:</span> <span id="clearance-level" style="color: #fbbf24; font-weight: bold;">LVL 1 (GUEST)</span>
+        <div class="mon-stat mon-clr-row">
+            <span>CLR:</span>
+            <button id="clearance-level" class="clr-badge hover-sound" title="Click to elevate clearance">LVL 1 (GUEST)</button>
         </div>
+        <button id="mon-diag-btn" class="mon-diag-action hover-sound"><i class="fa-solid fa-bolt"></i> DIAGNOSTIC</button>
+    </div>
+
+    <!-- Mini Dock Pill when minimized -->
+    <div id="sys-monitor-dock" class="sys-monitor-dock hidden hover-sound" title="Click to open SYS_MONITOR">
+        <i class="fa-solid fa-server" style="color:var(--accent-1);"></i> <span id="dock-fps">60 FPS</span> • <span id="dock-ping">18ms</span>
     </div>
 
     <div class="ui-controls">
@@ -142,14 +153,28 @@
                     <h2><span class="prefix-text">I am a</span> <span class="typing-text"></span><span
                             class="cursor">&nbsp;</span></h2>
 
-                    <div class="terminal-feed">
-                        <div class="terminal-header"><i class="fa-solid fa-terminal"></i> Live System Logs</div>
+                    <div class="terminal-feed" id="terminal-feed">
+                        <div class="terminal-header">
+                            <div class="terminal-window-dots">
+                                <span class="dot dot-red"></span>
+                                <span class="dot dot-yellow"></span>
+                                <span class="dot dot-green"></span>
+                            </div>
+                            <div class="terminal-title">
+                                <span class="term-prompt"><i class="fa-solid fa-terminal"></i></span>
+                                <span class="term-protocol">node://</span><span class="term-host">ap-south-1.telemetry.sre</span>
+                            </div>
+                            <div class="terminal-live-badge">
+                                <span class="live-dot"></span>
+                                <span class="live-text">STREAMING</span>
+                            </div>
+                        </div>
                         <div class="terminal-body" id="terminal-ticker">
-                            <p>&gt; [03:15 PM] (Version 2.0): AI-driven content workflows optimized (60% time
-                                reduction).</p>
-                            <p>&gt; [03:14 PM] Scalable marketing automation pipeline deployed.</p>
-                            <p>&gt; [08:59 PM] Successfully integrated Gemini API for automated scripting.</p>
-                            <p>&gt; [12:14 AM] New B2B tech solution documentation complete.</p>
+                            <p class="log-line"><span class="log-time">[16:15:24]</span> <span class="log-tag tag-sre">SRE</span> <span class="log-msg">Cluster pods 48/48 online • p99 latency <b class="metric-hl">&lt;18ms</b></span></p>
+                            <p class="log-line"><span class="log-time">[16:15:19]</span> <span class="log-tag tag-ai">AI-SWARM</span> <span class="log-msg">Claude 3.7 + Gemini 2.5 multi-agent loop active via <b class="metric-hl">MCP</b></span></p>
+                            <p class="log-line"><span class="log-time">[16:15:12]</span> <span class="log-tag tag-stream">KAFKA</span> <span class="log-msg">Event bus throughput: <b class="metric-hl">42.8k msg/sec</b> • 0 packet drops</span></p>
+                            <p class="log-line"><span class="log-time">[16:15:05]</span> <span class="log-tag tag-rag">PGVECTOR</span> <span class="log-msg">HNSW vector index synced: sub-ms high-dimensional retrieval</span></p>
+                            <p class="log-line"><span class="log-time">[16:14:58]</span> <span class="log-tag tag-sota">SOTA</span> <span class="log-msg">LLM inference throughput boosted <b class="metric-hl">4x</b> via speculative decoding</span></p>
                         </div>
                     </div>
 
@@ -159,8 +184,7 @@
 
                         <a href="./uploads/Mehedi_Hasan_FullStack_Developer.pdf"
                             download="Mehedi_Resume.pdf" class="btn secondary-btn magnetic-element hover-sound"
-                            style="border-color: #4ade80; color: #4ade80;"><i class="fa-solid fa-file-pdf"></i> Extract
-                            CV</a>
+                            style="border-color: #4ade80; color: #4ade80;"><i class="fa-solid fa-file-pdf"></i> Download CV</a>
 
                         <a href="#contact" class="btn primary-btn glow-effect magnetic-element hover-sound">Hire Me</a>
                     </div>
@@ -190,8 +214,139 @@
             <h2 class="decrypt-text glitch-hover" data-value="System Architecture">System <span
                     class="gradient-text">Architecture</span></h2>
         </div>
-        <div class="about-container hidden" style="text-align: center;">
-            <p>I am a Full-Stack Developer and AI Automation Engineer with 2+ years of experience building intelligent web systems. I specialize in integrating LLMs (ChatGPT, Claude, Gemini) to create autonomous workflows that reduce production time by up to 60%. From scalable React applications to advanced Facebook & WhatsApp automation, I build high-performance tools that eliminate manual work and drive digital engagement at scale.</p>
+        <div class="arch-infographic-wrap hidden">
+
+            <!-- 1. Top Metrics Strip -->
+            <div class="arch-metrics-strip">
+                <div class="arch-metric-card tilt-card magnetic-element">
+                    <div class="arch-metric-icon">
+                        <i class="fa-solid fa-business-time" style="color: var(--accent-1);"></i>
+                    </div>
+                    <div>
+                        <div class="arch-metric-val">4+ Years</div>
+                        <div class="arch-metric-lbl">Production Exp</div>
+                    </div>
+                </div>
+
+                <div class="arch-metric-card tilt-card magnetic-element">
+                    <div class="arch-metric-icon">
+                        <i class="fa-solid fa-gauge-high" style="color: #10b981;"></i>
+                    </div>
+                    <div>
+                        <div class="arch-metric-val">&lt; 15ms</div>
+                        <div class="arch-metric-lbl">p99 Latency</div>
+                    </div>
+                </div>
+
+                <div class="arch-metric-card tilt-card magnetic-element">
+                    <div class="arch-metric-icon">
+                        <i class="fa-solid fa-shield-halved" style="color: #38bdf8;"></i>
+                    </div>
+                    <div>
+                        <div class="arch-metric-val">99.99%</div>
+                        <div class="arch-metric-lbl">Resilience</div>
+                    </div>
+                </div>
+
+                <div class="arch-metric-card tilt-card magnetic-element">
+                    <div class="arch-metric-icon">
+                        <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i>
+                    </div>
+                    <div>
+                        <div class="arch-metric-val">4x</div>
+                        <div class="arch-metric-lbl">LLM Speedup</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Architecture Pillars Grid (Compact 4 Columns) -->
+            <div class="arch-pillars-grid">
+                <!-- Pillar 1 -->
+                <div class="arch-pillar-card tilt-card magnetic-element">
+                    <div class="arch-pillar-header">
+                        <div class="arch-pillar-title-wrap">
+                            <div class="arch-pillar-icon" style="color: var(--accent-1);"><i class="fa-solid fa-server"></i></div>
+                            <h3 class="arch-pillar-title">Distributed Backend</h3>
+                        </div>
+                        <span class="arch-pillar-badge"><i class="fa-solid fa-microchip"></i> Sub-15ms p99</span>
+                    </div>
+                    <p class="arch-pillar-desc">Clean-architecture NestJS microservices with PostgreSQL pools &amp; distributed Redis locks.</p>
+                    <div class="arch-pillar-tags">
+                        <span class="arch-tech-tag"><i class="fa-brands fa-node-js" style="color:#E0234E;"></i> NestJS</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-database" style="color:#336791;"></i> Postgres</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-server" style="color:#DC382D;"></i> Redis</span>
+                        <span class="arch-tech-tag"><i class="fa-brands fa-js" style="color:#3178C6;"></i> TypeScript</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="arch-pillar-card tilt-card magnetic-element">
+                    <div class="arch-pillar-header">
+                        <div class="arch-pillar-title-wrap">
+                            <div class="arch-pillar-icon" style="color: #f59e0b;"><i class="fa-solid fa-network-wired"></i></div>
+                            <h3 class="arch-pillar-title">Event Streaming</h3>
+                        </div>
+                        <span class="arch-pillar-badge" style="color:#f59e0b; border-color:rgba(245,158,11,0.25); background:rgba(245,158,11,0.1);"><i class="fa-solid fa-arrows-split-up-and-left"></i> Zero-Loss</span>
+                    </div>
+                    <p class="arch-pillar-desc">High-throughput asynchronous message bus via Apache Kafka &amp; RabbitMQ for enterprise queues.</p>
+                    <div class="arch-pillar-tags">
+                        <span class="arch-tech-tag"><i class="fa-solid fa-stream" style="color:#f59e0b;"></i> Kafka</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-envelope-open-text" style="color:#FF6600;"></i> RabbitMQ</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-layer-group" style="color:#DC382D;"></i> Redis Pub/Sub</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-diagram-project" style="color:var(--accent-1);"></i> Event Bus</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="arch-pillar-card tilt-card magnetic-element">
+                    <div class="arch-pillar-header">
+                        <div class="arch-pillar-title-wrap">
+                            <div class="arch-pillar-icon" style="color: #38bdf8;"><i class="fa-solid fa-cloud"></i></div>
+                            <h3 class="arch-pillar-title">Cloud &amp; Observability</h3>
+                        </div>
+                        <span class="arch-pillar-badge" style="color:#38bdf8; border-color:rgba(56,189,248,0.25); background:rgba(56,189,248,0.1);"><i class="fa-solid fa-chart-line"></i> HA Cluster</span>
+                    </div>
+                    <p class="arch-pillar-desc">Elastic Kubernetes orchestration on AWS with Prometheus, Grafana, and centralized ELK logging.</p>
+                    <div class="arch-pillar-tags">
+                        <span class="arch-tech-tag"><i class="fa-brands fa-docker" style="color:#2496ED;"></i> Docker</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-cubes" style="color:#326CE5;"></i> Kubernetes</span>
+                        <span class="arch-tech-tag"><i class="fa-brands fa-aws" style="color:#FF9900;"></i> AWS</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-chart-pie" style="color:#F46800;"></i> Grafana</span>
+                    </div>
+                </div>
+
+                <!-- Pillar 4 -->
+                <div class="arch-pillar-card tilt-card magnetic-element">
+                    <div class="arch-pillar-header">
+                        <div class="arch-pillar-title-wrap">
+                            <div class="arch-pillar-icon" style="color: #a855f7;"><i class="fa-solid fa-brain"></i></div>
+                            <h3 class="arch-pillar-title">Autonomous AI &amp; Agents</h3>
+                        </div>
+                        <span class="arch-pillar-badge" style="color:#a855f7; border-color:rgba(168,85,247,0.25); background:rgba(168,85,247,0.1);"><i class="fa-solid fa-robot"></i> Agentic SOTA</span>
+                    </div>
+                    <p class="arch-pillar-desc">Autonomous multi-agent swarms with MCP, LangGraph, hybrid reasoning &amp; PGVector RAG.</p>
+                    <div class="arch-pillar-tags">
+                        <span class="arch-tech-tag"><i class="fa-solid fa-bolt" style="color:#d97706;"></i> Claude Opus 5</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-microchip" style="color:#00f2fe;"></i> Gemini 3.1 Pro</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-brain" style="color:#10b981;"></i> DeepSeek-V4</span>
+                        <span class="arch-tech-tag"><i class="fa-solid fa-network-wired" style="color:#a855f7;"></i> MCP / LangGraph</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Data Flow Pipeline Strip -->
+            <div class="arch-pipeline-strip">
+                <div class="arch-pipe-node"><i class="fa-brands fa-react" style="color:#61DAFB;"></i> Client (React)</div>
+                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="arch-pipe-node"><i class="fa-brands fa-node-js" style="color:#E0234E;"></i> Gateway (NestJS)</div>
+                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="arch-pipe-node"><i class="fa-solid fa-network-wired" style="color:#f59e0b;"></i> Event Bus (Kafka)</div>
+                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="arch-pipe-node"><i class="fa-solid fa-database" style="color:#336791;"></i> Persistence (Postgres + Redis)</div>
+                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="arch-pipe-node"><i class="fa-brands fa-docker" style="color:#2496ED;"></i> Cluster (Kubernetes / AWS)</div>
+            </div>
+
         </div>
     </section>
 
@@ -206,6 +361,10 @@
                 <div class="mac-btns"><span class="close"></span><span class="min"></span><span class="max"></span>
                 </div>
                 <div class="ide-title">mehedi_workspace - VS Code</div>
+            </div>
+            <div class="ide-tabs">
+                <div class="ide-tab active" id="active-tab-display"><i class="fa-brands fa-node-js"
+                        style="color: #E0234E;"></i> order_service.nest.ts <i class="fa-solid fa-xmark close-tab"></i></div>
             </div>
             <div class="ide-body">
                 <div class="ide-sidebar">
@@ -232,46 +391,46 @@
             </div>
             <div class="ide-status-bar">
                 <div class="status-left"><span><i class="fa-solid fa-code-branch"></i> main*</span></div>
-                <div class="status-right"><span id="status-lang">PHP</span></div>
+                <div class="status-right"><span id="status-lang">TypeScript</span></div>
             </div>
         </div>
 
         <div class="dashboard-grid hidden">
             <div class="telemetry-card tilt-card magnetic-element">
                 <div class="tel-header">
-                    <h3><i class="fa-solid fa-satellite-dish" style="color:var(--accent-1);"></i> Live Code Telemetry
+                    <h3><i class="fa-solid fa-satellite-dish" style="color:var(--accent-1);"></i> Live Architecture Telemetry
                     </h3>
-                    <span style="color:var(--text-secondary); font-size:0.75rem;">Last 7 Days</span>
+                    <span style="color:var(--text-secondary); font-size:0.75rem;">Production Status</span>
                 </div>
 
                 <div class="tel-row">
-                    <div class="tel-label"><span class="lang">Full-Stack Development (React/PHP)</span> <span>40%</span>
+                    <div class="tel-label"><span class="lang">Distributed Microservices (NestJS / Postgres / Redis)</span> <span>35%</span>
                     </div>
-                    <div class="tel-bar-bg">
-                        <div class="tel-bar-fill" data-width="40%"></div>
-                    </div>
-                </div>
-                <div class="tel-row">
-                    <div class="tel-label"><span class="lang">AI &amp; Automation (Python/LLMs)</span> <span>35%</span></div>
                     <div class="tel-bar-bg">
                         <div class="tel-bar-fill" data-width="35%"></div>
                     </div>
                 </div>
                 <div class="tel-row">
-                    <div class="tel-label"><span class="lang">System Architecture &amp; Security</span> <span>15%</span></div>
+                    <div class="tel-label"><span class="lang">Event Streaming &amp; Queues (Kafka / RabbitMQ)</span> <span>25%</span></div>
+                    <div class="tel-bar-bg">
+                        <div class="tel-bar-fill" data-width="25%"></div>
+                    </div>
+                </div>
+                <div class="tel-row">
+                    <div class="tel-label"><span class="lang">Cloud &amp; SRE Observability (AWS / Docker / K8s / ELK / Grafana)</span> <span>25%</span></div>
+                    <div class="tel-bar-bg">
+                        <div class="tel-bar-fill" data-width="25%"></div>
+                    </div>
+                </div>
+                <div class="tel-row">
+                    <div class="tel-label"><span class="lang">AI Automation &amp; LLM Orchestration (Python / Gemini / Claude)</span> <span>15%</span></div>
                     <div class="tel-bar-bg">
                         <div class="tel-bar-fill" data-width="15%"></div>
                     </div>
                 </div>
-                <div class="tel-row">
-                    <div class="tel-label"><span class="lang">UI/UX &amp; Digital Strategy</span> <span>10%</span></div>
-                    <div class="tel-bar-bg">
-                        <div class="tel-bar-fill" data-width="10%"></div>
-                    </div>
-                </div>
                 <div
                     style="margin-top: 1.5rem; text-align: center; color: var(--accent-1); font-weight: bold; font-size: 0.9rem;">
-                    &gt; Experience: 2+ Years
+                    &gt; Foundations: DSA • High-Level System Design • Networking (HTTP/3, gRPC)
                 </div>
             </div>
 
@@ -310,7 +469,8 @@
 
         <div class="project-filters hidden">
             <button class="filter-btn active hover-sound" data-filter="all">ALL DEPLOYMENTS</button>
-            <button class="filter-btn hover-sound" data-filter="js">Full-Stack JS</button>
+            <button class="filter-btn hover-sound" data-filter="microservices">Microservices &amp; Cloud</button>
+            <button class="filter-btn hover-sound" data-filter="js">Full-Stack Web</button>
             <button class="filter-btn hover-sound" data-filter="ai">Autonomous Solutions</button>
             <button class="filter-btn hover-sound" data-filter="shop">E-commerce Optimization</button>
             <button class="filter-btn hover-sound" data-filter="media">Creative Media</button>
@@ -322,7 +482,33 @@
                 <h3 class="decrypt-text" data-value="Running Projects" style="color: var(--accent-1); border-left: 4px solid var(--accent-1); padding-left: 1rem; font-family: 'Fira Code', monospace; margin-bottom: 2rem;">&gt; Running Projects</h3>
             </div>
 
-            <div class="project-card hidden tilt-card" data-stack="ai, research, healthcare">
+            <div class="project-card hidden tilt-card" data-stack="microservices, js, cloud, postgres, redis, kafka">
+                <div class="project-info">
+                    <div class="project-preview placeholder-preview" style="background: linear-gradient(135deg, #E0234E, #326CE5);">
+                        <i class="fa-solid fa-cubes"></i>
+                    </div>
+                    <div class="project-details">
+                        <h3 class="decrypt-text" data-value="Distributed Event-Driven Engine">Distributed Event-Driven Engine</h3>
+                        <span class="status-badge progress-badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">Running</span>
+                        <p class="project-desc">High-throughput microservices architecture with NestJS, PostgreSQL, Apache Kafka streaming, and Redis caching deployed on Kubernetes with Prometheus/Grafana monitoring.</p>
+                        <div class="tech-tags">
+                            <span class="tag">NestJS</span>
+                            <span class="tag">PostgreSQL</span>
+                            <span class="tag">Kafka</span>
+                            <span class="tag">Redis</span>
+                            <span class="tag">Docker/K8s</span>
+                            <span class="tag">Grafana</span>
+                        </div>
+                        <div class="project-actions" style="margin-top: 1.5rem;">
+                            <a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-code-branch"></i> View Architecture
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card hidden tilt-card" data-stack="ai, research, healthcare, python, docker">
                 <div class="project-info">
                     <div class="project-preview" style="background: url('credencex_ai_lab_preview_1773391728980.webp') center/cover no-repeat;">
                         <!-- AI Generated Lab Preview -->
@@ -334,7 +520,8 @@
                         <div class="tech-tags">
                             <span class="tag">AI Research</span>
                             <span class="tag">Medical Imaging</span>
-                            <span class="tag">XAI</span>
+                            <span class="tag">Python / FastAPI</span>
+                            <span class="tag">Docker</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
                             <a href="https://credencex.ai/" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
@@ -345,7 +532,7 @@
                 </div>
             </div>
 
-            <div class="project-card hidden tilt-card" data-stack="python, ai, automation">
+            <div class="project-card hidden tilt-card" data-stack="python, ai, automation, microservices">
                 <div class="project-info">
                     <div class="project-preview placeholder-preview" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6);">
                         <i class="fa-solid fa-robot"></i>
@@ -356,8 +543,9 @@
                         <p class="project-desc">AI system that generates research summaries and marketing content using Python and LLM APIs, reducing manual work by ~50%.</p>
                         <div class="tech-tags">
                             <span class="tag">Python</span>
-                            <span class="tag">LLM APIs</span>
-                            <span class="tag">AI Automation</span>
+                            <span class="tag">Gemini &amp; Claude</span>
+                            <span class="tag">LangChain</span>
+                            <span class="tag">Redis Queue</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
                             <a href="https://sierraromeo.ai/" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
@@ -368,7 +556,7 @@
                 </div>
             </div>
 
-            <div class="project-card hidden tilt-card" data-stack="ai, bootstrap, javascript">
+            <div class="project-card hidden tilt-card" data-stack="ai, js, web, microservices">
                 <div class="project-info">
                     <div class="project-preview placeholder-preview" style="background: linear-gradient(135deg, #06b6d4, #4f46e5);">
                         <i class="fa-solid fa-robot"></i>
@@ -376,11 +564,12 @@
                     <div class="project-details">
                         <h3 class="decrypt-text" data-value="AI Chat Web App">AI Chat Web App</h3>
                         <span class="status-badge progress-badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">Running</span>
-                        <p class="project-desc">Conversational AI web interface developed with HTML, CSS, JavaScript, and Bootstrap using API-based AI responses.</p>
+                        <p class="project-desc">Conversational AI web interface developed with React, NestJS, and WebSockets with streaming LLM completions.</p>
                         <div class="tech-tags">
-                            <span class="tag">Bootstrap</span>
-                            <span class="tag">API Integration</span>
-                            <span class="tag">AI Interface</span>
+                            <span class="tag">React.js</span>
+                            <span class="tag">NestJS</span>
+                            <span class="tag">WebSockets</span>
+                            <span class="tag">LLM Streaming</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
                             <a href="https://retune.so" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
@@ -396,7 +585,7 @@
                 <h3 class="decrypt-text" data-value="Ongoing Projects" style="color: var(--accent-1); border-left: 4px solid var(--accent-1); padding-left: 1rem; font-family: 'Fira Code', monospace; margin-bottom: 2rem;">&gt; Ongoing Projects</h3>
             </div>
 
-            <div class="project-card hidden tilt-card" data-stack="management, web, react">
+            <div class="project-card hidden tilt-card" data-stack="microservices, js, web, management, postgres">
                 <div class="project-info">
                     <div class="project-preview placeholder-preview" style="background: linear-gradient(135deg, #4f46e5, #06b6d4);">
                         <i class="fa-solid fa-users-gear"></i>
@@ -406,15 +595,16 @@
                         <span class="status-badge progress-badge" style="background: rgba(251, 191, 36, 0.2); color: #fbbf24;">Ongoing</span>
                         <p class="project-desc">Web-based platform for managing employee records, payroll processing, attendance tracking, and reporting.</p>
                         <div class="tech-tags">
-                            <span class="tag">HRMS</span>
-                            <span class="tag">Payroll</span>
-                            <span class="tag">Management</span>
+                            <span class="tag">NestJS</span>
+                            <span class="tag">PostgreSQL</span>
+                            <span class="tag">RabbitMQ</span>
+                            <span class="tag">Docker</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="project-card hidden tilt-card" data-stack="ai, automation, management">
+            <div class="project-card hidden tilt-card" data-stack="microservices, ai, automation, js, postgres">
                 <div class="project-info">
                     <div class="project-preview placeholder-preview" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
                         <i class="fa-solid fa-hotel"></i>
@@ -424,9 +614,10 @@
                         <span class="status-badge progress-badge" style="background: rgba(251, 191, 36, 0.2); color: #fbbf24;">Ongoing</span>
                         <p class="project-desc">Hostel management platform with AI-assisted room allocation, student records management, and automated workflows.</p>
                         <div class="tech-tags">
-                            <span class="tag">AI Allocation</span>
-                            <span class="tag">Automation</span>
-                            <span class="tag">Management</span>
+                            <span class="tag">React</span>
+                            <span class="tag">NestJS</span>
+                            <span class="tag">PostgreSQL</span>
+                            <span class="tag">Redis Caching</span>
                         </div>
                         <div class="project-actions" style="margin-top: 1.5rem;">
                             <a href="https://mehedihasan228.github.io/Savora-AI-Powered-Meal-Planning-GroceryManagement/" target="_blank" rel="noopener noreferrer" class="btn primary-btn magnetic-element hover-sound" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px;">
@@ -556,7 +747,7 @@
                 <!-- Blog Card 2 -->
                 <a href="./ai-insights/index.html" class="insight-card glass-card hidden magnetic-element hover-sound" style="text-decoration: none; color: inherit; display: flex;">
                     <div class="card-header">
-                        <span class="neural-tag">Claude 3.5</span>
+                        <span class="neural-tag">Claude 3.7</span>
                     </div>
                     <h4>Agentic Workflows in Production</h4>
                     <p>Moving from single prompts to autonomous multi-agent systems for complex engineering tasks.</p>
@@ -773,9 +964,11 @@
                 </div>
                 <div class="radar-header-controls" style="display: flex; align-items: center; gap: 1rem;">
                     <div class="radar-filters">
-                        <button class="radar-tab active" data-category="overall">OVERALL</button>
-                        <button class="radar-tab" data-category="coding">CODING</button>
-                        <button class="radar-tab" data-category="reasoning">REASONING</button>
+                        <button class="radar-tab active" data-category="agent">AGENT</button>
+                        <button class="radar-tab" data-category="chat">CHAT</button>
+                        <button class="radar-tab" data-category="code">CODE</button>
+                        <button class="radar-tab" data-category="image">IMAGE</button>
+                        <button class="radar-tab" data-category="video">VIDEO</button>
                     </div>
                     <button id="lb-expand-btn" class="hover-sound" title="Toggle Full View" style="background: transparent; border: 1px solid rgba(var(--accent-rgb), 0.3); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer;">
                         <i class="fa-solid fa-expand"></i>
@@ -793,15 +986,21 @@
                 </div>
             </div>
 
+            <div class="radar-sub-header">
+                <div class="radar-subtabs" id="radar-subtabs">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
             <div class="radar-table-wrapper">
                 <table id="ai-leaderboard-table">
                     <thead>
                         <tr>
                             <th>RANK</th>
-                            <th>MODEL ENGINE</th>
-                            <th>PRIMARY STRENGTH</th>
-                            <th>ELO SCORE</th>
-                            <th>STATUS</th>
+                            <th>MODEL &amp; LAB</th>
+                            <th id="th-metric-score">SCORE / NET</th>
+                            <th id="th-metric-secondary">CONFIRMED / VOTES</th>
+                            <th>LICENSE</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-body">
@@ -833,7 +1032,7 @@
             <button id="chat-send" class="magnetic-element hover-sound"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
-    <script src="./script~9e1709.js?v=5" defer></script>
+    <script src="./script~9e1709.js?v=19" defer></script>
 
 </body>
 

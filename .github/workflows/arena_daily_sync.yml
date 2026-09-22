@@ -1,0 +1,40 @@
+name: Daily Arena AI Leaderboard Sync
+
+on:
+  schedule:
+    # Run every day at 00:00 UTC (প্রতিদিন মধ্যরাতে স্বয়ংক্রিয় সিংক)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync-leaderboard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Arena AI Leaderboard sync
+        run: |
+          npm run sync:arena
+
+      - name: Commit and push changes if updated
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add docs/data/arena_leaderboard.json
+          if git diff --staged --quiet; then
+            echo "No changes detected in arena leaderboard data today."
+          else
+            git commit -m "🤖 chore(data): daily arena leaderboard sync [skip ci]"
+            git push
+            echo "Daily updates pushed successfully!"
+          fi

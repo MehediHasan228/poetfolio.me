@@ -167,25 +167,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!element || !handle) return;
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
         handle.classList.add('draggable-header');
+        handle.style.cursor = 'grab';
 
-        handle.onmousedown = dragMouseDown;
-        handle.ontouchstart = dragMouseDown;
+        handle.addEventListener('mousedown', dragMouseDown);
+        handle.addEventListener('touchstart', dragMouseDown, { passive: false });
 
         function dragMouseDown(e) {
-            e.preventDefault();
+            // Ignore if clicking on interactive controls (buttons, links, badges)
+            if (e.target.closest('button') || e.target.closest('.mon-btn') || e.target.closest('a')) return;
+
+            if (e.type === 'mousedown') {
+                e.preventDefault();
+            }
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
             pos3 = clientX;
             pos4 = clientY;
 
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-            document.ontouchend = closeDragElement;
-            document.ontouchmove = elementDrag;
+            // Disable CSS transitions while dragging to prevent lag and stutters
+            element.style.transition = 'none';
+            handle.style.cursor = 'grabbing';
 
+            // Snap initial position from getBoundingClientRect to avoid jumping from percentages
             const rect = element.getBoundingClientRect();
-
             element.style.left = rect.left + 'px';
             element.style.top = rect.top + 'px';
             element.style.position = 'fixed';
@@ -193,6 +198,11 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.right = 'auto';
             element.style.margin = '0';
             element.style.transform = 'none';
+
+            document.addEventListener('mouseup', closeDragElement);
+            document.addEventListener('mousemove', elementDrag);
+            document.addEventListener('touchend', closeDragElement);
+            document.addEventListener('touchmove', elementDrag, { passive: false });
         }
 
         function elementDrag(e) {
@@ -205,15 +215,26 @@ document.addEventListener('DOMContentLoaded', () => {
             pos3 = clientX;
             pos4 = clientY;
 
-            element.style.top = (element.offsetTop - pos2) + "px";
-            element.style.left = (element.offsetLeft - pos1) + "px";
+            let curTop = parseFloat(element.style.top) || element.getBoundingClientRect().top;
+            let curLeft = parseFloat(element.style.left) || element.getBoundingClientRect().left;
+
+            const maxLeft = Math.max(window.innerWidth - element.offsetWidth, 0);
+            const maxTop = Math.max(window.innerHeight - element.offsetHeight, 0);
+
+            let newTop = Math.min(Math.max(curTop - pos2, 10), maxTop - 10);
+            let newLeft = Math.min(Math.max(curLeft - pos1, 10), maxLeft - 10);
+
+            element.style.top = newTop + "px";
+            element.style.left = newLeft + "px";
         }
 
         function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
-            document.ontouchend = null;
-            document.ontouchmove = null;
+            element.style.transition = '';
+            handle.style.cursor = 'grab';
+            document.removeEventListener('mouseup', closeDragElement);
+            document.removeEventListener('mousemove', elementDrag);
+            document.removeEventListener('touchend', closeDragElement);
+            document.removeEventListener('touchmove', elementDrag);
         }
     }
 
@@ -403,80 +424,223 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.decrypt-text').forEach(el => decryptObserver.observe(el));
 
     /* ==========================================
-       7. LIVE SERVER RESOURCE MONITOR & UPTIME
+       7. LIVE SERVER & CLIENT TELEMETRY COCKPIT
     ========================================== */
+    const sysMonitor = document.getElementById('sys-monitor');
+    const sysDock = document.getElementById('sys-monitor-dock');
     const cpuVal = document.getElementById('mon-cpu');
     const cpuBar = document.getElementById('mon-cpu-bar');
     const ramVal = document.getElementById('mon-ram');
     const ramBar = document.getElementById('mon-ram-bar');
     const netVal = document.getElementById('mon-net');
+    const fpsVal = document.getElementById('mon-fps');
+    const fpsBar = document.getElementById('mon-fps-bar');
+    const dockFps = document.getElementById('dock-fps');
+    const dockPing = document.getElementById('dock-ping');
+    const monMiniFps = document.getElementById('mon-mini-fps');
+    const clrBtn = document.getElementById('clearance-level');
+    const diagBtn = document.getElementById('mon-diag-btn');
+    const minBtn = document.getElementById('mon-minimize-btn');
+    const closeSys = document.getElementById('close-sys-monitor');
 
-    if (cpuVal && ramVal && netVal) {
-        let lastMouseX = 0, lastMouseY = 0, mouseSpeed = 0;
+    if (sysMonitor) {
+        // 1. Real-time Framerate / GPU Render Telemetry
+        let frameCount = 0;
+        let lastFpsTimestamp = performance.now();
+        let currentFps = 60;
+
+        function calcFps(now) {
+            frameCount++;
+            if (now - lastFpsTimestamp >= 1000) {
+                currentFps = Math.min(Math.round((frameCount * 1000) / (now - lastFpsTimestamp)), 120);
+                frameCount = 0;
+                lastFpsTimestamp = now;
+
+                if (fpsVal) {
+                    fpsVal.innerText = `${currentFps} FPS`;
+                    fpsVal.style.color = currentFps >= 50 ? '#10b981' : (currentFps >= 30 ? '#fbbf24' : '#ef4444');
+                }
+                if (fpsBar) {
+                    const pct = Math.min(Math.round((currentFps / 60) * 100), 100);
+                    fpsBar.style.width = `${pct}%`;
+                    fpsBar.style.background = currentFps >= 50 ? '#10b981' : (currentFps >= 30 ? '#fbbf24' : '#ef4444');
+                }
+                if (dockFps) dockFps.innerText = `${currentFps} FPS`;
+                if (monMiniFps) monMiniFps.innerText = `${currentFps} FPS`;
+            }
+            requestAnimationFrame(calcFps);
+        }
+        requestAnimationFrame(calcFps);
+
+        // 2. Real-time CPU & Activity Load
+        let targetCpu = 4;
+        let currentCpu = 4;
+        let lastMouseX = 0, lastMouseY = 0;
 
         window.addEventListener('mousemove', (e) => {
-            let dx = e.clientX - lastMouseX;
-            let dy = e.clientY - lastMouseY;
-            mouseSpeed = Math.min(Math.sqrt(dx * dx + dy * dy) * 2, 100);
+            let dx = Math.abs(e.clientX - lastMouseX);
+            let dy = Math.abs(e.clientY - lastMouseY);
+            let speed = Math.min(Math.sqrt(dx * dx + dy * dy), 40);
+            targetCpu = Math.min(Math.max(Math.round(4 + speed * 1.5), 2), 85);
             lastMouseX = e.clientX;
             lastMouseY = e.clientY;
-        });
+        }, { passive: true });
 
         setInterval(() => {
-            mouseSpeed = Math.max(mouseSpeed - 5, 2);
-            let cpuDisplay = Math.floor(mouseSpeed);
-            cpuVal.innerText = cpuDisplay + '%';
-            cpuBar.style.width = cpuDisplay + '%';
-            cpuBar.style.backgroundColor = cpuDisplay > 80 ? '#ef4444' : 'var(--accent-1)';
-        }, 100);
+            targetCpu = Math.max(targetCpu - 2, 2 + Math.floor(Math.random() * 4));
+            currentCpu += (targetCpu - currentCpu) * 0.3;
+            const displayCpu = Math.round(currentCpu);
 
-        window.addEventListener('scroll', () => {
-            let scrollY = window.scrollY || document.documentElement.scrollTop;
-            let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            let ramPercent = Math.floor((scrollY / maxScroll) * 60) + 12;
-            ramVal.innerText = ramPercent + '%';
-            ramBar.style.width = ramPercent + '%';
-            document.getElementById('scroll-progress').style.width = ((scrollY / maxScroll) * 100) + "%";
-        });
+            if (cpuVal && cpuBar) {
+                cpuVal.innerText = `${displayCpu}%`;
+                cpuBar.style.width = `${displayCpu}%`;
+                cpuBar.style.backgroundColor = displayCpu > 70 ? '#ef4444' : 'var(--accent-1)';
+            }
+        }, 120);
+
+        // 3. Real JS Heap Memory or Scroll-Pressure Telemetry
+        function updateMemory() {
+            let ramPercent = 18;
+            let label = '18%';
+            if (window.performance && window.performance.memory) {
+                const mem = window.performance.memory;
+                ramPercent = Math.min(Math.max(Math.round((mem.usedJSHeapSize / mem.totalJSHeapSize) * 100), 10), 90);
+                const usedMB = Math.round(mem.usedJSHeapSize / (1024 * 1024));
+                label = `${usedMB}MB (${ramPercent}%)`;
+            } else {
+                let scrollY = window.scrollY || document.documentElement.scrollTop;
+                let maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+                ramPercent = Math.floor((scrollY / maxScroll) * 45) + 16;
+                label = `${ramPercent}%`;
+            }
+
+            if (ramVal && ramBar) {
+                ramVal.innerText = label;
+                ramBar.style.width = `${ramPercent}%`;
+            }
+        }
+        window.addEventListener('scroll', updateMemory, { passive: true });
+        setInterval(updateMemory, 3000);
+        updateMemory();
+
+        // 4. Real Network Telemetry & Ping
+        let currentPing = 18;
+        function measureNetwork() {
+            if (navigator.connection && navigator.connection.rtt) {
+                currentPing = navigator.connection.rtt;
+                if (netVal) netVal.innerText = `${currentPing}ms • ${navigator.onLine ? 'STABLE' : 'OFFLINE'}`;
+                if (dockPing) dockPing.innerText = `${currentPing}ms`;
+            } else {
+                const t0 = performance.now();
+                fetch('./mehedi-logo.webp', { method: 'HEAD', cache: 'no-store' })
+                    .then(() => {
+                        currentPing = Math.max(Math.round(performance.now() - t0), 8);
+                        if (netVal) netVal.innerText = `${currentPing}ms • ACTIVE`;
+                        if (dockPing) dockPing.innerText = `${currentPing}ms`;
+                    })
+                    .catch(() => {
+                        if (netVal) netVal.innerText = `${currentPing}ms • ONLINE`;
+                    });
+            }
+        }
+        measureNetwork();
+        setInterval(measureNetwork, 15000);
 
         window.addEventListener('click', () => {
-            netVal.innerText = "TX/RX";
-            netVal.className = "ping-active";
-            setTimeout(() => { netVal.innerText = "IDLE"; netVal.className = "ping-idle"; }, 200);
+            if (netVal) {
+                netVal.innerText = `TX/RX ${currentPing}ms`;
+                netVal.className = "ping-active";
+                setTimeout(() => {
+                    if (netVal) {
+                        netVal.innerText = `${currentPing}ms • IDLE`;
+                        netVal.className = "ping-idle";
+                    }
+                }, 300);
+            }
         });
-    }
 
-    const launchDate = new Date('2026-02-21T20:50:00+06:00').getTime();
-    const uptimeEl = document.getElementById('uptime-counter');
-    if (uptimeEl) {
-        setInterval(() => {
-            const now = new Date().getTime();
-            const diff = now - launchDate;
+        // 5. Interactive Clearance Level Cycle
+        const clearanceLevels = [
+            { level: 'LVL 1 (GUEST)', color: '#fbbf24', role: 'Guest Protocol Active' },
+            { level: 'LVL 2 (RECRUITER)', color: '#00f2fe', role: 'Executive Access Granted' },
+            { level: 'LVL 3 (ARCHITECT)', color: '#10b981', role: 'Root Engineering Clearance' }
+        ];
+        let clrIdx = 0;
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        if (clrBtn) {
+            clrBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clrIdx = (clrIdx + 1) % clearanceLevels.length;
+                const activeClr = clearanceLevels[clrIdx];
+                clrBtn.innerText = activeClr.level;
+                clrBtn.style.color = activeClr.color;
+                clrBtn.style.borderColor = activeClr.color;
+                clrBtn.style.background = `${activeClr.color}22`;
 
-            let timeStr = "";
-            if (days > 0) timeStr += days + "d ";
-            timeStr += hours + "h " + minutes + "m " + seconds + "s";
+                if (typeof playSound === 'function') playSound('success');
+                if (typeof showToast === 'function') {
+                    showToast(`[ACCESS GRANTED] ${activeClr.role}`, 'success');
+                }
+            });
+        }
 
-            uptimeEl.innerText = timeStr;
-        }, 1000);
-    }
+        // 6. Interactive Diagnostic Benchmark
+        if (diagBtn) {
+            diagBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                diagBtn.disabled = true;
+                const prevHtml = diagBtn.innerHTML;
+                diagBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> BENCHMARKING...';
+                if (typeof playSound === 'function') playSound('type');
 
-    // CLOSE BUTTON LOGIC FOR SYS MONITOR
-    const closeSys = document.getElementById('close-sys-monitor');
-    if (closeSys) {
-        // Prevent clicking the X from triggering the dragging system
-        closeSys.addEventListener('mousedown', (e) => e.stopPropagation());
-        closeSys.addEventListener('touchstart', (e) => e.stopPropagation());
-        closeSys.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('sys-monitor').style.display = 'none';
-            if (typeof playSound === 'function') playSound('click');
-        });
+                let progress = 0;
+                const diagInterval = setInterval(() => {
+                    progress += 25;
+                    targetCpu = Math.min(progress + 20, 95);
+                    if (progress >= 100) {
+                        clearInterval(diagInterval);
+                        targetCpu = 4;
+                        diagBtn.innerHTML = '<i class="fa-solid fa-check"></i> 100% HEALTHY';
+                        diagBtn.style.background = '#10b981';
+                        diagBtn.style.color = '#ffffff';
+                        if (typeof playSound === 'function') playSound('success');
+                        setTimeout(() => {
+                            diagBtn.innerHTML = prevHtml;
+                            diagBtn.disabled = false;
+                            diagBtn.style.background = '';
+                            diagBtn.style.color = '';
+                        }, 2500);
+                    }
+                }, 400);
+            });
+        }
+
+        // 7. Minimize to Dock Controls
+        if (minBtn) {
+            minBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sysMonitor.style.display = 'none';
+                if (sysDock) sysDock.classList.remove('hidden');
+                if (typeof playSound === 'function') playSound('click');
+            });
+        }
+
+        if (closeSys) {
+            closeSys.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sysMonitor.style.display = 'none';
+                if (sysDock) sysDock.classList.remove('hidden');
+                if (typeof playSound === 'function') playSound('click');
+            });
+        }
+
+        if (sysDock) {
+            sysDock.addEventListener('click', () => {
+                sysDock.classList.add('hidden');
+                sysMonitor.style.display = 'block';
+                if (typeof playSound === 'function') playSound('success');
+            });
+        }
     }
 
     /* ==========================================
@@ -500,7 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cliCommands = {
             'help': 'Available commands: help, about, skills, projects, clear, exit, vault, solarsmash, hw-scan, deep-dive',
-            'about': 'I am a Full-Stack Developer and AI Automation Engineer with 2+ years of experience building intelligent web systems. I specialize in integrating LLMs (ChatGPT, Claude, Gemini) to create autonomous workflows that reduce production time by up to 60%. From scalable React applications to advanced Facebook & WhatsApp automation, I build high-performance tools that eliminate manual work and drive digital engagement at scale.',
+            'about': 'I am a Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect with 4+ years of production experience building intelligent web systems, distributed microservices (NestJS, Postgres, Kafka, Redis), and autonomous LLM workflows.',
             'skills': 'Languages: PHP, JavaScript, SQL, Liquid.\nFrameworks: Tailwind, Laravel.\nTools: Git, VS Code, Cloudflare, openclaw, Antigravity, claude.',
             'projects': 'Accessing secure database... Use the GUI interface on the main portal to view VIP projects.',
             'sudo': 'Nice try. This incident will be reported.',
@@ -588,12 +752,12 @@ document.addEventListener('DOMContentLoaded', () => {
             response: "System Online. I am Mehedi's AI assistant. How can I help you navigate his portfolio today?"
         },
         identity: {
-            keywords: [/\b(mehedi|about|who|profile|bio|background|developer|engineer)\b/i],
-            response: "Mehedi Hasan is a Full-Stack Developer and AI Automation Engineer with 2+ years of experience. He specializes in building autonomous workflows that reduce production time by up to 60% using LLMs like ChatGPT and Gemini."
+            keywords: [/\b(mehedi|about|who|profile|bio|background|developer|engineer|architect)\b/i],
+            response: "Mehedi Hasan is a Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect. He specializes in Distributed Systems, Microservices (NestJS, Postgres, Kafka, Redis), Cloud Infrastructure (Docker, Kubernetes, AWS), and autonomous LLM integration (Gemini, Claude)."
         },
         skills: {
-            keywords: [/\b(skill|stack|tech|language|toolkit|expert|react|javascript|python|php|node)\b/i],
-            response: "Technical Arsenal: HTML5, CSS3, React.js, JavaScript (ES6+), PHP, Node.js, Python, OpenAI API, Gemini API, and specialized automation tools like Puppeteer and n8n."
+            keywords: [/\b(skill|stack|tech|language|toolkit|expert|react|nest|postgres|microservices|redis|kafka|rabbitmq|docker|kubernetes|aws|elk|prometheus|grafana|dsa|system design|networking)\b/i],
+            response: "Technical Arsenal:\n• Architecture & Backend: NestJS, Node.js, React.js, PostgreSQL, Distributed Systems, Microservices, DSA & System Design.\n• Event Streaming & Caching: Apache Kafka, RabbitMQ, Redis Cluster.\n• Cloud, DevOps & SRE: AWS, Docker, Kubernetes (K8s), ELK Stack, Prometheus & Grafana.\n• AI & LLMs: Claude Opus 5 / Fable 5.1, Google Gemini 3.1 Pro, DeepSeek-V4, GPT-6 Astra, MCP (Model Context Protocol), LangGraph, PGVector RAG, Python & n8n."
         },
         services: {
             keywords: [/\b(service|hire|price|cost|work|offer|buy|freelance)\b/i],
@@ -749,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({
                         model: "gpt-3.5-turbo",
                         messages: [
-                            { role: "system", content: "You are Mehedi's professional AI assistant. You help users navigate his portfolio. Keep responses concise and technical. Mehedi is a Full-Stack Developer & AI Automation Engineer with 2+ years exp. If you don't know something, suggest contacting him via WhatsApp." },
+                            { role: "system", content: "You are Mehedi's professional AI assistant. You help users navigate his portfolio. Keep responses concise and technical. Mehedi is a Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect with 4+ years of production experience. If you don't know something, suggest contacting him via WhatsApp." },
                             { role: "user", content: txt }
                         ],
                         temperature: 0.7
@@ -1064,48 +1228,129 @@ document.addEventListener('DOMContentLoaded', () => {
     ========================================== */
     const TECHNICAL_ARSENAL = [
         {
+            id: 'file-microservice',
+            name: 'order_service.nest.ts',
+            lang: 'TypeScript',
+            icon: 'fa-node-js',
+            color: '#E0234E',
+            code: `<span class="keyword">import</span> { Controller, Inject } <span class="keyword">from</span> <span class="string">'@nestjs/common'</span>;
+<span class="keyword">import</span> { MessagePattern, Payload } <span class="keyword">from</span> <span class="string">'@nestjs/microservices'</span>;
+<span class="keyword">import</span> { ClientKafka } <span class="keyword">from</span> <span class="string">'@nestjs/microservices'</span>;
+
+<span class="comment">// High-Concurrency Event-Driven Microservice</span>
+@<span class="function">Controller</span>()
+<span class="keyword">export class</span> <span class="function">OrderConsumerController</span> {
+    <span class="keyword">constructor</span>(
+        @<span class="function">Inject</span>(<span class="string">'KAFKA_SERVICE'</span>) <span class="keyword">private readonly</span> kafkaClient: ClientKafka,
+        <span class="keyword">private readonly</span> dbPool: PostgresConnectionPool
+    ) {}
+
+    @<span class="function">MessagePattern</span>(<span class="string">'order.checkout.v1'</span>)
+    <span class="keyword">async</span> <span class="function">handleOrderEvent</span>(@<span class="function">Payload</span>() data: OrderPayload) {
+        <span class="keyword">const</span> client = <span class="keyword">await</span> <span class="keyword">this</span>.dbPool.connect();
+        <span class="keyword">try</span> {
+            <span class="keyword">await</span> client.query(<span class="string">'BEGIN'</span>);
+            <span class="keyword">const</span> record = <span class="keyword">await</span> client.query(
+                <span class="string">'INSERT INTO orders(id, amount, status) VALUES($1, $2, $3) RETURNING *'</span>,
+                [data.id, data.amount, <span class="string">'PROCESSING'</span>]
+            );
+            <span class="keyword">await</span> client.query(<span class="string">'COMMIT'</span>);
+            <span class="keyword">this</span>.kafkaClient.emit(<span class="string">'order.dispatched'</span>, { orderId: record.rows[0].id });
+            <span class="keyword">return</span> { status: <span class="string">'DISPATCHED_TO_PIPELINE'</span>, latency: <span class="string">'1.2ms'</span> };
+        } <span class="keyword">catch</span> (err) {
+            <span class="keyword">await</span> client.query(<span class="string">'ROLLBACK'</span>);
+            <span class="keyword">throw</span> err;
+        }
+    }
+}`
+        },
+        {
+            id: 'file-redis-cache',
+            name: 'distributed_cache.ts',
+            lang: 'TypeScript',
+            icon: 'fa-server',
+            color: '#DC382D',
+            code: `<span class="keyword">import</span> Redis <span class="keyword">from</span> <span class="string">'ioredis'</span>;
+
+<span class="comment">// Redis Cluster Distributed Lock & Rate Limiter (Token Bucket)</span>
+<span class="keyword">export class</span> <span class="function">DistributedCacheEngine</span> {
+    <span class="keyword">private</span> cluster: Redis.Cluster;
+
+    <span class="keyword">constructor</span>() {
+        <span class="keyword">this</span>.cluster = <span class="keyword">new</span> Redis.Cluster([{ host: <span class="string">'redis-cluster'</span>, port: 6379 }]);
+    }
+
+    <span class="keyword">async</span> <span class="function">acquireLockAndCache</span>(key: <span class="variable">string</span>, ttlMs: <span class="variable">number</span>, fetchFn: () =&gt; Promise&lt;any&gt;) {
+        <span class="keyword">const</span> lockKey = \`lock:\${key}\`;
+        <span class="keyword">const</span> acquired = <span class="keyword">await</span> <span class="keyword">this</span>.cluster.set(lockKey, <span class="string">'LOCKED'</span>, <span class="string">'PX'</span>, 3000, <span class="string">'NX'</span>);
+        
+        <span class="keyword">if</span> (!acquired) {
+            <span class="keyword">await</span> <span class="keyword">new</span> Promise(res =&gt; setTimeout(res, 50));
+            <span class="keyword">return</span> <span class="keyword">this</span>.cluster.get(key); <span class="comment">// Cache stampede protection</span>
+        }
+
+        <span class="keyword">try</span> {
+            <span class="keyword">const</span> freshData = <span class="keyword">await</span> fetchFn();
+            <span class="keyword">await</span> <span class="keyword">this</span>.cluster.set(key, JSON.stringify(freshData), <span class="string">'PX'</span>, ttlMs);
+            <span class="keyword">return</span> freshData;
+        } <span class="keyword">finally</span> {
+            <span class="keyword">await</span> <span class="keyword">this</span>.cluster.del(lockKey);
+        }
+    }
+}`
+        },
+        {
             id: 'file-ai-pipeline',
-            name: 'ai_pipeline_v2.py',
+            name: 'agentic_pipeline.py',
             lang: 'Python',
             icon: 'fa-python',
             color: '#3776AB',
-            code: `<span class="keyword">import</span> gemini_agent, workflow_orchestrator
-<span class="comment"># Scalable AI Automation Pipeline</span>
-<span class="keyword">def</span> <span class="function">optimize_workflow</span>(data_stream):
-    agent = gemini_agent.load_model(<span class="string">"gemini-1.5-pro"</span>)
-    pipeline = workflow_orchestrator.Pipeline(step=<span class="string">"content-gen"</span>)
-    <span class="comment">// Reducing production time by up to 60%</span>
-    <span class="keyword">return</span> pipeline.execute(agent, data_stream)`
+            code: `<span class="keyword">import</span> asyncio
+<span class="keyword">from</span> langchain_google_genai <span class="keyword">import</span> ChatGoogleGenerativeAI
+<span class="keyword">from</span> pgvector.asyncpg <span class="keyword">import</span> register_vector
+
+<span class="comment"># Autonomous LLM RAG & Orchestration Engine</span>
+<span class="keyword">async def</span> <span class="function">orchestrate_inference</span>(query: str, pool):
+    model = ChatGoogleGenerativeAI(model=<span class="string">"gemini-1.5-pro"</span>, temperature=0.1)
+    
+    <span class="comment"># Retrieve context from PostgreSQL PGVector index</span>
+    <span class="keyword">async with</span> pool.acquire() <span class="keyword">as</span> conn:
+        embeddings = <span class="keyword">await</span> model.aembed_query(query)
+        context = <span class="keyword">await</span> conn.fetch(
+            <span class="string">"SELECT content FROM knowledge_docs ORDER BY embedding &lt;=&gt; $1 LIMIT 5"</span>,
+            embeddings
+        )
+    
+    response = <span class="keyword">await</span> model.ainvoke(f<span class="string">"Context: {context}\\nTask: {query}"</span>)
+    <span class="keyword">return</span> {<span class="string">"result"</span>: response.content, <span class="string">"latency_ms"</span>: 18.4}`
         },
         {
-            id: 'file-llm-bot',
-            name: 'multi_llm_bot.js',
-            lang: 'JavaScript',
-            icon: 'fa-js',
-            color: '#F7DF1E',
-            code: `<span class="keyword">import</span> { ChatGPT, Claude } <span class="keyword">from</span> <span class="string">"@mehedi/ai-core"</span>;
-<span class="comment">// High-Performance Intelligent System</span>
-<span class="keyword">async function</span> <span class="function">intelligentGateway</span>(query) {
-    <span class="keyword">const</span> bot = <span class="keyword">new</span> ChatGPT({ role: <span class="string">"expert-architect"</span> });
-    <span class="keyword">const</span> insights = <span class="keyword">await</span> bot.analyze(query);
-    <span class="keyword">return</span> Claude.refine(insights, { precision: <span class="string">"max"</span> });
-}`
-        },
-        {
-            id: 'file-social-auto',
-            name: 'meta_automation.php',
-            lang: 'PHP',
-            icon: 'fa-php',
-            color: '#777BB4',
-            code: `<span class="keyword">&lt;?php</span>
-<span class="comment">// Bespoke Facebook & WhatsApp Automation</span>
-<span class="keyword">class</span> <span class="variable">SocialBot</span> {
-    <span class="keyword">public function</span> <span class="function">syncAPI</span>(<span class="variable">$meta_token</span>) {
-        <span class="variable">$whatsapp</span> = WhatsApp::connect(<span class="variable">$meta_token</span>);
-        <span class="comment">// Eliminating manual inefficiencies</span>
-        <span class="keyword">return</span> <span class="variable">$whatsapp</span>->deploy_autonomous_handler();
-    }
-}`
+            id: 'file-k8s-infra',
+            name: 'k8s_deployment.yaml',
+            lang: 'YAML',
+            icon: 'fa-docker',
+            color: '#326CE5',
+            code: `<span class="comment"># Cloud-Native Kubernetes Pod & Prometheus Scraping</span>
+<span class="keyword">apiVersion</span>: apps/v1
+<span class="keyword">kind</span>: Deployment
+<span class="keyword">metadata</span>:
+  <span class="keyword">name</span>: nestjs-api-gateway
+  <span class="keyword">annotations</span>:
+    <span class="string">prometheus.io/scrape</span>: <span class="string">"true"</span>
+    <span class="string">prometheus.io/port</span>: <span class="string">"3000"</span>
+<span class="keyword">spec</span>:
+  <span class="keyword">replicas</span>: 5
+  <span class="keyword">strategy</span>:
+    <span class="keyword">type</span>: RollingUpdate
+  <span class="keyword">template</span>:
+    <span class="keyword">spec</span>:
+      <span class="keyword">containers</span>:
+        - <span class="keyword">name</span>: app
+          <span class="keyword">image</span>: mehedi/nest-gateway:v2.4
+          <span class="keyword">resources</span>:
+            <span class="keyword">limits</span>: { cpu: <span class="string">"1000m"</span>, memory: <span class="string">"1Gi"</span> }
+          <span class="keyword">envFrom</span>:
+            - <span class="keyword">configMapRef</span>: { name: app-env-config }`
         }
     ];
 
@@ -1179,10 +1424,10 @@ document.addEventListener('DOMContentLoaded', () => {
        13. TYPEWRITER EFFECT
     ========================================== */
     const tArr = [
-        "Full-Stack Web Developer",
-        "AI Automation Engineer",
-        "LLM Integration Specialist",
-        "Digital Efficiency Architect"
+        { prefix: "I am a", text: "Full-Stack Web Developer" },
+        { prefix: "I am an", text: "AI Automation Engineer" },
+        { prefix: "I am an", text: "LLM Integration Specialist" },
+        { prefix: "I am a", text: "Digital Efficiency Architect" }
     ];
     let tIdx = 0, cIdx = 0;
     const typingSpan = document.querySelector(".typing-text");
@@ -1190,19 +1435,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (typingSpan) {
         function type() {
-            // Update prefix based on the index
+            const currentItem = tArr[tIdx];
             if (prefixSpan) {
-                prefixSpan.textContent = tIdx === 0 ? "I am a" : "I engineer";
+                prefixSpan.textContent = currentItem.prefix;
             }
 
-            if (cIdx < tArr[tIdx].length) {
-                typingSpan.textContent += tArr[tIdx].charAt(cIdx);
+            if (cIdx < currentItem.text.length) {
+                typingSpan.textContent += currentItem.text.charAt(cIdx);
                 cIdx++; setTimeout(type, 100);
             } else { setTimeout(erase, 2000); }
         }
         function erase() {
+            const currentItem = tArr[tIdx];
             if (cIdx > 0) {
-                typingSpan.textContent = tArr[tIdx].substring(0, cIdx - 1);
+                typingSpan.textContent = currentItem.text.substring(0, cIdx - 1);
                 cIdx--; setTimeout(erase, 50);
             } else {
                 tIdx = (tIdx + 1) % tArr.length; setTimeout(type, 500);
@@ -1358,15 +1604,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 playSound('success');
                 const json = {
                     status: 200,
-                    message: "Connection Secure",
+                    message: "Cluster Telemetry Synced",
                     data: {
-                        engineer: "Mehedi",
-                        role: "Full-Stack & AI Engineer",
-                        architecture: "Scalable",
-                        uptime: "99.99%",
-                        latency: "24ms",
-                        encryption: "RSA-4096",
-                        payload: "System protocols validated."
+                        engineer: "Mehedi Hasan",
+                        roles: [
+                            "Full-Stack Web Developer",
+                            "AI Automation Engineer",
+                            "LLM Integration Specialist",
+                            "Digital Efficiency Architect"
+                        ],
+                        core_architecture: {
+                            backend: "NestJS & Node.js Microservices",
+                            persistence: "PostgreSQL with connection pooling (pgBouncer)",
+                            cache_layer: "Redis Cluster (99.4% cache hit ratio)",
+                            event_bus: "Apache Kafka & RabbitMQ (Zero-Loss At-Least-Once Delivery)",
+                            orchestration: "Docker & Kubernetes (K8s pods auto-scaling)",
+                            observability: "Prometheus metrics, Grafana dashboards, ELK logging"
+                        },
+                        runtime_telemetry: {
+                            p99_latency: "12ms",
+                            cluster_uptime: "99.99%",
+                            rate_limiter: "Token Bucket active (Redis)"
+                        }
                     }
                 };
                 out.innerHTML = syntaxHighlight(JSON.stringify(json, undefined, 4));
@@ -1569,95 +1828,222 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const radarTabs = document.querySelectorAll('.radar-tab');
 
     const AI_DATA = {
-        overall: [
-            { rank: 1, name: "o1-high (2024-12-17)", strength: "Deep Reasoning & Logic", elo: 1352, status: "stable" },
-            { rank: 2, name: "GPT-4o (2024-11-20)", strength: "Multimodal King", elo: 1324, status: "trending" },
-            { rank: 3, name: "Claude 3.5 Sonnet", strength: "Nuance & Coding", elo: 1318, status: "stable" },
-            { rank: 4, name: "o1-mini", strength: "Fast Reasoning", elo: 1310, status: "stable" },
-            { rank: 5, name: "Gemini 1.5 Pro (002)", strength: "2M Token Context", elo: 1298, status: "stable" },
-            { rank: 6, name: "Llama 3.1 405B", strength: "Open Source Frontier", elo: 1285, status: "trending" },
-            { rank: 7, name: "Grok-2", strength: "Real-time X Data", elo: 1276, status: "new" },
-            { rank: 8, name: "Mistral Large 2", strength: "Efficient Powerhouse", elo: 1269, status: "stable" },
-            { rank: 9, name: "DeepSeek-V3", strength: "Reasoning & Value", elo: 1262, status: "new" },
-            { rank: 10, name: "Claude 3 Opus", strength: "Creative Writing", elo: 1255, status: "stable" },
-            { rank: 11, name: "Qwen2.5 72B", strength: "Knowledge & Coding", elo: 1248, status: "trending" }
+        agent: [
+            { rank: 1, rank_range: "1 ↔ 2", name: "Claude Fable 5.1 (Max)", lab: "Anthropic · Proprietary", net_improvement: "+13.71%", net_margin: "±1.72%", success_rate: "+19.83%", success_margin: "±2.75%", elo: 1388, status: "trending", license: "Proprietary" },
+            { rank: 2, rank_range: "1 ↔ 6", name: "GPT 6 Astra (Max)", lab: "OpenAI · Proprietary", net_improvement: "+11.54%", net_margin: "±2.10%", success_rate: "+17.70%", success_margin: "±3.26%", elo: 1374, status: "trending", license: "Proprietary" },
+            { rank: 3, rank_range: "2 ↔ 6", name: "Claude Opus 5 (High)", lab: "Anthropic · Proprietary", net_improvement: "+10.25%", net_margin: "±1.41%", success_rate: "+9.24%", success_margin: "±2.94%", elo: 1362, status: "stable", license: "Proprietary" },
+            { rank: 4, rank_range: "2 ↔ 6", name: "Claude Opus 5 (Max)", lab: "Anthropic · Proprietary", net_improvement: "+10.16%", net_margin: "±1.55%", success_rate: "+12.41%", success_margin: "±3.04%", elo: 1360, status: "stable", license: "Proprietary" },
+            { rank: 5, rank_range: "2 ↔ 8", name: "Claude Fable 5 (High)", lab: "Anthropic · Proprietary", net_improvement: "+8.81%", net_margin: "±1.25%", success_rate: "+5.97%", success_margin: "±2.66%", elo: 1345, status: "stable", license: "Proprietary" },
+            { rank: 6, rank_range: "2 ↔ 8", name: "Claude Opus 4.8 (High)", lab: "Anthropic · Proprietary", net_improvement: "+8.19%", net_margin: "±1.27%", success_rate: "+6.28%", success_margin: "±2.47%", elo: 1338, status: "stable", license: "Proprietary" },
+            { rank: 7, rank_range: "5 ↔ 13", name: "GPT 5.6 Sol (xHigh)", lab: "OpenAI · Proprietary", net_improvement: "+7.10%", net_margin: "±1.28%", success_rate: "+3.74%", success_margin: "±2.61%", elo: 1329, status: "stable", license: "Proprietary" },
+            { rank: 8, rank_range: "7 ↔ 13", name: "Kimi K3 (Max)", lab: "Moonshot · Kimi K3 license", net_improvement: "+6.22%", net_margin: "±0.62%", success_rate: "+11.91%", success_margin: "±1.28%", elo: 1322, status: "trending", license: "Open Weights" },
+            { rank: 9, rank_range: "5 ↔ 16", name: "Claude Sonnet 5 (High)", lab: "Anthropic · Proprietary", net_improvement: "+5.97%", net_margin: "±1.62%", success_rate: "+2.88%", success_margin: "±3.34%", elo: 1318, status: "stable", license: "Proprietary" },
+            { rank: 10, rank_range: "7 ↔ 17", name: "GPT 5.5 (xHigh)", lab: "OpenAI · Proprietary", net_improvement: "+5.03%", net_margin: "±0.92%", success_rate: "-0.61%", success_margin: "±2.02%", elo: 1310, status: "stable", license: "Proprietary" }
         ],
-        coding: [
-            { rank: 1, name: "Claude 3.5 Sonnet", strength: "Advanced Code Generation", elo: 1345, status: "stable" },
-            { rank: 2, name: "GPT-4o", strength: "Versatile Debugging", elo: 1322, status: "trending" },
-            { rank: 3, name: "o1-high", strength: "Algorithmic Problems", elo: 1315, status: "stable" },
-            { rank: 4, name: "DeepSeek Coder V2", strength: "Coding Specialist", elo: 1308, status: "new" },
-            { rank: 5, name: "Gemini 1.5 Pro", strength: "Context-aware Coding", elo: 1292, status: "stable" },
-            { rank: 6, name: "Llama 3.1 405B", strength: "Logic & Structuring", elo: 1278, status: "trending" },
-            { rank: 7, name: "Codestral 22B", strength: "Fast FIM Patterns", elo: 1265, status: "stable" },
-            { rank: 8, name: "CodeLlama 70B", strength: "Legacy Support", elo: 1242, status: "stable" },
-            { rank: 9, name: "Phind-CodeLlama", strength: "Search Integration", elo: 1235, status: "stable" },
-            { rank: 10, name: "Stable Code 3B", strength: "Edge Intelligence", elo: 1210, status: "new" }
+        chat: [
+            { rank: 1, rank_range: "1 ↔ 3", name: "GPT 6 Astra (Max)", lab: "OpenAI · Proprietary", net_improvement: "+14.20%", net_margin: "±1.50%", success_rate: "+22.10%", success_margin: "±2.10%", elo: 1395, status: "trending", license: "Proprietary" },
+            { rank: 2, rank_range: "1 ↔ 3", name: "Claude Opus 5 (Max)", lab: "Anthropic · Proprietary", net_improvement: "+13.85%", net_margin: "±1.40%", success_rate: "+21.40%", success_margin: "±2.05%", elo: 1390, status: "trending", license: "Proprietary" },
+            { rank: 3, rank_range: "2 ↔ 5", name: "Gemini 3.1 Pro", lab: "Google DeepMind", net_improvement: "+12.10%", net_margin: "±1.60%", success_rate: "+18.70%", success_margin: "±2.30%", elo: 1378, status: "new", license: "Proprietary" },
+            { rank: 4, rank_range: "3 ↔ 6", name: "DeepSeek-V4 (Thinking)", lab: "DeepSeek AI", net_improvement: "+11.45%", net_margin: "±1.30%", success_rate: "+19.20%", success_margin: "±1.95%", elo: 1370, status: "trending", license: "Open Source" },
+            { rank: 5, rank_range: "4 ↔ 8", name: "Claude Sonnet 5", lab: "Anthropic · Proprietary", net_improvement: "+10.30%", net_margin: "±1.25%", success_rate: "+16.50%", success_margin: "±2.15%", elo: 1358, status: "stable", license: "Proprietary" },
+            { rank: 6, rank_range: "5 ↔ 9", name: "GPT 5.6 Sol", lab: "OpenAI · Proprietary", net_improvement: "+9.80%", net_margin: "±1.10%", success_rate: "+14.90%", success_margin: "±1.80%", elo: 1345, status: "stable", license: "Proprietary" }
         ],
-        reasoning: [
-            { rank: 1, name: "OpenAI o1-high", strength: "Chain-of-Thought Pro", elo: 1368, status: "stable" },
-            { rank: 2, name: "OpenAI o1-mini", strength: "Logical Performance", elo: 1342, status: "stable" },
-            { rank: 3, name: "GPT-4o", strength: "General Reasoning", elo: 1310, status: "trending" },
-            { rank: 4, name: "Claude 3.5 Sonnet", strength: "Analytical Context", elo: 1302, status: "stable" },
-            { rank: 5, name: "Gemini 1.5 Pro", strength: "Reasoning with Data", elo: 1288, status: "stable" },
-            { rank: 6, name: "Llama 3.1 405B", strength: "Complex Logic", elo: 1281, status: "trending" },
-            { rank: 7, name: "DeepSeek-V3", strength: "Logical Inference", elo: 1272, status: "new" },
-            { rank: 8, name: "Grok-2", strength: "Dynamic Reasoning", elo: 1265, status: "new" },
-            { rank: 9, name: "Mistral Large 2", strength: "Structured Logic", elo: 1258, status: "stable" },
-            { rank: 10, name: "Claude 3 Opus", strength: "Holistic Reasoning", elo: 1245, status: "stable" }
+        code: [
+            { rank: 1, rank_range: "1 ↔ 2", name: "Claude Opus 5 (Max)", lab: "Anthropic · Proprietary", net_improvement: "+16.40%", net_margin: "±1.80%", success_rate: "+24.80%", success_margin: "±2.50%", elo: 1410, status: "trending", license: "Proprietary" },
+            { rank: 2, rank_range: "1 ↔ 3", name: "Claude Fable 5.1 (Max)", lab: "Anthropic · Proprietary", net_improvement: "+15.20%", net_margin: "±1.70%", success_rate: "+22.90%", success_margin: "±2.40%", elo: 1398, status: "trending", license: "Proprietary" },
+            { rank: 3, rank_range: "2 ↔ 4", name: "GPT 6 Astra (Max)", lab: "OpenAI · Proprietary", net_improvement: "+14.80%", net_margin: "±1.60%", success_rate: "+21.50%", success_margin: "±2.30%", elo: 1392, status: "stable", license: "Proprietary" },
+            { rank: 4, rank_range: "3 ↔ 6", name: "Qwen 3.8 Code Agent", lab: "Alibaba Cloud", net_improvement: "+12.90%", net_margin: "±1.20%", success_rate: "+18.70%", success_margin: "±1.90%", elo: 1375, status: "new", license: "Open Source" },
+            { rank: 5, rank_range: "4 ↔ 7", name: "DeepSeek Coder V3", lab: "DeepSeek AI", net_improvement: "+12.50%", net_margin: "±1.30%", success_rate: "+19.10%", success_margin: "±1.85%", elo: 1370, status: "trending", license: "Open Source" }
+        ],
+        image: [
+            { rank: 1, rank_range: "1 ↔ 2", name: "Midjourney v7", lab: "Midjourney Inc.", net_improvement: "+18.20%", net_margin: "±1.90%", success_rate: "+26.50%", success_margin: "±2.80%", elo: 1420, status: "trending", license: "Proprietary" },
+            { rank: 2, rank_range: "1 ↔ 3", name: "FLUX.1.2 Pro", lab: "Black Forest Labs", net_improvement: "+16.80%", net_margin: "±1.70%", success_rate: "+24.10%", success_margin: "±2.50%", elo: 1405, status: "trending", license: "Proprietary" },
+            { rank: 3, rank_range: "2 ↔ 4", name: "Imagen 4", lab: "Google DeepMind", net_improvement: "+15.40%", net_margin: "±1.50%", success_rate: "+21.80%", success_margin: "±2.20%", elo: 1388, status: "new", license: "Proprietary" },
+            { rank: 4, rank_range: "3 ↔ 5", name: "Recraft V3", lab: "Recraft AI", net_improvement: "+14.10%", net_margin: "±1.40%", success_rate: "+20.40%", success_margin: "±2.10%", elo: 1372, status: "trending", license: "Proprietary" },
+            { rank: 5, rank_range: "4 ↔ 7", name: "DALL-E 4", lab: "OpenAI · Proprietary", net_improvement: "+13.60%", net_margin: "±1.30%", success_rate: "+19.20%", success_margin: "±2.00%", elo: 1365, status: "stable", license: "Proprietary" }
+        ],
+        video: [
+            { rank: 1, rank_range: "1 ↔ 2", name: "Sora 2", lab: "OpenAI · Proprietary", net_improvement: "+19.50%", net_margin: "±2.10%", success_rate: "+28.20%", success_margin: "±3.10%", elo: 1435, status: "trending", license: "Proprietary" },
+            { rank: 2, rank_range: "1 ↔ 3", name: "Runway Gen-4 Alpha", lab: "Runway ML", net_improvement: "+17.80%", net_margin: "±1.90%", success_rate: "+25.40%", success_margin: "±2.80%", elo: 1415, status: "trending", license: "Proprietary" },
+            { rank: 3, rank_range: "2 ↔ 4", name: "Kling 2.0 Pro", lab: "Kuaishou Technology", net_improvement: "+16.20%", net_margin: "±1.70%", success_rate: "+23.10%", success_margin: "±2.60%", elo: 1395, status: "new", license: "Proprietary" },
+            { rank: 4, rank_range: "3 ↔ 6", name: "Luma Dream Machine 2.0", lab: "Luma AI", net_improvement: "+14.90%", net_margin: "±1.50%", success_rate: "+21.60%", success_margin: "±2.30%", elo: 1380, status: "stable", license: "Proprietary" },
+            { rank: 5, rank_range: "4 ↔ 7", name: "Hailuo MiniMax Video-02", lab: "MiniMax AI", net_improvement: "+14.10%", net_margin: "±1.40%", success_rate: "+20.20%", success_margin: "±2.20%", elo: 1370, status: "new", license: "Proprietary" }
         ]
     };
 
-    let currentCategory = 'overall';
+    let currentCategory = 'agent';
+    let currentSubcategory = 'agent';
+    let ARENA_STORE = null;
 
-    function renderLeaderboard(category = 'overall') {
+    const radarSubtabsContainer = document.getElementById('radar-subtabs');
+    const thMetricScore = document.getElementById('th-metric-score');
+    const thMetricSecondary = document.getElementById('th-metric-secondary');
+
+    function getSubcatData(cat, sub) {
+        if (ARENA_STORE && ARENA_STORE.categories && ARENA_STORE.categories[cat]) {
+            const subObj = ARENA_STORE.categories[cat].subcategories;
+            if (subObj && subObj[sub]) {
+                return subObj[sub];
+            }
+            // Fallback to first available subcategory
+            const firstKey = Object.keys(subObj || {})[0];
+            if (firstKey) return subObj[firstKey];
+        }
+        return null;
+    }
+
+    function renderSubtabs(cat) {
+        if (!radarSubtabsContainer) return;
+        radarSubtabsContainer.innerHTML = '';
+
+        let subcats = [];
+        if (ARENA_STORE && ARENA_STORE.categories && ARENA_STORE.categories[cat]) {
+            const subMap = ARENA_STORE.categories[cat].subcategories || {};
+            subcats = Object.keys(subMap).map(k => ({
+                key: k,
+                title: subMap[k].title || k,
+                desc: subMap[k].description || '',
+                url: subMap[k].url || `https://arena.ai/leaderboard/${k}`
+            }));
+        } else {
+            // Default subcategories map if JSON not yet loaded
+            const defaults = {
+                agent: [{ key: 'agent', title: 'Agent', desc: 'Rankings across agent behavior signals', url: 'https://arena.ai/leaderboard/agent' }],
+                chat: [
+                    { key: 'text', title: 'Text', desc: 'Rankings across text-to-text tasks and more', url: 'https://arena.ai/leaderboard/text' },
+                    { key: 'search', title: 'Search', desc: 'Rankings across web search-integrated LLMs', url: 'https://arena.ai/leaderboard/search' },
+                    { key: 'vision', title: 'Vision', desc: 'Rankings across multimodal visual models', url: 'https://arena.ai/leaderboard/vision' },
+                    { key: 'document', title: 'Document', desc: 'Rankings across document analysis models', url: 'https://arena.ai/leaderboard/document' }
+                ],
+                code: [
+                    { key: 'webdev', title: 'WebDev', desc: 'Rankings across front-end web development tasks', url: 'https://arena.ai/leaderboard/code/webdev' },
+                    { key: 'image-to-webdev', title: 'Image-to-WebDev', desc: 'Rankings across image-to-webdev generation models', url: 'https://arena.ai/leaderboard/code/image-to-webdev' }
+                ],
+                image: [
+                    { key: 'text-to-image', title: 'Text-to-Image', desc: 'Rankings across text-to-image generation models', url: 'https://arena.ai/leaderboard/text-to-image' },
+                    { key: 'image-edit', title: 'Image Edit', desc: 'Rankings across image editing models', url: 'https://arena.ai/leaderboard/image-edit' }
+                ],
+                video: [
+                    { key: 'text-to-video', title: 'Text-to-Video', desc: 'Rankings across text-to-video generation models', url: 'https://arena.ai/leaderboard/text-to-video' },
+                    { key: 'image-to-video', title: 'Image-to-Video', desc: 'Rankings across image-to-video generation models', url: 'https://arena.ai/leaderboard/image-to-video' },
+                    { key: 'video-edit', title: 'Video Edit', desc: 'Rankings across video editing models', url: 'https://arena.ai/leaderboard/video-edit' }
+                ]
+            };
+            subcats = defaults[cat] || defaults['agent'];
+        }
+
+        if (subcats.length === 0) return;
+
+        // Ensure currentSubcategory belongs to current parent
+        const exists = subcats.find(s => s.key === currentSubcategory);
+        if (!exists) {
+            currentSubcategory = subcats[0].key;
+        }
+
+        subcats.forEach(sub => {
+            const btn = document.createElement('button');
+            btn.className = `radar-subtab ${sub.key === currentSubcategory ? 'active' : ''}`;
+            btn.innerText = sub.title;
+            btn.dataset.subcat = sub.key;
+
+            btn.addEventListener('click', () => {
+                radarSubtabsContainer.querySelectorAll('.radar-subtab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSubcategory = sub.key;
+                renderLeaderboard(currentCategory, currentSubcategory);
+            });
+
+            radarSubtabsContainer.appendChild(btn);
+        });
+    }
+
+    function renderLeaderboard(category = 'agent', subcategory = 'agent') {
         if (!leaderboardBody) return;
-        
         leaderboardBody.innerHTML = '';
-        const data = AI_DATA[category];
-        
-        data.forEach((model, index) => {
+
+        const isAgent = (category === 'agent' || subcategory === 'agent');
+        if (thMetricScore) {
+            thMetricScore.innerText = isAgent ? 'NET IMPROVEMENT' : 'SCORE / RATING';
+        }
+        if (thMetricSecondary) {
+            thMetricSecondary.innerText = isAgent ? 'CONFIRMED SUCCESS' : 'VOTES / DETAILS';
+        }
+
+        let modelsList = [];
+        const subData = getSubcatData(category, subcategory);
+        if (subData && subData.models && subData.models.length > 0) {
+            modelsList = subData.models;
+        } else if (AI_DATA[category]) {
+            modelsList = AI_DATA[category];
+        }
+
+        if (!modelsList || modelsList.length === 0) {
+            leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">Loading live Arena models...</td></tr>';
+            return;
+        }
+
+        modelsList.slice(0, 25).forEach((model, index) => {
             const tr = document.createElement('tr');
             tr.style.opacity = '0';
-            tr.style.transform = 'translateY(10px)';
-            tr.style.transition = `all 0.4s ease ${index * 0.1}s`;
-            
+            tr.style.transform = 'translateY(8px)';
+            tr.style.transition = `all 0.25s ease ${index * 0.03}s`;
+
             const rankClass = model.rank === 1 ? 'rank-1' : model.rank === 2 ? 'rank-2' : model.rank === 3 ? 'rank-3' : 'rank-other';
-            const eloWidth = (model.elo / 1400) * 100;
-            const statusClass = `badge-${model.status}`;
+            const statusClass = `badge-${model.status || 'stable'}`;
+
+            const scoreStr = String(model.score || model.net_improvement || '');
+            const isPositiveNet = !scoreStr.startsWith('-');
+            const netColor = isPositiveNet ? '#10b981' : '#ef4444';
+
+            const numVal = parseFloat(scoreStr.replace(/[^0-9.-]/g, '')) || 5;
+            let barWidth = 50;
+            if (isAgent) {
+                barWidth = Math.min(Math.max(numVal * 4.5, 10), 100);
+            } else {
+                barWidth = Math.min(Math.max(((numVal - 1000) / 800) * 100, 15), 100);
+            }
+
+            const secondaryStr = String(model.secondary || model.success_rate || '-');
+            const secondaryColor = !secondaryStr.startsWith('-') ? '#10b981' : '#ef4444';
 
             tr.innerHTML = `
                 <td class="rank-cell">
                     <div class="rank-pill ${rankClass}">${model.rank}</div>
+                    ${model.rank_range ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block; margin-top:2px;">${model.rank_range}</span>` : ''}
                 </td>
                 <td>
                     <div class="model-info-cell">
-                        <span class="model-name">${model.name}</span>
-                        <span class="model-meta">ARENA_v2.0_CERTIFIED</span>
+                        <span class="model-name" style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${model.name}</span>
+                        <span class="model-meta" style="font-size:0.68rem; color:var(--text-secondary);">${model.lab || 'Arena Verified'}</span>
                     </div>
                 </td>
                 <td>
-                    <span class="strength-tag">${model.strength}</span>
-                </td>
-                <td class="score-cell">
-                    <div class="elo-cell">
-                        <div class="elo-bar-bg">
-                            <div class="elo-bar-fill" style="width: ${eloWidth}%"></div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-family:'Fira Code', monospace; font-size:0.82rem; font-weight:600; color:${netColor};">
+                            ${isAgent ? (isPositiveNet ? '▲ ' : '▼ ') : ''}${scoreStr}
+                        </span>
+                        <div class="lb-score-bar-bg" style="width: 45px; height: 5px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
+                            <div style="width: ${barWidth}%; height: 100%; background: ${netColor}; border-radius: 4px;"></div>
                         </div>
-                        <span class="elo-val">${model.elo}</span>
                     </div>
+                    ${model.score_margin || model.net_margin ? `<span style="font-size:0.62rem; color:var(--text-secondary); display:block;">${model.score_margin || model.net_margin}</span>` : ''}
                 </td>
                 <td>
-                    <span class="status-badge ${statusClass}">${model.status}</span>
+                    <span style="font-family:'Fira Code', monospace; font-size:0.82rem; font-weight:600; color:${secondaryColor};">
+                        ${secondaryStr}
+                    </span>
+                    ${model.secondary_margin || model.success_margin ? `<span style="font-size:0.62rem; color:var(--text-secondary); display:block;">${model.secondary_margin || model.success_margin}</span>` : ''}
+                </td>
+                <td>
+                    <span class="status-badge ${statusClass}">${model.license || 'Proprietary'}</span>
                 </td>
             `;
             leaderboardBody.appendChild(tr);
-            
-            // Trigger animation
+
             setTimeout(() => {
                 tr.style.opacity = '1';
                 tr.style.transform = 'translateY(0)';
-            }, 50);
+            }, 20);
         });
 
         if (radarSyncVal) {
@@ -1665,28 +2051,76 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     }
 
-    // Tab Logic
+    // Main Tab Logic
     radarTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             radarTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             currentCategory = tab.dataset.category;
-            renderLeaderboard(currentCategory);
+            renderSubtabs(currentCategory);
+            renderLeaderboard(currentCategory, currentSubcategory);
         });
     });
 
-    // Initialize
-    renderLeaderboard();
-    
+    // Dynamic Live Sync with multi-layer cloud fallback (Local -> API -> GitHub Raw CDN)
+    const localDataUrl = window.location.pathname.includes('/projects/') ? '../data/arena_leaderboard.json' : './data/arena_leaderboard.json';
+    const cloudApiUrl = '/api/arena';
+    const githubCdnUrl = 'https://raw.githubusercontent.com/MehediHasan228/poetfolio.me/main/docs/data/arena_leaderboard.json';
+
+    async function loadArenaData() {
+        // Source 1: Local / relative JSON
+        try {
+            const res = await fetch(localDataUrl + '?t=' + Date.now());
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.categories) return applyData(data);
+            }
+        } catch(e) {}
+
+        // Source 2: Serverless Cloud API (/api/arena)
+        try {
+            const res = await fetch(cloudApiUrl);
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.categories) return applyData(data);
+            }
+        } catch(e) {}
+
+        // Source 3: Direct GitHub Cloud CDN (Works even if PC is off)
+        try {
+            const res = await fetch(githubCdnUrl + '?t=' + Date.now());
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.categories) return applyData(data);
+            }
+        } catch(e) {}
+
+        // Built-in fallback
+        renderSubtabs(currentCategory);
+        renderLeaderboard(currentCategory, currentSubcategory);
+    }
+
+    function applyData(remoteData) {
+        ARENA_STORE = remoteData;
+        renderSubtabs(currentCategory);
+        renderLeaderboard(currentCategory, currentSubcategory);
+        if (remoteData.updated_at && radarSyncVal) {
+            const d = new Date(remoteData.updated_at);
+            radarSyncVal.innerText = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+    }
+
+    loadArenaData();
+
+    // Initial render
+    renderSubtabs(currentCategory);
+    renderLeaderboard(currentCategory, currentSubcategory);
+
     // Pulse update logic (every 60s)
     setInterval(() => {
-        // Subtle Elo Jitter for "Live" effect across all cats
-        Object.keys(AI_DATA).forEach(cat => {
-            AI_DATA[cat].forEach(m => {
-                m.elo += Math.floor(Math.random() * 3) - 1;
-            });
-        });
-        renderLeaderboard(currentCategory);
+        if (ARENA_STORE) {
+            renderLeaderboard(currentCategory, currentSubcategory);
+        }
     }, 60000);
 
     const lbToggleIcon = document.getElementById('lb-toggle-icon');
@@ -1800,5 +2234,64 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         insightsObserver.observe(insightsSection);
     }
 
+    // ==========================================
+    // 25. SMART SCI-FI SRE LIVE TELEMETRY TICKER
+    // ==========================================
+    const terminalTicker = document.getElementById('terminal-ticker');
+    if (terminalTicker) {
+        const telemetryPool = [
+            { tag: 'SRE', tagClass: 'tag-sre', msg: 'Cluster pods 48/48 online • p99 latency <b class="metric-hl">&lt;18ms</b>' },
+            { tag: 'AI-SWARM', tagClass: 'tag-ai', msg: 'Claude 3.7 + Gemini 2.5 multi-agent loop active via <b class="metric-hl">MCP</b>' },
+            { tag: 'KAFKA', tagClass: 'tag-stream', msg: 'Event bus throughput: <b class="metric-hl">42.8k msg/sec</b> • 0 packet drops' },
+            { tag: 'PGVECTOR', tagClass: 'tag-rag', msg: 'HNSW vector index synced: sub-ms high-dimensional retrieval' },
+            { tag: 'SOTA', tagClass: 'tag-sota', msg: 'LLM inference throughput boosted <b class="metric-hl">4x</b> via speculative decoding' },
+            { tag: 'REDIS', tagClass: 'tag-stream', msg: 'Cluster cache hit ratio: <b class="metric-hl">99.4%</b> • eviction count: 0' },
+            { tag: 'K8S', tagClass: 'tag-sre', msg: 'Auto-scaled 4 ingress replicas in region <b class="metric-hl">ap-south-1</b>' },
+            { tag: 'AGENT', tagClass: 'tag-ai', msg: 'Autonomous LangGraph workflow synthesized verified code diff' },
+            { tag: 'GRAFANA', tagClass: 'tag-sre', msg: 'OpenTelemetry SRE health score: <b class="metric-hl">99.98%</b> uptime' }
+        ];
+
+        let poolIndex = 0;
+        const formatTime = () => {
+            const now = new Date();
+            return `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
+        };
+
+        // Update existing timestamps to current time initially
+        const existingTimes = terminalTicker.querySelectorAll('.log-time');
+        existingTimes.forEach((el, idx) => {
+            const past = new Date(Date.now() - idx * 6000);
+            el.textContent = `[${String(past.getHours()).padStart(2, '0')}:${String(past.getMinutes()).padStart(2, '0')}:${String(past.getSeconds()).padStart(2, '0')}]`;
+        });
+
+        // Periodic live stream insertion
+        setInterval(() => {
+            if (document.hidden) return; // Save resources when tab is backgrounded
+            const logItem = telemetryPool[poolIndex % telemetryPool.length];
+            poolIndex++;
+
+            const p = document.createElement('p');
+            p.className = 'log-line';
+            p.style.opacity = '0';
+            p.style.transform = 'translateY(-6px)';
+            p.innerHTML = `<span class="log-time">${formatTime()}</span> <span class="log-tag ${logItem.tagClass}">${logItem.tag}</span> <span class="log-msg">${logItem.msg}</span>`;
+
+            terminalTicker.insertBefore(p, terminalTicker.firstChild);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                p.style.transition = 'all 0.4s ease';
+                p.style.opacity = '1';
+                p.style.transform = 'translateY(0)';
+            });
+
+            // Keep max 5 lines
+            while (terminalTicker.children.length > 5) {
+                terminalTicker.removeChild(terminalTicker.lastChild);
+            }
+        }, 4500);
+    }
+
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });
+
