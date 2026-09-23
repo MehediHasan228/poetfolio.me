@@ -6,6 +6,10 @@
   "scripts": {
     "start": "python3 -m http.server 8000 --directory docs",
     "serve": "python3 -m http.server 8000 --directory docs",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
     "sync:arena": "node scripts/sync_arena.js",
     "mcp:arena": "node scripts/arena_mcp_server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
