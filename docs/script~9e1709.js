@@ -2293,11 +2293,51 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
 
     // ==========================================
-    // 26. SYSTEM ARCHITECTURE MOBILE APP TABS
+    // 26. SYSTEM ARCHITECTURE MOBILE APP SLIDER & TABS
     // ==========================================
-    const archTabs = document.querySelectorAll('.arch-tab-btn');
+    const archGrid = document.querySelector('.arch-pillars-grid');
     const archCards = document.querySelectorAll('.arch-pillar-card');
-    if (archTabs.length > 0 && archCards.length > 0) {
+    const archTabs = document.querySelectorAll('.arch-tab-btn');
+    const archDots = document.querySelectorAll('.arch-dot');
+
+    if (archGrid && archCards.length > 0) {
+        function setActivePillar(index, triggerScroll = false) {
+            if (index < 0 || index >= archCards.length) return;
+
+            archCards.forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('is-active');
+                } else {
+                    card.classList.remove('is-active');
+                }
+            });
+
+            // Sync indicator dots
+            archDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+
+            // Sync tab buttons
+            const activePillarName = archCards[index].dataset.pillar;
+            archTabs.forEach(tab => {
+                if (tab.dataset.pillar === activePillarName) {
+                    tab.classList.add('active');
+                } else if (tab.dataset.pillar !== 'all') {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Smooth scroll into center if requested
+            if (triggerScroll && window.innerWidth <= 768) {
+                archCards[index].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }
+        }
+
+        // Tab click
         archTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const pillar = tab.dataset.pillar;
@@ -2305,16 +2345,64 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 tab.classList.add('active');
                 if (typeof playSound === 'function') playSound('type');
 
-                archCards.forEach(card => {
-                    if (pillar === 'all' || card.dataset.pillar === pillar) {
-                        card.style.display = 'flex';
-                        card.style.animation = 'fadeIn 0.25s ease';
-                    } else {
-                        card.style.display = 'none';
+                if (pillar === 'all') {
+                    setActivePillar(0, true);
+                } else {
+                    const targetIdx = Array.from(archCards).findIndex(c => c.dataset.pillar === pillar);
+                    if (targetIdx !== -1) {
+                        setActivePillar(targetIdx, true);
                     }
-                });
+                }
             });
         });
+
+        // Dot click
+        archDots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                if (typeof playSound === 'function') playSound('click');
+                setActivePillar(i, true);
+            });
+        });
+
+        // Swipe & Scroll observer with debounce to detect centered card on mobile
+        let scrollTimeout = null;
+        archGrid.addEventListener('scroll', () => {
+            if (window.innerWidth > 768) return;
+
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const gridRect = archGrid.getBoundingClientRect();
+                const gridCenter = gridRect.left + gridRect.width / 2;
+
+                let closestIdx = 0;
+                let minDistance = Infinity;
+
+                archCards.forEach((card, i) => {
+                    const cardRect = card.getBoundingClientRect();
+                    const cardCenter = cardRect.left + cardRect.width / 2;
+                    const distance = Math.abs(gridCenter - cardCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestIdx = i;
+                    }
+                });
+
+                setActivePillar(closestIdx, false);
+            }, 60);
+        }, { passive: true });
+
+        // Direct card click on blurred peek card centers and focuses it
+        archCards.forEach((card, i) => {
+            card.addEventListener('click', () => {
+                if (window.innerWidth <= 768 && !card.classList.contains('is-active')) {
+                    if (typeof playSound === 'function') playSound('click');
+                    setActivePillar(i, true);
+                }
+            });
+        });
+
+        // Initial state
+        setActivePillar(0, false);
     }
 
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");

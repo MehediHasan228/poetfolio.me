@@ -4944,6 +4944,10 @@ footer {
     flex-shrink: 0;
 }
 
+.arch-carousel-dots {
+    display: none;
+}
+
 @media (max-width: 1024px) {
     .arch-pillars-grid { grid-template-columns: repeat(2, 1fr); }
     .arch-metrics-strip { grid-template-columns: repeat(2, 1fr); }
@@ -5008,25 +5012,84 @@ footer {
         font-size: 0.73rem;
     }
 
-    /* Stacked Smart App Cards */
+    /* Horizontal Swipable Smart App Carousel (Side-Scroll with Blur Effect) */
     .arch-pillars-grid {
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory !important;
         gap: 0.85rem !important;
+        padding: 0.5rem 0.25rem 0.85rem 0.25rem !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+    }
+
+    .arch-pillars-grid::-webkit-scrollbar {
+        display: none;
     }
 
     .arch-pillar-card {
         min-height: auto !important;
-        padding: 0.95rem 1rem !important;
-        border-radius: 14px !important;
-        background: rgba(15, 23, 42, 0.75) !important;
+        min-width: 86% !important;
+        max-width: 86% !important;
+        flex: 0 0 86% !important;
+        scroll-snap-align: center !important;
+        scroll-snap-stop: always;
+        padding: 1.1rem !important;
+        border-radius: 16px !important;
+        background: rgba(15, 23, 42, 0.8) !important;
         border: 1px solid rgba(148, 163, 184, 0.16) !important;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
-        transition: transform 0.15s ease, border-color 0.2s ease;
+        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                    filter 0.35s ease, 
+                    opacity 0.35s ease, 
+                    border-color 0.25s ease, 
+                    box-shadow 0.35s ease !important;
+        /* Inactive/side cards are blurred, dimmed, and slightly scaled down */
+        filter: blur(2.5px) brightness(0.85);
+        opacity: 0.45;
+        transform: scale(0.93);
+        user-select: none;
+        cursor: pointer;
+    }
+
+    /* Active Front Focused Card is sharp, 100% visible, scaled up, with cyan accent glow */
+    .arch-pillar-card.is-active {
+        filter: none !important;
+        opacity: 1 !important;
+        transform: scale(1) !important;
+        border-color: rgba(0, 242, 254, 0.5) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(0, 242, 254, 0.15) !important;
     }
 
     .arch-pillar-card:active {
-        transform: scale(0.99);
+        transform: scale(0.98);
+    }
+
+    /* Mobile Carousel Indicator Dots */
+    .arch-carousel-dots {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: -0.2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .arch-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.3);
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        cursor: pointer;
+    }
+
+    .arch-dot.active {
+        width: 22px;
+        background: var(--accent-1, #00f2fe);
+        box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
     }
 
     .arch-pillar-header {
@@ -5372,6 +5435,20 @@ footer {
 [data-theme="light"] .pipe-idx {
     background: rgba(2, 132, 199, 0.1) !important;
     color: #0284c7 !important;
+}
+
+[data-theme="light"] .arch-dot {
+    background: #cbd5e1 !important;
+}
+
+[data-theme="light"] .arch-dot.active {
+    background: #0284c7 !important;
+    box-shadow: 0 0 8px rgba(2, 132, 199, 0.4) !important;
+}
+
+[data-theme="light"] .arch-pillar-card.is-active {
+    border-color: #0284c7 !important;
+    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12) !important;
 }
 
 /* --- 6. TERMINAL FEED / LIVE SYSTEM LOGS (Light Theme) --- */
