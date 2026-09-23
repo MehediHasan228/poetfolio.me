@@ -4987,29 +4987,33 @@ footer {
         letter-spacing: 0.4px !important;
     }
 
-    /* Smart App Segmented Control Tabs */
+    /* Smart App Segmented Control Tabs (Equal 4-Column Grid, 100% Full-Width) */
     .arch-mobile-tabs {
-        display: flex !important;
-        overflow-x: auto;
-        gap: 6px;
-        padding: 4px;
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        width: 100% !important;
+        gap: 4px !important;
+        padding: 4px !important;
         background: rgba(15, 23, 42, 0.75);
         border: 1px solid rgba(148, 163, 184, 0.16);
         border-radius: 12px;
         backdrop-filter: blur(14px);
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .arch-mobile-tabs::-webkit-scrollbar {
-        display: none;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
     }
 
     .arch-tab-btn {
-        flex: 1 0 auto;
-        justify-content: center;
-        padding: 7px 12px;
-        font-size: 0.73rem;
+        width: 100% !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 8px 3px !important;
+        font-size: 0.72rem !important;
+        gap: 5px !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        border-radius: 8px !important;
+        box-sizing: border-box !important;
     }
 
     /* Horizontal Swipable Smart App Carousel (Side-Scroll with Blur Effect) */
@@ -5131,15 +5135,24 @@ footer {
 }
 
 @media (max-width: 480px) {
-    .arch-app-status-bar {
-        font-size: 0.62rem;
-        padding: 4px 10px;
-    }
     .arch-metric-card {
         padding: 0.65rem 0.75rem !important;
     }
     .arch-metric-val {
         font-size: 1.05rem !important;
+    }
+    .arch-tab-btn {
+        font-size: 0.68rem !important;
+        padding: 7px 2px !important;
+        gap: 3.5px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .arch-tab-btn {
+        font-size: 0.63rem !important;
+        padding: 6px 1px !important;
+        gap: 2.5px !important;
     }
 }
 

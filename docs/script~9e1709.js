@@ -2322,7 +2322,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             archTabs.forEach(tab => {
                 if (tab.dataset.pillar === activePillarName) {
                     tab.classList.add('active');
-                } else if (tab.dataset.pillar !== 'all') {
+                } else {
                     tab.classList.remove('active');
                 }
             });
@@ -2345,13 +2345,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 tab.classList.add('active');
                 if (typeof playSound === 'function') playSound('type');
 
-                if (pillar === 'all') {
-                    setActivePillar(0, true);
-                } else {
-                    const targetIdx = Array.from(archCards).findIndex(c => c.dataset.pillar === pillar);
-                    if (targetIdx !== -1) {
-                        setActivePillar(targetIdx, true);
-                    }
+                const targetIdx = Array.from(archCards).findIndex(c => c.dataset.pillar === pillar);
+                if (targetIdx !== -1) {
+                    setActivePillar(targetIdx, true);
                 }
             });
         });
