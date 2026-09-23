@@ -652,6 +652,18 @@ nav {
     margin: 0;
 }
 
+.hero-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 1.5rem;
+}
+
+.hero-sub-row {
+    display: contents;
+}
+
 section {
     padding: 8rem 5% 4rem;
     position: relative;
@@ -3412,9 +3424,9 @@ footer {
         width: 100%;
     }
 
-    /* Fix Hero Layout to stack vertically */
+    /* Fix Hero Layout to stack vertically with comfortable breathing room */
     .hero {
-        padding: 80px 5% 40px;
+        padding: 70px 5% 85px !important;
         min-height: auto;
     }
 
@@ -3426,7 +3438,7 @@ footer {
     .hero-layout {
         flex-direction: column-reverse;
         text-align: center;
-        gap: 2.5rem;
+        gap: 1.5rem;
     }
 
     .hero-text-side {
@@ -3440,61 +3452,135 @@ footer {
     }
 
     .hero-image-wrapper {
-        max-width: 280px;
+        max-width: 220px;
         margin: 0 auto;
     }
 
-    /* Adjust Typography for smaller screens */
+    /* Adjust Typography for mobile: clamp ensures no edge collision */
     h1 {
-        font-size: 2.5rem !important;
+        font-size: clamp(1.65rem, 6.2vw, 2.2rem) !important;
+        line-height: 1.2 !important;
+        word-break: break-word;
     }
 
     h2 {
-        font-size: 1.5rem !important;
+        font-size: clamp(0.95rem, 4vw, 1.25rem) !important;
+        margin: 0.35rem 0 0.85rem !important;
     }
 
     .decrypt-text {
         word-break: break-word;
     }
 
-    /* Mobile Hero Buttons Layout */
-    .hero-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        /* Creates two equal columns */
-        gap: 0.8rem;
-        width: 100%;
-        margin-top: 1.5rem;
+    /* Mobile Hero Buttons: Clean vertical column with side-by-side secondary row */
+    .hero-buttons,
+    .hero-cta-group {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.65rem !important;
+        width: 100% !important;
+        margin-top: 1.2rem !important;
     }
 
-    .hero-buttons .btn {
-        width: 100%;
+    .hero-btn-main,
+    .hero-btn-support {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.82rem !important;
         margin: 0 !important;
+        box-sizing: border-box !important;
+        border-radius: 8px !important;
+        text-align: center;
     }
 
-    /* Force the main "Explore Systems" button to span both columns */
-    .hero-buttons .primary-btn {
-        grid-column: span 2;
-        padding: 0.8rem 1rem;
+    .hero-sub-row {
+        display: flex !important;
+        gap: 0.65rem !important;
+        width: 100% !important;
     }
 
-    /* Shrink the secondary buttons and put them side-by-side */
-    .hero-buttons .secondary-btn {
-        grid-column: span 1;
-        /* Each takes exactly half the width */
-        padding: 0.6rem 0.2rem;
-        /* Tighter padding for a smaller look */
-        font-size: 0.75rem;
-        /* Reduce text size slightly */
-        gap: 5px;
-        /* Bring the PDF icon slightly closer to the text */
+    .hero-sub-row .btn {
+        flex: 1 1 0 !important;
+        width: 50% !important;
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.7rem 0.35rem !important;
+        font-size: 0.76rem !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important;
+        border-radius: 8px !important;
+        text-align: center;
     }
 
-    /* Terminal Feed Mobile Scaling */
+    /* Terminal Feed Mobile Optimization */
     .terminal-feed {
-        font-size: 0.75rem;
-        height: 140px;
-        margin: 2rem 0;
+        font-size: 0.7rem !important;
+        height: auto !important;
+        min-height: 95px !important;
+        max-height: 118px !important;
+        margin: 1.1rem 0 !important;
+        padding: 0.55rem 0.75rem !important;
+        overflow: hidden !important;
+    }
+
+    .terminal-header {
+        margin-bottom: 0.35rem !important;
+        padding-bottom: 0.35rem !important;
+    }
+
+    .terminal-header-left {
+        gap: 6px !important;
+        min-width: 0 !important;
+    }
+
+    .terminal-window-dots {
+        gap: 4px !important;
+    }
+
+    .terminal-window-dots .dot {
+        width: 8px !important;
+        height: 8px !important;
+    }
+
+    .terminal-title {
+        font-size: 0.62rem !important;
+        padding: 1px 5px !important;
+    }
+
+    .terminal-title .term-host {
+        max-width: 125px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    .terminal-live-badge {
+        padding: 1px 5px !important;
+    }
+
+    .terminal-live-badge .live-text {
+        font-size: 0.52rem !important;
+    }
+
+    .log-line {
+        font-size: 0.66rem !important;
+        gap: 6px !important;
+        line-height: 1.35 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .log-msg {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
     }
 
     /* Navigation - Hide links on mobile to save space */
@@ -3512,7 +3598,7 @@ footer {
 
     /* Sections - Reduce padding */
     section {
-        padding: 4rem 5% 2rem;
+        padding: 3.5rem 5% 3.5rem;
     }
 
     /* Adjust Dashboard and Project Grids */
@@ -3530,10 +3616,50 @@ footer {
         max-width: 100%;
     }
 
-    /* UI Controls Mobile Placement */
+    /* UI Controls Mobile Placement: Horizontal bottom-left pill row */
     .ui-controls {
-        bottom: 15px;
-        left: 15px;
+        position: fixed !important;
+        bottom: 12px !important;
+        left: 12px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        z-index: 999 !important;
+    }
+
+    .ui-controls .control-btn {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 0.95rem !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+    }
+
+    /* Floating AI Leaderboard: Positioned at top right away from hero text */
+    #leaderboard-widget {
+        top: 95px !important;
+        right: 0 !important;
+        transform: translateY(0) translateX(var(--lb-tx)) !important;
+        --lb-ty: translateY(0);
+        z-index: 900 !important;
+    }
+
+    #leaderboard-widget.lb-collapsed {
+        --lb-tx: calc(100% - 38px) !important;
+    }
+
+    .lb-toggle {
+        width: 38px !important;
+        height: 52px !important;
+        border-radius: 8px 0 0 8px !important;
+    }
+
+    .lb-live-text {
+        font-size: 0.48rem !important;
+    }
+
+    #lb-toggle-icon {
+        font-size: 0.9rem !important;
     }
 
     .sys-monitor {
@@ -3900,14 +4026,14 @@ footer {
 
     /* Hero */
     .hero {
-        padding: 80px 5% 40px;
+        padding: 70px 5% 85px !important;
         min-height: auto;
     }
 
     .hero-layout {
         flex-direction: column-reverse;
         text-align: center;
-        gap: 2.5rem;
+        gap: 1.5rem;
     }
 
     .hero-text-side {
@@ -3921,37 +4047,70 @@ footer {
     }
 
     .hero-image-wrapper {
-        max-width: 240px;
+        max-width: 220px;
         margin: 0 auto;
     }
 
-    h1 { font-size: 2.2rem !important; }
-    h2 { font-size: 1.5rem !important; }
+    h1 { font-size: clamp(1.65rem, 6.2vw, 2.2rem) !important; line-height: 1.2 !important; word-break: break-word; }
+    h2 { font-size: clamp(0.95rem, 4vw, 1.25rem) !important; margin: 0.35rem 0 0.85rem !important; }
 
     .decrypt-text { word-break: break-word; }
 
-    /* Hero Buttons: 2-col grid */
-    .hero-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
-        width: 100%;
-        margin-top: 1.5rem;
+    /* Mobile Hero Buttons: Clean vertical column with side-by-side secondary row */
+    .hero-buttons,
+    .hero-cta-group {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.65rem !important;
+        width: 100% !important;
+        margin-top: 1.2rem !important;
     }
 
-    .hero-buttons .btn { width: 100%; margin: 0 !important; }
-    .hero-buttons .primary-btn { grid-column: span 2; }
-    .hero-buttons .secondary-btn {
-        grid-column: span 1;
-        padding: 0.6rem 0.2rem;
-        font-size: 0.75rem;
+    .hero-btn-main,
+    .hero-btn-support {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.82rem !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        border-radius: 8px !important;
+        text-align: center;
+    }
+
+    .hero-sub-row {
+        display: flex !important;
+        gap: 0.65rem !important;
+        width: 100% !important;
+    }
+
+    .hero-sub-row .btn {
+        flex: 1 1 0 !important;
+        width: 50% !important;
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.7rem 0.35rem !important;
+        font-size: 0.76rem !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important;
+        border-radius: 8px !important;
+        text-align: center;
     }
 
     /* Terminal Feed */
     .terminal-feed {
-        font-size: 0.72rem;
-        height: 130px;
-        margin: 1.5rem 0;
+        font-size: 0.7rem !important;
+        height: auto !important;
+        min-height: 95px !important;
+        max-height: 118px !important;
+        margin: 1.1rem 0 !important;
+        padding: 0.55rem 0.75rem !important;
+        overflow: hidden !important;
     }
 
     /* Nav */
@@ -4104,9 +4263,23 @@ footer {
     .mines-grid { gap: 6px; }
     .mine-tile { height: 42px; font-size: 1.2rem; }
 
-    /* UI Controls Placement */
-    .ui-controls { bottom: 15px; left: 15px; gap: 10px; }
-    .control-btn { width: 40px; height: 40px; font-size: 1rem; }
+    /* UI Controls Placement: horizontal bottom-left */
+    .ui-controls {
+        position: fixed !important;
+        bottom: 12px !important;
+        left: 12px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        z-index: 999 !important;
+    }
+    .control-btn {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 0.95rem !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+    }
 
     /* Chat Widget */
     #ai-chat-widget { right: 15px; bottom: 15px; }
