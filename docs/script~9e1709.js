@@ -1262,7 +1262,24 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="keyword">throw</span> err;
         }
     }
-}`
+}`,
+            blueprint: {
+                title: 'Transactional Outbox & Event-Driven Pipeline',
+                subtitle: 'High-Concurrency Ingress with ACID Protection & Apache Kafka Pub/Sub',
+                badges: ['NestJS Microservices', 'PostgreSQL ACID', 'Apache Kafka', 'Distributed Tx'],
+                flow: [
+                    { step: 'Step 01 // Ingress', title: 'Order Ingestion', icon: 'fa-arrow-right-to-bracket', desc: 'REST/gRPC checkout payload validated & ingested via NestJS controller.' },
+                    { step: 'Step 02 // ACID Tx', title: 'Row-Locked Write', icon: 'fa-database', desc: 'PostgreSQL connection pool executes atomic BEGIN -> INSERT with row locking.' },
+                    { step: 'Step 03 // Kafka Emit', title: 'Event Publication', icon: 'fa-network-wired', desc: 'Outbox event emitted to order.dispatched stream with zero packet loss.' },
+                    { step: 'Step 04 // Downstream', title: 'Async Sync & Rollback', icon: 'fa-rotate-left', desc: 'Inventory & payment microservices sync; automated rollback on exception.' }
+                ],
+                metrics: [
+                    { value: '1.2ms', label: 'Ingress Latency' },
+                    { value: '100% ACID', label: 'Tx Isolation' },
+                    { value: '0% Drop', label: 'Kafka Reliability' },
+                    { value: '50k+ RPM', label: 'Peak Capacity' }
+                ]
+            }
         },
         {
             id: 'file-redis-cache',
@@ -1297,7 +1314,24 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="keyword">await</span> <span class="keyword">this</span>.cluster.del(lockKey);
         }
     }
-}`
+}`,
+            blueprint: {
+                title: 'Distributed Mutex Lock & Cache Stampede Shield',
+                subtitle: 'Redis Cluster Engine with NX Mutex & Token Bucket Rate Limiting',
+                badges: ['Redis Cluster', 'ioredis', 'Redlock Algorithm', 'Stampede Prevention'],
+                flow: [
+                    { step: 'Step 01 // Burst Read', title: 'Traffic Ingress', icon: 'fa-bolt', desc: 'High-concurrency read requests hit distributed cache layer simultaneously.' },
+                    { step: 'Step 02 // Mutex Lock', title: 'Redlock NX Check', icon: 'fa-lock', desc: 'Acquires atomic distributed lock with 3000ms TTL to prevent dogpiling.' },
+                    { step: 'Step 03 // Failsafe Wait', title: 'Wait & Retry (50ms)', icon: 'fa-clock', desc: 'Secondary workers wait and read cached result instead of hitting database.' },
+                    { step: 'Step 04 // Hydration', title: 'Atomic Hydration', icon: 'fa-shield-halved', desc: 'Winning worker queries DB once, re-hydrates Redis, and releases mutex.' }
+                ],
+                metrics: [
+                    { value: '99.4%', label: 'Cache Hit Ratio' },
+                    { value: '3000ms', label: 'Lock TTL Safety' },
+                    { value: 'Zero-Dogpile', label: 'Stampede Guard' },
+                    { value: '100k+ OPS', label: 'Redis Throughput' }
+                ]
+            }
         },
         {
             id: 'file-ai-pipeline',
@@ -1322,7 +1356,24 @@ document.addEventListener('DOMContentLoaded', () => {
         )
     
     response = <span class="keyword">await</span> model.ainvoke(f<span class="string">"Context: {context}\\nTask: {query}"</span>)
-    <span class="keyword">return</span> {<span class="string">"result"</span>: response.content, <span class="string">"latency_ms"</span>: 18.4}`
+    <span class="keyword">return</span> {<span class="string">"result"</span>: response.content, <span class="string">"latency_ms"</span>: 18.4}`,
+            blueprint: {
+                title: 'Autonomous Vector RAG & Agentic Swarm',
+                subtitle: 'Enterprise Knowledge Grounding with Gemini 1.5 Pro & PGVector HNSW',
+                badges: ['LangChain', 'Gemini 1.5 Pro', 'PGVector HNSW', 'Async Python'],
+                flow: [
+                    { step: 'Step 01 // Embed', title: 'Semantic Query Parse', icon: 'fa-brain', desc: 'User prompt parsed and converted into dense 768-dim vector embeddings.' },
+                    { step: 'Step 02 // Search', title: 'PGVector Cosine Search', icon: 'fa-magnifying-glass-chart', desc: 'HNSW index runs sub-15ms nearest-neighbor semantic cosine similarity match.' },
+                    { step: 'Step 03 // Grounding', title: 'Context Fusion', icon: 'fa-layer-group', desc: 'Top-5 authoritative document chunks extracted and injected into prompt context.' },
+                    { step: 'Step 04 // Synthesis', title: 'Gemini 1.5 Synthesis', icon: 'fa-wand-magic-sparkles', desc: 'Gemini 1.5 Pro produces hallucination-free answer with exact citations.' }
+                ],
+                metrics: [
+                    { value: '18.4ms', label: 'Retrieval Speed' },
+                    { value: '96.8%', label: 'Context Density' },
+                    { value: '0% Hallucination', label: 'Strict Grounding' },
+                    { value: '1M Tokens', label: 'Context Window' }
+                ]
+            }
         },
         {
             id: 'file-k8s-infra',
@@ -1350,9 +1401,98 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="keyword">resources</span>:
             <span class="keyword">limits</span>: { cpu: <span class="string">"1000m"</span>, memory: <span class="string">"1Gi"</span> }
           <span class="keyword">envFrom</span>:
-            - <span class="keyword">configMapRef</span>: { name: app-env-config }`
+            - <span class="keyword">configMapRef</span>: { name: app-env-config }`,
+            blueprint: {
+                title: 'Cloud-Native Kubernetes & Auto-Healing Cluster',
+                subtitle: 'High-Availability Container Orchestration with Prometheus Telemetry',
+                badges: ['AWS EKS', 'Kubernetes Apps/v1', 'Prometheus Scrape', 'RollingUpdate'],
+                flow: [
+                    { step: 'Step 01 // Routing', title: 'Cloudflare Ingress', icon: 'fa-cloud', desc: 'Global CDN and ingress controller route authenticated traffic to API gateway.' },
+                    { step: 'Step 02 // Scaling', title: '5x Pod Replicas', icon: 'fa-cubes', desc: 'Auto-scaled stateless NestJS pods balance CPU/memory load evenly across nodes.' },
+                    { step: 'Step 03 // Rollout', title: 'Zero-Downtime Rollout', icon: 'fa-arrows-rotate', desc: 'RollingUpdate strategy swaps container images with zero service interruption.' },
+                    { step: 'Step 04 // Metrics', title: 'Prometheus Scrape', icon: 'fa-chart-line', desc: 'Prometheus scrapes port 3000 every 15s to push alerts to Grafana dashboard.' }
+                ],
+                metrics: [
+                    { value: '99.99%', label: 'Production SLA' },
+                    { value: '5 Replicas', label: 'Active Redundancy' },
+                    { value: '< 3s', label: 'Auto-Healing Time' },
+                    { value: '1Gi / 1000m', label: 'Pod Limits' }
+                ]
+            }
         }
     ];
+
+    let currentArsenalFile = TECHNICAL_ARSENAL[0];
+    let currentArsenalView = 'code'; // 'code' | 'blueprint'
+
+    function renderBlueprint(file) {
+        const bpContainer = document.getElementById('ide-blueprint-view');
+        if (!bpContainer || !file || !file.blueprint) return;
+        const bp = file.blueprint;
+
+        bpContainer.innerHTML = `
+            <div class="bp-card">
+                <div class="bp-header">
+                    <div class="bp-title-wrap">
+                        <h3><i class="fa-solid fa-diagram-project" style="color: ${file.color};"></i> ${bp.title}</h3>
+                        <p>${bp.subtitle}</p>
+                    </div>
+                    <div class="bp-badges">
+                        ${bp.badges.map(b => `<span class="bp-badge">${b}</span>`).join('')}
+                    </div>
+                </div>
+
+                <div class="bp-flow-container">
+                    <div class="bp-flow-title"><i class="fa-solid fa-timeline"></i> Architecture Execution Pipeline</div>
+                    <div class="bp-flow-grid">
+                        ${bp.flow.map(n => `
+                            <div class="bp-node">
+                                <div class="bp-node-step">${n.step}</div>
+                                <div class="bp-node-title"><i class="fa-solid ${n.icon}" style="color: ${file.color};"></i> ${n.title}</div>
+                                <p class="bp-node-desc">${n.desc}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="bp-metrics-grid">
+                    ${bp.metrics.map(m => `
+                        <div class="bp-metric-box">
+                            <div class="bp-metric-value" style="color: ${file.color};">${m.value}</div>
+                            <div class="bp-metric-label">${m.label}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    function setArsenalView(mode) {
+        currentArsenalView = mode;
+        const lineNums = document.getElementById('line-numbers');
+        const editorCont = document.getElementById('ide-editor-container');
+        const bpView = document.getElementById('ide-blueprint-view');
+        const btnCode = document.getElementById('btn-view-code');
+        const btnBp = document.getElementById('btn-view-blueprint');
+
+        if (mode === 'code') {
+            if (lineNums) lineNums.style.display = 'block';
+            if (editorCont) editorCont.style.display = 'block';
+            if (bpView) bpView.style.display = 'none';
+            if (btnCode) btnCode.classList.add('active');
+            if (btnBp) btnBp.classList.remove('active');
+        } else {
+            if (lineNums) lineNums.style.display = 'none';
+            if (editorCont) editorCont.style.display = 'none';
+            if (bpView) {
+                bpView.style.display = 'block';
+                renderBlueprint(currentArsenalFile);
+            }
+            if (btnCode) btnCode.classList.remove('active');
+            if (btnBp) btnBp.classList.add('active');
+        }
+        if (typeof playSound === 'function') playSound('click');
+    }
 
     function renderArsenal() {
         const fileList = document.getElementById('ide-file-list');
@@ -1386,6 +1526,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 li.classList.add('active');
                 block.classList.add('active');
+                currentArsenalFile = file;
 
                 // Update UI
                 const tabDisplay = document.getElementById('active-tab-display');
@@ -1396,12 +1537,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (statusLang) statusLang.innerText = file.lang;
 
                 generateLines(block);
+
+                if (currentArsenalView === 'blueprint') {
+                    renderBlueprint(file);
+                }
+
                 if (typeof playSound === 'function') playSound('type');
             });
         });
 
+        // View toggle listeners
+        const btnCode = document.getElementById('btn-view-code');
+        const btnBp = document.getElementById('btn-view-blueprint');
+        if (btnCode) {
+            btnCode.addEventListener('click', () => setArsenalView('code'));
+        }
+        if (btnBp) {
+            btnBp.addEventListener('click', () => setArsenalView('blueprint'));
+        }
+
         // Init first tab display
         const first = TECHNICAL_ARSENAL[0];
+        currentArsenalFile = first;
         const tabDisplay = document.getElementById('active-tab-display');
         if (tabDisplay) tabDisplay.innerHTML = `<i class="fa-brands ${first.icon}" style="color: ${first.color};"></i> ${first.name} <i class="fa-solid fa-xmark close-tab"></i>`;
         const statusLang = document.getElementById('status-lang');
@@ -2240,15 +2397,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const terminalTicker = document.getElementById('terminal-ticker');
     if (terminalTicker) {
         const telemetryPool = [
-            { tag: 'SRE', tagClass: 'tag-sre', msg: 'Cluster pods 48/48 online • p99 latency <b class="metric-hl">&lt;18ms</b>' },
-            { tag: 'AI-SWARM', tagClass: 'tag-ai', msg: 'Claude 3.7 + Gemini 2.5 multi-agent loop active via <b class="metric-hl">MCP</b>' },
-            { tag: 'KAFKA', tagClass: 'tag-stream', msg: 'Event bus throughput: <b class="metric-hl">42.8k msg/sec</b> • 0 packet drops' },
-            { tag: 'PGVECTOR', tagClass: 'tag-rag', msg: 'HNSW vector index synced: sub-ms high-dimensional retrieval' },
-            { tag: 'SOTA', tagClass: 'tag-sota', msg: 'LLM inference throughput boosted <b class="metric-hl">4x</b> via speculative decoding' },
-            { tag: 'REDIS', tagClass: 'tag-stream', msg: 'Cluster cache hit ratio: <b class="metric-hl">99.4%</b> • eviction count: 0' },
-            { tag: 'K8S', tagClass: 'tag-sre', msg: 'Auto-scaled 4 ingress replicas in region <b class="metric-hl">ap-south-1</b>' },
-            { tag: 'AGENT', tagClass: 'tag-ai', msg: 'Autonomous LangGraph workflow synthesized verified code diff' },
-            { tag: 'GRAFANA', tagClass: 'tag-sre', msg: 'OpenTelemetry SRE health score: <b class="metric-hl">99.98%</b> uptime' }
+            { tag: 'SAWAB ERP', tagClass: 'tag-rag', msg: 'Auto-reconciled <b class="metric-hl">1,420</b> multi-currency transactions • 0 audit error' },
+            { tag: 'FINTECH', tagClass: 'tag-stream', msg: 'Payment gateway webhook idempotent lock verified • p99 latency <b class="metric-hl">&lt;14ms</b>' },
+            { tag: 'AGENTIC AI', tagClass: 'tag-ai', msg: 'Autonomous Claude &amp; Gemini swarm loop verified via <b class="metric-hl">MCP protocol</b>' },
+            { tag: 'PGVECTOR', tagClass: 'tag-sota', msg: 'HNSW semantic index synced: vector similarity match in <b class="metric-hl">11.2ms</b>' },
+            { tag: 'DISTRIBUTED', tagClass: 'tag-sre', msg: 'High-concurrency checkout throughput: <b class="metric-hl">12.5k req/s</b> • zero pool drop' },
+            { tag: 'KAFKA', tagClass: 'tag-stream', msg: 'Zero-loss event bus throughput: <b class="metric-hl">42.8k msg/sec</b> • 0 packet drops' },
+            { tag: 'REDIS', tagClass: 'tag-stream', msg: 'Distributed cluster cache hit ratio: <b class="metric-hl">99.4%</b> • eviction count: 0' },
+            { tag: 'K8S / SRE', tagClass: 'tag-sre', msg: 'Multi-zone ingress pods 48/48 online • <b class="metric-hl">99.99%</b> uptime SLA verified' }
         ];
 
         let poolIndex = 0;
@@ -2293,18 +2449,23 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
 
     // ==========================================
-    // 26. SYSTEM ARCHITECTURE MOBILE APP SLIDER & TABS
+    // 26. MOBILE APP CAROUSEL SLIDERS & TABS (ARCH, ETHICAL & DEEP TECH)
     // ==========================================
-    const archGrid = document.querySelector('.arch-pillars-grid');
-    const archCards = document.querySelectorAll('.arch-pillar-card');
-    const archTabs = document.querySelectorAll('.arch-tab-btn');
-    const archDots = document.querySelectorAll('.arch-dot');
+    function setupMobileAppCarousel(gridSelector, cardSelector, tabContainerSelector, dotContainerSelector) {
+        const grid = document.querySelector(gridSelector);
+        if (!grid) return;
+        const cards = grid.querySelectorAll(cardSelector);
+        if (cards.length === 0) return;
 
-    if (archGrid && archCards.length > 0) {
-        function setActivePillar(index, triggerScroll = false) {
-            if (index < 0 || index >= archCards.length) return;
+        const tabContainer = document.querySelector(tabContainerSelector);
+        const tabs = tabContainer ? tabContainer.querySelectorAll('.arch-tab-btn') : [];
+        const dotContainer = document.querySelector(dotContainerSelector);
+        const dots = dotContainer ? dotContainer.querySelectorAll('.arch-dot') : [];
 
-            archCards.forEach((card, i) => {
+        function setActiveItem(index, triggerScroll = false) {
+            if (index < 0 || index >= cards.length) return;
+
+            cards.forEach((card, i) => {
                 if (i === index) {
                     card.classList.add('is-active');
                 } else {
@@ -2312,24 +2473,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 }
             });
 
-            // Sync indicator dots
-            archDots.forEach((dot, i) => {
+            dots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
 
-            // Sync tab buttons
-            const activePillarName = archCards[index].dataset.pillar;
-            archTabs.forEach(tab => {
-                if (tab.dataset.pillar === activePillarName) {
+            const activePillar = cards[index].dataset.pillar;
+            tabs.forEach(tab => {
+                if (tab.dataset.pillar === activePillar) {
                     tab.classList.add('active');
+                    // Scroll tab pill into view if parent is horizontally scrollable
+                    if (tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
+                        tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    }
                 } else {
                     tab.classList.remove('active');
                 }
             });
 
-            // Smooth scroll into center if requested
             if (triggerScroll && window.innerWidth <= 768) {
-                archCards[index].scrollIntoView({
+                cards[index].scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest',
                     inline: 'center'
@@ -2337,43 +2499,40 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             }
         }
 
-        // Tab click
-        archTabs.forEach(tab => {
+        tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const pillar = tab.dataset.pillar;
-                archTabs.forEach(t => t.classList.remove('active'));
+                tabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 if (typeof playSound === 'function') playSound('type');
 
-                const targetIdx = Array.from(archCards).findIndex(c => c.dataset.pillar === pillar);
+                const targetIdx = Array.from(cards).findIndex(c => c.dataset.pillar === pillar);
                 if (targetIdx !== -1) {
-                    setActivePillar(targetIdx, true);
+                    setActiveItem(targetIdx, true);
                 }
             });
         });
 
-        // Dot click
-        archDots.forEach((dot, i) => {
+        dots.forEach((dot, i) => {
             dot.addEventListener('click', () => {
                 if (typeof playSound === 'function') playSound('click');
-                setActivePillar(i, true);
+                setActiveItem(i, true);
             });
         });
 
-        // Swipe & Scroll observer with debounce to detect centered card on mobile
         let scrollTimeout = null;
-        archGrid.addEventListener('scroll', () => {
+        grid.addEventListener('scroll', () => {
             if (window.innerWidth > 768) return;
 
             if (scrollTimeout) clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
-                const gridRect = archGrid.getBoundingClientRect();
+                const gridRect = grid.getBoundingClientRect();
                 const gridCenter = gridRect.left + gridRect.width / 2;
 
                 let closestIdx = 0;
                 let minDistance = Infinity;
 
-                archCards.forEach((card, i) => {
+                cards.forEach((card, i) => {
                     const cardRect = card.getBoundingClientRect();
                     const cardCenter = cardRect.left + cardRect.width / 2;
                     const distance = Math.abs(gridCenter - cardCenter);
@@ -2383,23 +2542,30 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                     }
                 });
 
-                setActivePillar(closestIdx, false);
+                setActiveItem(closestIdx, false);
             }, 60);
         }, { passive: true });
 
-        // Direct card click on blurred peek card centers and focuses it
-        archCards.forEach((card, i) => {
-            card.addEventListener('click', () => {
+        cards.forEach((card, i) => {
+            card.addEventListener('click', (e) => {
                 if (window.innerWidth <= 768 && !card.classList.contains('is-active')) {
+                    if (e.target.closest('a, button, .cyber-overlay-btn')) {
+                        e.preventDefault();
+                    }
                     if (typeof playSound === 'function') playSound('click');
-                    setActivePillar(i, true);
+                    setActiveItem(i, true);
                 }
             });
         });
 
-        // Initial state
-        setActivePillar(0, false);
+        setActiveItem(0, false);
     }
+
+    // Initialize all 4 Mobile App Carousel Sliders
+    setupMobileAppCarousel('.arch-pillars-grid', '.arch-pillar-card', '.arch-mobile-tabs', '#archCarouselDots');
+    setupMobileAppCarousel('.projects-grid', '.project-card', '.projects-mobile-tabs', '#projectsCarouselDots');
+    setupMobileAppCarousel('#ethicalGrid', '.ethical-card', '.ethical-mobile-tabs', '#ethicalDots');
+    setupMobileAppCarousel('#deeptechGrid', '#deeptechGrid .archive-card', '.deeptech-mobile-tabs', '#deeptechDots');
 
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });

@@ -20,7 +20,7 @@
     <link href="../fonts.googleapis.com/css2/index~a5ef49.html" rel="stylesheet">
     <link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=26">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=29">
 </head>
 
 <body>
@@ -101,7 +101,7 @@
         <ul class="nav-links">
             <li><a href="./index.html#about" class="magnetic-element hover-sound">Architecture</a></li>
             <li><a href="./index.html#skills" class="magnetic-element hover-sound">Stack</a></li>
-            <li><a href="./index.html#projects" class="magnetic-element hover-sound">Ventures</a></li>
+            <li><a href="./index.html#projects" class="magnetic-element hover-sound">Deployments</a></li>
             <li><a href="./index.html#contact" class="magnetic-element hover-sound">Contact</a></li>
             <li><a href="./index.html#archives" class="magnetic-element hover-sound">Archives</a></li>
             <li><a href="./contact_process.html" id="cli-toggle" class="magnetic-element hover-sound"
@@ -120,7 +120,7 @@
                     <h2><span class="prefix-text">I am a</span> <span class="typing-text"></span><span
                             class="cursor">&nbsp;</span></h2>
 
-                    <div class="terminal-feed" id="terminal-feed">
+                    <div class="terminal-feed" id="terminal-feed" role="region" aria-label="Live System Telemetry Feed">
                         <div class="terminal-header">
                             <div class="terminal-window-dots">
                                 <span class="dot dot-red"></span>
@@ -136,12 +136,12 @@
                                 <span class="live-text">STREAMING</span>
                             </div>
                         </div>
-                        <div class="terminal-body" id="terminal-ticker">
-                            <p class="log-line"><span class="log-time">[16:15:24]</span> <span class="log-tag tag-sre">SRE</span> <span class="log-msg">Cluster pods 48/48 online • p99 latency <b class="metric-hl">&lt;18ms</b></span></p>
-                            <p class="log-line"><span class="log-time">[16:15:19]</span> <span class="log-tag tag-ai">AI-SWARM</span> <span class="log-msg">Claude 3.7 + Gemini 2.5 multi-agent loop active via <b class="metric-hl">MCP</b></span></p>
-                            <p class="log-line"><span class="log-time">[16:15:12]</span> <span class="log-tag tag-stream">KAFKA</span> <span class="log-msg">Event bus throughput: <b class="metric-hl">42.8k msg/sec</b> • 0 packet drops</span></p>
-                            <p class="log-line"><span class="log-time">[16:15:05]</span> <span class="log-tag tag-rag">PGVECTOR</span> <span class="log-msg">HNSW vector index synced: sub-ms high-dimensional retrieval</span></p>
-                            <p class="log-line"><span class="log-time">[16:14:58]</span> <span class="log-tag tag-sota">SOTA</span> <span class="log-msg">LLM inference throughput boosted <b class="metric-hl">4x</b> via speculative decoding</span></p>
+                        <div class="terminal-body" id="terminal-ticker" role="log" aria-live="polite" aria-relevant="additions text">
+                            <p class="log-line"><span class="log-time">[16:15:24]</span> <span class="log-tag tag-rag">SAWAB ERP</span> <span class="log-msg">Auto-reconciled <b class="metric-hl">1,420</b> multi-currency transactions • 0 audit error</span></p>
+                            <p class="log-line"><span class="log-time">[16:15:19]</span> <span class="log-tag tag-stream">FINTECH</span> <span class="log-msg">Payment gateway webhook idempotent lock verified • p99 latency <b class="metric-hl">&lt;14ms</b></span></p>
+                            <p class="log-line"><span class="log-time">[16:15:12]</span> <span class="log-tag tag-ai">AGENTIC AI</span> <span class="log-msg">Autonomous Claude &amp; Gemini swarm loop verified via <b class="metric-hl">MCP protocol</b></span></p>
+                            <p class="log-line"><span class="log-time">[16:15:05]</span> <span class="log-tag tag-sota">PGVECTOR</span> <span class="log-msg">HNSW semantic index synced: vector similarity match in <b class="metric-hl">11.2ms</b></span></p>
+                            <p class="log-line"><span class="log-time">[16:14:58]</span> <span class="log-tag tag-sre">DISTRIBUTED</span> <span class="log-msg">High-concurrency checkout throughput: <b class="metric-hl">12.5k req/s</b> • zero pool drop</span></p>
                         </div>
                     </div>
 
@@ -417,8 +417,8 @@
 
     <section id="projects" class="projects-section">
         <div class="section-title hidden">
-            <h2 class="decrypt-text glitch-hover" data-value="Deployed Ventures">Deployed <span
-                    class="gradient-text">Ventures</span></h2>
+            <h2 class="decrypt-text glitch-hover" data-value="Production Deployments">Production <span
+                    class="gradient-text">Deployments</span></h2>
         </div>
 
         <div class="ai-dropzone hidden" id="ai-dropzone">
@@ -788,7 +788,7 @@
                 title="Initiate Self Destruct"></button>
         </div>
     </footer>
-    <script src="./script~9e1709.js?v=19"></script>
+    <script src="./script~9e1709.js?v=22"></script>
 
 </body>
 
