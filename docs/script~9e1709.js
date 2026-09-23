@@ -2292,6 +2292,31 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }, 4500);
     }
 
+    // ==========================================
+    // 26. SYSTEM ARCHITECTURE MOBILE APP TABS
+    // ==========================================
+    const archTabs = document.querySelectorAll('.arch-tab-btn');
+    const archCards = document.querySelectorAll('.arch-pillar-card');
+    if (archTabs.length > 0 && archCards.length > 0) {
+        archTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const pillar = tab.dataset.pillar;
+                archTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (typeof playSound === 'function') playSound('type');
+
+                archCards.forEach(card => {
+                    if (pillar === 'all' || card.dataset.pillar === pillar) {
+                        card.style.display = 'flex';
+                        card.style.animation = 'fadeIn 0.25s ease';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    }
+
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });
 

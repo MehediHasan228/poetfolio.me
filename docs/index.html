@@ -210,12 +210,16 @@
 
     <section id="about" class="about-section">
         <div class="section-title hidden">
+            <div class="arch-app-status-bar">
+                <span class="arch-live-pulse"></span>
+                <span class="arch-status-text">ENTERPRISE TOPOLOGY • CLUSTER LIVE</span>
+            </div>
             <h2 class="decrypt-text glitch-hover" data-value="System Architecture">System <span
                     class="gradient-text">Architecture</span></h2>
         </div>
         <div class="arch-infographic-wrap hidden">
 
-            <!-- 1. Top Metrics Strip -->
+            <!-- 1. Top Metrics Strip (2x2 App Grid on Mobile) -->
             <div class="arch-metrics-strip">
                 <div class="arch-metric-card tilt-card magnetic-element">
                     <div class="arch-metric-icon">
@@ -258,10 +262,19 @@
                 </div>
             </div>
 
-            <!-- 2. Architecture Pillars Grid (Compact 4 Columns) -->
+            <!-- Mobile App Segmented Tabs (Visible on Mobile) -->
+            <div class="arch-mobile-tabs" role="tablist">
+                <button class="arch-tab-btn active hover-sound" data-pillar="all" role="tab"><i class="fa-solid fa-layer-group"></i> All</button>
+                <button class="arch-tab-btn hover-sound" data-pillar="backend" role="tab"><i class="fa-solid fa-server"></i> Backend</button>
+                <button class="arch-tab-btn hover-sound" data-pillar="streaming" role="tab"><i class="fa-solid fa-network-wired"></i> Kafka</button>
+                <button class="arch-tab-btn hover-sound" data-pillar="cloud" role="tab"><i class="fa-solid fa-cloud"></i> Cloud</button>
+                <button class="arch-tab-btn hover-sound" data-pillar="ai" role="tab"><i class="fa-solid fa-robot"></i> AI Swarm</button>
+            </div>
+
+            <!-- 2. Architecture Pillars Grid (Smart App Cards) -->
             <div class="arch-pillars-grid">
                 <!-- Pillar 1 -->
-                <div class="arch-pillar-card tilt-card magnetic-element">
+                <div class="arch-pillar-card tilt-card magnetic-element" data-pillar="backend">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: var(--accent-1);"><i class="fa-solid fa-server"></i></div>
@@ -279,7 +292,7 @@
                 </div>
 
                 <!-- Pillar 2 -->
-                <div class="arch-pillar-card tilt-card magnetic-element">
+                <div class="arch-pillar-card tilt-card magnetic-element" data-pillar="streaming">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #f59e0b;"><i class="fa-solid fa-network-wired"></i></div>
@@ -297,7 +310,7 @@
                 </div>
 
                 <!-- Pillar 3 -->
-                <div class="arch-pillar-card tilt-card magnetic-element">
+                <div class="arch-pillar-card tilt-card magnetic-element" data-pillar="cloud">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #38bdf8;"><i class="fa-solid fa-cloud"></i></div>
@@ -315,7 +328,7 @@
                 </div>
 
                 <!-- Pillar 4 -->
-                <div class="arch-pillar-card tilt-card magnetic-element">
+                <div class="arch-pillar-card tilt-card magnetic-element" data-pillar="ai">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #a855f7;"><i class="fa-solid fa-brain"></i></div>
@@ -333,17 +346,23 @@
                 </div>
             </div>
 
-            <!-- 3. Data Flow Pipeline Strip -->
-            <div class="arch-pipeline-strip">
-                <div class="arch-pipe-node"><i class="fa-brands fa-react" style="color:#61DAFB;"></i> Client (React)</div>
-                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                <div class="arch-pipe-node"><i class="fa-brands fa-node-js" style="color:#E0234E;"></i> Gateway (NestJS)</div>
-                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                <div class="arch-pipe-node"><i class="fa-solid fa-network-wired" style="color:#f59e0b;"></i> Event Bus (Kafka)</div>
-                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                <div class="arch-pipe-node"><i class="fa-solid fa-database" style="color:#336791;"></i> Persistence (Postgres + Redis)</div>
-                <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                <div class="arch-pipe-node"><i class="fa-brands fa-docker" style="color:#2496ED;"></i> Cluster (Kubernetes / AWS)</div>
+            <!-- 3. Smart Pipeline Flow -->
+            <div class="arch-pipeline-wrap">
+                <div class="arch-pipe-header">
+                    <div class="arch-pipe-title"><i class="fa-solid fa-route" style="color:var(--accent-1);"></i> <span>END-TO-END PIPELINE FLOW</span></div>
+                    <span class="arch-pipe-live"><span class="pipe-live-dot"></span> STREAMING</span>
+                </div>
+                <div class="arch-pipeline-strip">
+                    <div class="arch-pipe-node"><span class="pipe-idx">01</span><i class="fa-brands fa-react" style="color:#61DAFB;"></i> React Client</div>
+                    <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="arch-pipe-node"><span class="pipe-idx">02</span><i class="fa-brands fa-node-js" style="color:#E0234E;"></i> NestJS Gateway</div>
+                    <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="arch-pipe-node"><span class="pipe-idx">03</span><i class="fa-solid fa-network-wired" style="color:#f59e0b;"></i> Kafka Event Bus</div>
+                    <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="arch-pipe-node"><span class="pipe-idx">04</span><i class="fa-solid fa-database" style="color:#336791;"></i> Postgres + Redis</div>
+                    <div class="arch-pipe-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="arch-pipe-node"><span class="pipe-idx">05</span><i class="fa-brands fa-docker" style="color:#2496ED;"></i> K8s Cluster</div>
+                </div>
             </div>
 
         </div>
