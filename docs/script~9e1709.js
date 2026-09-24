@@ -1949,30 +1949,24 @@ Server: Cloudflare Edge Network Routing
     /* ==========================================
        20. CLEAN URL SMOOTH SCROLLING
     ========================================== */
-// 1. Handle clicking the links
+// 1. Handle in-page smooth scrolling without mutating URL
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
 
         // Let the terminal toggle or empty hashes act normally
-        if (targetId === '#') return;
+        if (!targetId || targetId === '#') return;
 
         const targetElement = document.querySelector(targetId);
 
         if (targetElement) {
-            // Prevent the default jump
+            // Prevent the default abrupt jump
             e.preventDefault();
 
-            // Scroll smoothly
+            // Scroll smoothly to target section
             targetElement.scrollIntoView({
                 behavior: 'smooth'
             });
-
-            // Create the clean URL (e.g., changing '#projects' to '/projects')
-            const cleanUrl = '/' + targetId.substring(1);
-
-            // Update the address bar without reloading the page
-            history.pushState(null, null, cleanUrl);
         }
     });
 });
