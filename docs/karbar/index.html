@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karbar ERP — Live Demo | Mehedi Hasan</title>
+    <meta name="description" content="Karbar ERP: business management software for Bangladesh — accounting, NBR VAT (Mushak), payroll, inventory, sales, purchase and projects, fully in Bangla.">
+    <meta property="og:title" content="Karbar ERP — Live Demo">
+    <meta property="og:description" content="Accounting, Mushak VAT, payroll, inventory and projects for Bangladeshi businesses — in Bangla.">
+    <meta property="og:image" content="https://mehedi.pro.bd/karbar/karbar-mark.png">
+    <link rel="icon" href="./karbar-mark.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Hind+Siliguri:wght@400;500;600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b1120;
+            --card: rgba(30, 41, 59, 0.6);
+            --border: rgba(148, 163, 184, 0.15);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --cyan: #00f2fe;
+            --indigo: #4f46e5;
+            --green: #22c55e;
+            --amber: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: radial-gradient(circle at 15% 0%, rgba(79, 70, 229, 0.25), transparent 40%),
+                        radial-gradient(circle at 85% 20%, rgba(0, 242, 254, 0.12), transparent 40%),
+                        var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', 'Hind Siliguri', system-ui, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .bn { font-family: 'Hind Siliguri', sans-serif; }
+        .mono { font-family: 'Fira Code', monospace; }
+        a { color: inherit; }
+
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+        nav a.back { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+        nav a.back:hover { color: var(--cyan); }
+
+        .hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; padding: 40px 0 56px; }
+        .brand { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+        .brand img { width: 56px; height: 56px; }
+        .brand span { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); }
+
+        h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; font-weight: 800; }
+        h1 .grad { background: linear-gradient(135deg, var(--cyan), #818cf8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .tagline { color: var(--muted); margin: 16px 0 8px; font-size: 1.05rem; }
+        .tagline.bn { font-size: 1.1rem; color: #cbd5e1; }
+
+        .status { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-size: 0.85rem; margin: 20px 0; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+        .status.live .dot { background: var(--green); box-shadow: 0 0 12px var(--green); animation: pulse 1.6s infinite; }
+        .status.offline .dot { background: var(--amber); }
+        @keyframes pulse { 50% { opacity: 0.4; } }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 12px; font-weight: 700; text-decoration: none; border: 1px solid var(--border); transition: transform 0.15s, box-shadow 0.15s; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn.primary { background: linear-gradient(135deg, var(--indigo), #06b6d4); border: none; box-shadow: 0 10px 30px rgba(79, 70, 229, 0.35); }
+        .btn.primary[aria-disabled="true"] { opacity: 0.45; pointer-events: none; }
+        .btn.ghost { background: var(--card); }
+        .note { color: var(--muted); font-size: 0.85rem; margin-top: 14px; }
+
+        .mock { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; backdrop-filter: blur(8px); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }
+        .mock-bar { display: flex; gap: 6px; margin-bottom: 14px; }
+        .mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: #334155; }
+        .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .kpi { background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .kpi small { color: var(--muted); font-size: 0.72rem; display: block; }
+        .kpi b { font-size: 1.25rem; }
+        .kpi .up { color: var(--green); font-size: 0.72rem; }
+        .bars { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-top: 14px; padding: 10px; background: rgba(15, 23, 42, 0.7); border-radius: 12px; border: 1px solid var(--border); }
+        .bars span { flex: 1; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--cyan), var(--indigo)); opacity: 0.85; }
+
+        section { padding: 36px 0; }
+        h2 { font-size: 1.6rem; margin-bottom: 6px; }
+        .sub { color: var(--muted); margin-bottom: 24px; }
+
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+        .card .ic { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; background: rgba(0, 242, 254, 0.1); color: var(--cyan); margin-bottom: 12px; font-size: 1.1rem; }
+        .card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+        .card p { color: var(--muted); font-size: 0.92rem; }
+        .card p.bn { font-size: 0.95rem; }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.6); font-size: 0.82rem; color: #cbd5e1; }
+
+        .cta { text-align: center; background: linear-gradient(135deg, rgba(79, 70, 229, 0.25), rgba(6, 182, 212, 0.15)); border: 1px solid var(--border); border-radius: 20px; padding: 36px 20px; margin: 20px 0 60px; }
+        .cta .actions { justify-content: center; margin-top: 18px; }
+
+        footer { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 0 0 40px; }
+
+        @media (max-width: 860px) {
+            .hero { grid-template-columns: 1fr; padding-top: 16px; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <nav>
+            <a class="back" href="/"><i class="fa-solid fa-arrow-left"></i> mehedi.pro.bd</a>
+            <span class="mono" style="color: var(--muted); font-size: 0.8rem;">karbar-erp · v1</span>
+        </nav>
+
+        <header class="hero">
+            <div>
+                <div class="brand">
+                    <img src="./karbar-mark.png" alt="Karbar ERP logo">
+                    <span>Karbar ERP</span>
+                </div>
+                <h1>Business management <span class="grad">made for Bangladesh</span></h1>
+                <p class="tagline">Accounting, NBR VAT (Mushak), payroll, inventory, sales, purchase and projects — one system, fully in Bangla.</p>
+                <p class="tagline bn">হিসাব, মূসক ভ্যাট, বেতন, মজুদ, বিক্রয়-ক্রয় আর প্রকল্প — সব এক জায়গায়, সম্পূর্ণ বাংলায়।</p>
+
+                <div id="status" class="status"><span class="dot"></span><span id="status-text">Checking live demo…</span></div>
+
+                <div class="actions">
+                    <a id="demo-btn" class="btn primary" href="#" aria-disabled="true" target="_blank" rel="noopener">
+                        <i class="fa-solid fa-play"></i> Open Live Demo
+                    </a>
+                    <a class="btn ghost" href="https://wa.me/8801799447594?text=Hi%20Mehedi%2C%20I%20want%20demo%20access%20to%20Karbar%20ERP" target="_blank" rel="noopener">
+                        <i class="fa-brands fa-whatsapp"></i> Get demo login
+                    </a>
+                </div>
+                <p class="note">Demo login is shared on request. <span class="bn">ডেমো লগইনের জন্য WhatsApp-এ যোগাযোগ করুন।</span></p>
+            </div>
+
+            <div class="mock" aria-hidden="true">
+                <div class="mock-bar"><i></i><i></i><i></i></div>
+                <div class="kpis">
+                    <div class="kpi"><small class="bn">মোট বিক্রয়</small><b>৳ ৫৩.৫ লাখ</b> <span class="up">▲ 12%</span></div>
+                    <div class="kpi"><small class="bn">মূসক ৬.৩ ইস্যু</small><b>18</b></div>
+                    <div class="kpi"><small class="bn">সক্রিয় প্রকল্প</small><b>4</b></div>
+                    <div class="kpi"><small class="bn">বেতন (নিট)</small><b>৳ ৯.৩ লাখ</b></div>
+                </div>
+                <div class="bars">
+                    <span style="height: 35%"></span><span style="height: 55%"></span><span style="height: 45%"></span>
+                    <span style="height: 70%"></span><span style="height: 60%"></span><span style="height: 85%"></span>
+                    <span style="height: 75%"></span><span style="height: 95%"></span>
+                </div>
+            </div>
+        </header>
+
+        <section>
+            <h2>What it does</h2>
+            <p class="sub">Built on Laravel &amp; Filament, extended for local compliance and workflows.</p>
+            <div class="grid">
+                <div class="card">
+                    <div class="ic"><i class="fa-solid fa-receipt"></i></div>
+                    <h3>NBR VAT — Mushak</h3>
+                    <p>Mushak 6.3 tax invoices generated from posted invoices, 6.6 VDS certificates, 6.5 transfer challans and 9.1 returns, with fiscal-year serials.</p>
+                </div>
+                <div class="card">
+                    <div class="ic"><i class="fa-solid fa-money-check-dollar"></i></div>
+                    <h3>BD Payroll</h3>
+                    <p>Salary structures, income-tax TDS with exemption &amp; rebate, PF, gratuity, festival bonus, unpaid leave, payslip PDF and BEFTN bank advice.</p>
+                </div>
+                <div class="card">
+                    <div class="ic"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3>Project Dashboard</h3>
+                    <p>Project health, burn-down, team workload, billable hours and upcoming deadlines with drill-down filters.</p>
+                </div>
+                <div class="card">
+                    <div class="ic"><i class="fa-solid fa-calculator"></i></div>
+                    <h3>Accounting &amp; Invoicing</h3>
+                    <p>Chart of accounts, journals, customer invoices, vendor bills, payments and financial reports in BDT.</p>
+                </div>
+                <div class="card">
+                    <div class="ic"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <h3>Inventory, Sales &amp; Purchase</h3>
+                    <p>Warehouses, stock, barcode operations, quotations, sales and purchase orders, manufacturing and maintenance.</p>
+                </div>
+                <div class="card">
+                    <div class="ic"><i class="fa-solid fa-language"></i></div>
+                    <h3 class="bn">সম্পূর্ণ বাংলা</h3>
+                    <p class="bn">পুরো ইন্টারফেস বাংলায়, টাকার লাখ-কোটি ফরম্যাট আর বাংলাদেশি ব্যবসার পরিভাষা।</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Under the hood</h2>
+            <p class="sub">Tested with 2,600+ automated tests. Deployable with one command and automatic HTTPS.</p>
+            <div class="chips">
+                <span class="chip"><i class="fa-brands fa-laravel"></i> Laravel</span>
+                <span class="chip">Filament 5</span>
+                <span class="chip">Livewire</span>
+                <span class="chip">MySQL / PostgreSQL</span>
+                <span class="chip"><i class="fa-brands fa-docker"></i> Docker</span>
+                <span class="chip">Caddy · Let's Encrypt</span>
+                <span class="chip">Pest tests</span>
+                <span class="chip">Role-based permissions</span>
+                <span class="chip">25 modules</span>
+            </div>
+        </section>
+
+        <div class="cta">
+            <h2>Want Karbar ERP for your business?</h2>
+            <p class="sub bn" style="margin-bottom: 0;">আপনার প্রতিষ্ঠানের জন্য সেটআপ, কাস্টমাইজেশন ও প্রশিক্ষণ।</p>
+            <div class="actions">
+                <a class="btn primary" href="https://wa.me/8801799447594?text=Hi%20Mehedi%2C%20I%20am%20interested%20in%20Karbar%20ERP" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                <a class="btn ghost" href="mailto:mehedihasan228.cse@gmail.com?subject=Karbar%20ERP"><i class="fa-solid fa-envelope"></i> Email</a>
+                <a class="btn ghost" href="/#projects"><i class="fa-solid fa-briefcase"></i> More projects</a>
+            </div>
+        </div>
+
+        <footer>© <span id="year"></span> Mehedi Hasan · Karbar ERP</footer>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        (async () => {
+            const status = document.getElementById('status');
+            const text = document.getElementById('status-text');
+            const button = document.getElementById('demo-btn');
+
+            const setOffline = () => {
+                status.className = 'status offline';
+                text.textContent = 'Demo is offline right now — message me for a walkthrough';
+            };
+
+            try {
+                const response = await fetch('./demo.json?t=' + Date.now(), { cache: 'no-store' });
+                const { url } = await response.json();
+
+                if (!url) {
+                    return setOffline();
+                }
+
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 7000);
+
+                await fetch(url.replace(/\/$/, '') + '/health', { mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
+                clearTimeout(timer);
+
+                status.className = 'status live';
+                text.textContent = 'Live demo is online';
+                button.href = url.replace(/\/$/, '') + '/admin';
+                button.removeAttribute('aria-disabled');
+            } catch (error) {
+                setOffline();
+            }
+        })();
+    </script>
+</body>
+</html>

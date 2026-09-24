@@ -1681,23 +1681,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filterBtns.length > 0) {
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                playSound('click');
+                if (typeof playSound === 'function') playSound('click');
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                const filter = btn.dataset.filter.toLowerCase();
+                const filter = (btn.dataset.filter || 'all').toLowerCase();
+                let matchCount = 0;
+
                 projectCards.forEach(card => {
                     const stack = (card.dataset.stack || '').toLowerCase();
-                    if (filter === 'all' || stack.includes(filter)) {
-                        card.style.display = 'block';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'perspective(1000px) scale3d(1, 1, 1)';
-                        }, 10);
-                    } else {
+                    const isMatch = filter === 'all' || stack.includes(filter);
+
+                    if (isMatch) {
+                        card.classList.remove('is-filtered-out');
+                        card.classList.add('show');
+                        card.classList.remove('hidden');
+                        card.style.display = '';
                         card.style.opacity = '0';
-                        card.style.transform = 'perspective(1000px) scale3d(0.8, 0.8, 0.8)';
-                        setTimeout(() => { if (card.style.opacity === '0') card.style.display = 'none'; }, 400);
+                        card.style.transform = 'perspective(1000px) scale3d(0.94, 0.94, 0.94) translateY(12px)';
+
+                        const delay = Math.min(matchCount * 30, 160);
+                        matchCount++;
+
+                        setTimeout(() => {
+                            card.style.transition = 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
+                            card.style.opacity = '1';
+                            card.style.transform = 'perspective(1000px) scale3d(1, 1, 1) translateY(0)';
+                        }, delay);
+                    } else {
+                        card.classList.add('is-filtered-out');
+                        card.style.opacity = '0';
+                        card.style.transform = 'perspective(1000px) scale3d(0.85, 0.85, 0.85)';
                     }
                 });
             });

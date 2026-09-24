@@ -1221,13 +1221,16 @@ section {
     gap: 1.5rem;
     justify-content: center;
     align-items: stretch;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .project-card {
-    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
-    max-width: 370px;
-    flex: 1 1 310px;
+    max-width: 380px;
+    flex: 1 1 340px;
     background: var(--card-bg);
     border-radius: 12px;
     border: 1px solid rgba(150, 150, 150, 0.2);
@@ -1237,6 +1240,10 @@ section {
     transform: perspective(1000px);
     display: flex;
     flex-direction: column;
+}
+
+.project-card.is-filtered-out {
+    display: none !important;
 }
 
 .project-info {
@@ -6627,8 +6634,8 @@ footer {
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.03) !important;
     overflow: hidden !important;
     background: var(--card-bg) !important;
-    display: flex !important;
-    flex-direction: column !important;
+    display: flex;
+    flex-direction: column;
 }
 
 .cyber-project-card::before {
