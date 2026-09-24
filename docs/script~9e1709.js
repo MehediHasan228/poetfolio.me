@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Ensure mobile browsers always open cleanly at top if no hash in URL
+    if (!window.location.hash) {
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+    }
+
     /* ==========================================
        0. GAMIFIED SECURITY CLEARANCE
     ========================================== */
@@ -2348,13 +2356,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         });
     }
 
-    // 2. Handle page refreshes or direct links
-    const path = window.location.pathname.substring(1);
-    if (path && document.getElementById(path)) {
+    // 2. Handle explicit hash direct links (e.g. #projects)
+    const hash = (window.location.hash || '').replace('#', '');
+    if (hash && document.getElementById(hash)) {
         setTimeout(() => {
-            const target = document.getElementById(path);
+            const target = document.getElementById(hash);
             if (target) target.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        }, 150);
     }
 
     // --- AI INSIGHTS: TYPEWRITER & TERMINAL LOGIC ---
@@ -2489,20 +2497,29 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             tabs.forEach(tab => {
                 if (tab.dataset.pillar === activePillar) {
                     tab.classList.add('active');
-                    // Scroll tab pill into view if parent is horizontally scrollable
-                    if (tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
-                        tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    // Scroll tab pill horizontally inside tabContainer ONLY when user triggers scroll
+                    if (triggerScroll && tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
+                        const tabLeft = tab.offsetLeft;
+                        const tabWidth = tab.offsetWidth;
+                        const containerWidth = tabContainer.clientWidth;
+                        tabContainer.scrollTo({
+                            left: tabLeft - (containerWidth / 2) + (tabWidth / 2),
+                            behavior: 'smooth'
+                        });
                     }
                 } else {
                     tab.classList.remove('active');
                 }
             });
 
+            // Scroll carousel card horizontally inside grid ONLY when user triggers scroll
             if (triggerScroll && window.innerWidth <= 768) {
-                cards[index].scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'nearest',
-                    inline: 'center'
+                const cardLeft = cards[index].offsetLeft;
+                const cardWidth = cards[index].offsetWidth;
+                const gridWidth = grid.clientWidth;
+                grid.scrollTo({
+                    left: cardLeft - (gridWidth / 2) + (cardWidth / 2),
+                    behavior: 'smooth'
                 });
             }
         }
