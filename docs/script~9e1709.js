@@ -103,6 +103,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function playCinematicShockwaveSound() {
+        if (isMuted) return;
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const t = audioCtx.currentTime;
+
+        try {
+            // 1. Cinematic sub-acoustic pulse (warm spatial impulse)
+            const subOsc = audioCtx.createOscillator();
+            const subGain = audioCtx.createGain();
+            subOsc.type = 'sine';
+            subOsc.frequency.setValueAtTime(68, t);
+            subOsc.frequency.exponentialRampToValueAtTime(36, t + 0.28);
+            subGain.gain.setValueAtTime(0.06, t);
+            subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+            subOsc.connect(subGain);
+            subGain.connect(audioCtx.destination);
+            subOsc.start(t);
+            subOsc.stop(t + 0.3);
+
+            // 2. High-tech sci-fi fluid water wave sweep (resonant, organic)
+            const waveOsc = audioCtx.createOscillator();
+            const waveGain = audioCtx.createGain();
+            waveOsc.type = 'sine';
+            waveOsc.frequency.setValueAtTime(340, t);
+            waveOsc.frequency.exponentialRampToValueAtTime(720, t + 0.07);
+            waveOsc.frequency.exponentialRampToValueAtTime(260, t + 0.36);
+            waveGain.gain.setValueAtTime(0.045, t);
+            waveGain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+            waveOsc.connect(waveGain);
+            waveGain.connect(audioCtx.destination);
+            waveOsc.start(t);
+            waveOsc.stop(t + 0.38);
+
+            // 3. Sci-fi crystalline harmonic shimmer (holographic water chime)
+            const chimeOsc = audioCtx.createOscillator();
+            const chimeGain = audioCtx.createGain();
+            chimeOsc.type = 'sine';
+            chimeOsc.frequency.setValueAtTime(960, t + 0.04);
+            chimeOsc.frequency.exponentialRampToValueAtTime(620, t + 0.35);
+            chimeGain.gain.setValueAtTime(0.016, t + 0.04);
+            chimeGain.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
+            chimeOsc.connect(chimeGain);
+            chimeGain.connect(audioCtx.destination);
+            chimeOsc.start(t + 0.04);
+            chimeOsc.stop(t + 0.42);
+        } catch (err) {
+            console.warn('Audio synthesis notice:', err);
+        }
+    }
+
     document.querySelectorAll('.hover-sound, a, button').forEach(el => {
         el.addEventListener('mouseenter', () => playSound('hover'));
         el.addEventListener('click', () => playSound('click'));
@@ -392,6 +444,408 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
         });
     });
+
+    /* ==========================================
+       5.1 APPLE CINEMATIC 3D DEPTH CONTROLLER (PARALLAX + GYROSCOPE + DYNAMIC LIGHTING)
+    ========================================== */
+    function initCinematicDepth() {
+        const cards = document.querySelectorAll('.cinematic-depth-card');
+        if (!cards.length) return;
+
+        cards.forEach(card => {
+            const wrapper = card.closest('.cinematic-depth-wrapper') || card;
+            const heroSection = card.closest('header.hero') || document.querySelector('header.hero') || document.body;
+            const bgLayer = card.querySelector('.layer-bg');
+            const subject = card.querySelector('.layer-subject');
+            const frontArmyLayer = card.querySelector('.layer-army-front') || card.querySelector('.layer-tools');
+            const midArmyLayer = card.querySelector('.layer-army-mid');
+            const rearArmyLayer = card.querySelector('.layer-army-rear') || card.querySelector('.layer-models');
+            const glare = card.querySelector('.layer-glare');
+            const rimLight = card.querySelector('.layer-rimlight');
+
+            // Tag army units unambiguously as flank-left or flank-right
+            card.querySelectorAll('.army-unit-wrap').forEach(el => {
+                if (/\br[123]-l\d+\b/.test(el.className)) el.classList.add('flank-left');
+                if (/\br[123]-r\d+\b/.test(el.className)) el.classList.add('flank-right');
+            });
+
+            // Physics state
+            let currentCardRotX = 0;
+            let currentCardRotY = 0;
+            let currentSubjX = 0;
+            let currentSubjY = 0;
+            let currentIntensity = 0;
+
+            let targetCardRotX = 0;
+            let targetCardRotY = 0;
+            let targetSubjX = 0;
+            let targetSubjY = 0;
+            let targetIntensity = 0;
+
+            let currentNormX = 0;
+            let currentNormY = 0;
+            let targetNormX = 0;
+            let targetNormY = 0;
+
+            let isDirectHover = false;
+            let isHeroActive = false;
+            let isGyroActive = false;
+            let rafId = null;
+
+            // Maximum values (Apple spatial depth standards: pure horizontal 3D depth, locked vertically)
+            const MAX_ROTATION_Y = 2.4; // degrees (subtle, natural iPhone stereoscopic horizontal rotation)
+            const MAX_SUBJECT_SHIFT = 6.0; // px (pure horizontal spatial depth drift)
+
+            function render() {
+                // Spring / Lerp smoothing
+                const factor = isGyroActive ? 0.12 : 0.085;
+                currentCardRotX += (targetCardRotX - currentCardRotX) * factor;
+                currentCardRotY += (targetCardRotY - currentCardRotY) * factor;
+                currentSubjX += (targetSubjX - currentSubjX) * factor;
+                currentSubjY += (targetSubjY - currentSubjY) * factor;
+                currentIntensity += (targetIntensity - currentIntensity) * factor;
+                currentNormX += (targetNormX - currentNormX) * factor;
+                currentNormY += (targetNormY - currentNormY) * factor;
+
+                // 1. Subtle horizontal card angle (Pure left-right 3D without any vertical stretch)
+                card.style.transform = `perspective(1200px) rotateY(${currentCardRotY.toFixed(2)}deg)`;
+
+                // 2. Background counter-shift (iPhone 3D Depth Parallax: horizontal opposite drift)
+                if (bgLayer) {
+                    bgLayer.style.transform = `translate3d(${(-currentSubjX * 0.65).toFixed(2)}px, 0px, 0) scale(1.03)`;
+                }
+
+                // 3. Foreground Subject Shift (horizontal only, locked vertically so it never shifts down)
+                if (subject) {
+                    subject.style.transform = `translate3d(${currentSubjX.toFixed(2)}px, 0px, 0)`;
+                }
+
+                // 4. Multi-Depth Spatial Layers Shift (Rank 1 moves faster, Rank 3 moves deeper in perspective)
+                if (frontArmyLayer) {
+                    frontArmyLayer.style.transform = `translate3d(${(currentSubjX * 0.95).toFixed(2)}px, 0px, 0)`;
+                }
+                if (midArmyLayer) {
+                    midArmyLayer.style.transform = `translate3d(${(currentSubjX * 0.55).toFixed(2)}px, 0px, 0)`;
+                }
+                if (rearArmyLayer) {
+                    rearArmyLayer.style.transform = `translate3d(${(currentSubjX * 0.20).toFixed(2)}px, 0px, 0)`;
+                }
+
+
+
+                // Check motion settle
+                const isMoving = Math.abs(targetCardRotX - currentCardRotX) > 0.02 ||
+                                 Math.abs(targetCardRotY - currentCardRotY) > 0.02 ||
+                                 Math.abs(targetSubjX - currentSubjX) > 0.05 ||
+                                 Math.abs(targetSubjY - currentSubjY) > 0.05 ||
+                                 Math.abs(targetIntensity - currentIntensity) > 0.02;
+
+                if (isHeroActive || isGyroActive || isMoving) {
+                    rafId = requestAnimationFrame(render);
+                } else {
+                    rafId = null;
+                }
+            }
+
+            function startRender() {
+                if (!rafId) {
+                    rafId = requestAnimationFrame(render);
+                }
+            }
+
+            function computeTargets(clientX, clientY, directHover) {
+                const rect = card.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                // Normalized -1 to 1 based on card size with smooth bounds
+                const rawNormX = (clientX - centerX) / (rect.width / 2);
+                const rawNormY = (clientY - centerY) / (rect.height / 2);
+                targetNormX = Math.max(-1, Math.min(1, rawNormX));
+                targetNormY = Math.max(-1, Math.min(1, rawNormY));
+
+                // Direct hover gets full intensity (1.0), ambient hero motion gets refined subtle intensity (0.38)
+                isDirectHover = directHover;
+                targetIntensity = directHover ? 1.0 : 0.38;
+
+                targetCardRotX = 0;
+                targetCardRotY = targetNormX * MAX_ROTATION_Y * targetIntensity;
+                targetSubjX = targetNormX * MAX_SUBJECT_SHIFT * targetIntensity;
+                // Vertical shift locked to 0 so the photo never shifts or grows downwards
+                targetSubjY = 0;
+
+                isHeroActive = true;
+                startRender();
+            }
+
+            function resetTargets() {
+                targetCardRotX = 0;
+                targetCardRotY = 0;
+                targetSubjX = 0;
+                targetSubjY = 0;
+                targetNormX = 0;
+                targetNormY = 0;
+                targetIntensity = 0;
+                isDirectHover = false;
+                isHeroActive = false;
+                startRender();
+            }
+
+            let isShockwaveRunning = false;
+
+            function triggerCinematicShockwave(clientX, clientY) {
+                if (isShockwaveRunning) return;
+                isShockwaveRunning = true;
+
+                // 1. Synthesize audio
+                if (typeof playCinematicShockwaveSound === 'function') {
+                    playCinematicShockwaveSound();
+                }
+
+                // 2. Lock both flanks visible with shockwave impulse
+                card.classList.add('is-active', 'is-shockwave-active');
+                card.setAttribute('data-active-flank', 'all');
+
+                const rect = card.getBoundingClientRect();
+                const clickX = (clientX && clientX > 0) ? (clientX - rect.left) : (rect.width / 2);
+                const clickY = (clientY && clientY > 0) ? (clientY - rect.top) : (rect.height / 2);
+
+                card.style.setProperty('--wave-cx', `${clickX}px`);
+                card.style.setProperty('--wave-cy', `${clickY}px`);
+
+                // Staggered Sci-Fi Water Wave for all cyber-units on both flanks (পানির ঢেউ)
+                const units = card.querySelectorAll('.cyber-unit');
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const maxDist = Math.hypot(centerX, centerY);
+
+                units.forEach(unit => {
+                    const uRect = unit.getBoundingClientRect();
+                    const uX = (uRect.left + uRect.width / 2) - rect.left;
+                    const uY = (uRect.top + uRect.height / 2) - rect.top;
+
+                    // Calculate radial distance from wave origin
+                    const dist = Math.hypot(uX - clickX, uY - clickY);
+                    // Wave propagation speed: expands smoothly outwards (0 to ~400ms delay)
+                    const rippleDelay = Math.max(0.04, (dist / maxDist) * 0.42);
+
+                    setTimeout(() => {
+                        unit.classList.remove('ripple-wave-active');
+                        void unit.offsetWidth; // Force reflow
+                        unit.classList.add('ripple-wave-active');
+                    }, rippleDelay * 1000);
+
+                    setTimeout(() => {
+                        unit.classList.remove('ripple-wave-active');
+                    }, (rippleDelay + 1.0) * 1000);
+                });
+
+                // Cleanup wave state
+                setTimeout(() => {
+                    card.classList.remove('is-shockwave-active');
+                    isShockwaveRunning = false;
+                    if (!card.matches(':hover') && !wrapper.matches(':hover')) {
+                        card.classList.remove('is-active');
+                        card.removeAttribute('data-active-flank');
+                    }
+                }, 1250);
+            }
+
+            function updateActiveFlank(clientX) {
+                if (isShockwaveRunning) return;
+                const rect = card.getBoundingClientRect();
+                if (!rect.width) return;
+                const ratioX = (clientX - rect.left) / rect.width;
+                if (ratioX < 0.36) {
+                    card.setAttribute('data-active-flank', 'left');
+                } else if (ratioX > 0.64) {
+                    card.setAttribute('data-active-flank', 'right');
+                } else {
+                    card.setAttribute('data-active-flank', 'all');
+                }
+            }
+
+            // 1. Direct Card Hover (Full Cinematic Inspection & Spatial Badges Reveal)
+            wrapper.addEventListener('mouseenter', (e) => {
+                card.classList.add('is-active');
+                updateActiveFlank(e.clientX);
+            });
+
+            wrapper.addEventListener('mousemove', (e) => {
+                e.stopPropagation();
+                computeTargets(e.clientX, e.clientY, true);
+                updateActiveFlank(e.clientX);
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+                if (isShockwaveRunning) return;
+                card.classList.remove('is-active');
+                card.removeAttribute('data-active-flank');
+                // If still within hero, drop to ambient tracking
+                isDirectHover = false;
+                targetIntensity = 0.38;
+                startRender();
+            });
+
+            // 2. Cinematic Shockwave & Sci-Fi Water Ripple on Center Click / Tap
+            wrapper.addEventListener('click', (e) => {
+                if (e.target.closest('.unit-popup') || e.target.closest('a') || e.target.closest('button')) return;
+                const rect = card.getBoundingClientRect();
+                if (!rect.width) return;
+                const ratioX = (e.clientX - rect.left) / rect.width;
+
+                const isCenterZone = ratioX >= 0.28 && ratioX <= 0.72;
+                const isBothFlanksActive = card.getAttribute('data-active-flank') === 'all';
+
+                if (isCenterZone || isBothFlanksActive) {
+                    triggerCinematicShockwave(e.clientX, e.clientY);
+                }
+            });
+
+            // 3. Smart Tooltip Collision Prevention & Viewport Clamping (Guaranteed visible bounds on desktop)
+            card.querySelectorAll('.cyber-unit').forEach(unit => {
+                unit.addEventListener('mouseenter', () => {
+                    if (window.innerWidth <= 768) return; // Mobile uses vertical above/below positioning!
+                    const popup = unit.querySelector('.unit-popup');
+                    if (!popup) return;
+                    requestAnimationFrame(() => {
+                        const r = popup.getBoundingClientRect();
+                        const pad = 12;
+                        let dx = 0;
+                        if (r.right > window.innerWidth - pad) {
+                            dx = (window.innerWidth - pad) - r.right;
+                        } else if (r.left < pad) {
+                            dx = pad - r.left;
+                        }
+                        if (dx !== 0) {
+                            popup.style.setProperty('transform', `translateY(-50%) translateX(${dx}px) scale(1)`, 'important');
+                        }
+                    });
+                });
+                unit.addEventListener('mouseleave', () => {
+                    const popup = unit.querySelector('.unit-popup');
+                    if (popup) popup.style.transform = '';
+                });
+
+                // Mobile touch / tap to inspect unit popup (toggles popup above/below unit)
+                unit.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768) {
+                        e.stopPropagation();
+                        const wasActive = unit.classList.contains('popup-active');
+                        card.querySelectorAll('.cyber-unit.popup-active').forEach(u => u.classList.remove('popup-active'));
+                        if (!wasActive) {
+                            unit.classList.add('popup-active');
+                        }
+                    }
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.cyber-unit')) {
+                    card.querySelectorAll('.cyber-unit.popup-active').forEach(u => u.classList.remove('popup-active'));
+                }
+            });
+
+            if (heroSection) {
+                heroSection.addEventListener('mousemove', (e) => {
+                    if (!isDirectHover) {
+                        computeTargets(e.clientX, e.clientY, false);
+                    }
+                });
+
+                heroSection.addEventListener('mouseleave', () => {
+                    card.classList.remove('is-active');
+                    card.removeAttribute('data-active-flank');
+                    resetTargets();
+                });
+            }
+
+            // 4. Mobile Touch Events (Drag & Pan Interaction)
+            wrapper.addEventListener('touchstart', (e) => {
+                card.classList.add('is-active');
+                if (e.touches && e.touches[0]) {
+                    computeTargets(e.touches[0].clientX, e.touches[0].clientY, true);
+                    const rect = card.getBoundingClientRect();
+                    const ratioX = (e.touches[0].clientX - rect.left) / rect.width;
+                    if (ratioX < 0.34) {
+                        card.setAttribute('data-active-flank', 'left');
+                    } else if (ratioX > 0.66) {
+                        card.setAttribute('data-active-flank', 'right');
+                    } else {
+                        card.setAttribute('data-active-flank', 'all');
+                    }
+                }
+            }, { passive: true });
+
+            wrapper.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches[0]) {
+                    computeTargets(e.touches[0].clientX, e.touches[0].clientY, true);
+                    const rect = card.getBoundingClientRect();
+                    const ratioX = (e.touches[0].clientX - rect.left) / rect.width;
+                    if (ratioX < 0.34) {
+                        card.setAttribute('data-active-flank', 'left');
+                    } else if (ratioX > 0.66) {
+                        card.setAttribute('data-active-flank', 'right');
+                    } else {
+                        card.setAttribute('data-active-flank', 'all');
+                    }
+                }
+            }, { passive: true });
+
+            wrapper.addEventListener('touchend', () => {
+                if (isShockwaveRunning) return;
+                // If on mobile, retain active flank briefly for inspection or reset
+                card.classList.remove('is-active');
+                card.removeAttribute('data-active-flank');
+                resetTargets();
+            });
+
+            // 4. Mobile Gyroscope / DeviceOrientation Support (iPhone & Android)
+            let baseBeta = null;
+            let baseGamma = null;
+
+            function handleOrientation(e) {
+                if (e.beta === null || e.gamma === null) return;
+                isGyroActive = true;
+
+                if (baseBeta === null) {
+                    baseBeta = e.beta;
+                    baseGamma = e.gamma;
+                }
+
+                const deltaGamma = e.gamma - baseGamma;
+                const deltaBeta = e.beta - baseBeta;
+
+                targetNormX = Math.max(-1, Math.min(1, deltaGamma / 25));
+                targetNormY = Math.max(-1, Math.min(1, deltaBeta / 25));
+                targetIntensity = 1.0;
+
+                targetCardRotX = -targetNormY * MAX_ROTATION;
+                targetCardRotY = targetNormX * MAX_ROTATION;
+                targetSubjX = targetNormX * MAX_SUBJECT_SHIFT;
+                targetSubjY = targetNormY * MAX_SUBJECT_SHIFT;
+
+                startRender();
+            }
+
+            if (window.DeviceOrientationEvent) {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    card.addEventListener('click', async () => {
+                        try {
+                            const res = await DeviceOrientationEvent.requestPermission();
+                            if (res === 'granted') {
+                                window.addEventListener('deviceorientation', handleOrientation);
+                            }
+                        } catch (err) {}
+                    }, { once: true });
+                } else {
+                    window.addEventListener('deviceorientation', handleOrientation);
+                }
+            }
+        });
+    }
+
+    initCinematicDepth();
 
     /* ==========================================
        6. MATRIX DECRYPTION EFFECT
@@ -2591,6 +3045,40 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     setupMobileAppCarousel('.projects-grid', '.project-card', '.projects-mobile-tabs', '#projectsCarouselDots');
     setupMobileAppCarousel('#ethicalGrid', '.ethical-card', '.ethical-mobile-tabs', '#ethicalDots');
     setupMobileAppCarousel('#deeptechGrid', '#deeptechGrid .archive-card', '.deeptech-mobile-tabs', '#deeptechDots');
+
+    // ----------------------------------------------------
+    // Smart Dynamic Island Collapse on Scroll (Mobile)
+    // ----------------------------------------------------
+    const mainNav = document.querySelector('nav');
+    const mainLogoLink = document.querySelector('.logo-link');
+
+    if (mainNav) {
+        const handleNavScroll = () => {
+            if (window.innerWidth <= 768) {
+                if (window.scrollY > 45) {
+                    mainNav.classList.add('nav-scrolled');
+                } else {
+                    mainNav.classList.remove('nav-scrolled');
+                }
+            } else {
+                mainNav.classList.remove('nav-scrolled');
+            }
+        };
+
+        window.addEventListener('scroll', handleNavScroll, { passive: true });
+        handleNavScroll();
+
+        // Tapping floating logo when scrolled smoothly returns to top
+        if (mainLogoLink) {
+            mainLogoLink.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && window.scrollY > 45) {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (typeof playSound === 'function') playSound('click');
+                }
+            });
+        }
+    }
 
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });

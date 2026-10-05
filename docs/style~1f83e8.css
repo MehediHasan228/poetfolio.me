@@ -11,6 +11,12 @@
     --accent-3: #8b5cf6;
     --accent-3-rgb: 139, 92, 246;
     --particle-color: #00f2fe;
+    /* Apple Spatial Liquid Glass (Pure Transparent Crystal with Cyan Edge Glow) */
+    --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 242, 254, 0.10) 100%);
+    --spatial-glass-border: rgba(255, 255, 255, 0.42);
+    --spatial-glass-glow: rgba(0, 242, 254, 0.45);
+    --spatial-glass-highlight: rgba(255, 255, 255, 0.70);
+    --spatial-glass-specular: rgba(255, 255, 255, 0.85);
 }
 
 :root[data-theme="light"] {
@@ -19,9 +25,16 @@
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --accent-1: #2563eb;
+    --accent-1-rgb: 37, 99, 235;
     --accent-2: #3b82f6;
     --accent-3: #10b981;
     --particle-color: #94a3b8;
+    /* Apple Spatial Liquid Glass (Pure Transparent Crystal with Royal Blue Rim) */
+    --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.20) 50%, rgba(37, 99, 235, 0.10) 100%);
+    --spatial-glass-border: rgba(37, 99, 235, 0.42);
+    --spatial-glass-glow: rgba(37, 99, 235, 0.35);
+    --spatial-glass-highlight: rgba(255, 255, 255, 0.95);
+    --spatial-glass-specular: rgba(255, 255, 255, 0.95);
 }
 
 :root[data-theme="cyberpunk"] {
@@ -30,9 +43,16 @@
     --text-primary: #fbbf24;
     --text-secondary: #a1a1aa;
     --accent-1: #f43f5e;
+    --accent-1-rgb: 244, 63, 94;
     --accent-2: #eab308;
     --accent-3: #ec4899;
     --particle-color: #f43f5e;
+    /* Apple Spatial Liquid Glass (Pure Transparent Glass with Neon Rose Rim) */
+    --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(244, 63, 94, 0.08) 50%, rgba(234, 179, 8, 0.10) 100%);
+    --spatial-glass-border: rgba(244, 63, 94, 0.50);
+    --spatial-glass-glow: rgba(244, 63, 94, 0.45);
+    --spatial-glass-highlight: rgba(254, 205, 211, 0.70);
+    --spatial-glass-specular: rgba(255, 255, 255, 0.90);
 }
 
 :root[data-theme="god-mode"] {
@@ -41,9 +61,16 @@
     --text-primary: #00ff00;
     --text-secondary: #008800;
     --accent-1: #00ff00;
+    --accent-1-rgb: 0, 255, 0;
     --accent-2: #00cc00;
     --accent-3: #ffffff;
     --particle-color: #00ff00;
+    /* Apple Spatial Liquid Glass (Pure Transparent Glass with Matrix Green Rim) */
+    --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(0, 255, 0, 0.08) 50%, rgba(0, 255, 0, 0.14) 100%);
+    --spatial-glass-border: rgba(0, 255, 0, 0.55);
+    --spatial-glass-glow: rgba(0, 255, 0, 0.45);
+    --spatial-glass-highlight: rgba(187, 247, 208, 0.75);
+    --spatial-glass-specular: rgba(255, 255, 255, 0.90);
 }
 
 /* --- GLOBAL STYLES --- */
@@ -595,6 +622,10 @@ nav {
     z-index: 101;
 }
 
+.mobile-nav-pill-badge {
+    display: none;
+}
+
 .nav-links {
     display: flex;
     list-style: none;
@@ -731,37 +762,966 @@ section {
 .hero-image-side {
     flex: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     position: relative;
     z-index: 2;
+    padding-right: 24px;
 }
 
 .hero-image-wrapper {
     position: relative;
     width: 100%;
-    max-width: 350px;
-    border-radius: 20px;
-    padding: 10px;
-    background: rgba(0, 242, 254, 0.05);
-    border: 1px dashed var(--accent-1);
-    box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 16px;
+    border-radius: 40px;
+    background: rgba(var(--accent-1-rgb, 0, 242, 254), 0.04);
+    border: 1.5px dashed var(--accent-1);
+    box-shadow: 0 0 35px rgba(var(--accent-1-rgb, 0, 242, 254), 0.22), 0 20px 50px rgba(0, 0, 0, 0.6);
     animation: floatProfile 6s ease-in-out infinite;
+    perspective: 1200px;
+    isolation: isolate;
+    z-index: 10;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
 }
 
-.hero-image-wrapper img {
+.hero-image-wrapper:hover {
+    animation-play-state: paused;
+    border-color: var(--accent-1);
+    box-shadow: 0 0 45px rgba(var(--accent-1-rgb, 0, 242, 254), 0.45), 0 25px 60px rgba(0, 0, 0, 0.7);
+    background: rgba(var(--accent-1-rgb, 0, 242, 254), 0.07);
+}
+
+/* Tactical Corner Targeting Reticles on the Cyber Grid Frame */
+.hero-image-wrapper::before,
+.hero-image-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    z-index: 25;
+    transition: all 0.3s ease;
+}
+
+.hero-image-wrapper::before {
+    top: -2px;
+    left: -2px;
+    border-top: 3px solid var(--accent-1);
+    border-left: 3px solid var(--accent-1);
+    border-top-left-radius: 10px;
+}
+
+.hero-image-wrapper::after {
+    bottom: -2px;
+    right: -2px;
+    border-bottom: 3px solid var(--accent-1);
+    border-right: 3px solid var(--accent-1);
+    border-bottom-right-radius: 10px;
+}
+
+/* ==========================================================================
+   APPLE CINEMATIC 3D DEPTH CARD & IPHONE SPATIAL PARALLAX
+   ========================================================================== */
+.cinematic-depth-card {
+    position: relative;
     width: 100%;
-    height: auto;
     aspect-ratio: 1054 / 1492;
-    object-fit: cover;
-    border-radius: 15px;
-    display: block;
-    transition: transform 0.3s ease, filter 0.3s ease;
+    border-radius: 26px;
+    overflow: visible;
+    transform-style: preserve-3d;
+    isolation: isolate;
+    z-index: 10;
+    background: #090d16;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+    transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+    will-change: transform;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.hero-image-wrapper:hover img {
+.cinematic-depth-card:active {
+    cursor: grabbing;
+}
+
+.hero-image-wrapper:hover .cinematic-depth-card {
+    border-color: rgba(var(--accent-1-rgb, 0, 242, 254), 0.35);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), 0 0 16px rgba(var(--accent-1-rgb, 0, 242, 254), 0.2);
+}
+
+.cinematic-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Layer 1: Background - iPhone Portrait depth: subtle soft blur when quiet, 100% crystal-clear when logos deploy */
+.cinematic-layer.layer-bg {
+    z-index: 1;
+    border-radius: 26px;
+    overflow: hidden;
+    transform: translate(var(--bg-x, 0px), var(--bg-y, 0px));
+    transform-origin: center center;
+    will-change: transform;
+}
+
+.cinematic-layer.layer-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 26px;
     transform: scale(1.02);
-    filter: brightness(1.03);
+    transform-origin: center center;
+    /* Soft portrait bokeh when no logos are present */
+    filter: blur(2px) contrast(1.02);
+    transition: filter 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Grounding shadow at the bottom to anchor suit and prevent table peek */
+.cinematic-layer.layer-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 26px;
+    background: linear-gradient(to top, rgba(9, 13, 22, 0.95) 0%, rgba(9, 13, 22, 0.5) 8%, transparent 22%);
+    z-index: 2;
+}
+
+/* 100% CLEAR and sharp when tech army logos appear */
+.hero-image-wrapper:hover .cinematic-layer.layer-bg img,
+.cinematic-depth-card.is-active .cinematic-layer.layer-bg img,
+.cinematic-depth-card[data-active-flank] .cinematic-layer.layer-bg img {
+    filter: blur(0px) contrast(1);
+}
+
+/* ==========================================================================
+   COMMANDER TACTICAL GRID & NEURAL LINK FIELD
+   ========================================================================== */
+.cinematic-layer.layer-tactical-grid {
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-image-wrapper:hover .layer-tactical-grid,
+.cinematic-depth-card:hover .layer-tactical-grid,
+.cinematic-depth-card.is-active .layer-tactical-grid {
+    opacity: 0.85;
+}
+
+.tactical-grid-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.tactical-arc {
+    fill: none;
+    stroke: rgba(0, 242, 254, 0.22);
+    stroke-width: 1.2px;
+    stroke-dasharray: 6 10;
+    animation: tacticalArcRotate 24s linear infinite;
+    transform-origin: 527px 550px;
+}
+
+.arc-2 {
+    stroke: rgba(79, 172, 254, 0.28);
+    stroke-width: 1px;
+    stroke-dasharray: 12 8;
+    animation-duration: 36s;
+    animation-direction: reverse;
+}
+
+.arc-3 {
+    stroke: rgba(0, 242, 254, 0.16);
+    stroke-width: 0.8px;
+    stroke-dasharray: 4 14;
+    animation-duration: 48s;
+}
+
+@keyframes tacticalArcRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.cmd-line {
+    fill: none;
+    stroke: rgba(0, 242, 254, 0.35);
+    stroke-width: 1.2px;
+    stroke-dasharray: 8 6;
+    animation: cmdPulseStream 2s ease-in-out infinite alternate;
+}
+
+.cmd-line-l2, .cmd-line-r2 {
+    stroke: rgba(79, 172, 254, 0.25);
+    stroke-width: 0.9px;
+    animation-delay: -1s;
+}
+
+@keyframes cmdPulseStream {
+    0% { stroke-opacity: 0.2; stroke-dashoffset: 0; }
+    100% { stroke-opacity: 0.65; stroke-dashoffset: 28; }
+}
+
+/* ==========================================================================
+   CYBER ARMY FORMATION (3 RANKS: FRONT SHARP, MID SOFT, REAR BOKEH)
+   ========================================================================== */
+.cinematic-layer.layer-army {
+    overflow: visible;
+    pointer-events: none;
+}
+
+.cinematic-layer.layer-army:hover,
+.cinematic-layer.layer-army:has(.cyber-unit:hover) {
+    z-index: 25 !important;
+}
+
+.layer-army-rear {
+    z-index: 3;
+}
+
+.layer-army-mid {
+    z-index: 4;
+}
+
+.layer-army-front {
+    z-index: 5;
+}
+
+.army-unit-wrap:hover,
+.army-unit-wrap:has(.cyber-unit:hover) {
+    z-index: 2500 !important;
+}
+
+/* Common unit wrapper for spring deployment (Hidden at rest, springs forth on photo hover) */
+.army-unit-wrap {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 50%;
+    transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.42s ease;
+}
+
+/* Left wing retracted resting state: tucked smoothly behind Commander */
+.flank-left,
+[class*="r1-l"], [class*="r2-l"], [class*="r3-l"] {
+    transform: translate3d(24px, 14px, 0) scale(0.52);
+}
+
+/* Right wing retracted resting state: tucked smoothly behind Commander */
+.flank-right,
+[class*="r1-r"], [class*="r2-r"], [class*="r3-r"] {
+    transform: translate3d(-24px, 14px, 0) scale(0.52);
+}
+
+/* Flank-Aware Tactical Deployment:
+   - When cursor is on right flank: ONLY right wing deploys! Left wing stays tucked behind.
+   - When cursor is on left flank: ONLY left wing deploys! Right wing stays tucked behind.
+   - When hovering HUD console badge or master state: both flanks deploy.
+*/
+
+/* Left Wing Deployment */
+.cinematic-depth-card[data-active-flank="left"] .flank-left,
+.cinematic-depth-card[data-active-flank="all"] .flank-left,
+.cinematic-depth-card:has(.flank-left:hover) .flank-left,
+.cinematic-depth-card[data-active-flank="left"] [class*="r1-l"],
+.cinematic-depth-card[data-active-flank="left"] [class*="r2-l"],
+.cinematic-depth-card[data-active-flank="left"] [class*="r3-l"],
+.cinematic-depth-card[data-active-flank="all"] [class*="r1-l"],
+.cinematic-depth-card[data-active-flank="all"] [class*="r2-l"],
+.cinematic-depth-card[data-active-flank="all"] [class*="r3-l"] {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.cinematic-depth-card[data-active-flank="left"] .flank-left.army-rank-1,
+.cinematic-depth-card[data-active-flank="all"] .flank-left.army-rank-1,
+.cinematic-depth-card:has(.flank-left:hover) .flank-left.army-rank-1 {
+    opacity: 1;
+}
+
+.cinematic-depth-card[data-active-flank="left"] .flank-left.army-rank-2,
+.cinematic-depth-card[data-active-flank="all"] .flank-left.army-rank-2,
+.cinematic-depth-card:has(.flank-left:hover) .flank-left.army-rank-2 {
+    opacity: 0.88;
+}
+
+.cinematic-depth-card[data-active-flank="left"] .flank-left.army-rank-3,
+.cinematic-depth-card[data-active-flank="all"] .flank-left.army-rank-3,
+.cinematic-depth-card:has(.flank-left:hover) .flank-left.army-rank-3 {
+    opacity: 0.68;
+}
+
+/* Right Wing Deployment */
+.cinematic-depth-card[data-active-flank="right"] .flank-right,
+.cinematic-depth-card[data-active-flank="all"] .flank-right,
+.cinematic-depth-card:has(.flank-right:hover) .flank-right,
+.cinematic-depth-card[data-active-flank="right"] [class*="r1-r"],
+.cinematic-depth-card[data-active-flank="right"] [class*="r2-r"],
+.cinematic-depth-card[data-active-flank="right"] [class*="r3-r"],
+.cinematic-depth-card[data-active-flank="all"] [class*="r1-r"],
+.cinematic-depth-card[data-active-flank="all"] [class*="r2-r"],
+.cinematic-depth-card[data-active-flank="all"] [class*="r3-r"] {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.cinematic-depth-card[data-active-flank="right"] .flank-right.army-rank-1,
+.cinematic-depth-card[data-active-flank="all"] .flank-right.army-rank-1,
+.cinematic-depth-card:has(.flank-right:hover) .flank-right.army-rank-1 {
+    opacity: 1;
+}
+
+.cinematic-depth-card[data-active-flank="right"] .flank-right.army-rank-2,
+.cinematic-depth-card[data-active-flank="all"] .flank-right.army-rank-2,
+.cinematic-depth-card:has(.flank-right:hover) .flank-right.army-rank-2 {
+    opacity: 0.88;
+}
+
+.cinematic-depth-card[data-active-flank="right"] .flank-right.army-rank-3,
+.cinematic-depth-card[data-active-flank="all"] .flank-right.army-rank-3,
+.cinematic-depth-card:has(.flank-right:hover) .flank-right.army-rank-3 {
+    opacity: 0.68;
+}
+
+/* Base Cyber Army Escort Unit - Apple Spatial 3D Liquid Glass Orb */
+.cyber-unit {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    background: var(--spatial-glass-bg);
+    border: 1px solid var(--spatial-glass-border);
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65),
+                0 0 14px var(--spatial-glass-glow),
+                inset 0 1.5px 1.5px 0 var(--spatial-glass-specular),
+                inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.45);
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.28s ease,
+                border-color 0.28s ease,
+                background 0.35s ease,
+                filter 0.28s ease,
+                opacity 0.28s ease;
+    animation: spatialBadgeFloat 5s ease-in-out infinite alternate;
+}
+
+/* Apple-style Curved Top Reflection Sheen */
+.cyber-unit::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 15%;
+    right: 15%;
+    height: 42%;
+    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
+    background: linear-gradient(180deg, var(--spatial-glass-highlight) 0%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Floating 3D Brand Logo inside glass */
+.cyber-unit img {
+    position: relative;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.60));
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   RANK 1: FRONTLINE VANGUARD (Razor Sharp, Foreground Generals, Z=4)
+   ========================================================================== */
+.unit-r1 {
+    width: 38px;
+    height: 38px;
+    filter: none;
+    border: 1px solid rgba(0, 242, 254, 0.45);
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(10, 16, 28, 0.55) 100%);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+}
+
+.unit-r1 img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Left Shoulder Frontline Positions (100% razor sharp, vanguard staggered echelon flanking shoulders) */
+.r1-l1 { top: 16%; left: 21%; z-index: 4; }
+.r1-l2 { top: 22%; left: 14%; z-index: 4; }
+.r1-l3 { top: 28%; left: 20%; z-index: 4; }
+.r1-l4 { top: 34%; left: 13%; z-index: 4; }
+.r1-l5 { top: 40%; left: 19%; z-index: 4; }
+.r1-l6 { top: 46%; left: 12%; z-index: 4; }
+
+/* Right Shoulder Frontline Positions (100% razor sharp, vanguard staggered echelon flanking shoulders) */
+.r1-r1 { top: 16%; right: 21%; z-index: 4; }
+.r1-r2 { top: 22%; right: 14%; z-index: 4; }
+.r1-r3 { top: 28%; right: 20%; z-index: 4; }
+.r1-r4 { top: 34%; right: 13%; z-index: 4; }
+.r1-r5 { top: 40%; right: 19%; z-index: 4; }
+.r1-r6 { top: 46%; right: 12%; z-index: 4; }
+
+/* Cascading spring delays for Rank 1 */
+.hero-image-wrapper:hover .r1-l1, .hero-image-wrapper:hover .r1-r1,
+.cinematic-depth-card:hover .r1-l1, .cinematic-depth-card:hover .r1-r1,
+.cinematic-depth-card.is-active .r1-l1, .cinematic-depth-card.is-active .r1-r1 { transition-delay: 0.04s; }
+
+.hero-image-wrapper:hover .r1-l2, .hero-image-wrapper:hover .r1-r2,
+.cinematic-depth-card:hover .r1-l2, .cinematic-depth-card:hover .r1-r2,
+.cinematic-depth-card.is-active .r1-l2, .cinematic-depth-card.is-active .r1-r2 { transition-delay: 0.07s; }
+
+.hero-image-wrapper:hover .r1-l3, .hero-image-wrapper:hover .r1-r3,
+.cinematic-depth-card:hover .r1-l3, .cinematic-depth-card:hover .r1-r3,
+.cinematic-depth-card.is-active .r1-l3, .cinematic-depth-card.is-active .r1-r3 { transition-delay: 0.10s; }
+
+.hero-image-wrapper:hover .r1-l4, .hero-image-wrapper:hover .r1-r4,
+.cinematic-depth-card:hover .r1-l4, .cinematic-depth-card:hover .r1-r4,
+.cinematic-depth-card.is-active .r1-l4, .cinematic-depth-card.is-active .r1-r4 { transition-delay: 0.13s; }
+
+.hero-image-wrapper:hover .r1-l5, .hero-image-wrapper:hover .r1-r5,
+.cinematic-depth-card:hover .r1-l5, .cinematic-depth-card:hover .r1-r5,
+.cinematic-depth-card.is-active .r1-l5, .cinematic-depth-card.is-active .r1-r5 { transition-delay: 0.16s; }
+
+.hero-image-wrapper:hover .r1-l6, .hero-image-wrapper:hover .r1-r6,
+.cinematic-depth-card:hover .r1-l6, .cinematic-depth-card:hover .r1-r6,
+.cinematic-depth-card.is-active .r1-l6, .cinematic-depth-card.is-active .r1-r6 { transition-delay: 0.19s; }
+
+/* ==========================================================================
+   RANK 2: TACTICAL SQUADRON (Soft Midfield Depth, Mild Blur ~1.3px, Z=3)
+   ========================================================================== */
+.unit-r2 {
+    width: 32px;
+    height: 32px;
+    filter: none;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.2) 0%, rgba(10, 16, 28, 0.5) 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.unit-r2 img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Left Tactical Escort Positions (Midfield echelon) */
+.r2-l1 { top: 9%;  left: 21%; z-index: 3; }
+.r2-l2 { top: 13%; left: 12%; z-index: 3; }
+.r2-l3 { top: 19%; left: 7%;  z-index: 3; }
+.r2-l4 { top: 26%; left: 6%;  z-index: 3; }
+.r2-l5 { top: 33%; left: 7%;  z-index: 3; }
+.r2-l6 { top: 39%; left: 6%;  z-index: 3; }
+.r2-l7 { top: 45%; left: 7%;  z-index: 3; }
+.r2-l8 { top: 51%; left: 8%;  z-index: 3; }
+
+/* Right Tactical Escort Positions (Midfield echelon) */
+.r2-r1 { top: 9%;  right: 21%; z-index: 3; }
+.r2-r2 { top: 13%; right: 12%; z-index: 3; }
+.r2-r3 { top: 19%; right: 7%;  z-index: 3; }
+.r2-r4 { top: 26%; right: 6%;  z-index: 3; }
+.r2-r5 { top: 33%; right: 7%;  z-index: 3; }
+.r2-r6 { top: 39%; right: 6%;  z-index: 3; }
+.r2-r7 { top: 45%; right: 7%;  z-index: 3; }
+.r2-r8 { top: 51%; right: 8%;  z-index: 3; }
+
+/* Cascading spring delays for Rank 2 */
+.hero-image-wrapper:hover .r2-l1, .hero-image-wrapper:hover .r2-r1,
+.cinematic-depth-card:hover .r2-l1, .cinematic-depth-card:hover .r2-r1,
+.cinematic-depth-card.is-active .r2-l1, .cinematic-depth-card.is-active .r2-r1 { transition-delay: 0.08s; }
+
+.hero-image-wrapper:hover .r2-l2, .hero-image-wrapper:hover .r2-r2,
+.cinematic-depth-card:hover .r2-l2, .cinematic-depth-card:hover .r2-r2,
+.cinematic-depth-card.is-active .r2-l2, .cinematic-depth-card.is-active .r2-r2 { transition-delay: 0.11s; }
+
+.hero-image-wrapper:hover .r2-l3, .hero-image-wrapper:hover .r2-r3,
+.cinematic-depth-card:hover .r2-l3, .cinematic-depth-card:hover .r2-r3,
+.cinematic-depth-card.is-active .r2-l3, .cinematic-depth-card.is-active .r2-r3 { transition-delay: 0.14s; }
+
+.hero-image-wrapper:hover .r2-l4, .hero-image-wrapper:hover .r2-r4,
+.cinematic-depth-card:hover .r2-l4, .cinematic-depth-card:hover .r2-r4,
+.cinematic-depth-card.is-active .r2-l4, .cinematic-depth-card.is-active .r2-r4 { transition-delay: 0.17s; }
+
+.hero-image-wrapper:hover .r2-l5, .hero-image-wrapper:hover .r2-r5,
+.cinematic-depth-card:hover .r2-l5, .cinematic-depth-card:hover .r2-r5,
+.cinematic-depth-card.is-active .r2-l5, .cinematic-depth-card.is-active .r2-r5 { transition-delay: 0.20s; }
+
+.hero-image-wrapper:hover .r2-l6, .hero-image-wrapper:hover .r2-r6,
+.cinematic-depth-card:hover .r2-l6, .cinematic-depth-card:hover .r2-r6,
+.cinematic-depth-card.is-active .r2-l6, .cinematic-depth-card.is-active .r2-r6 { transition-delay: 0.23s; }
+
+.hero-image-wrapper:hover .r2-l7, .hero-image-wrapper:hover .r2-r7,
+.cinematic-depth-card:hover .r2-l7, .cinematic-depth-card:hover .r2-r7,
+.cinematic-depth-card.is-active .r2-l7, .cinematic-depth-card.is-active .r2-r7 { transition-delay: 0.26s; }
+
+.hero-image-wrapper:hover .r2-l8, .hero-image-wrapper:hover .r2-r8,
+.cinematic-depth-card:hover .r2-l8, .cinematic-depth-card:hover .r2-r8,
+.cinematic-depth-card.is-active .r2-l8, .cinematic-depth-card.is-active .r2-r8 { transition-delay: 0.29s; }
+
+/* ==========================================================================
+   RANK 3: REAR STRATEGIC FLEET (Cinematic Bokeh Blur ~2.6px, Atmospheric, Z=2)
+   ========================================================================== */
+.unit-r3 {
+    width: 28px;
+    height: 28px;
+    filter: none;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.16) 0%, rgba(10, 16, 28, 0.5) 100%);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.unit-r3 img {
+    width: 17px;
+    height: 17px;
+}
+
+/* Left Horizon Strategic Positions (Crown arch & outermost perimeter) */
+.r3-l1 { top: 3.5%; left: 21%; z-index: 2; }
+.r3-l2 { top: 4%;   left: 12%; z-index: 2; }
+.r3-l3 { top: 6.5%; left: 5%;  z-index: 2; }
+.r3-l4 { top: 12%;  left: 1.5%; z-index: 2; }
+.r3-l5 { top: 19%;  left: 1%;  z-index: 2; }
+.r3-l6 { top: 26%;  left: 1%;  z-index: 2; }
+.r3-l7 { top: 33%;  left: 1%;  z-index: 2; }
+.r3-l8 { top: 40%;  left: 1%;  z-index: 2; }
+.r3-l9 { top: 47%;  left: 1.5%; z-index: 2; }
+
+/* Right Horizon Strategic Positions (Crown arch & outermost perimeter) */
+.r3-r1 { top: 3.5%; right: 21%; z-index: 2; }
+.r3-r2 { top: 4%;   right: 12%; z-index: 2; }
+.r3-r3 { top: 6.5%; right: 5%;  z-index: 2; }
+.r3-r4 { top: 12%;  right: 1.5%; z-index: 2; }
+.r3-r5 { top: 19%;  right: 1%;  z-index: 2; }
+.r3-r6 { top: 26%;  right: 1%;  z-index: 2; }
+.r3-r7 { top: 33%;  right: 1%;  z-index: 2; }
+.r3-r8 { top: 40%;  right: 1%;  z-index: 2; }
+.r3-r9 { top: 47%;  right: 1.5%; z-index: 2; }
+
+/* Cascading spring delays for Rank 3 */
+.hero-image-wrapper:hover .r3-l1, .hero-image-wrapper:hover .r3-r1,
+.cinematic-depth-card:hover .r3-l1, .cinematic-depth-card:hover .r3-r1,
+.cinematic-depth-card.is-active .r3-l1, .cinematic-depth-card.is-active .r3-r1 { transition-delay: 0.12s; }
+
+.hero-image-wrapper:hover .r3-l2, .hero-image-wrapper:hover .r3-r2,
+.cinematic-depth-card:hover .r3-l2, .cinematic-depth-card:hover .r3-r2,
+.cinematic-depth-card.is-active .r3-l2, .cinematic-depth-card.is-active .r3-r2 { transition-delay: 0.15s; }
+
+.hero-image-wrapper:hover .r3-l3, .hero-image-wrapper:hover .r3-r3,
+.cinematic-depth-card:hover .r3-l3, .cinematic-depth-card:hover .r3-r3,
+.cinematic-depth-card.is-active .r3-l3, .cinematic-depth-card.is-active .r3-r3 { transition-delay: 0.18s; }
+
+.hero-image-wrapper:hover .r3-l4, .hero-image-wrapper:hover .r3-r4,
+.cinematic-depth-card:hover .r3-l4, .cinematic-depth-card:hover .r3-r4,
+.cinematic-depth-card.is-active .r3-l4, .cinematic-depth-card.is-active .r3-r4 { transition-delay: 0.21s; }
+
+.hero-image-wrapper:hover .r3-l5, .hero-image-wrapper:hover .r3-r5,
+.cinematic-depth-card:hover .r3-l5, .cinematic-depth-card:hover .r3-r5,
+.cinematic-depth-card.is-active .r3-l5, .cinematic-depth-card.is-active .r3-r5 { transition-delay: 0.24s; }
+
+.hero-image-wrapper:hover .r3-l6, .hero-image-wrapper:hover .r3-r6,
+.cinematic-depth-card:hover .r3-l6, .cinematic-depth-card:hover .r3-r6,
+.cinematic-depth-card.is-active .r3-l6, .cinematic-depth-card.is-active .r3-r6 { transition-delay: 0.27s; }
+
+.hero-image-wrapper:hover .r3-l7, .hero-image-wrapper:hover .r3-r7,
+.cinematic-depth-card:hover .r3-l7, .cinematic-depth-card:hover .r3-r7,
+.cinematic-depth-card.is-active .r3-l7, .cinematic-depth-card.is-active .r3-r7 { transition-delay: 0.30s; }
+
+.hero-image-wrapper:hover .r3-l8, .hero-image-wrapper:hover .r3-r8,
+.cinematic-depth-card:hover .r3-l8, .cinematic-depth-card:hover .r3-r8,
+.cinematic-depth-card.is-active .r3-l8, .cinematic-depth-card.is-active .r3-r8 { transition-delay: 0.33s; }
+
+.hero-image-wrapper:hover .r3-l9, .hero-image-wrapper:hover .r3-r9,
+.cinematic-depth-card:hover .r3-l9, .cinematic-depth-card:hover .r3-r9,
+.cinematic-depth-card.is-active .r3-l9, .cinematic-depth-card.is-active .r3-r9 { transition-delay: 0.36s; }
+
+/* ==========================================================================
+/* ==========================================================================
+   SPATIAL POPUP TOOLTIPS (Theme-Aware, High-Legibility HUD Badge)
+   ========================================================================== */
+.unit-popup {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 6000;
+    display: grid;
+    grid-template-areas: 
+        "tag title"
+        "desc desc";
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 6px;
+    row-gap: 3px;
+    width: max-content;
+    min-width: 150px;
+    max-width: 250px;
+    box-sizing: border-box;
+    padding: 7px 10px;
+    white-space: normal;
+    background: rgba(9, 14, 26, 0.95);
+    backdrop-filter: blur(20px) saturate(190%);
+    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    border: 1px solid rgba(var(--accent-1-rgb), 0.70);
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.90), 0 0 16px rgba(var(--accent-1-rgb), 0.40);
+    transition: opacity 0.20s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.20s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.20s ease;
+    text-align: left;
+}
+
+:root[data-theme="light"] .unit-popup {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(var(--accent-1-rgb), 0.55);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15), 0 0 16px rgba(var(--accent-1-rgb), 0.25);
+}
+
+.popup-tag {
+    grid-area: tag;
+    display: inline-block;
+    font-size: 7.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent-1);
+    background: rgba(var(--accent-1-rgb), 0.18);
+    border: 1px solid rgba(var(--accent-1-rgb), 0.40);
+    padding: 1.5px 5px;
+    border-radius: 3.5px;
+    line-height: 1.2;
+    margin: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+:root[data-theme="light"] .popup-tag {
+    color: var(--accent-1);
+    background: rgba(var(--accent-1-rgb), 0.12);
+    border-color: rgba(var(--accent-1-rgb), 0.30);
+}
+
+.popup-title {
+    grid-area: title;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    margin: 0;
+    min-width: 0;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+[data-theme="light"] .popup-title,
+:root[data-theme="light"] .popup-title {
+    color: #0f172a !important;
+}
+
+.popup-desc {
+    grid-area: desc;
+    display: block;
+    font-size: 8.5px;
+    line-height: 1.35;
+    color: rgba(226, 232, 240, 0.95);
+    font-weight: 400;
+    margin: 0;
+    min-width: 0;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+.popup-desc::before {
+    content: "• ";
+    margin-right: 2px;
+    color: var(--accent-1);
+    font-weight: bold;
+}
+
+[data-theme="light"] .popup-desc,
+:root[data-theme="light"] .popup-desc {
+    color: #1e293b !important;
+}
+[data-theme="light"] .popup-desc::before,
+:root[data-theme="light"] .popup-desc::before {
+    color: var(--accent-1);
+}
+
+/* Positioning: OUTWARD FLANK ANCHOR (Strictly Away from Face)
+   - Left Flank: Popups anchor to the OUTER LEFT of the icon into wide open hero space.
+   - Right Flank: Popups anchor to the OUTER RIGHT of the icon into the balanced window margin.
+   - Center/Face zone is 100% protected and NEVER touched by any popup.
+*/
+
+/* Left Flank Units: Expand to OUTER LEFT */
+.flank-left .unit-popup,
+[class*="r1-l"] .unit-popup,
+[class*="r2-l"] .unit-popup,
+[class*="r3-l"] .unit-popup {
+    right: calc(100% + 10px) !important;
+    left: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) translateX(6px) scale(0.95);
+    transform-origin: right center !important;
+}
+
+/* Right Flank Units: Expand to OUTER RIGHT */
+.flank-right .unit-popup,
+[class*="r1-r"] .unit-popup,
+[class*="r2-r"] .unit-popup,
+[class*="r3-r"] .unit-popup {
+    left: calc(100% + 10px) !important;
+    right: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) translateX(-6px) scale(0.95);
+    transform-origin: left center !important;
+}
+
+/* Crown top units maintain horizontal outward direction */
+.r3-l1 .unit-popup, .r3-l2 .unit-popup {
+    right: calc(100% + 10px) !important;
+    left: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) translateX(6px) scale(0.95);
+    transform-origin: right center !important;
+}
+
+.r3-r1 .unit-popup, .r3-r2 .unit-popup {
+    left: calc(100% + 10px) !important;
+    right: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) translateX(-6px) scale(0.95);
+    transform-origin: left center !important;
+}
+
+/* Focus and Blur Logic:
+   When ANY unit is hovered:
+   1. All other units on the card dim down smoothly (opacity 0.35, no blur).
+   2. The hovered unit scales up to 1.10x, gains theme-matching reticle & glow.
+   3. The multi-line HUD popup appears crisply at full scale(1) in outer space.
+*/
+.cinematic-depth-card:has(.cyber-unit:hover) .cyber-unit:not(:hover) {
+    opacity: 0.35 !important;
+    filter: none !important;
+    transform: scale(0.92) !important;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cyber-unit:hover {
+    transform: scale(1.10) !important;
+    filter: none !important;
+    opacity: 1 !important;
+    z-index: 4000 !important;
+    border-color: var(--accent-1) !important;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85), 0 0 20px rgba(var(--accent-1-rgb), 0.60) !important;
+    background: rgba(15, 23, 42, 0.96) !important;
+}
+
+.cyber-unit:hover img {
+    transform: scale(1.08) !important;
+    filter: drop-shadow(0 0 6px rgba(var(--accent-1-rgb), 0.85)) !important;
+}
+
+/* Tactical Target Lock Reticle (Theme-Aware Rotating Dashed Ring) */
+.cyber-unit:hover::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--accent-1);
+    box-shadow: 0 0 10px rgba(var(--accent-1-rgb), 0.40);
+    animation: targetReticleSpin 4s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+}
+
+@keyframes targetReticleSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* On hover: popup opens with scale(1) and clear text */
+.cyber-unit:hover .unit-popup {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(-50%) translateX(0) scale(1) !important;
+}
+
+.r3-l1 .cyber-unit:hover .unit-popup,
+.r3-l2 .cyber-unit:hover .unit-popup,
+.r3-r1 .cyber-unit:hover .unit-popup,
+.r3-r2 .cyber-unit:hover .unit-popup {
+    transform: translateY(-50%) translateX(0) scale(1) !important;
+}
+
+/* Tool Halos and Category Accent Glows */
+.unit-n8n { border-color: rgba(234, 75, 113, 0.6); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 14px rgba(234, 75, 113, 0.45), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-langchain { border-color: rgba(46, 204, 113, 0.6); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 14px rgba(46, 204, 113, 0.45), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-crewai { border-color: rgba(255, 90, 95, 0.6); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 14px rgba(255, 90, 95, 0.45), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-python { border-color: rgba(55, 118, 171, 0.6); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 14px rgba(55, 118, 171, 0.45), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-typescript { border-color: rgba(49, 120, 198, 0.6); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 14px rgba(49, 120, 198, 0.45), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-hermis { border-color: rgba(0, 242, 254, 0.65); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 16px rgba(0, 242, 254, 0.50), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-docker { border-color: rgba(36, 150, 237, 0.65); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 16px rgba(36, 150, 237, 0.50), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-postgresql { border-color: rgba(65, 105, 225, 0.65); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 16px rgba(65, 105, 225, 0.50), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-redis { border-color: rgba(220, 56, 45, 0.65); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 16px rgba(220, 56, 45, 0.50), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-pgvector { border-color: rgba(0, 242, 254, 0.65); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 16px rgba(0, 242, 254, 0.50), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-mcp { border-color: rgba(0, 242, 254, 0.65); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 16px rgba(0, 242, 254, 0.50), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-cursor { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 14px rgba(255, 255, 255, 0.40), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+.unit-kubernetes { border-color: rgba(50, 108, 229, 0.65); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.60), 0 0 16px rgba(50, 108, 229, 0.50), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular); }
+
+.unit-claude { border-color: rgba(217, 119, 6, 0.55); }
+.unit-gemini { border-color: rgba(168, 85, 247, 0.55); }
+.unit-deepseek { border-color: rgba(77, 107, 254, 0.55); }
+.unit-openai { border-color: rgba(16, 163, 127, 0.55); }
+.unit-meta { border-color: rgba(0, 129, 251, 0.55); }
+.unit-aws { border-color: rgba(255, 153, 0, 0.55); }
+.unit-nestjs { border-color: rgba(224, 35, 78, 0.55); }
+
+/* Floating Micro-Animation */
+@keyframes spatialBadgeFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-3px); }
+}
+
+.r1-l2 .cyber-unit, .r1-r2 .cyber-unit { animation-delay: -1.2s; }
+.r1-l3 .cyber-unit, .r1-r3 .cyber-unit { animation-delay: -2.4s; }
+.r1-l4 .cyber-unit, .r1-r4 .cyber-unit { animation-delay: -3.6s; }
+.r2-l2 .cyber-unit, .r2-r2 .cyber-unit { animation-delay: -1.5s; }
+.r2-l4 .cyber-unit, .r2-r4 .cyber-unit { animation-delay: -3.0s; }
+.r3-l2 .cyber-unit, .r3-r2 .cyber-unit { animation-delay: -2.0s; }
+.r3-l4 .cyber-unit, .r3-r4 .cyber-unit { animation-delay: -4.0s; }
+
+/* ==========================================================================
+   SCI-FI FLUID WAVE ANIMATIONS (সাইফাই পানির ঢেউ এনিমেশন)
+   Elegant sci-fi hydrodynamic ripples with concentric energy crests
+   ========================================================================== */
+.cinematic-depth-card[data-active-flank="all"] {
+    cursor: pointer;
+}
+
+/* When wave triggered on photo click (Clean 3D Fluid Motion - NO circular outline rings) */
+.cinematic-depth-card.is-shockwave-active {
+    animation: sciFiCardFluidWave 1.05s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Fluid 3D Wave Motion on Card (পানির ঢেউয়ের মতো 3D বক্রতা ও আলোড়ন) */
+@keyframes sciFiCardFluidWave {
+    0% {
+        transform: perspective(1200px) translateY(0px) rotateX(0deg) scale(1);
+    }
+    22% {
+        transform: perspective(1200px) translateY(-7px) rotateX(2deg) scale(1.02);
+    }
+    55% {
+        transform: perspective(1200px) translateY(4px) rotateX(-1.5deg) scale(0.988);
+    }
+    78% {
+        transform: perspective(1200px) translateY(-2px) rotateX(0.6deg) scale(1.006);
+    }
+    100% {
+        transform: perspective(1200px) translateY(0px) rotateX(0deg) scale(1);
+    }
+}
+
+/* Flank Icons Sci-Fi Water Wave (পানির ঢেউয়ের মতো ওঠা-নামা ও হাইটেক ক্রিস্ট গ্লো) */
+.cyber-unit.ripple-wave-active {
+    animation: sciFiIconWaterWave 0.92s cubic-bezier(0.25, 1.15, 0.45, 1) forwards !important;
+}
+
+@keyframes sciFiIconWaterWave {
+    0% {
+        transform: translateY(0px) scale(1);
+        border-color: rgba(var(--accent-1-rgb), 0.25);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+    28% {
+        transform: translateY(-14px) scale(1.15);
+        border-color: rgba(var(--accent-1-rgb), 0.85);
+        box-shadow: 0 10px 22px rgba(var(--accent-1-rgb), 0.45), 0 0 14px rgba(var(--accent-1-rgb), 0.3);
+    }
+    58% {
+        transform: translateY(6px) scale(0.96);
+        border-color: rgba(var(--accent-1-rgb), 0.35);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    }
+    80% {
+        transform: translateY(-2px) scale(1.02);
+        border-color: rgba(var(--accent-1-rgb), 0.5);
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+        border-color: rgba(var(--accent-1-rgb), 0.25);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+}
+
+/* Layer 4: Subject (Foreground Cutout - In Front of Badges & Shoulders with Razor Sharp Resolution) */
+.cinematic-layer.layer-subject {
+    z-index: 6;
+    border-radius: 26px;
+    overflow: hidden;
+    transform: translate3d(var(--subj-x, 0px), var(--subj-y, 0px), 0);
+    transform-origin: bottom center;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.cinematic-layer.layer-subject img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: bottom center;
+    display: block;
+    border-radius: 26px;
+    image-rendering: -webkit-optimize-contrast;
+    transform: none;
+    transform-origin: bottom center;
+    /* Soft ambient contact shadow for authentic iPhone 3D spatial depth */
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.55)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.35));
+}
+
+
+
+
+
+@media (prefers-reduced-motion: reduce) {
+    .cinematic-depth-card,
+    .cinematic-layer.layer-subject,
+    .cinematic-layer.layer-bg {
+        transform: none !important;
+        transition: none !important;
+    }
 }
 
 @keyframes floatProfile {
@@ -3323,21 +4283,21 @@ footer {
     font-family: 'Fira Code', monospace;
 }
 
-/* Rank Specific Premium Gradients */
-.rank-1 { 
+/* Rank Specific Premium Gradients for Leaderboard */
+.rank-pill.rank-1 { 
     background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); 
     color: #000; 
     box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
 }
-.rank-2 { 
+.rank-pill.rank-2 { 
     background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%); 
     color: #000; 
 }
-.rank-3 { 
+.rank-pill.rank-3 { 
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
     color: #000; 
 }
-.rank-other { 
+.rank-pill.rank-other { 
     background: #1e293b; 
     color: #94a3b8; 
     border: 1px solid rgba(51, 65, 85, 0.5);
@@ -3677,7 +4637,7 @@ footer {
 
     /* Fix Hero Layout to stack vertically with comfortable breathing room */
     .hero {
-        padding: 70px 5% 85px !important;
+        padding: 75px 5% 95px !important;
         min-height: auto;
     }
 
@@ -3689,7 +4649,7 @@ footer {
     .hero-layout {
         flex-direction: column-reverse;
         text-align: center;
-        gap: 1.5rem;
+        gap: 1.8rem;
     }
 
     .hero-text-side {
@@ -3700,11 +4660,16 @@ footer {
     .hero-image-side {
         justify-content: center;
         width: 100%;
+        padding-right: 0 !important;
+        margin: 10px 0 15px !important;
     }
 
     .hero-image-wrapper {
-        max-width: 220px;
+        max-width: 295px !important;
+        width: 82vw !important;
         margin: 0 auto;
+        padding: 14px;
+        border-radius: 36px;
     }
 
     /* Adjust Typography for mobile: clamp ensures no edge collision */
@@ -3730,10 +4695,10 @@ footer {
     .hero-cta-group {
         display: flex !important;
         flex-direction: column !important;
-        gap: 0.75rem !important;
+        gap: 0.85rem !important;
         width: 100% !important;
-        margin-top: 2.2rem !important; /* Pushed down comfortably below telemetry terminal */
-        margin-bottom: 2.5rem !important; /* Ample breathing room clearing bottom floating docks */
+        margin-top: 2.8rem !important; /* Pushed down comfortably below telemetry terminal */
+        margin-bottom: 5.5rem !important; /* Ample breathing room clearing bottom floating docks */
         position: relative !important;
         z-index: 5 !important;
     }
@@ -4442,7 +5407,96 @@ footer {
         width: 100%;
     }
 
-    /* Hero */
+    /* Mobile Nav: Smart Dynamic Island Auto-Fit Pill */
+    nav {
+        position: fixed !important;
+        top: 10px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: auto !important;
+        min-width: 90px !important;
+        max-width: 90% !important;
+        height: 42px !important;
+        padding: 0 12px 0 10px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 10px !important;
+        background: rgba(9, 14, 26, 0.78) !important;
+        backdrop-filter: blur(18px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
+        border: 1px solid rgba(var(--accent-1-rgb), 0.28) !important;
+        border-radius: 999px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(var(--accent-1-rgb), 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+        z-index: 1000 !important;
+        pointer-events: auto !important;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    /* Light Theme Nav */
+    [data-theme="light"] nav,
+    :root[data-theme="light"] nav {
+        background: rgba(255, 255, 255, 0.88) !important;
+        border-color: rgba(var(--accent-1-rgb), 0.35) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(var(--accent-1-rgb), 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    }
+
+    /* Scrolled State: Collapse into a sleek Floating Mini Logo in top-left */
+    nav.nav-scrolled {
+        left: 14px !important;
+        transform: translateX(0) !important;
+        min-width: 40px !important;
+        width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(var(--accent-1-rgb), 0.2) !important;
+    }
+
+    nav.nav-scrolled .mobile-nav-pill-badge {
+        display: none !important;
+    }
+
+    .logo-link {
+        pointer-events: auto !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .site-logo {
+        max-height: 26px !important;
+        width: auto !important;
+    }
+
+    .mobile-nav-pill-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        pointer-events: auto !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .live-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 8px #10b981;
+        animation: livePulse 2s infinite ease-in-out;
+    }
+
+    @keyframes livePulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.35); opacity: 0.55; }
+    }
+
+    .nav-links { display: none !important; }
+
+    /* Hero: Positioned comfortably under the floating glass pill */
     .hero {
         padding: 70px 5% 85px !important;
         min-height: auto;
@@ -4462,10 +5516,12 @@ footer {
     .hero-image-side {
         justify-content: center;
         width: 100%;
+        margin: 0 0 10px !important;
     }
 
     .hero-image-wrapper {
-        max-width: 220px;
+        max-width: 295px;
+        width: 82vw;
         margin: 0 auto;
     }
 
@@ -4474,11 +5530,132 @@ footer {
 
     .decrypt-text { word-break: break-word; }
 
+    /* Mobile Popups: Position ABOVE or BELOW icon (never over face), fully responsive multi-line */
+    .unit-popup {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 3px !important;
+        width: max-content !important;
+        min-width: 140px !important;
+        max-width: min(220px, calc(100vw - 36px)) !important;
+        box-sizing: border-box !important;
+        padding: 7px 10px !important;
+        white-space: normal !important;
+        border-radius: 8px !important;
+        z-index: 9999 !important;
+    }
 
+    .popup-tag {
+        font-size: 7px !important;
+        padding: 1.5px 5px !important;
+        margin-bottom: 1px !important;
+        white-space: nowrap !important;
+        align-self: flex-start !important;
+    }
 
-    /* Nav */
-    .nav-links { display: none; }
-    nav { padding: 1rem 5%; }
+    .popup-title {
+        font-size: 11px !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: break-word !important;
+        width: 100% !important;
+        color: #ffffff !important;
+    }
+
+    .popup-desc {
+        font-size: 8.5px !important;
+        line-height: 1.35 !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: break-word !important;
+        width: 100% !important;
+    }
+
+    /* Mobile Light Theme Popup Contrast Fix (সব লেখা পরিষ্কার ও স্পষ্ট) */
+    [data-theme="light"] .unit-popup,
+    :root[data-theme="light"] .unit-popup {
+        background: rgba(255, 255, 255, 0.98) !important;
+        border-color: rgba(var(--accent-1-rgb), 0.65) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16), 0 0 14px rgba(var(--accent-1-rgb), 0.25) !important;
+    }
+
+    [data-theme="light"] .popup-title,
+    :root[data-theme="light"] .popup-title {
+        color: #0f172a !important; /* Deep dark navy for 100% crisp legibility */
+        font-weight: 700 !important;
+    }
+
+    [data-theme="light"] .popup-desc,
+    :root[data-theme="light"] .popup-desc {
+        color: #1e293b !important; /* Rich dark slate */
+        font-weight: 500 !important;
+    }
+
+    [data-theme="light"] .popup-tag,
+    :root[data-theme="light"] .popup-tag {
+        color: var(--accent-1) !important;
+        background: rgba(var(--accent-1-rgb), 0.12) !important;
+        border-color: rgba(var(--accent-1-rgb), 0.35) !important;
+        font-weight: 800 !important;
+    }
+
+    /* Left Flank Units: Anchor Above by default, Left-aligned */
+    .flank-left .unit-popup,
+    [class*="r1-l"] .unit-popup,
+    [class*="r2-l"] .unit-popup,
+    [class*="r3-l"] .unit-popup {
+        left: 0 !important;
+        right: auto !important;
+        bottom: calc(100% + 8px) !important;
+        top: auto !important;
+        transform: translateY(4px) scale(0.96) !important;
+        transform-origin: left bottom !important;
+    }
+
+    /* Right Flank Units: Anchor Above by default, Right-aligned */
+    .flank-right .unit-popup,
+    [class*="r1-r"] .unit-popup,
+    [class*="r2-r"] .unit-popup,
+    [class*="r3-r"] .unit-popup {
+        right: 0 !important;
+        left: auto !important;
+        bottom: calc(100% + 8px) !important;
+        top: auto !important;
+        transform: translateY(4px) scale(0.96) !important;
+        transform-origin: right bottom !important;
+    }
+
+    /* Crown / Upper Units (top <= 20%): Anchor BELOW icon so they don't clip off the top */
+    .r3-l1 .unit-popup, .r3-l2 .unit-popup, .r3-l3 .unit-popup, .r3-l4 .unit-popup,
+    .r2-l1 .unit-popup, .r2-l2 .unit-popup, .r2-l3 .unit-popup,
+    .r1-l1 .unit-popup {
+        bottom: auto !important;
+        top: calc(100% + 8px) !important;
+        transform: translateY(-4px) scale(0.96) !important;
+        transform-origin: left top !important;
+    }
+
+    .r3-r1 .unit-popup, .r3-r2 .unit-popup, .r3-r3 .unit-popup, .r3-r4 .unit-popup,
+    .r2-r1 .unit-popup, .r2-r2 .unit-popup, .r2-r3 .unit-popup,
+    .r1-r1 .unit-popup {
+        bottom: auto !important;
+        top: calc(100% + 8px) !important;
+        transform: translateY(-4px) scale(0.96) !important;
+        transform-origin: right top !important;
+    }
+
+    /* Active / Tap / Hover state on Mobile */
+    .cyber-unit:hover .unit-popup,
+    .cyber-unit:focus-within .unit-popup,
+    .cyber-unit.popup-active .unit-popup {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: translateY(0) scale(1) !important;
+    }
+
     section { padding: 4rem 5% 2rem; }
 
     /* IDE: Full-width, minimal sidebar */
@@ -4692,8 +5869,13 @@ footer {
 
     .support-btn { width: 100%; font-size: 0.8rem; }
 
-    /* Hero: Further compact */
-    .hero-image-wrapper { max-width: 200px; }
+    /* Hero: Mobile prominent portrait sizing */
+    .hero-image-wrapper {
+        max-width: 285px;
+        width: 84vw;
+        padding: 12px;
+        border-radius: 34px;
+    }
 
     /* Single column filter (wrap + center) */
     .project-filters {

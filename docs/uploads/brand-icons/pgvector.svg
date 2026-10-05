@@ -1,0 +1,6 @@
+<svg role="img" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+  <path d="M4 19L19 4M19 4H10M19 4V13" stroke="#336791" stroke-width="2.5"/>
+  <circle cx="4" cy="19" r="3" fill="#336791"/>
+  <circle cx="19" cy="4" r="3" fill="#00F2FE"/>
+  <circle cx="12" cy="12" r="2" fill="#38BDF8"/>
+</svg>
