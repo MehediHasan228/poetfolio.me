@@ -2426,6 +2426,58 @@ section {
     background: rgba(56, 189, 248, 0.15);
 }
 
+.node-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    display: block;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.topo-node:hover .node-icon svg,
+.topo-node.active .node-icon svg {
+    transform: scale(1.12);
+}
+
+.topo-tab svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.topo-title-group h3 svg {
+    width: 17px;
+    height: 17px;
+    stroke: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.hud-metric-item svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.system-topology-card i.fa-solid,
+.system-topology-card i.fas,
+.node-icon i {
+    font-family: "Font Awesome 6 Free", "FontAwesome" !important;
+    font-weight: 900 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+}
+
 .node-info {
     display: flex;
     flex-direction: column;
