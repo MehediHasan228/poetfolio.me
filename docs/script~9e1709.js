@@ -313,14 +313,18 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(err) {}
 
         handles.forEach(handle => {
-            handle.style.cursor = 'move';
+            if (handle.classList.contains('lb-toggle')) {
+                handle.style.cursor = 'pointer';
+            } else {
+                handle.style.cursor = 'move';
+            }
             handle.addEventListener('mousedown', dragStart);
             handle.addEventListener('touchstart', dragStart, { passive: false });
             
-            // Prevent standard click if we were dragging
+            // Prevent click if we were actively dragging
             handle.addEventListener('click', (e) => {
                 const now = Date.now();
-                if (isDragging || (now - lastDragTime < 280)) {
+                if (isDragging || (now - lastDragTime < 320)) {
                     e.stopImmediatePropagation();
                     e.preventDefault();
                 }
@@ -328,141 +332,78 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function dragStart(e) {
-            // MOBILE VERTICAL TOUCH DRAGGING
-            if (window.innerWidth <= 860) {
-                // If modal is expanded, don't drag the background
-                if (element.classList.contains('lb-expanded')) return;
+            // If modal is expanded and handle is the toggle, don't drag
+            if (element.classList.contains('lb-expanded') && e.target.closest('.lb-toggle')) return;
 
-                const touch = e.touches ? e.touches[0] : e;
-                const startTouchY = touch.clientY;
-                const rect = element.getBoundingClientRect();
-                const startElemTop = rect.top;
-                let hasMoved = false;
-                let currentTargetTop = startElemTop;
+            const isTouch = e.type === 'touchstart';
+            const clientY = isTouch ? (e.touches && e.touches[0].clientY) : e.clientY;
+            startY = clientY;
+            isDragging = false;
+            let hasMoved = false;
 
-                function mobileTouchMove(ev) {
-                    const currentTouch = ev.touches ? ev.touches[0] : ev;
-                    const diffY = currentTouch.clientY - startTouchY;
-                    if (Math.abs(diffY) > 6) {
-                        hasMoved = true;
-                        isDragging = true;
-                        if (ev.cancelable) ev.preventDefault();
-                        element.classList.add('is-tab-dragging');
+            const rect = element.getBoundingClientRect();
+            const startElemTop = rect.top;
+            pos4 = clientY;
 
+            function onMove(ev) {
+                const moveY = ev.touches ? ev.touches[0].clientY : ev.clientY;
+                const diffY = Math.abs(moveY - startY);
+                if (diffY > 8) {
+                    hasMoved = true;
+                    isDragging = true;
+                    if (ev.cancelable) ev.preventDefault();
+                    element.classList.add('is-tab-dragging');
+
+                    if (window.innerWidth <= 860) {
                         const winH = window.innerHeight;
                         const tabH = element.offsetHeight || 50;
                         const minTop = 60;
                         const maxTop = winH - tabH - 60;
-                        currentTargetTop = Math.max(minTop, Math.min(maxTop, startElemTop + diffY));
-
-                        element.style.setProperty('--lb-mobile-top', currentTargetTop + 'px');
+                        const newTop = Math.max(minTop, Math.min(maxTop, startElemTop + (moveY - startY)));
+                        element.style.setProperty('--lb-mobile-top', newTop + 'px');
                         element.style.setProperty('--lb-mobile-transform', 'none');
-                    }
-                }
-
-                function mobileTouchEnd() {
-                    document.removeEventListener('touchmove', mobileTouchMove);
-                    document.removeEventListener('touchend', mobileTouchEnd);
-                    document.removeEventListener('touchcancel', mobileTouchEnd);
-                    element.classList.remove('is-tab-dragging');
-
-                    if (hasMoved) {
-                        lastDragTime = Date.now();
-                        setTimeout(() => { isDragging = false; }, 250);
-                        try {
-                            localStorage.setItem('poetfolio_lb_mobile_top', currentTargetTop);
-                        } catch(err) {}
                     } else {
-                        isDragging = false;
+                        pos2 = pos4 - moveY;
+                        pos4 = moveY;
+                        let newTop = element.offsetTop - pos2;
+                        const padding = 20;
+                        const viewHeight = window.innerHeight;
+                        if (newTop < padding) newTop = padding;
+                        if (newTop > viewHeight - element.offsetHeight - padding) 
+                            newTop = viewHeight - element.offsetHeight - padding;
+                        element.style.top = newTop + "px";
+                        element.style.setProperty('--lb-ty', 'translateY(0)');
                     }
                 }
-
-                document.addEventListener('touchmove', mobileTouchMove, { passive: false });
-                document.addEventListener('touchend', mobileTouchEnd);
-                document.addEventListener('touchcancel', mobileTouchEnd);
-                return;
             }
 
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            startY = clientY;
-            isDragging = false;
-            pos4 = clientY;
+            function onEnd() {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+                document.removeEventListener('touchcancel', onEnd);
+                element.classList.remove('is-tab-dragging');
 
-            document.addEventListener('mousemove', dragMove);
-            document.addEventListener('mouseup', dragEnd);
-            document.addEventListener('touchmove', dragMove, { passive: false });
-            document.addEventListener('touchend', dragEnd);
-
-            // IMPORTANT: If the element is centered via CSS transform, 
-            // we must capture its actual top and use a CSS variable for the Y offset to avoid jumping.
-            const rect = element.getBoundingClientRect();
-            element.style.top = rect.top + 'px';
-            element.style.setProperty('--lb-ty', 'translateY(0)'); 
-
-            // Optimization: Remove transitions during drag for smoothness
-            element.style.transition = 'none';
-        }
-
-        function dragMove(e) {
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            
-            // Threshold: 5px for mouse, 15px for touch to prevent accidental drags during taps
-            const threshold = e.type.startsWith('touch') ? 15 : 5;
-            
-            if (Math.abs(clientY - startY) > threshold) {
-                isDragging = true;
-                if (e.cancelable) e.preventDefault();
-            }
-
-            if (!isDragging) return;
-
-            pos2 = pos4 - clientY;
-            pos4 = clientY;
-
-            let newTop = element.offsetTop - pos2;
-            
-            // Bound checking (optional but good for UX)
-            const padding = 20;
-            const viewHeight = window.innerHeight;
-            if (newTop < padding) newTop = padding;
-            if (newTop > viewHeight - element.offsetHeight - padding) 
-                newTop = viewHeight - element.offsetHeight - padding;
-
-            element.style.top = newTop + "px";
-            element.style.bottom = 'auto';
-            element.style.left = 'auto';
-            element.style.right = '0';
-            // No transform: none needed here as it's cleared in dragStart
-        }
-
-        function dragEnd(e) {
-            document.removeEventListener('mousemove', dragMove);
-            document.removeEventListener('mouseup', dragEnd);
-            document.removeEventListener('touchmove', dragMove);
-            document.removeEventListener('touchend', dragEnd);
-            
-            element.style.transition = ''; 
-
-            if (isDragging) {
-                lastDragTime = Date.now();
-            }
-
-            // If we didn't drag, it's a click. Signal to other listeners.
-            if (!isDragging) {
-                const path = e.composedPath ? e.composedPath() : (e.path || []);
-                // DON'T dispatch if we clicked on a button or interactive element that should handle itself
-                const isControlClick = path.some(el => el && el.tagName && (
-                    el.tagName === 'BUTTON' || 
-                    el.tagName === 'A' || 
-                    (el.classList && el.classList.contains('radar-tab')) ||
-                    (el.classList && el.classList.contains('lb-expand-btn'))
-                ));
-                
-                if (!isControlClick) {
-                    element.dispatchEvent(new CustomEvent('lb-click', { bubbles: true, composed: true }));
+                if (hasMoved) {
+                    lastDragTime = Date.now();
+                    setTimeout(() => { isDragging = false; }, 250);
+                    if (window.innerWidth <= 860) {
+                        try {
+                            const curTop = element.style.getPropertyValue('--lb-mobile-top');
+                            if (curTop) localStorage.setItem('poetfolio_lb_mobile_top', parseFloat(curTop));
+                        } catch(err) {}
+                    }
+                } else {
+                    isDragging = false;
                 }
             }
+
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onEnd);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('touchend', onEnd);
+            document.addEventListener('touchcancel', onEnd);
         }
     }
 
@@ -3290,7 +3231,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             if (typeof playSound === 'function') playSound('click');
         }
 
+        let lastToggleTime = 0;
         function toggleLeaderboard() {
+            const now = Date.now();
+            if (now - lastToggleTime < 320) return;
+            lastToggleTime = now;
+
             if (lbWidget.classList.contains('lb-expanded')) {
                 closeLeaderboard();
             } else {
@@ -3298,15 +3244,20 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             }
         }
 
-        // Use custom event from draggable logic on desktop
-        lbWidget.addEventListener('lb-click', (e) => {
+        // Direct tap/click listener for mobile, tablet, and desktop
+        lbToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             toggleLeaderboard();
         });
 
-        // Direct tap/click listener for mobile and desktop
-        lbToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleLeaderboard();
+        // Close on clicking outside on desktop and tablet
+        document.addEventListener('click', (e) => {
+            if (lbWidget.classList.contains('lb-expanded')) {
+                if (!lbWidget.contains(e.target)) {
+                    closeLeaderboard();
+                }
+            }
         });
 
         window.closeLeaderboardWidget = closeLeaderboard;

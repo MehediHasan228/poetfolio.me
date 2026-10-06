@@ -6637,7 +6637,7 @@ footer {
     /* Leaderboard Card Entry: Emerges from the Right Side with fluid spring animation */
     #leaderboard-widget.lb-expanded .radar-container {
         width: calc(100vw - 24px) !important;
-        max-width: 410px !important;
+        max-width: 500px !important;
         height: 84vh !important;
         max-height: 700px !important;
         border-radius: 24px !important;
