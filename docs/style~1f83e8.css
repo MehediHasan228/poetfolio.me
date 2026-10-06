@@ -1075,19 +1075,7 @@ section {
 .cinematic-depth-card[data-active-flank="left"] [class*="r3-l"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r1-l"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r2-l"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r3-l"],
-.cinematic-depth-card.is-active [class*="r1-l"],
-.cinematic-depth-card.is-active [class*="r2-l"],
-.cinematic-depth-card.is-active [class*="r3-l"],
-.cinematic-depth-card.is-scroll-deployed [class*="r1-l"],
-.cinematic-depth-card.is-scroll-deployed [class*="r2-l"],
-.cinematic-depth-card.is-scroll-deployed [class*="r3-l"],
-.cinematic-depth-card:hover [class*="r1-l"],
-.cinematic-depth-card:hover [class*="r2-l"],
-.cinematic-depth-card:hover [class*="r3-l"],
-.hero-image-wrapper:hover [class*="r1-l"],
-.hero-image-wrapper:hover [class*="r2-l"],
-.hero-image-wrapper:hover [class*="r3-l"] {
+.cinematic-depth-card[data-active-flank="all"] [class*="r3-l"] {
     visibility: visible;
     pointer-events: auto;
     transform: translate3d(0, 0, 0) scale(1);
@@ -1095,30 +1083,18 @@ section {
 
 .cinematic-depth-card[data-active-flank="left"] [class*="r1-l"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r1-l"],
-.cinematic-depth-card.is-active [class*="r1-l"],
-.cinematic-depth-card.is-scroll-deployed [class*="r1-l"],
-.cinematic-depth-card:hover [class*="r1-l"],
-.hero-image-wrapper:hover [class*="r1-l"],
 .cinematic-depth-card:has([class*="r1-l"]:hover) [class*="r1-l"] {
     opacity: 1;
 }
 
 .cinematic-depth-card[data-active-flank="left"] [class*="r2-l"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r2-l"],
-.cinematic-depth-card.is-active [class*="r2-l"],
-.cinematic-depth-card.is-scroll-deployed [class*="r2-l"],
-.cinematic-depth-card:hover [class*="r2-l"],
-.hero-image-wrapper:hover [class*="r2-l"],
 .cinematic-depth-card:has([class*="r2-l"]:hover) [class*="r2-l"] {
     opacity: 0.88;
 }
 
 .cinematic-depth-card[data-active-flank="left"] [class*="r3-l"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r3-l"],
-.cinematic-depth-card.is-active [class*="r3-l"],
-.cinematic-depth-card.is-scroll-deployed [class*="r3-l"],
-.cinematic-depth-card:hover [class*="r3-l"],
-.hero-image-wrapper:hover [class*="r3-l"],
 .cinematic-depth-card:has([class*="r3-l"]:hover) [class*="r3-l"] {
     opacity: 0.68;
 }
@@ -1132,19 +1108,7 @@ section {
 .cinematic-depth-card[data-active-flank="right"] [class*="r3-r"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r1-r"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r2-r"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r3-r"],
-.cinematic-depth-card.is-active [class*="r1-r"],
-.cinematic-depth-card.is-active [class*="r2-r"],
-.cinematic-depth-card.is-active [class*="r3-r"],
-.cinematic-depth-card.is-scroll-deployed [class*="r1-r"],
-.cinematic-depth-card.is-scroll-deployed [class*="r2-r"],
-.cinematic-depth-card.is-scroll-deployed [class*="r3-r"],
-.cinematic-depth-card:hover [class*="r1-r"],
-.cinematic-depth-card:hover [class*="r2-r"],
-.cinematic-depth-card:hover [class*="r3-r"],
-.hero-image-wrapper:hover [class*="r1-r"],
-.hero-image-wrapper:hover [class*="r2-r"],
-.hero-image-wrapper:hover [class*="r3-r"] {
+.cinematic-depth-card[data-active-flank="all"] [class*="r3-r"] {
     visibility: visible;
     pointer-events: auto;
     transform: translate3d(0, 0, 0) scale(1);
@@ -1152,32 +1116,66 @@ section {
 
 .cinematic-depth-card[data-active-flank="right"] [class*="r1-r"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r1-r"],
-.cinematic-depth-card.is-active [class*="r1-r"],
-.cinematic-depth-card.is-scroll-deployed [class*="r1-r"],
-.cinematic-depth-card:hover [class*="r1-r"],
-.hero-image-wrapper:hover [class*="r1-r"],
 .cinematic-depth-card:has([class*="r1-r"]:hover) [class*="r1-r"] {
     opacity: 1;
 }
 
 .cinematic-depth-card[data-active-flank="right"] [class*="r2-r"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r2-r"],
-.cinematic-depth-card.is-active [class*="r2-r"],
-.cinematic-depth-card.is-scroll-deployed [class*="r2-r"],
-.cinematic-depth-card:hover [class*="r2-r"],
-.hero-image-wrapper:hover [class*="r2-r"],
 .cinematic-depth-card:has([class*="r2-r"]:hover) [class*="r2-r"] {
     opacity: 0.88;
 }
 
 .cinematic-depth-card[data-active-flank="right"] [class*="r3-r"],
 .cinematic-depth-card[data-active-flank="all"] [class*="r3-r"],
-.cinematic-depth-card.is-active [class*="r3-r"],
-.cinematic-depth-card.is-scroll-deployed [class*="r3-r"],
-.cinematic-depth-card:hover [class*="r3-r"],
-.hero-image-wrapper:hover [class*="r3-r"],
 .cinematic-depth-card:has([class*="r3-r"]:hover) [class*="r3-r"] {
     opacity: 0.68;
+}
+
+/* STRICT FLANK ISOLATION: When one flank is active, the opposite flank MUST remain completely hidden and empty */
+.cinematic-depth-card[data-active-flank="right"] .flank-left,
+.cinematic-depth-card[data-active-flank="right"] [class*="r1-l"],
+.cinematic-depth-card[data-active-flank="right"] [class*="r2-l"],
+.cinematic-depth-card[data-active-flank="right"] [class*="r3-l"] {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translate3d(24px, 14px, 0) scale(0.52) !important;
+}
+
+.cinematic-depth-card[data-active-flank="left"] .flank-right,
+.cinematic-depth-card[data-active-flank="left"] [class*="r1-r"],
+.cinematic-depth-card[data-active-flank="left"] [class*="r2-r"],
+.cinematic-depth-card[data-active-flank="left"] [class*="r3-r"] {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translate3d(-24px, 14px, 0) scale(0.52) !important;
+}
+
+/* STRICT RESTING STATE: If no flank is active (initial load / neutral), all units stay tucked behind and completely hidden */
+.cinematic-depth-card:not([data-active-flank="left"]):not([data-active-flank="right"]):not([data-active-flank="all"]) .army-unit-wrap {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Neural command lines flank isolation */
+.cinematic-depth-card[data-active-flank="right"] .cmd-line-l1,
+.cinematic-depth-card[data-active-flank="right"] .cmd-line-l2 {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.cinematic-depth-card[data-active-flank="left"] .cmd-line-r1,
+.cinematic-depth-card[data-active-flank="left"] .cmd-line-r2 {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.cinematic-depth-card:not([data-active-flank="left"]):not([data-active-flank="right"]):not([data-active-flank="all"]) .cmd-line {
+    opacity: 0 !important;
+    visibility: hidden !important;
 }
 
 /* Base Cyber Army Escort Unit - Apple Spatial 3D Liquid Glass Orb */

@@ -488,6 +488,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let isHeroActive = false;
             let isGyroActive = false;
             let isScrollDeployed = false;
+            let isDeploymentUnlocked = false;
+            let lastGyroGamma = null;
             let isShakingActive = false;
             let shakeEndTimer = null;
             let lastShakeTime = 0;
@@ -775,23 +777,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // 4. Auto-Reveal on Scroll (মোবাইল, ট্যাব ও ওয়েব স্ক্রল করলে লোগোগুলো স্বয়ংক্রিয়ভাবে ভেসে উঠবে)
+            // 4. Auto-Reveal on Scroll (স্ক্রল বা টাচ করার পরে লোগো আনলক হবে)
             function handleHeroScroll() {
                 if (!card || isShakingActive) return;
 
                 const rect = card.getBoundingClientRect();
                 const winHeight = window.innerHeight || document.documentElement.clientHeight;
                 const scrollY = window.scrollY || window.pageYOffset;
+                const isMobile = window.innerWidth <= 860;
 
                 // Check if hero card is currently in viewport
                 const isHeroVisible = rect.top < winHeight * 0.92 && rect.bottom > winHeight * 0.08;
 
-                if (scrollY > 20 && isHeroVisible) {
+                if (scrollY > 25 && isHeroVisible) {
+                    isDeploymentUnlocked = true;
                     if (!isScrollDeployed) {
                         isScrollDeployed = true;
-                        card.classList.add('is-active', 'is-scroll-deployed');
-                        if (!isDirectHover) {
-                            card.setAttribute('data-active-flank', 'all');
+                        if (!isMobile) {
+                            card.classList.add('is-active', 'is-scroll-deployed');
+                            if (!isDirectHover) {
+                                card.setAttribute('data-active-flank', 'all');
+                            }
                         }
                     }
                     if (!isDirectHover && !isGyroActive) {
@@ -805,7 +811,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (isScrollDeployed) {
                         isScrollDeployed = false;
                         card.classList.remove('is-scroll-deployed');
-                        if (!isDirectHover) {
+                        if (!isDirectHover && !isGyroActive) {
                             card.classList.remove('is-active');
                             card.removeAttribute('data-active-flank');
                             resetTargets();
@@ -815,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Out of screen view: silently reset so it re-deploys cleanly on scroll back
                     isScrollDeployed = false;
                     card.classList.remove('is-scroll-deployed');
-                    if (!isDirectHover) {
+                    if (!isDirectHover && !isGyroActive) {
                         card.classList.remove('is-active');
                         card.removeAttribute('data-active-flank');
                         resetTargets();
@@ -824,44 +830,74 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             window.addEventListener('scroll', handleHeroScroll, { passive: true });
+            // Global touch anywhere on page unlocks flank deployment
+            window.addEventListener('touchstart', () => {
+                isDeploymentUnlocked = true;
+            }, { passive: true });
             // Initial run in case loaded midway
             handleHeroScroll();
 
             // 5. Mobile Touch Events (Drag & Pan Interaction)
             wrapper.addEventListener('touchstart', (e) => {
-                card.classList.add('is-active');
+                isDeploymentUnlocked = true;
                 if (e.touches && e.touches[0]) {
                     computeTargets(e.touches[0].clientX, e.touches[0].clientY, true);
                     const rect = card.getBoundingClientRect();
                     const ratioX = (e.touches[0].clientX - rect.left) / rect.width;
-                    if (ratioX < 0.34) {
+                    if (ratioX < 0.46) {
                         card.setAttribute('data-active-flank', 'left');
-                    } else if (ratioX > 0.66) {
+                        card.classList.add('is-active');
+                    } else if (ratioX > 0.54) {
                         card.setAttribute('data-active-flank', 'right');
+                        card.classList.add('is-active');
                     } else {
-                        card.setAttribute('data-active-flank', 'all');
+                        card.removeAttribute('data-active-flank');
+                        card.classList.remove('is-active');
                     }
                 }
             }, { passive: true });
 
             wrapper.addEventListener('touchmove', (e) => {
+                isDeploymentUnlocked = true;
                 if (e.touches && e.touches[0]) {
                     computeTargets(e.touches[0].clientX, e.touches[0].clientY, true);
                     const rect = card.getBoundingClientRect();
                     const ratioX = (e.touches[0].clientX - rect.left) / rect.width;
-                    if (ratioX < 0.34) {
+                    if (ratioX < 0.46) {
                         card.setAttribute('data-active-flank', 'left');
-                    } else if (ratioX > 0.66) {
+                        card.classList.add('is-active');
+                    } else if (ratioX > 0.54) {
                         card.setAttribute('data-active-flank', 'right');
+                        card.classList.add('is-active');
                     } else {
-                        card.setAttribute('data-active-flank', 'all');
+                        card.removeAttribute('data-active-flank');
+                        card.classList.remove('is-active');
                     }
                 }
             }, { passive: true });
 
             wrapper.addEventListener('touchend', () => {
                 if (isShockwaveRunning) return;
-                if (isScrollDeployed) {
+                const isMobile = window.innerWidth <= 860;
+                if (isMobile) {
+                    if (baseGamma !== null && lastGyroGamma !== null && isDeploymentUnlocked) {
+                        const currentDeltaGamma = lastGyroGamma - baseGamma;
+                        if (currentDeltaGamma > 3.5) {
+                            card.setAttribute('data-active-flank', 'right');
+                            card.classList.add('is-active');
+                        } else if (currentDeltaGamma < -3.5) {
+                            card.setAttribute('data-active-flank', 'left');
+                            card.classList.add('is-active');
+                        } else {
+                            card.removeAttribute('data-active-flank');
+                            card.classList.remove('is-active');
+                        }
+                    } else {
+                        card.removeAttribute('data-active-flank');
+                        card.classList.remove('is-active');
+                    }
+                    resetTargets();
+                } else if (isScrollDeployed) {
                     card.classList.add('is-active', 'is-scroll-deployed');
                     card.setAttribute('data-active-flank', 'all');
                 } else {
@@ -875,6 +911,7 @@ document.addEventListener('DOMContentLoaded', () => {
             function handleOrientation(e) {
                 if (e.beta === null || e.gamma === null) return;
                 isGyroActive = true;
+                lastGyroGamma = e.gamma;
 
                 // Dynamic baseline drift: smoothly adapts to user hand posture
                 if (baseBeta === null) {
@@ -900,18 +937,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Highlight flank according to phone tilt direction
                 if (!isShakingActive && !isDirectHover) {
-                    if (deltaGamma < -6) {
-                        card.setAttribute('data-active-flank', 'left');
-                        card.classList.add('is-active');
-                    } else if (deltaGamma > 6) {
-                        card.setAttribute('data-active-flank', 'right');
-                        card.classList.add('is-active');
-                    } else if (isScrollDeployed) {
-                        card.setAttribute('data-active-flank', 'all');
-                        card.classList.add('is-active');
-                    } else {
+                    const isMobile = window.innerWidth <= 860;
+                    if (!isDeploymentUnlocked) {
+                        // Locked on initial open: ONLY 3D photo vibe, no logos on either side
                         card.removeAttribute('data-active-flank');
                         card.classList.remove('is-active');
+                    } else if (isMobile) {
+                        // Unlocked after scroll or touch:
+                        // Tilt phone RIGHT -> ONLY right logos emerge, left side completely empty
+                        // Tilt phone LEFT -> ONLY left logos emerge, right side completely empty
+                        // Neutral posture -> both flanks tucked behind and empty
+                        if (deltaGamma > 3.5) {
+                            card.setAttribute('data-active-flank', 'right');
+                            card.classList.add('is-active');
+                        } else if (deltaGamma < -3.5) {
+                            card.setAttribute('data-active-flank', 'left');
+                            card.classList.add('is-active');
+                        } else {
+                            card.removeAttribute('data-active-flank');
+                            card.classList.remove('is-active');
+                        }
+                    } else {
+                        if (deltaGamma < -6) {
+                            card.setAttribute('data-active-flank', 'left');
+                            card.classList.add('is-active');
+                        } else if (deltaGamma > 6) {
+                            card.setAttribute('data-active-flank', 'right');
+                            card.classList.add('is-active');
+                        } else if (isScrollDeployed) {
+                            card.setAttribute('data-active-flank', 'all');
+                            card.classList.add('is-active');
+                        } else {
+                            card.removeAttribute('data-active-flank');
+                            card.classList.remove('is-active');
+                        }
                     }
                 }
 
