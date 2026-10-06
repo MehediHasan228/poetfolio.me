@@ -3506,8 +3506,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 tabs.forEach(tab => {
                     if (tab.dataset.pillar === activePillar) {
                         tab.classList.add('active');
-                        // Scroll tab pill horizontally inside tabContainer ONLY when user triggers scroll
-                        if (triggerScroll && tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
+                        // Scroll tab pill horizontally inside tabContainer so active tab is always centered
+                        if (tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
                             const tabLeft = tab.offsetLeft;
                             const tabWidth = tab.offsetWidth;
                             const containerWidth = tabContainer.clientWidth;
