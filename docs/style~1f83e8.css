@@ -6446,12 +6446,12 @@ footer {
     /* Leaderboard Mobile Modal Container */
     #leaderboard-widget.lb-collapsed {
         position: fixed !important;
-        top: 50% !important;
+        top: var(--lb-mobile-top, 50%) !important;
         right: 0 !important;
         left: auto !important;
         bottom: auto !important;
-        transform: translateY(-50%) !important;
-        --lb-ty: translateY(-50%);
+        transform: var(--lb-mobile-transform, translateY(-50%)) !important;
+        --lb-ty: var(--lb-mobile-transform, translateY(-50%));
         --lb-tx: 0;
         z-index: 950 !important;
         width: auto !important;
@@ -6460,6 +6460,16 @@ footer {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         display: block !important;
+        transition: none !important;
+    }
+
+    /* Active Mobile Touch Dragging Feedback */
+    #leaderboard-widget.is-tab-dragging .lb-toggle {
+        transform: scale(1.10) !important;
+        box-shadow: -10px 0 28px rgba(var(--accent-1-rgb, 0, 242, 254), 0.75),
+                    -2px 0 14px rgba(var(--accent-1-rgb, 0, 242, 254), 0.5),
+                    inset 1px 1px 2px rgba(255, 255, 255, 0.55) !important;
+        border-color: rgba(var(--accent-1-rgb, 0, 242, 254), 1) !important;
         transition: none !important;
     }
 
@@ -6480,10 +6490,11 @@ footer {
         border-right: none !important;
         border-radius: 10px 0 0 10px !important;
         box-shadow: -5px 0 16px rgba(0, 0, 0, 0.65), -1px 0 8px rgba(var(--accent-1-rgb, 0, 242, 254), 0.25), inset 1px 1px 1px rgba(255, 255, 255, 0.25) !important;
-        cursor: pointer !important;
-        touch-action: manipulation !important;
+        cursor: grab !important;
+        touch-action: none !important;
         -webkit-tap-highlight-color: transparent !important;
         user-select: none !important;
+        -webkit-user-select: none !important;
         transform: none !important;
         transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
     }
@@ -6532,7 +6543,7 @@ footer {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        animation: lbModalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        animation: lbModalFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
     }
 
     @keyframes lbModalFadeIn {
@@ -6544,7 +6555,8 @@ footer {
         display: none !important;
     }
 
-    #leaderboard-widget .radar-container {
+    /* Leaderboard Card Entry: Emerges from the Right Side with fluid spring animation */
+    #leaderboard-widget.lb-expanded .radar-container {
         width: calc(100vw - 24px) !important;
         max-width: 410px !important;
         height: 84vh !important;
@@ -6559,6 +6571,57 @@ footer {
         display: flex !important;
         flex-direction: column !important;
         box-sizing: border-box !important;
+        animation: lbSlideInFromRight 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        will-change: transform, opacity;
+    }
+
+    @keyframes lbSlideInFromRight {
+        0% {
+            transform: translateX(115%) scale(0.94);
+            opacity: 0;
+            filter: blur(6px);
+        }
+        70% {
+            transform: translateX(-6px) scale(1.01);
+            opacity: 1;
+            filter: blur(0);
+        }
+        88% {
+            transform: translateX(2px) scale(0.998);
+        }
+        100% {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+            filter: blur(0);
+        }
+    }
+
+    /* Smooth Closing Animation: Slides back into the Right Edge */
+    #leaderboard-widget.lb-closing {
+        pointer-events: none !important;
+        animation: lbModalFadeOut 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    }
+
+    #leaderboard-widget.lb-closing .radar-container {
+        animation: lbSlideOutToRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    }
+
+    @keyframes lbSlideOutToRight {
+        0% {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+            filter: blur(0);
+        }
+        100% {
+            transform: translateX(115%) scale(0.94);
+            opacity: 0;
+            filter: blur(6px);
+        }
+    }
+
+    @keyframes lbModalFadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
     }
 
     /* Header Section */

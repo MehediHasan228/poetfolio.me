@@ -303,6 +303,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let startY = 0;
         let lastDragTime = 0;
 
+        // Restore saved position on mobile
+        try {
+            const savedTop = localStorage.getItem('poetfolio_lb_mobile_top');
+            if (savedTop && window.innerWidth <= 860) {
+                element.style.setProperty('--lb-mobile-top', savedTop + 'px');
+                element.style.setProperty('--lb-mobile-transform', 'none');
+            }
+        } catch(err) {}
+
         handles.forEach(handle => {
             handle.style.cursor = 'move';
             handle.addEventListener('mousedown', dragStart);
@@ -311,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Prevent standard click if we were dragging
             handle.addEventListener('click', (e) => {
                 const now = Date.now();
-                if (isDragging || (now - lastDragTime < 150)) {
+                if (isDragging || (now - lastDragTime < 280)) {
                     e.stopImmediatePropagation();
                     e.preventDefault();
                 }
@@ -319,8 +328,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function dragStart(e) {
-            // Never enable drag mechanics on mobile / touch screen widths to prevent jumping
-            if (window.innerWidth <= 860) return;
+            // MOBILE VERTICAL TOUCH DRAGGING
+            if (window.innerWidth <= 860) {
+                // If modal is expanded, don't drag the background
+                if (element.classList.contains('lb-expanded')) return;
+
+                const touch = e.touches ? e.touches[0] : e;
+                const startTouchY = touch.clientY;
+                const rect = element.getBoundingClientRect();
+                const startElemTop = rect.top;
+                let hasMoved = false;
+                let currentTargetTop = startElemTop;
+
+                function mobileTouchMove(ev) {
+                    const currentTouch = ev.touches ? ev.touches[0] : ev;
+                    const diffY = currentTouch.clientY - startTouchY;
+                    if (Math.abs(diffY) > 6) {
+                        hasMoved = true;
+                        isDragging = true;
+                        if (ev.cancelable) ev.preventDefault();
+                        element.classList.add('is-tab-dragging');
+
+                        const winH = window.innerHeight;
+                        const tabH = element.offsetHeight || 50;
+                        const minTop = 60;
+                        const maxTop = winH - tabH - 60;
+                        currentTargetTop = Math.max(minTop, Math.min(maxTop, startElemTop + diffY));
+
+                        element.style.setProperty('--lb-mobile-top', currentTargetTop + 'px');
+                        element.style.setProperty('--lb-mobile-transform', 'none');
+                    }
+                }
+
+                function mobileTouchEnd() {
+                    document.removeEventListener('touchmove', mobileTouchMove);
+                    document.removeEventListener('touchend', mobileTouchEnd);
+                    document.removeEventListener('touchcancel', mobileTouchEnd);
+                    element.classList.remove('is-tab-dragging');
+
+                    if (hasMoved) {
+                        lastDragTime = Date.now();
+                        setTimeout(() => { isDragging = false; }, 250);
+                        try {
+                            localStorage.setItem('poetfolio_lb_mobile_top', currentTargetTop);
+                        } catch(err) {}
+                    } else {
+                        isDragging = false;
+                    }
+                }
+
+                document.addEventListener('touchmove', mobileTouchMove, { passive: false });
+                document.addEventListener('touchend', mobileTouchEnd);
+                document.addEventListener('touchcancel', mobileTouchEnd);
+                return;
+            }
 
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
             
@@ -3203,53 +3264,52 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const lbToggleIcon = document.getElementById('lb-toggle-icon');
 
     if (lbWidget && lbToggleBtn) {
+        function openLeaderboard() {
+            lbWidget.classList.remove('lb-collapsed', 'lb-closing');
+            lbWidget.classList.add('lb-expanded');
+            if (lbToggleIcon) {
+                lbToggleIcon.classList.remove('fa-chart-simple');
+                lbToggleIcon.classList.add('fa-chevron-right');
+            }
+            if (typeof playSound === 'function') playSound('click');
+        }
+
+        function closeLeaderboard() {
+            if (!lbWidget.classList.contains('lb-expanded')) return;
+            lbWidget.classList.add('lb-closing');
+            
+            const closeDelay = (window.innerWidth <= 860) ? 260 : 0;
+            setTimeout(() => {
+                lbWidget.classList.remove('lb-expanded', 'lb-full-view', 'lb-closing');
+                lbWidget.classList.add('lb-collapsed');
+                if (lbToggleIcon) {
+                    lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
+                }
+            }, closeDelay);
+
+            if (typeof playSound === 'function') playSound('click');
+        }
+
+        function toggleLeaderboard() {
+            if (lbWidget.classList.contains('lb-expanded')) {
+                closeLeaderboard();
+            } else {
+                openLeaderboard();
+            }
+        }
+
         // Use custom event from draggable logic on desktop
         lbWidget.addEventListener('lb-click', (e) => {
             toggleLeaderboard();
         });
 
-        // Direct, instantaneous tap/click listener for mobile and desktop
+        // Direct tap/click listener for mobile and desktop
         lbToggleBtn.addEventListener('click', (e) => {
-            if (window.innerWidth <= 860) {
-                e.stopPropagation();
-                toggleLeaderboard();
-            }
+            e.stopPropagation();
+            toggleLeaderboard();
         });
-        
-        function toggleLeaderboard() {
-            // Clear any drag inline styles on mobile to ensure smooth CSS animation
-            if (window.innerWidth <= 860) {
-                lbWidget.style.top = '';
-                lbWidget.style.bottom = '';
-                lbWidget.style.left = '';
-                lbWidget.style.right = '';
-                lbWidget.style.removeProperty('--lb-ty');
-                lbWidget.style.removeProperty('--lb-tx');
-                lbWidget.style.transition = '';
-            }
 
-            // If already in full view, close full view first when collapsing
-            if (lbWidget.classList.contains('lb-full-view') && lbWidget.classList.contains('lb-expanded')) {
-                lbWidget.classList.remove('lb-full-view');
-            }
-
-            lbWidget.classList.toggle('lb-expanded');
-            lbWidget.classList.toggle('lb-collapsed');
-
-            // Optionally change the icon state when expanded
-            const isExpanded = lbWidget.classList.contains('lb-expanded');
-
-            if (lbToggleIcon) {
-                if (isExpanded) {
-                    lbToggleIcon.classList.remove('fa-chart-simple');
-                    lbToggleIcon.classList.add('fa-chevron-right');
-                } else {
-                    lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
-                }
-            }
-
-            if (typeof playSound === 'function') playSound('click');
-        }
+        window.closeLeaderboardWidget = closeLeaderboard;
     }
 
     // --- LEADERBOARD FULL VIEW TOGGLE ---
@@ -3278,12 +3338,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (lbCloseBtn && lbWidget) {
         lbCloseBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            lbWidget.classList.remove('lb-expanded', 'lb-full-view');
-            lbWidget.classList.add('lb-collapsed');
-            if (lbToggleIcon) {
-                lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
+            if (typeof window.closeLeaderboardWidget === 'function') {
+                window.closeLeaderboardWidget();
+            } else {
+                lbWidget.classList.remove('lb-expanded', 'lb-full-view');
+                lbWidget.classList.add('lb-collapsed');
             }
-            if (typeof playSound === 'function') playSound('click');
         });
     }
 
@@ -3293,12 +3353,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             if (window.innerWidth <= 860 && lbWidget.classList.contains('lb-expanded')) {
                 const isBackdropClick = (e.target === lbWidget);
                 if (isBackdropClick) {
-                    lbWidget.classList.remove('lb-expanded', 'lb-full-view');
-                    lbWidget.classList.add('lb-collapsed');
-                    if (lbToggleIcon) {
-                        lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
+                    if (typeof window.closeLeaderboardWidget === 'function') {
+                        window.closeLeaderboardWidget();
+                    } else {
+                        lbWidget.classList.remove('lb-expanded', 'lb-full-view');
+                        lbWidget.classList.add('lb-collapsed');
                     }
-                    if (typeof playSound === 'function') playSound('click');
                 }
             }
         });
