@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="description" content="Contact Mehedi Hasan for AI automation and full-stack web development projects.">
     
     <!-- Open Graph / Facebook -->
@@ -20,7 +20,7 @@
     <link href="../fonts.googleapis.com/css2/index~a5ef49.html" rel="stylesheet">
     <link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=29">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=159">
 </head>
 
 <body>
@@ -76,14 +76,47 @@
                 class="fa-solid fa-palette"></i></button>
     </div>
 
-    <div id="ai-chat-widget" class="chat-collapsed">
+    <div id="ai-chat-widget" class="chat-collapsed hover-sound">
         <div class="chat-header" id="chat-header">
-            <span><i class="fa-solid fa-robot"></i> Ask My AI</span>
+            <span class="chat-header-content">
+                <span class="grok-bot-avatar" aria-label="Grok AI Assistant">
+                    <svg class="grok-bot-svg" viewBox="-20 -20 268 268" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="grokHead3DGrad" cx="32%" cy="28%" r="75%" fx="25%" fy="20%">
+                                <stop class="grok-stop-highlight" offset="0%" style="stop-color: var(--grok-3d-highlight, #ffffff); stop-opacity: 1;" />
+                                <stop class="grok-stop-mid" offset="25%" style="stop-color: var(--grok-3d-mid, #e0f7fa); stop-opacity: 1;" />
+                                <stop class="grok-stop-base" offset="58%" style="stop-color: var(--grok-3d-base, #38bdf8); stop-opacity: 1;" />
+                                <stop class="grok-stop-shadow" offset="84%" style="stop-color: var(--grok-3d-shadow, #0284c7); stop-opacity: 1;" />
+                                <stop class="grok-stop-rim" offset="100%" style="stop-color: var(--grok-3d-rim, #00f2fe); stop-opacity: 1;" />
+                            </radialGradient>
+                            <linearGradient id="grokGloss3DGrad" x1="15%" y1="0%" x2="70%" y2="85%">
+                                <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 0.9;" />
+                                <stop offset="45%" style="stop-color: #ffffff; stop-opacity: 0.25;" />
+                                <stop offset="100%" style="stop-color: #ffffff; stop-opacity: 0;" />
+                            </linearGradient>
+                            <linearGradient id="grokEye3DGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop class="grok-stop-eyetop" offset="0%" style="stop-color: var(--grok-eye-top, #083344); stop-opacity: 1;" />
+                                <stop class="grok-stop-eyebot" offset="100%" style="stop-color: var(--grok-eye-bottom, #020617); stop-opacity: 1;" />
+                            </linearGradient>
+                        </defs>
+                        <g class="grok-bot-group">
+                            <path class="grok-bot-head" fill="url(#grokHead3DGrad)" d="M228.541 114.228C228.541 130.133 225.184 145.994 218.738 160.534C212.674 174.217 203.904 186.669 193.065 196.988C155.933 232.34 99.497 238.596 55.5255 212.24C45.097 205.99 35.6851 198.072 27.7451 188.866C19.1926 178.953 12.3686 167.569 7.65781 155.351C2.60712 142.264 0 128.257 0 114.228C0 98.3219 3.35751 82.4611 9.80315 67.9215C15.8672 54.2382 24.6377 41.7862 35.4767 31.4668C72.6081 -3.88483 129.044 -10.1413 173.016 16.2153C183.444 22.4653 192.856 30.3829 200.796 39.5896C209.349 49.5018 216.173 60.8859 220.883 73.1037C225.934 86.1906 228.541 100.198 228.541 114.228Z" />
+                            <ellipse class="grok-bot-sheen" cx="82" cy="60" rx="46" ry="24" transform="rotate(-30 82 60)" fill="url(#grokGloss3DGrad)" opacity="0.8" pointer-events="none" />
+                            <g class="grok-bot-eyes">
+                                <path class="grok-bot-eye grok-bot-eye-left" fill="url(#grokEye3DGrad)" d="M118.17 70.73L120.45 71.04L122.59 71.76L124.55 72.87L126.18 74.38L127.42 76.24L128.34 78.29L129.10 80.42L129.83 82.57L130.55 84.72L131.27 86.86L131.97 89.02L132.64 91.19L133.29 93.36L133.91 95.55L134.50 97.74L135.05 99.95L135.36 102.23L135.16 104.55L134.41 106.80L133.11 108.84L131.36 110.51L129.28 111.73L127.01 112.45L124.68 112.65L122.41 112.33L120.31 111.51L118.45 110.26L116.93 108.62L115.81 106.69L115.01 104.57L114.39 102.39L113.80 100.19L113.17 98.01L112.52 95.84L111.85 93.66L111.17 91.51L110.47 89.35L109.75 87.20L108.94 85.09L108.17 82.96L107.64 80.75L107.63 78.44L108.31 76.16L109.61 74.14L111.41 72.51L113.54 71.41L115.84 70.83Z" />
+                                <circle class="grok-eye-sparkle" cx="122.5" cy="79" r="3.2" fill="#ffffff" opacity="0.95" />
+                                <path class="grok-bot-eye grok-bot-eye-right" fill="url(#grokEye3DGrad)" d="M179.77 59.76L182.04 60.05L184.10 60.75L185.92 61.77L187.55 63.03L188.95 64.50L190.10 66.16L191.07 67.95L191.90 69.82L192.67 71.74L193.41 73.66L194.13 75.60L194.80 77.56L195.42 79.55L196.02 81.54L196.56 83.57L197.06 85.61L197.50 87.67L197.90 89.77L198.06 91.94L197.82 94.21L197.15 96.51L195.85 98.72L193.75 100.38L191.30 101.01L189.00 100.81L186.99 100.03L185.30 98.85L183.91 97.38L182.84 95.66L182.05 93.76L181.48 91.76L181.00 89.71L180.53 87.64L180.02 85.60L179.48 83.58L178.89 81.58L178.26 79.60L177.60 77.62L176.90 75.68L176.15 73.76L175.36 71.86L174.53 69.98L173.78 68.06L173.41 65.97L173.71 63.70L175.05 61.53L177.32 60.14Z" />
+                                <circle class="grok-eye-sparkle" cx="184.5" cy="68" r="3.2" fill="#ffffff" opacity="0.95" />
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+                <span class="chat-header-title">Ask My AI</span>
+            </span>
             <i class="fa-solid fa-chevron-up" id="chat-toggle-icon"></i>
         </div>
         <div class="chat-body" id="chat-body">
-            <div class="message bot-msg">System initialized. Ask me about Mehedi's tech stack, e-commerce experience, or
-                deployed projects.</div>
+            <!-- Dynamic chat messages rendered via JS -->
         </div>
         <div class="chat-input-area">
             <input type="text" id="chat-input" placeholder="Type a query...">
@@ -362,65 +395,136 @@
         <div class="dashboard-grid hidden">
             <div class="telemetry-card tilt-card magnetic-element">
                 <div class="tel-header">
-                    <h3><i class="fa-solid fa-satellite-dish" style="color:var(--accent-1);"></i> Live Architecture Telemetry
-                    </h3>
-                    <span style="color:var(--text-secondary); font-size:0.75rem;">Production Status</span>
+                    <h3><i class="fa-solid fa-satellite-dish" style="color:var(--accent-1);"></i> Live Telemetry</h3>
+                    <span class="tel-live-pill"><span class="tel-live-dot"></span> 100% OPERATIONAL</span>
                 </div>
 
                 <div class="tel-row">
-                    <div class="tel-label"><span class="lang">Distributed Microservices (NestJS / Postgres / Redis)</span> <span>35%</span>
+                    <div class="tel-label">
+                        <span class="lang"><i class="fa-solid fa-server" style="color:var(--accent-1); margin-right:6px;"></i> Microservices Mesh</span>
+                        <span class="tel-metric-badge"><i class="fa-solid fa-gauge-high"></i> &lt; 12ms p99</span>
                     </div>
                     <div class="tel-bar-bg">
-                        <div class="tel-bar-fill" data-width="35%"></div>
+                        <div class="tel-bar-fill" data-width="98%" style="background: linear-gradient(90deg, #00f2fe, #4facfe);"></div>
                     </div>
                 </div>
+
                 <div class="tel-row">
-                    <div class="tel-label"><span class="lang">Event Streaming &amp; Queues (Kafka / RabbitMQ)</span> <span>25%</span></div>
+                    <div class="tel-label">
+                        <span class="lang"><i class="fa-solid fa-network-wired" style="color:#f59e0b; margin-right:6px;"></i> Event Bus (Kafka)</span>
+                        <span class="tel-metric-badge badge-warning"><i class="fa-solid fa-bolt"></i> 50K+ msg/s</span>
+                    </div>
                     <div class="tel-bar-bg">
-                        <div class="tel-bar-fill" data-width="25%"></div>
+                        <div class="tel-bar-fill" data-width="96%" style="background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
                     </div>
                 </div>
+
                 <div class="tel-row">
-                    <div class="tel-label"><span class="lang">Cloud &amp; SRE Observability (AWS / Docker / K8s / ELK / Grafana)</span> <span>25%</span></div>
+                    <div class="tel-label">
+                        <span class="lang"><i class="fa-solid fa-cloud" style="color:#38bdf8; margin-right:6px;"></i> Cloud SRE (K8s)</span>
+                        <span class="tel-metric-badge badge-info"><i class="fa-solid fa-heart-pulse"></i> 99.99% SLA</span>
+                    </div>
                     <div class="tel-bar-bg">
-                        <div class="tel-bar-fill" data-width="25%"></div>
+                        <div class="tel-bar-fill" data-width="99.9%" style="background: linear-gradient(90deg, #38bdf8, #0ea5e9);"></div>
                     </div>
                 </div>
+
                 <div class="tel-row">
-                    <div class="tel-label"><span class="lang">AI Automation &amp; LLM Orchestration (Python / Gemini / Claude)</span> <span>15%</span></div>
+                    <div class="tel-label">
+                        <span class="lang"><i class="fa-solid fa-brain" style="color:#a855f7; margin-right:6px;"></i> Autonomous AI Swarms</span>
+                        <span class="tel-metric-badge badge-purple"><i class="fa-solid fa-robot"></i> 4x COT Speedup</span>
+                    </div>
                     <div class="tel-bar-bg">
-                        <div class="tel-bar-fill" data-width="15%"></div>
+                        <div class="tel-bar-fill" data-width="95%" style="background: linear-gradient(90deg, #a855f7, #d946ef);"></div>
                     </div>
                 </div>
-                <div
-                    style="margin-top: 1.5rem; text-align: center; color: var(--accent-1); font-weight: bold; font-size: 0.9rem;">
-                    &gt; Foundations: DSA • High-Level System Design • Networking (HTTP/3, gRPC)
+
+                <div class="tel-footer">
+                    <i class="fa-solid fa-shield-halved"></i> Distributed Systems • gRPC • Zero Downtime
                 </div>
             </div>
 
-            <div class="api-sandbox tilt-card magnetic-element">
-                <div class="api-header">
-                    <select id="api-method" class="hover-sound">
-                        <option>GET</option>
-                        <option>POST</option>
-                    </select>
-                    <input type="text" id="api-endpoint" value="https://api.mehedi.pro/v1/systems" readonly="">
-                    <button id="api-send" class="hover-sound">SEND</button>
+            <div class="system-topology-card tilt-card magnetic-element">
+                <div class="topo-header">
+                    <div class="topo-title-group">
+                        <h3><i class="fa-solid fa-diagram-project" style="color:var(--accent-1);"></i> Distributed Mesh</h3>
+                        <span class="topo-live-pill"><span class="pulse-dot"></span> LIVE TOPOLOGY</span>
+                    </div>
+                    <div class="topo-tabs">
+                        <button class="topo-tab active hover-sound" data-layer="mesh"><i class="fa-solid fa-network-wired"></i> Full Mesh</button>
+                        <button class="topo-tab hover-sound" data-layer="pipeline"><i class="fa-solid fa-bolt"></i> Stream</button>
+                        <button class="topo-tab hover-sound" data-layer="ai"><i class="fa-solid fa-brain"></i> AI Swarm</button>
+                    </div>
                 </div>
-                <div class="api-body">
-                    <pre id="api-response"
-                        class="json-output"><span style="color:var(--text-secondary);">// System standby. Awaiting API request...</span></pre>
+
+                <div class="topo-canvas-container" id="topo-canvas-container">
+                    <svg class="topo-svg-canvas" viewBox="0 0 540 200" preserveAspectRatio="none">
+                        <path class="topo-wire active-stream" id="wire-edge-gw" d="M 65 100 L 195 100" />
+                        <path class="topo-wire active-stream stream-kafka" id="wire-gw-kafka" d="M 215 90 C 265 60, 295 55, 345 55" />
+                        <path class="topo-wire active-stream stream-ai" id="wire-gw-ai" d="M 215 110 C 265 140, 295 145, 345 145" />
+                        <path class="topo-wire active-stream stream-kafka" id="wire-kafka-db" d="M 385 55 C 430 55, 450 85, 485 95" />
+                        <path class="topo-wire active-stream stream-ai" id="wire-ai-db" d="M 385 145 C 430 145, 450 115, 485 105" />
+                    </svg>
+
+                    <div class="topo-nodes-layer">
+                        <div class="topo-node active" data-node="edge" style="left: 12%; top: 50%;">
+                            <div class="node-icon"><i class="fa-solid fa-globe"></i></div>
+                            <div class="node-info">
+                                <span class="node-name">Cloud Edge</span>
+                                <span class="node-badge">12ms Anycast</span>
+                            </div>
+                        </div>
+
+                        <div class="topo-node" data-node="gateway" style="left: 38%; top: 50%;">
+                            <div class="node-icon"><i class="fa-solid fa-server"></i></div>
+                            <div class="node-info">
+                                <span class="node-name">NestJS Gateway</span>
+                                <span class="node-badge">gRPC &bull; Active</span>
+                            </div>
+                        </div>
+
+                        <div class="topo-node" data-node="kafka" style="left: 68%; top: 27%;">
+                            <div class="node-icon icon-kafka"><i class="fa-solid fa-network-wired"></i></div>
+                            <div class="node-info">
+                                <span class="node-name">Kafka Stream</span>
+                                <span class="node-badge badge-warning">50K msg/s</span>
+                            </div>
+                        </div>
+
+                        <div class="topo-node" data-node="ai" style="left: 68%; top: 73%;">
+                            <div class="node-icon icon-ai"><i class="fa-solid fa-brain"></i></div>
+                            <div class="node-info">
+                                <span class="node-name">AI Agent Swarm</span>
+                                <span class="node-badge badge-purple">4x CoT Boost</span>
+                            </div>
+                        </div>
+
+                        <div class="topo-node" data-node="data" style="left: 92%; top: 50%;">
+                            <div class="node-icon icon-db"><i class="fa-solid fa-database"></i></div>
+                            <div class="node-info">
+                                <span class="node-name">DB &amp; Cache</span>
+                                <span class="node-badge badge-cyan">99.4% Hit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topo-hud" id="topo-hud">
+                    <div class="topo-hud-status">
+                        <span class="hud-status-dot"></span>
+                        <span class="hud-node-title" id="hud-title">Cloud Edge (Global Anycast CDN)</span>
+                    </div>
+                    <div class="topo-hud-metrics" id="hud-metrics">
+                        <span class="hud-metric-item"><i class="fa-solid fa-shield-halved" style="color:var(--accent-1);"></i> DDoS Protected</span>
+                        <span class="hud-metric-item"><i class="fa-solid fa-gauge-high" style="color:var(--accent-1);"></i> Latency: 12ms</span>
+                        <span class="hud-metric-item"><i class="fa-solid fa-signal" style="color:var(--accent-1);"></i> 99.999% SLA</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="projects" class="projects-section">
-        <div class="section-title hidden">
-            <h2 class="decrypt-text glitch-hover" data-value="Production Deployments">Production <span
-                    class="gradient-text">Deployments</span></h2>
-        </div>
-
         <div class="ai-dropzone hidden" id="ai-dropzone">
             <i class="fa-solid fa-file-arrow-up"></i>
             <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-family: 'Fira Code', monospace;">&gt;_ AI
@@ -429,6 +533,11 @@
                 here to auto-generate a system architecture map.</p>
             <input type="file" id="fileInput" accept=".txt" style="display: none;">
             <div id="ai-parse-result" class="parse-result"></div>
+        </div>
+
+        <div class="section-title hidden">
+            <h2 class="decrypt-text glitch-hover" data-value="Production Deployments">Production <span
+                    class="gradient-text">Deployments</span></h2>
         </div>
 
         <div class="project-filters hidden">
@@ -644,7 +753,6 @@
         <div class="section-title hidden">
             <h2 class="decrypt-text glitch-hover" data-value="Service Terminal">Service <span
                     class="gradient-text">Terminal</span></h2>
-            <p>Select required systems to generate a deployment invoice.</p>
         </div>
 
 
@@ -788,7 +896,7 @@
                 title="Initiate Self Destruct"></button>
         </div>
     </footer>
-    <script src="./script~9e1709.js?v=22"></script>
+    <script src="./script~9e1709.js?v=148"></script>
 
 </body>
 

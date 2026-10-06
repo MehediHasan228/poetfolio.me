@@ -1,0 +1,14 @@
+<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <title>Antigravity</title>
+  <defs>
+    <linearGradient id="agyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#4facfe"/>
+    </linearGradient>
+  </defs>
+  <!-- Anti-gravity levitation core & upward thrust -->
+  <path fill="url(#agyGrad)" d="M12 2.5L20.5 8.2V15.8L12 21.5L3.5 15.8V8.2L12 2.5ZM12 5.2L5.5 9.6V14.4L12 18.8L18.5 14.4V9.6L12 5.2Z"/>
+  <!-- Central inverted gravity node -->
+  <polygon fill="#00f2fe" points="12,7.5 16,13.5 8,13.5"/>
+  <circle cx="12" cy="16.5" r="1.5" fill="#4facfe"/>
+</svg>

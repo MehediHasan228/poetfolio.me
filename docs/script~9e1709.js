@@ -179,18 +179,12 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.querySelectorAll('.tel-bar-fill').forEach(bar => {
-                    const skillName = bar.parentElement.previousElementSibling.querySelector('.lang').textContent;
-                    let targetWidth = bar.getAttribute('data-width');
-
-                    if (skillName.includes('Full-Stack')) targetWidth = '90%';
-                    if (skillName.includes('AI & Automation')) targetWidth = '85%';
-                    if (skillName.includes('System Architecture')) targetWidth = '75%';
-
+                    const targetWidth = bar.getAttribute('data-width') || '100%';
                     bar.style.width = targetWidth;
                 });
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.3 });
 
     document.querySelectorAll('.telemetry-card').forEach(el => telObserver.observe(el));
 
@@ -325,6 +319,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function dragStart(e) {
+            // Never enable drag mechanics on mobile / touch screen widths to prevent jumping
+            if (window.innerWidth <= 860) return;
+
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
             
             startY = clientY;
@@ -490,9 +487,17 @@ document.addEventListener('DOMContentLoaded', () => {
             let isDirectHover = false;
             let isHeroActive = false;
             let isGyroActive = false;
+            let isScrollDeployed = false;
+            let isShakingActive = false;
+            let shakeEndTimer = null;
+            let lastShakeTime = 0;
+            let baseBeta = null;
+            let baseGamma = null;
+            let lastAccX = null, lastAccY = null, lastAccZ = null;
             let rafId = null;
 
             // Maximum values (Apple spatial depth standards: pure horizontal 3D depth, locked vertically)
+            const MAX_ROTATION_X = 2.4;
             const MAX_ROTATION_Y = 2.4; // degrees (subtle, natural iPhone stereoscopic horizontal rotation)
             const MAX_SUBJECT_SHIFT = 6.0; // px (pure horizontal spatial depth drift)
 
@@ -679,11 +684,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             wrapper.addEventListener('mouseleave', () => {
                 if (isShockwaveRunning) return;
-                card.classList.remove('is-active');
-                card.removeAttribute('data-active-flank');
-                // If still within hero, drop to ambient tracking
                 isDirectHover = false;
-                targetIntensity = 0.38;
+                if (isScrollDeployed) {
+                    card.classList.add('is-active', 'is-scroll-deployed');
+                    card.setAttribute('data-active-flank', 'all');
+                    targetIntensity = 0.55;
+                } else {
+                    card.classList.remove('is-active');
+                    card.removeAttribute('data-active-flank');
+                    targetIntensity = 0.38;
+                }
                 startRender();
             });
 
@@ -754,13 +764,70 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 heroSection.addEventListener('mouseleave', () => {
-                    card.classList.remove('is-active');
-                    card.removeAttribute('data-active-flank');
-                    resetTargets();
+                    if (isScrollDeployed) {
+                        card.classList.add('is-active', 'is-scroll-deployed');
+                        card.setAttribute('data-active-flank', 'all');
+                    } else {
+                        card.classList.remove('is-active');
+                        card.removeAttribute('data-active-flank');
+                        resetTargets();
+                    }
                 });
             }
 
-            // 4. Mobile Touch Events (Drag & Pan Interaction)
+            // 4. Auto-Reveal on Scroll (মোবাইল, ট্যাব ও ওয়েব স্ক্রল করলে লোগোগুলো স্বয়ংক্রিয়ভাবে ভেসে উঠবে)
+            function handleHeroScroll() {
+                if (!card || isShakingActive) return;
+
+                const rect = card.getBoundingClientRect();
+                const winHeight = window.innerHeight || document.documentElement.clientHeight;
+                const scrollY = window.scrollY || window.pageYOffset;
+
+                // Check if hero card is currently in viewport
+                const isHeroVisible = rect.top < winHeight * 0.92 && rect.bottom > winHeight * 0.08;
+
+                if (scrollY > 20 && isHeroVisible) {
+                    if (!isScrollDeployed) {
+                        isScrollDeployed = true;
+                        card.classList.add('is-active', 'is-scroll-deployed');
+                        if (!isDirectHover) {
+                            card.setAttribute('data-active-flank', 'all');
+                        }
+                    }
+                    if (!isDirectHover && !isGyroActive) {
+                        // Subtle reactive tilt & dynamic 3D depth shift as user scrolls down
+                        const scrollProgress = Math.min(1, (scrollY - 20) / 280);
+                        targetCardRotX = -scrollProgress * 6.5;
+                        targetIntensity = 0.50 + scrollProgress * 0.35;
+                        startRender();
+                    }
+                } else if (scrollY <= 15) {
+                    if (isScrollDeployed) {
+                        isScrollDeployed = false;
+                        card.classList.remove('is-scroll-deployed');
+                        if (!isDirectHover) {
+                            card.classList.remove('is-active');
+                            card.removeAttribute('data-active-flank');
+                            resetTargets();
+                        }
+                    }
+                } else if (!isHeroVisible && isScrollDeployed) {
+                    // Out of screen view: silently reset so it re-deploys cleanly on scroll back
+                    isScrollDeployed = false;
+                    card.classList.remove('is-scroll-deployed');
+                    if (!isDirectHover) {
+                        card.classList.remove('is-active');
+                        card.removeAttribute('data-active-flank');
+                        resetTargets();
+                    }
+                }
+            }
+
+            window.addEventListener('scroll', handleHeroScroll, { passive: true });
+            // Initial run in case loaded midway
+            handleHeroScroll();
+
+            // 5. Mobile Touch Events (Drag & Pan Interaction)
             wrapper.addEventListener('touchstart', (e) => {
                 card.classList.add('is-active');
                 if (e.touches && e.touches[0]) {
@@ -794,54 +861,145 @@ document.addEventListener('DOMContentLoaded', () => {
 
             wrapper.addEventListener('touchend', () => {
                 if (isShockwaveRunning) return;
-                // If on mobile, retain active flank briefly for inspection or reset
-                card.classList.remove('is-active');
-                card.removeAttribute('data-active-flank');
-                resetTargets();
+                if (isScrollDeployed) {
+                    card.classList.add('is-active', 'is-scroll-deployed');
+                    card.setAttribute('data-active-flank', 'all');
+                } else {
+                    card.classList.remove('is-active');
+                    card.removeAttribute('data-active-flank');
+                    resetTargets();
+                }
             });
 
-            // 4. Mobile Gyroscope / DeviceOrientation Support (iPhone & Android)
-            let baseBeta = null;
-            let baseGamma = null;
-
+            // 5. Mobile Gyroscope 3D Tilt & Kinetic Shake Surge (iPhone & Android)
             function handleOrientation(e) {
                 if (e.beta === null || e.gamma === null) return;
                 isGyroActive = true;
 
+                // Dynamic baseline drift: smoothly adapts to user hand posture
                 if (baseBeta === null) {
                     baseBeta = e.beta;
                     baseGamma = e.gamma;
+                } else {
+                    baseBeta += (e.beta - baseBeta) * 0.015;
+                    baseGamma += (e.gamma - baseGamma) * 0.015;
                 }
 
                 const deltaGamma = e.gamma - baseGamma;
                 const deltaBeta = e.beta - baseBeta;
 
-                targetNormX = Math.max(-1, Math.min(1, deltaGamma / 25));
-                targetNormY = Math.max(-1, Math.min(1, deltaBeta / 25));
-                targetIntensity = 1.0;
+                // Responsive tilt mapping (-18 to +18 degrees = full 3D range)
+                targetNormX = Math.max(-1, Math.min(1, deltaGamma / 18));
+                targetNormY = Math.max(-1, Math.min(1, deltaBeta / 18));
+                targetIntensity = Math.min(1.0, Math.sqrt(targetNormX * targetNormX + targetNormY * targetNormY) * 1.25);
 
-                targetCardRotX = -targetNormY * MAX_ROTATION;
-                targetCardRotY = targetNormX * MAX_ROTATION;
-                targetSubjX = targetNormX * MAX_SUBJECT_SHIFT;
-                targetSubjY = targetNormY * MAX_SUBJECT_SHIFT;
+                targetCardRotX = -targetNormY * (MAX_ROTATION_X * 1.25);
+                targetCardRotY = targetNormX * (MAX_ROTATION_Y * 1.25);
+                targetSubjX = targetNormX * (MAX_SUBJECT_SHIFT * 1.35);
+                targetSubjY = targetNormY * (MAX_SUBJECT_SHIFT * 1.35);
+
+                // Highlight flank according to phone tilt direction
+                if (!isShakingActive && !isDirectHover) {
+                    if (deltaGamma < -6) {
+                        card.setAttribute('data-active-flank', 'left');
+                        card.classList.add('is-active');
+                    } else if (deltaGamma > 6) {
+                        card.setAttribute('data-active-flank', 'right');
+                        card.classList.add('is-active');
+                    } else if (isScrollDeployed) {
+                        card.setAttribute('data-active-flank', 'all');
+                        card.classList.add('is-active');
+                    } else {
+                        card.removeAttribute('data-active-flank');
+                        card.classList.remove('is-active');
+                    }
+                }
 
                 startRender();
             }
 
-            if (window.DeviceOrientationEvent) {
-                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                    card.addEventListener('click', async () => {
-                        try {
-                            const res = await DeviceOrientationEvent.requestPermission();
-                            if (res === 'granted') {
-                                window.addEventListener('deviceorientation', handleOrientation);
-                            }
-                        } catch (err) {}
-                    }, { once: true });
-                } else {
-                    window.addEventListener('deviceorientation', handleOrientation);
+            // 5. Kinetic Mobile Shake Detection (ঝাঁকালে লোগো ভেসে উঠে কাঁপতে থাকবে)
+            function handleMotion(e) {
+                const acc = e.accelerationIncludingGravity || e.acceleration;
+                if (!acc) return;
+                const x = acc.x || 0;
+                const y = acc.y || 0;
+                const z = acc.z || 0;
+
+                if (lastAccX === null) {
+                    lastAccX = x; lastAccY = y; lastAccZ = z;
+                    return;
+                }
+
+                const deltaX = Math.abs(x - lastAccX);
+                const deltaY = Math.abs(y - lastAccY);
+                const deltaZ = Math.abs(z - lastAccZ);
+                const shakeForce = deltaX + deltaY + deltaZ;
+
+                // Threshold for vigorous shake
+                if (shakeForce > 21) {
+                    const now = Date.now();
+                    if (now - lastShakeTime > 120) {
+                        lastShakeTime = now;
+                        triggerKineticShake(shakeForce);
+                    }
+                }
+
+                lastAccX = x; lastAccY = y; lastAccZ = z;
+            }
+
+            function triggerKineticShake(force) {
+                if (!isShakingActive) {
+                    isShakingActive = true;
+                    card.classList.add('is-kinetic-shaking');
+                    card.classList.add('is-active');
+                    card.setAttribute('data-active-flank', 'all');
+
+                    // Subtle mobile haptic vibration if supported
+                    if (navigator.vibrate) {
+                        try { navigator.vibrate([40, 30, 50]); } catch(err) {}
+                    }
+                    if (typeof playSound === 'function') {
+                        playSound('hover');
+                    }
+                }
+
+                // Shake persists while shaking + settles 2.2 seconds after stopping
+                if (shakeEndTimer) clearTimeout(shakeEndTimer);
+                shakeEndTimer = setTimeout(() => {
+                    isShakingActive = false;
+                    card.classList.remove('is-kinetic-shaking');
+                    card.classList.remove('is-active');
+                    card.removeAttribute('data-active-flank');
+                }, 2200);
+            }
+
+            // Enable Orientation and Motion Sensors (iOS permission + Android automatic)
+            function initMotionAndGyro() {
+                if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    DeviceOrientationEvent.requestPermission().then(res => {
+                        if (res === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation, { passive: true });
+                        }
+                    }).catch(() => {});
+                } else if (window.DeviceOrientationEvent) {
+                    window.addEventListener('deviceorientation', handleOrientation, { passive: true });
+                }
+
+                if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                    DeviceMotionEvent.requestPermission().then(res => {
+                        if (res === 'granted') {
+                            window.addEventListener('devicemotion', handleMotion, { passive: true });
+                        }
+                    }).catch(() => {});
+                } else if (window.DeviceMotionEvent) {
+                    window.addEventListener('devicemotion', handleMotion, { passive: true });
                 }
             }
+
+            // Bind sensor permissions to user gesture
+            document.addEventListener('touchstart', initMotionAndGyro, { once: true, passive: true });
+            document.addEventListener('click', initMotionAndGyro, { once: true, passive: true });
         });
     }
 
@@ -899,6 +1057,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fpsBar = document.getElementById('mon-fps-bar');
     const dockFps = document.getElementById('dock-fps');
     const dockPing = document.getElementById('dock-ping');
+    const hudNavPing = document.getElementById('hud-nav-ping');
     const monMiniFps = document.getElementById('mon-mini-fps');
     const clrBtn = document.getElementById('clearance-level');
     const diagBtn = document.getElementById('mon-diag-btn');
@@ -992,6 +1151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentPing = navigator.connection.rtt;
                 if (netVal) netVal.innerText = `${currentPing}ms • ${navigator.onLine ? 'STABLE' : 'OFFLINE'}`;
                 if (dockPing) dockPing.innerText = `${currentPing}ms`;
+                if (hudNavPing) hudNavPing.innerText = `${currentPing}ms`;
             } else {
                 const t0 = performance.now();
                 fetch('./mehedi-logo.webp', { method: 'HEAD', cache: 'no-store' })
@@ -999,9 +1159,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         currentPing = Math.max(Math.round(performance.now() - t0), 8);
                         if (netVal) netVal.innerText = `${currentPing}ms • ACTIVE`;
                         if (dockPing) dockPing.innerText = `${currentPing}ms`;
+                        if (hudNavPing) hudNavPing.innerText = `${currentPing}ms`;
                     })
                     .catch(() => {
                         if (netVal) netVal.innerText = `${currentPing}ms • ONLINE`;
+                        if (hudNavPing) hudNavPing.innerText = `${currentPing}ms`;
                     });
             }
         }
@@ -1101,6 +1263,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 sysDock.classList.add('hidden');
                 sysMonitor.style.display = 'block';
                 if (typeof playSound === 'function') playSound('success');
+            });
+        }
+
+        // Mobile HUD Nano Telemetry Badge Interactive Tap
+        const mobileNavBadge = document.querySelector('.mobile-nav-pill-badge');
+        if (mobileNavBadge) {
+            mobileNavBadge.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (typeof playSound === 'function') playSound('click');
+                if (sysMonitor) {
+                    sysMonitor.style.display = 'block';
+                    if (sysDock) sysDock.classList.add('hidden');
+                } else if (typeof showToast === 'function') {
+                    showToast(`[SYS_TELEMETRY] Operational • Latency: ${currentPing}ms`, 'success');
+                }
             });
         }
     }
@@ -1211,35 +1388,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const KNOWLEDGE_BASE = {
         greetings: {
             keywords: [/\b(hi|hello|hey|greetings|howdy|sup|hola)\b/i, /\bhow are you\b/i, /\bwho are you\b/i],
-            response: "System Online. I am Mehedi's AI assistant. How can I help you navigate his portfolio today?"
+            response: "System Online. I am Mehedi's AI assistant. How can I help you explore his systems, architectures, or deployed projects today?"
         },
         identity: {
             keywords: [/\b(mehedi|about|who|profile|bio|background|developer|engineer|architect)\b/i],
-            response: "Mehedi Hasan is a Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect. He specializes in Distributed Systems, Microservices (NestJS, Postgres, Kafka, Redis), Cloud Infrastructure (Docker, Kubernetes, AWS), and autonomous LLM integration (Gemini, Claude)."
+            response: "Mehedi Hasan is a Full-Stack Web Developer, Distributed Systems Architect, and Autonomous AI Engineer. He specializes in Microservices (NestJS, Postgres, Kafka, RabbitMQ, Docker), Cloud Infrastructure, and AI Agent workflows (LangGraph, MCP, Ollama)."
         },
         skills: {
             keywords: [/\b(skill|stack|tech|language|toolkit|expert|react|nest|postgres|microservices|redis|kafka|rabbitmq|docker|kubernetes|aws|elk|prometheus|grafana|dsa|system design|networking)\b/i],
-            response: "Technical Arsenal:\n• Architecture & Backend: NestJS, Node.js, React.js, PostgreSQL, Distributed Systems, Microservices, DSA & System Design.\n• Event Streaming & Caching: Apache Kafka, RabbitMQ, Redis Cluster.\n• Cloud, DevOps & SRE: AWS, Docker, Kubernetes (K8s), ELK Stack, Prometheus & Grafana.\n• AI & LLMs: Claude Opus 5 / Fable 5.1, Google Gemini 3.1 Pro, DeepSeek-V4, GPT-6 Astra, MCP (Model Context Protocol), LangGraph, PGVector RAG, Python & n8n."
+            response: "Technical Arsenal:\n• Architecture & Backend: NestJS, Laravel, Node.js, React 19, TypeScript, PostgreSQL, Distributed Systems, Microservices, DSA & System Design.\n• Event Streaming & Caching: Apache Kafka, RabbitMQ, Redis Cluster.\n• Cloud, DevOps & SRE: AWS, Docker, Kubernetes (K8s), CI/CD, Prometheus & Grafana.\n• AI & Agents: LangGraph, MCP (Model Context Protocol), Local LLMs (Ollama, DeepSeek), Claude, Gemini, PGVector RAG, Python & n8n."
         },
         services: {
             keywords: [/\b(service|hire|price|cost|work|offer|buy|freelance)\b/i],
-            response: "Available Services: Basic Web Dev ($150), E-commerce ($300), AI Integration ($400), Full-Stack Apps ($500), API Dev ($200), and Marketing Automation ($250)."
+            response: "Engineering Services:\n• Autonomous AI & Swarms ($450+)\n• Distributed Cloud Systems ($550+)\n• Full-Stack Web Engineering ($350+)\n• API & Workflow Automation ($250+)\nYou can select required systems in the Service Terminal to generate a custom deployment invoice."
         },
         projects: {
-            keywords: [/\b(project|portfolio|build|create|done|example|work|app)\b/i],
-            response: "Key Projects: CredenceX AI Lab (Trustworthy MedAI), Sierraromeo.ai (AI Research Agent), Retune.so (AI Chat UI), and specialized enterprise automation bots."
+            keywords: [/\b(project|portfolio|build|create|done|example|work|app|erp|sawab|karbar|hostel)\b/i],
+            response: "Featured Deployments:\n• AI-Native Enterprise NGO ERP (85+ Microservices, NestJS, Kafka, PGVector, LangGraph)\n• Karbar ERP — BD Business Suite (Laravel, Filament, NBR VAT & Payroll)\n• SAWAB Bangladesh Enterprise Platform & Foundation Portal\n• AI Video Making Engine & AI Hostel Management\n• Autonomous AI Swarms & Local LLM Sandbox"
         },
         credencex: {
             keywords: [/\b(credencex|medical|imaging|healthcare|lab|research|xai)\b/i],
-            response: "CredenceX AI Research Lab advances trustworthy, explainable (XAI), and deployment-aware AI for medical imaging and clinical decision support in high-stakes healthcare environments. Explore it at credencex.ai."
+            response: "CredenceX AI Research Lab advances trustworthy, explainable (XAI), and deployment-aware AI for medical imaging and clinical decision support in high-stakes healthcare environments."
         },
         contact: {
             keywords: [/\b(contact|email|phone|whatsapp|reach|talk|linkedin|github|connect)\b/i],
-            response: "Data Retrieved: Reach Mehedi via WhatsApp at +880 1799-447594 or email at mehedihasan228.cse@gmail.com. GitHub: github.com/MehediHasan228"
+            response: "Connect with Mehedi:\n• WhatsApp: +880 1799-447594\n• Email: mehedihasan228.cse@gmail.com\n• GitHub: github.com/MehediHasan228"
         },
         automation: {
             keywords: [/\b(automation|bot|facebook|whatsapp bot|workflow|llm|agent)\b/i],
-            response: "Automation Expertise: Mehedi builds autonomous workflows that reduce production time by up to 60%. He specializes in Facebook & WhatsApp API integrations and LLM orchestration."
+            response: "Autonomous Workflows: Mehedi builds event-driven autonomous pipelines (n8n, LangGraph, RabbitMQ) and AI swarms that cut manual overhead by up to 60%."
         },
         smalltalk: {
             keywords: [/\b(joke|funny|laugh)\b/i],
@@ -1247,7 +1424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const DEFAULT_RESPONSE = "Query complete. I currently lack sufficient data to process that request offline. Try asking about Mehedi's skills, projects, services, or how to contact him. For complex queries, please connect via WhatsApp.";
+    const DEFAULT_RESPONSE = "Query complete. Try asking about Mehedi's skills, enterprise ERPs, cloud architectures, AI services, or how to reach him directly.";
 
     // ── CHAT FUNCTIONS ─────────────────────────────────────────────────────────
     function getBotResponse(input) {
@@ -1265,15 +1442,36 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleChat();
         });
 
+        // Interactive Grok Bot touch & hover feedback (looks directly at user)
+        chatWidget.addEventListener('mouseenter', () => {
+            chatWidget.classList.add('grok-hovered');
+        });
+        chatWidget.addEventListener('mouseleave', () => {
+            chatWidget.classList.remove('grok-hovered');
+        });
+        chatWidget.addEventListener('touchstart', () => {
+            chatWidget.classList.add('grok-hovered');
+        }, { passive: true });
+        chatWidget.addEventListener('touchend', () => {
+            setTimeout(() => chatWidget.classList.remove('grok-hovered'), 1400);
+        }, { passive: true });
+
         function toggleChat() {
             chatWidget.classList.toggle('chat-expanded');
             chatWidget.classList.toggle('chat-collapsed');
+            
+            // Clear any inline styles from keyboard sync when toggling
+            chatWidget.style.bottom = '';
+            chatWidget.style.maxHeight = '';
             
             const icon = document.getElementById('chat-toggle-icon');
             if (icon) {
                 if (chatWidget.classList.contains('chat-expanded')) {
                     icon.classList.remove('fa-chevron-up');
                     icon.classList.add('fa-chevron-down');
+                    setTimeout(() => {
+                        if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+                    }, 100);
                 } else {
                     icon.classList.remove('fa-chevron-down');
                     icon.classList.add('fa-chevron-up');
@@ -1282,30 +1480,61 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof playSound === 'function') playSound('click');
         }
 
-        // ── VOICE INPUT ────────────────────────────────────────────────────────
+        // ── VOICE INPUT (LIVE STREAMING TRANSCRIPTION) ─────────────────────────
         if (voiceBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
             recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
+            recognition.interimResults = true; // Stream words in real-time as spoken
+            recognition.lang = navigator.language || 'en-US';
 
-            voiceBtn.addEventListener('click', () => {
-                voiceBtn.classList.add('mic-active');
-                recognition.start();
-                if (typeof playSound === 'function') playSound('click');
+            let isListening = false;
+
+            voiceBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (isListening) {
+                    recognition.stop();
+                    return;
+                }
+                try {
+                    recognition.start();
+                } catch (err) {
+                    console.warn('[VOICE] Recognition start error:', err);
+                }
             });
 
-            recognition.onresult = (e) => {
-                const transcript = e.results[0][0].transcript;
-                chatInput.value = transcript;
-                voiceBtn.classList.remove('mic-active');
-                sendChat();
+            recognition.onstart = () => {
+                isListening = true;
+                voiceBtn.classList.add('mic-active');
+                chatInput.placeholder = "Listening... speak now";
+                chatInput.focus();
+                if (typeof playSound === 'function') playSound('click');
             };
 
-            recognition.onerror = () => {
+            recognition.onresult = (e) => {
+                let speechText = '';
+                for (let i = 0; i < e.results.length; ++i) {
+                    speechText += e.results[i][0].transcript;
+                }
+                if (speechText) {
+                    chatInput.value = speechText;
+                    chatInput.focus();
+                }
+            };
+
+            recognition.onerror = (e) => {
+                console.warn('[VOICE] Error:', e.error);
+                isListening = false;
                 voiceBtn.classList.remove('mic-active');
+                chatInput.placeholder = "Type a query...";
                 if (typeof playSound === 'function') playSound('error');
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                voiceBtn.classList.remove('mic-active');
+                chatInput.placeholder = "Type a query...";
+                chatInput.focus();
             };
         } else if (voiceBtn) {
             voiceBtn.style.display = 'none';
@@ -1328,15 +1557,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = document.createElement('div');
             container.className = 'smart-btn-container';
             const buttons = [
-            { text: "CredenceX Lab", icon: "fa-microscope" },
-            { text: "Who is Mehedi?", icon: "fa-user" },
-            { text: "Experience Protocol", icon: "fa-briefcase" },
-            { text: "Contact Handshake", icon: "fa-handshake" }
-        ];
+                { text: "Who is Mehedi?", icon: "fa-user" },
+                { text: "Enterprise NGO ERP", icon: "fa-server" },
+                { text: "AI & Swarms", icon: "fa-brain" },
+                { text: "Contact Mehedi", icon: "fa-handshake" }
+            ];
 
             buttons.forEach(btn => {
                 const b = document.createElement('button');
                 b.className = 'smart-btn';
+                b.setAttribute('type', 'button');
                 b.innerHTML = `<i class="fa-solid ${btn.icon}"></i> ${btn.text}`;
                 b.onclick = () => {
                     chatInput.value = btn.text;
@@ -1347,11 +1577,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return container;
         }
 
-        // Initial Greeting with Buttons
+        // Initial Clean Chat Greeting
         setTimeout(() => {
-            const welcomeMsg = appendMsg("System Online. I am Mehedi's AI assistant. Select a protocol to begin:", 'bot');
-            welcomeMsg.appendChild(createSmartButtons());
-        }, 500);
+            if (chatBody) {
+                chatBody.innerHTML = '';
+                const welcomeMsg = appendMsg("Hi! 👋 I'm Mehedi's AI assistant. How can I help you today?", 'bot');
+                welcomeMsg.appendChild(createSmartButtons());
+            }
+        }, 150);
 
         async function sendChat() {
             const txt = chatInput.value.trim();
@@ -1427,6 +1660,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chatSend.addEventListener('click', sendChat);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChat(); });
+
+        // Mobile Virtual Keyboard & Viewport Auto-Adjustment
+        if (window.visualViewport) {
+            const syncMobileViewport = () => {
+                if (!chatWidget.classList.contains('chat-expanded')) return;
+                if (window.innerWidth <= 768) {
+                    const keyboardHeight = window.innerHeight - window.visualViewport.height - (window.visualViewport.offsetTop || 0);
+                    if (keyboardHeight > 40) {
+                        chatWidget.style.bottom = `${keyboardHeight + 8}px`;
+                        chatWidget.style.maxHeight = `${window.visualViewport.height - 16}px`;
+                        if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+                    } else {
+                        chatWidget.style.bottom = '';
+                        chatWidget.style.maxHeight = '';
+                    }
+                } else {
+                    chatWidget.style.bottom = '';
+                    chatWidget.style.maxHeight = '';
+                }
+            };
+
+            window.visualViewport.addEventListener('resize', syncMobileViewport);
+            window.visualViewport.addEventListener('scroll', syncMobileViewport);
+        }
+
+        // On mobile input focus, ensure input stays in view
+        chatInput.addEventListener('focus', () => {
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+                    chatInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 300);
+            }
+        });
     }
 
 
@@ -2226,44 +2493,168 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const apiBtn = document.getElementById('api-send');
-    if (apiBtn) {
-        apiBtn.addEventListener('click', () => {
-            playSound('type');
-            const out = document.getElementById('api-response');
-            out.innerHTML = "<span style='color:var(--accent-1);'>[SYSTEM] Establishing secure handshake with api.mehedi.pro...</span>";
+    const apiPresets = {
+        systems: {
+            status: 200,
+            cluster: "mehedi-prod-us-east",
+            uptime: "99.99%",
+            nodes: [
+                { service: "microservices-mesh", protocol: "gRPC", p99: "11.2ms", status: "HEALTHY" },
+                { service: "kafka-event-bus", brokers: 3, throughput: "52.4K msg/s", status: "HEALTHY" },
+                { service: "k8s-orchestrator", pods: 24, autoscaling: "ACTIVE", status: "HEALTHY" },
+                { service: "ai-cot-agent", model: "Gemini 2.5", latency: "140ms", status: "HEALTHY" }
+            ],
+            security: { tls: "1.3", ddos_mitigation: "Active", zero_trust: true }
+        },
+        stack: {
+            status: 200,
+            engineer: "Mehedi Hasan",
+            stack: {
+                backend: ["NestJS", "Node.js", "Python", "Go"],
+                persistence: ["PostgreSQL", "Redis Cluster", "pgBouncer"],
+                streaming: ["Apache Kafka", "RabbitMQ"],
+                devops_sre: ["AWS", "Docker", "Kubernetes", "Prometheus", "Grafana"],
+                ai_systems: ["LLM Agents", "Vector Embeddings", "LangChain"]
+            },
+            protocols: ["HTTP/3", "gRPC", "WebSocket"]
+        },
+        metrics: {
+            status: 200,
+            telemetry: {
+                p99_latency: "11.8ms",
+                cache_hit_ratio: "99.4%",
+                req_per_second: "4.8K req/s",
+                error_rate: "0.001%",
+                sla_availability: "99.99%",
+                cot_speedup: "4.2x"
+            }
+        }
+    };
 
-            setTimeout(() => {
-                playSound('success');
-                const json = {
-                    status: 200,
-                    message: "Cluster Telemetry Synced",
-                    data: {
-                        engineer: "Mehedi Hasan",
-                        roles: [
-                            "Full-Stack Web Developer",
-                            "AI Automation Engineer",
-                            "LLM Integration Specialist",
-                            "Digital Efficiency Architect"
-                        ],
-                        core_architecture: {
-                            backend: "NestJS & Node.js Microservices",
-                            persistence: "PostgreSQL with connection pooling (pgBouncer)",
-                            cache_layer: "Redis Cluster (99.4% cache hit ratio)",
-                            event_bus: "Apache Kafka & RabbitMQ (Zero-Loss At-Least-Once Delivery)",
-                            orchestration: "Docker & Kubernetes (K8s pods auto-scaling)",
-                            observability: "Prometheus metrics, Grafana dashboards, ELK logging"
-                        },
-                        runtime_telemetry: {
-                            p99_latency: "12ms",
-                            cluster_uptime: "99.99%",
-                            rate_limiter: "Token Bucket active (Redis)"
-                        }
-                    }
-                };
-                out.innerHTML = syntaxHighlight(JSON.stringify(json, undefined, 4));
-            }, 800);
+    /* ==========================================
+       17. DISTRIBUTED ARCHITECTURE TOPOLOGY MESH
+    ========================================== */
+    const topoNodes = document.querySelectorAll('.topo-node');
+    const topoTabs = document.querySelectorAll('.topo-tab');
+    const hudTitle = document.getElementById('hud-title');
+    const hudMetrics = document.getElementById('hud-metrics');
+    const topoWires = document.querySelectorAll('.topo-wire');
+
+    const nodeData = {
+        edge: {
+            title: "Cloud Edge (Global Anycast CDN)",
+            metrics: [
+                { icon: "fa-shield-halved", text: "DDoS Protected" },
+                { icon: "fa-gauge-high", text: "Latency: 12ms" },
+                { icon: "fa-signal", text: "99.999% SLA" }
+            ],
+            color: "var(--accent-1)"
+        },
+        gateway: {
+            title: "NestJS API Gateway (Microservices Hub)",
+            metrics: [
+                { icon: "fa-server", text: "Protocol: gRPC / REST" },
+                { icon: "fa-lock", text: "Rate Limited" },
+                { icon: "fa-microchip", text: "p99 < 8ms" }
+            ],
+            color: "var(--accent-1)"
+        },
+        kafka: {
+            title: "Kafka Event Bus (High-Throughput Streaming)",
+            metrics: [
+                { icon: "fa-bolt", text: "52,400 msg/s" },
+                { icon: "fa-layer-group", text: "12 Partitions" },
+                { icon: "fa-clock", text: "Lag: 0ms" }
+            ],
+            color: "#f59e0b"
+        },
+        ai: {
+            title: "Autonomous AI Swarm (Multi-Agent Pipeline)",
+            metrics: [
+                { icon: "fa-robot", text: "Active Agents: 8" },
+                { icon: "fa-bolt", text: "4.2x CoT Speedup" },
+                { icon: "fa-brain", text: "RAG & LLM Routing" }
+            ],
+            color: "#a855f7"
+        },
+        data: {
+            title: "PostgreSQL & Distributed Redis Cache",
+            metrics: [
+                { icon: "fa-database", text: "Multi-AZ Replicas" },
+                { icon: "fa-fire-flame-curved", text: "99.4% Cache Hit" },
+                { icon: "fa-chart-pie", text: "Pool: 128 Conn" }
+            ],
+            color: "#38bdf8"
+        }
+    };
+
+    function updateTopoHUD(nodeKey, playSnd) {
+        const data = nodeData[nodeKey];
+        if (!data || !hudTitle || !hudMetrics) return;
+
+        if (playSnd && typeof playSound === 'function') {
+            playSound('hover');
+        }
+
+        hudTitle.textContent = data.title;
+        hudMetrics.innerHTML = data.metrics.map(m =>
+            `<span class="hud-metric-item"><i class="fa-solid ${m.icon}" style="color:${data.color};"></i> ${m.text}</span>`
+        ).join('');
+    }
+
+    if (topoNodes && topoNodes.length > 0) {
+        topoNodes.forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                const nodeKey = node.getAttribute('data-node');
+                topoNodes.forEach(n => n.classList.remove('active'));
+                node.classList.add('active');
+                updateTopoHUD(nodeKey, false);
+            });
+
+            node.addEventListener('click', () => {
+                const nodeKey = node.getAttribute('data-node');
+                topoNodes.forEach(n => n.classList.remove('active'));
+                node.classList.add('active');
+                updateTopoHUD(nodeKey, true);
+            });
         });
+    }
+
+    function setTopoLayer(layer) {
+        topoWires.forEach(wire => {
+            wire.className.baseVal = "topo-wire";
+        });
+
+        if (layer === 'mesh') {
+            document.getElementById('wire-edge-gw')?.classList.add('active-stream');
+            document.getElementById('wire-gw-kafka')?.classList.add('active-stream', 'stream-kafka');
+            document.getElementById('wire-gw-ai')?.classList.add('active-stream', 'stream-ai');
+            document.getElementById('wire-kafka-db')?.classList.add('active-stream', 'stream-kafka');
+            document.getElementById('wire-ai-db')?.classList.add('active-stream', 'stream-ai');
+        } else if (layer === 'pipeline') {
+            document.getElementById('wire-edge-gw')?.classList.add('active-stream');
+            document.getElementById('wire-gw-kafka')?.classList.add('active-stream', 'stream-kafka');
+            document.getElementById('wire-kafka-db')?.classList.add('active-stream', 'stream-kafka');
+        } else if (layer === 'ai') {
+            document.getElementById('wire-edge-gw')?.classList.add('active-stream');
+            document.getElementById('wire-gw-ai')?.classList.add('active-stream', 'stream-ai');
+            document.getElementById('wire-ai-db')?.classList.add('active-stream', 'stream-ai');
+        }
+    }
+
+    if (topoTabs && topoTabs.length > 0) {
+        topoTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                topoTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const layer = tab.getAttribute('data-layer') || 'mesh';
+                setTopoLayer(layer);
+                if (typeof playSound === 'function') playSound('click');
+            });
+        });
+
+        // Initialize active stream wires
+        setTopoLayer('mesh');
     }
 
     /* ==========================================
@@ -2753,16 +3144,31 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const lbToggleIcon = document.getElementById('lb-toggle-icon');
 
     if (lbWidget && lbToggleBtn) {
-        // Use custom event from draggable logic to avoid click conflict
+        // Use custom event from draggable logic on desktop
         lbWidget.addEventListener('lb-click', (e) => {
             toggleLeaderboard();
         });
 
-        // Still allow direct click if not dragging (for desktop reliability)
-        // Note: The draggable logic handles this via lb-click, but keeping direct for simple clicks.
-        // We check if it was a drag in the handle's listener.
+        // Direct, instantaneous tap/click listener for mobile and desktop
+        lbToggleBtn.addEventListener('click', (e) => {
+            if (window.innerWidth <= 860) {
+                e.stopPropagation();
+                toggleLeaderboard();
+            }
+        });
         
         function toggleLeaderboard() {
+            // Clear any drag inline styles on mobile to ensure smooth CSS animation
+            if (window.innerWidth <= 860) {
+                lbWidget.style.top = '';
+                lbWidget.style.bottom = '';
+                lbWidget.style.left = '';
+                lbWidget.style.right = '';
+                lbWidget.style.removeProperty('--lb-ty');
+                lbWidget.style.removeProperty('--lb-tx');
+                lbWidget.style.transition = '';
+            }
+
             // If already in full view, close full view first when collapsing
             if (lbWidget.classList.contains('lb-full-view') && lbWidget.classList.contains('lb-expanded')) {
                 lbWidget.classList.remove('lb-full-view');
@@ -2774,14 +3180,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             // Optionally change the icon state when expanded
             const isExpanded = lbWidget.classList.contains('lb-expanded');
 
-            // Optionally change the icon state when expanded
             if (lbToggleIcon) {
                 if (isExpanded) {
-                    lbToggleIcon.classList.remove('fa-trophy');
+                    lbToggleIcon.classList.remove('fa-chart-simple');
                     lbToggleIcon.classList.add('fa-chevron-right');
                 } else {
-                    lbToggleIcon.classList.remove('fa-chevron-right');
-                    lbToggleIcon.classList.add('fa-trophy');
+                    lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
                 }
             }
 
@@ -2807,6 +3211,37 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             }
             
             if (typeof playSound === 'function') playSound('click');
+        });
+    }
+
+    // --- LEADERBOARD CLOSE BUTTON & BACKDROP DISMISS ---
+    const lbCloseBtn = document.getElementById('lb-close-btn');
+    if (lbCloseBtn && lbWidget) {
+        lbCloseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            lbWidget.classList.remove('lb-expanded', 'lb-full-view');
+            lbWidget.classList.add('lb-collapsed');
+            if (lbToggleIcon) {
+                lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
+            }
+            if (typeof playSound === 'function') playSound('click');
+        });
+    }
+
+    // Tap outside to close modal on mobile
+    if (lbWidget) {
+        lbWidget.addEventListener('click', (e) => {
+            if (window.innerWidth <= 860 && lbWidget.classList.contains('lb-expanded')) {
+                const isBackdropClick = (e.target === lbWidget);
+                if (isBackdropClick) {
+                    lbWidget.classList.remove('lb-expanded', 'lb-full-view');
+                    lbWidget.classList.add('lb-collapsed');
+                    if (lbToggleIcon) {
+                        lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
+                    }
+                    if (typeof playSound === 'function') playSound('click');
+                }
+            }
         });
     }
 
@@ -2937,9 +3372,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
             cards.forEach((card, i) => {
                 if (i === index) {
-                    card.classList.add('is-active');
+                    card.classList.add('is-active', 'sci-fi-active');
                 } else {
-                    card.classList.remove('is-active');
+                    card.classList.remove('is-active', 'sci-fi-active');
                 }
             });
 
@@ -2948,26 +3383,28 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
 
             const activePillar = cards[index].dataset.pillar;
-            tabs.forEach(tab => {
-                if (tab.dataset.pillar === activePillar) {
-                    tab.classList.add('active');
-                    // Scroll tab pill horizontally inside tabContainer ONLY when user triggers scroll
-                    if (triggerScroll && tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
-                        const tabLeft = tab.offsetLeft;
-                        const tabWidth = tab.offsetWidth;
-                        const containerWidth = tabContainer.clientWidth;
-                        tabContainer.scrollTo({
-                            left: tabLeft - (containerWidth / 2) + (tabWidth / 2),
-                            behavior: 'smooth'
-                        });
+            if (activePillar) {
+                tabs.forEach(tab => {
+                    if (tab.dataset.pillar === activePillar) {
+                        tab.classList.add('active');
+                        // Scroll tab pill horizontally inside tabContainer ONLY when user triggers scroll
+                        if (triggerScroll && tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
+                            const tabLeft = tab.offsetLeft;
+                            const tabWidth = tab.offsetWidth;
+                            const containerWidth = tabContainer.clientWidth;
+                            tabContainer.scrollTo({
+                                left: tabLeft - (containerWidth / 2) + (tabWidth / 2),
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                        tab.classList.remove('active');
                     }
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
+                });
+            }
 
             // Scroll carousel card horizontally inside grid ONLY when user triggers scroll
-            if (triggerScroll && window.innerWidth <= 768) {
+            if (triggerScroll && window.innerWidth <= 860) {
                 const cardLeft = cards[index].offsetLeft;
                 const cardWidth = cards[index].offsetWidth;
                 const gridWidth = grid.clientWidth;
@@ -3001,7 +3438,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         let scrollTimeout = null;
         grid.addEventListener('scroll', () => {
-            if (window.innerWidth > 768) return;
+            if (window.innerWidth > 860) return;
 
             if (scrollTimeout) clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
@@ -3012,6 +3449,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 let minDistance = Infinity;
 
                 cards.forEach((card, i) => {
+                    if (card.classList.contains('is-hidden') || card.style.display === 'none') return;
                     const cardRect = card.getBoundingClientRect();
                     const cardCenter = cardRect.left + cardRect.width / 2;
                     const distance = Math.abs(gridCenter - cardCenter);
@@ -3022,12 +3460,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 });
 
                 setActiveItem(closestIdx, false);
-            }, 60);
+            }, 45);
         }, { passive: true });
 
         cards.forEach((card, i) => {
             card.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768 && !card.classList.contains('is-active')) {
+                if (window.innerWidth <= 860 && !card.classList.contains('is-active')) {
                     if (e.target.closest('a, button, .cyber-overlay-btn')) {
                         e.preventDefault();
                     }
@@ -3037,14 +3475,84 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
         });
 
-        setActiveItem(0, false);
+        // Initialize first visible card as active
+        const firstVisibleIdx = Array.from(cards).findIndex(c => !c.classList.contains('is-hidden') && c.style.display !== 'none');
+        setActiveItem(firstVisibleIdx !== -1 ? firstVisibleIdx : 0, false);
     }
 
-    // Initialize all 4 Mobile App Carousel Sliders
-    setupMobileAppCarousel('.arch-pillars-grid', '.arch-pillar-card', '.arch-mobile-tabs', '#archCarouselDots');
+    // Initialize all 4 Mobile App Carousel Sliders (Architecture, Deployments, Ethical/Philosophy, DeepTech/Telemetry)
+    setupMobileAppCarousel('.arch-unified-grid', '.arch-unified-card', null, null);
     setupMobileAppCarousel('.projects-grid', '.project-card', '.projects-mobile-tabs', '#projectsCarouselDots');
     setupMobileAppCarousel('#ethicalGrid', '.ethical-card', '.ethical-mobile-tabs', '#ethicalDots');
     setupMobileAppCarousel('#deeptechGrid', '#deeptechGrid .archive-card', '.deeptech-mobile-tabs', '#deeptechDots');
+
+    // ----------------------------------------------------
+    // Unified System Architecture & Enterprise Stack Filters
+    // ----------------------------------------------------
+    const unifiedFilterBtns = document.querySelectorAll('.arch-unified-filter-btn');
+    const unifiedCards = document.querySelectorAll('.arch-unified-card');
+
+    if (unifiedFilterBtns.length > 0 && unifiedCards.length > 0) {
+        unifiedFilterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter || 'pillars';
+
+                unifiedFilterBtns.forEach(b => {
+                    const isActive = b === btn;
+                    b.classList.toggle('active', isActive);
+                    b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                });
+
+                // Center the active button horizontally on mobile
+                const container = btn.closest('.arch-unified-filters');
+                if (container && window.innerWidth <= 860) {
+                    const scrollLeft = btn.offsetLeft - (container.offsetWidth / 2) + (btn.offsetWidth / 2);
+                    container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                }
+
+                unifiedCards.forEach(card => {
+                    const domain = card.dataset.domain;
+                    let shouldShow = false;
+
+                    if (filter === 'pillars') {
+                        shouldShow = (domain === 'pillars');
+                    } else if (filter === 'all') {
+                        shouldShow = (domain !== 'pillars');
+                    } else {
+                        shouldShow = (domain === filter);
+                    }
+
+                    if (shouldShow) {
+                        card.classList.remove('is-hidden');
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.96)';
+                        requestAnimationFrame(() => {
+                            card.style.transition = 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+                            card.style.opacity = '1';
+                            card.style.transform = 'scale(1)';
+                        });
+                    } else {
+                        card.classList.add('is-hidden');
+                    }
+                });
+
+                // Reset grid scroll position on mobile when filter changes & activate first visible card
+                const grid = document.querySelector('.arch-unified-grid');
+                if (grid && window.innerWidth <= 860) {
+                    grid.scrollTo({ left: 0, behavior: 'smooth' });
+                    setTimeout(() => {
+                        const visibleCards = Array.from(unifiedCards).filter(c => !c.classList.contains('is-hidden'));
+                        if (visibleCards.length > 0) {
+                            unifiedCards.forEach(c => c.classList.remove('is-active', 'sci-fi-active'));
+                            visibleCards[0].classList.add('is-active', 'sci-fi-active');
+                        }
+                    }, 80);
+                }
+
+                if (typeof playSound === 'function') playSound('click');
+            });
+        });
+    }
 
     // ----------------------------------------------------
     // Smart Dynamic Island Collapse on Scroll (Mobile)
