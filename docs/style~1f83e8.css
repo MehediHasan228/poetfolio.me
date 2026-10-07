@@ -1,4 +1,5 @@
 /* --- THEME VARIABLES --- */
+:root,
 :root[data-theme="dark"] {
     --bg-color: #0b1120;
     --card-bg: rgba(30, 41, 59, 0.6);
@@ -10,6 +11,11 @@
     --accent-2-rgb: 79, 172, 254;
     --accent-3: #8b5cf6;
     --accent-3-rgb: 139, 92, 246;
+    --accent-rgb: 0, 242, 254;
+    --gradient-accent: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    --accent-glow: rgba(0, 242, 254, 0.4);
+    --accent-active-color: #0b1120;
     --particle-color: #00f2fe;
     /* Apple Spatial Liquid Glass (Pure Transparent Crystal with Cyan Edge Glow) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 242, 254, 0.10) 100%);
@@ -27,7 +33,14 @@
     --accent-1: #2563eb;
     --accent-1-rgb: 37, 99, 235;
     --accent-2: #3b82f6;
+    --accent-2-rgb: 59, 130, 246;
     --accent-3: #10b981;
+    --accent-3-rgb: 16, 185, 129;
+    --accent-rgb: 37, 99, 235;
+    --gradient-accent: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    --accent-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    --accent-glow: rgba(37, 99, 235, 0.35);
+    --accent-active-color: #ffffff;
     --particle-color: #94a3b8;
     /* Apple Spatial Liquid Glass (Pure Transparent Crystal with Royal Blue Rim) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.20) 50%, rgba(37, 99, 235, 0.10) 100%);
@@ -45,7 +58,14 @@
     --accent-1: #f43f5e;
     --accent-1-rgb: 244, 63, 94;
     --accent-2: #eab308;
+    --accent-2-rgb: 234, 179, 8;
     --accent-3: #ec4899;
+    --accent-3-rgb: 236, 72, 153;
+    --accent-rgb: 244, 63, 94;
+    --gradient-accent: linear-gradient(135deg, #f43f5e 0%, #eab308 100%);
+    --accent-gradient: linear-gradient(135deg, #f43f5e 0%, #eab308 100%);
+    --accent-glow: rgba(244, 63, 94, 0.45);
+    --accent-active-color: #09090b;
     --particle-color: #f43f5e;
     /* Apple Spatial Liquid Glass (Pure Transparent Glass with Neon Rose Rim) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(244, 63, 94, 0.08) 50%, rgba(234, 179, 8, 0.10) 100%);
@@ -63,7 +83,14 @@
     --accent-1: #00ff00;
     --accent-1-rgb: 0, 255, 0;
     --accent-2: #00cc00;
+    --accent-2-rgb: 0, 204, 0;
     --accent-3: #ffffff;
+    --accent-3-rgb: 255, 255, 255;
+    --accent-rgb: 0, 255, 0;
+    --gradient-accent: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+    --accent-gradient: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+    --accent-glow: rgba(0, 255, 0, 0.45);
+    --accent-active-color: #000000;
     --particle-color: #00ff00;
     /* Apple Spatial Liquid Glass (Pure Transparent Glass with Matrix Green Rim) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(0, 255, 0, 0.08) 50%, rgba(0, 255, 0, 0.14) 100%);
@@ -2601,6 +2628,46 @@ section {
 
 [data-theme="light"] .node-name {
     text-shadow: none;
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .topo-tabs {
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .topo-tab {
+    background: transparent !important;
+    color: #64748b !important;
+    border: 1px solid transparent !important;
+}
+
+[data-theme="light"] .topo-tab:hover {
+    background: rgba(255, 255, 255, 0.8) !important;
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .topo-tab.active {
+    background: #ffffff !important;
+    color: #2563eb !important;
+    border: 1px solid rgba(37, 99, 235, 0.3) !important;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.18) !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="light"] .topo-tab svg {
+    stroke: currentColor !important;
+}
+
+[data-theme="light"] .topo-tab.active svg {
+    stroke: #2563eb !important;
+}
+
+[data-theme="light"] .topo-live-pill {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    border-color: #bfdbfe !important;
 }
 
 @media (max-width: 768px) {
@@ -4075,20 +4142,22 @@ section {
         display: none !important;
     }
 
-    /* Default Grok Bot avatar size inside desktop pill */
-    #ai-chat-widget.chat-collapsed .grok-bot-avatar {
+    /* Default AI Orb Mascot avatar size inside desktop pill */
+    #ai-chat-widget.chat-collapsed .grok-bot-avatar,
+    #ai-chat-widget.chat-collapsed .ai-orb-avatar {
         width: 38px !important;
         height: 38px !important;
         margin: 0 !important;
         display: inline-flex !important;
-        filter: var(--grok-3d-drop-shadow) !important;
+        filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 14px rgba(0, 242, 254, 0.4)) !important;
         transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease;
     }
 
     /* Desktop hover: Circular bot grows larger and looks at user */
-    #ai-chat-widget.chat-collapsed:hover .grok-bot-avatar {
+    #ai-chat-widget.chat-collapsed:hover .grok-bot-avatar,
+    #ai-chat-widget.chat-collapsed:hover .ai-orb-avatar {
         transform: scale(1.28) translateY(-2px);
-        filter: var(--grok-3d-drop-shadow) drop-shadow(0 0 14px var(--accent-1)) !important;
+        filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 20px var(--accent-1)) !important;
     }
 
     /* Desktop Expanded Window (Fixes Squashed Body in Screenshot 2) */
@@ -4129,78 +4198,132 @@ section {
 
 .chat-header:hover { filter: brightness(1.05); }
 
-/* ==========================================
-   GROK BOT ANIMATED AVATAR SYSTEM (x.ai inspired)
-========================================== */
+/* ==========================================================================
+   AI ORB MASCOT — ORIGINAL FUTURISTIC MASCOT FOR MEHEDI.PRO.BD
+   Communicates purely through TWO dark capsule eyes on a 3D cyan/blue sphere.
+   NO eyebrows. NO mouth. NO accessories.
+   ========================================================================== */
+
+/* --- Dynamic Theme Color Variables for AI Orb Mascot --- */
 :root,
 [data-theme="dark"] {
-    /* Dark Theme (Default) - 3D Cyber Cyan Sphere */
-    --grok-3d-highlight: #ffffff;
+    --orb-stop-highlight: #ffffff;
+    --orb-stop-bright: #38e1ff;
+    --orb-stop-primary: #009dff;
+    --orb-stop-deep: #005bbd;
+    --orb-stop-dark: #00337a;
+    --orb-stop-rim: #00f2fe;
+    --orb-glow-color: #00f2fe;
+    --orb-shadow-color: rgba(0, 0, 0, 0.45);
+    --orb-eye-top: #0a1526;
+    --orb-eye-bot: #01040a;
+    --orb-eye-shadow: rgba(0, 242, 254, 0.45);
+
+    /* Backward compatibility aliases */
+    --grok-3d-highlight: var(--orb-stop-highlight);
     --grok-3d-mid: #e0f7fa;
-    --grok-3d-base: #38bdf8;
-    --grok-3d-shadow: #0284c7;
-    --grok-3d-rim: #00f2fe;
-    --grok-3d-drop-shadow: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 22px rgba(0, 242, 254, 0.7));
-    --grok-eye-top: #083344;
-    --grok-eye-bottom: #020617;
-    --grok-glow: drop-shadow(0 0 16px rgba(0, 242, 254, 0.85));
+    --grok-3d-base: var(--orb-stop-bright);
+    --grok-3d-shadow: var(--orb-stop-primary);
+    --grok-3d-rim: var(--orb-stop-rim);
+    --grok-3d-drop-shadow: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 18px rgba(0, 242, 254, 0.65));
+    --grok-eye-top: var(--orb-eye-top);
+    --grok-eye-bottom: var(--orb-eye-bot);
 }
 
 [data-theme="light"] {
-    /* Light Theme - 3D Porcelain Sphere with Royal Blue Rim */
-    --grok-3d-highlight: #ffffff;
+    --orb-stop-highlight: #ffffff;
+    --orb-stop-bright: #93c5fd;
+    --orb-stop-primary: #3b82f6;
+    --orb-stop-deep: #1d4ed8;
+    --orb-stop-dark: #0f2766;
+    --orb-stop-rim: #2563eb;
+    --orb-glow-color: #2563eb;
+    --orb-shadow-color: rgba(15, 23, 42, 0.35);
+    --orb-eye-top: #1e293b;
+    --orb-eye-bot: #090d16;
+    --orb-eye-shadow: rgba(37, 99, 235, 0.25);
+
+    --grok-3d-highlight: var(--orb-stop-highlight);
     --grok-3d-mid: #f0f7ff;
-    --grok-3d-base: #93c5fd;
-    --grok-3d-shadow: #2563eb;
-    --grok-3d-rim: #1d4ed8;
-    --grok-3d-drop-shadow: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.22)) drop-shadow(0 0 18px rgba(37, 99, 235, 0.45));
-    --grok-eye-top: #1e3a8a;
-    --grok-eye-bottom: #0f172a;
-    --grok-glow: drop-shadow(0 0 14px rgba(37, 99, 235, 0.5));
+    --grok-3d-base: var(--orb-stop-bright);
+    --grok-3d-shadow: var(--orb-stop-primary);
+    --grok-3d-rim: var(--orb-stop-rim);
+    --grok-3d-drop-shadow: drop-shadow(0 10px 20px rgba(15, 23, 42, 0.2)) drop-shadow(0 0 16px rgba(37, 99, 235, 0.4));
+    --grok-eye-top: var(--orb-eye-top);
+    --grok-eye-bottom: var(--orb-eye-bot);
 }
 
 [data-theme="cyberpunk"] {
-    /* Cyberpunk Theme - 3D Neon Chrome Sphere with Hot Pink Rim */
-    --grok-3d-highlight: #ffffff;
+    --orb-stop-highlight: #fff1f2;
+    --orb-stop-bright: #fb7185;
+    --orb-stop-primary: #e11d48;
+    --orb-stop-deep: #881337;
+    --orb-stop-dark: #400516;
+    --orb-stop-rim: #ff0055;
+    --orb-glow-color: #ff0055;
+    --orb-shadow-color: rgba(0, 0, 0, 0.85);
+    --orb-eye-top: #2a0512;
+    --orb-eye-bot: #0a0104;
+    --orb-eye-shadow: rgba(255, 0, 85, 0.4);
+
+    --grok-3d-highlight: var(--orb-stop-highlight);
     --grok-3d-mid: #ffe4e6;
-    --grok-3d-base: #fb7185;
-    --grok-3d-shadow: #be123c;
-    --grok-3d-rim: #ff0055;
-    --grok-3d-drop-shadow: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 24px rgba(255, 0, 85, 0.8));
-    --grok-eye-top: #4c0519;
-    --grok-eye-bottom: #030002;
-    --grok-glow: drop-shadow(0 0 18px rgba(255, 0, 85, 0.9));
+    --grok-3d-base: var(--orb-stop-bright);
+    --grok-3d-shadow: var(--orb-stop-primary);
+    --grok-3d-rim: var(--orb-stop-rim);
+    --grok-3d-drop-shadow: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 20px rgba(255, 0, 85, 0.7));
+    --grok-eye-top: var(--orb-eye-top);
+    --grok-eye-bottom: var(--orb-eye-bot);
 }
 
 [data-theme="god-mode"] {
-    /* God Mode Theme - 3D Matrix Green Sphere */
-    --grok-3d-highlight: #ffffff;
-    --grok-3d-mid: #dcfce7;
-    --grok-3d-base: #4ade80;
-    --grok-3d-shadow: #15803d;
-    --grok-3d-rim: #00ff00;
-    --grok-3d-drop-shadow: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 24px rgba(0, 255, 0, 0.85));
-    --grok-eye-top: #14532d;
-    --grok-eye-bottom: #011303;
-    --grok-glow: drop-shadow(0 0 18px rgba(0, 255, 0, 0.95));
-}
+    --orb-stop-highlight: #f0fdf4;
+    --orb-stop-bright: #4ade80;
+    --orb-stop-primary: #16a34a;
+    --orb-stop-deep: #14532d;
+    --orb-stop-dark: #05230c;
+    --orb-stop-rim: #00ff66;
+    --orb-glow-color: #00ff66;
+    --orb-shadow-color: rgba(0, 0, 0, 0.9);
+    --orb-eye-top: #052e16;
+    --orb-eye-bot: #021206;
+    --orb-eye-shadow: rgba(0, 255, 102, 0.45);
 
-/* SVG Gradient Stop Color Dynamic Theme Bindings */
-.grok-stop-highlight { stop-color: var(--grok-3d-highlight) !important; }
-.grok-stop-mid { stop-color: var(--grok-3d-mid) !important; }
-.grok-stop-base { stop-color: var(--grok-3d-base) !important; }
-.grok-stop-shadow { stop-color: var(--grok-3d-shadow) !important; }
-.grok-stop-rim { stop-color: var(--grok-3d-rim) !important; }
-.grok-stop-eyetop { stop-color: var(--grok-eye-top) !important; }
-.grok-stop-eyebot { stop-color: var(--grok-eye-bottom) !important; }
+    --grok-3d-highlight: var(--orb-stop-highlight);
+    --grok-3d-mid: #dcfce7;
+    --grok-3d-base: var(--orb-stop-bright);
+    --grok-3d-shadow: var(--orb-stop-primary);
+    --grok-3d-rim: var(--orb-stop-rim);
+    --grok-3d-drop-shadow: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 20px rgba(0, 255, 102, 0.8));
+    --grok-eye-top: var(--orb-eye-top);
+    --grok-eye-bottom: var(--orb-eye-bot);
+}
 
 .chat-header-content {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
+    gap: 10px;
 }
 
-.grok-bot-avatar {
+/* --- Mascot Custom Element & Avatar Wrapper --- */
+ai-orb-mascot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    --orb-look-x: 0px;
+    --orb-look-y: 0px;
+}
+
+.grok-bot-avatar,
+.ai-orb-avatar {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4209,220 +4332,632 @@ section {
     position: relative;
     flex-shrink: 0;
     transform-origin: center;
-    filter: var(--grok-3d-drop-shadow);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+    filter: drop-shadow(0 10px 22px var(--orb-shadow-color)) drop-shadow(0 2px 8px rgba(2, 132, 199, 0.3));
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease;
 }
 
-.grok-bot-avatar:hover {
-    transform: scale(1.1) translateY(-3px);
-}
-
-.chat-expanded .grok-bot-avatar {
+.chat-expanded .grok-bot-avatar,
+.chat-expanded .ai-orb-avatar {
     width: 32px !important;
     height: 32px !important;
-    filter: none !important;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5)) !important;
 }
 
-.grok-bot-svg {
+.ai-orb-svg {
     width: 100%;
     height: 100%;
     overflow: visible;
+    display: block;
 }
 
-.grok-bot-group {
-    transform-origin: 114px 114px;
-    animation: grok3dFloat 3.8s ease-in-out infinite;
+/* --- Sphere Floating Motion --- */
+.ai-orb-group {
+    transform-origin: 100px 100px;
+    animation: aiOrbFloat 4.2s ease-in-out infinite;
+    will-change: transform;
 }
 
-@keyframes grok3dFloat {
+@keyframes aiOrbFloat {
     0%, 100% {
-        transform: translateY(0px) rotate(0deg) scale(1);
-    }
-    25% {
-        transform: translateY(-5px) rotate(-2deg) scale(1.02);
+        transform: translateY(0px) scale(1);
     }
     50% {
-        transform: translateY(-8px) rotate(1deg) scale(1.03);
-    }
-    75% {
-        transform: translateY(-3px) rotate(2deg) scale(1.01);
+        transform: translateY(-4px) scale(1.015);
     }
 }
 
-.grok-bot-eyes {
-    transform-origin: 153px 86px;
-    animation: grokEyeGaze 7.5s ease-in-out infinite;
+/* --- Face & Eye Base --- */
+.ai-orb-face {
+    transform-origin: 100px 97px;
+    transform: translate(var(--orb-look-x, 0px), var(--orb-look-y, 0px));
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 
-.grok-bot-eye {
-    fill: var(--grok-eye-fill);
-    transition: fill 0.3s ease;
+.ai-orb-eye {
+    transform-origin: center;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 
-.grok-bot-eye-left {
-    transform-origin: 121.5px 91.6px;
-    animation: grokEyeBlinkLeft 5.2s infinite ease-in-out;
+.ai-orb-eye-inner {
+    transform-origin: center;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
 }
 
-.grok-bot-eye-right {
-    transform-origin: 185.7px 80.3px;
-    animation: grokEyeBlinkRight 5.2s infinite ease-in-out;
+.ai-orb-capsule {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
 }
 
-/* Grok Head Organic Float */
-@keyframes grokHeadFloat {
+.ai-orb-sparkle {
+    transform-origin: -2.5px -7.5px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.ai-orb-sparkle-micro {
+    transform-origin: 2px 5.5px;
+    transition: opacity 0.25s ease;
+}
+
+.ai-orb-arch {
+    opacity: 0;
+    transform-origin: 0px 0px;
+    transform: scaleY(0.1);
+    transition: opacity 0.25s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   EXPRESSION STATES (ONLY TWO CAPSULE EYES, NO EYEBROWS, NO MOUTH)
+   ========================================================================== */
+
+/* 1. IDLE / NORMAL */
+ai-orb-mascot.orb-expr-idle .ai-orb-eye-left,
+ai-orb-mascot[data-expression="idle"] .ai-orb-eye-left {
+    transform: translate(0, 0) rotate(0deg) scale(1, 1);
+}
+ai-orb-mascot.orb-expr-idle .ai-orb-eye-right,
+ai-orb-mascot[data-expression="idle"] .ai-orb-eye-right {
+    transform: translate(0, 0) rotate(0deg) scale(1, 1);
+}
+
+/* Organic Blinking for Idle State */
+ai-orb-mascot.orb-is-blinking .ai-orb-capsule,
+ai-orb-mascot.orb-is-blinking .ai-orb-sparkle,
+ai-orb-mascot.orb-is-blinking .ai-orb-sparkle-micro {
+    transform: scaleY(0.06);
+    opacity: 0.1;
+    transition: transform 0.12s ease-in, opacity 0.12s ease-in;
+}
+
+/* 2. LOOKING_LEFT (Upward Curious 3D Spherical Glance) */
+ai-orb-mascot.orb-expr-looking-left .ai-orb-face,
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-face {
+    transform: translate(-18px, -8px);
+}
+ai-orb-mascot.orb-expr-looking-left .ai-orb-eye-left,
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-left {
+    transform: translate(0px, -2px) rotate(-3deg) scale(0.88, 0.98);
+}
+ai-orb-mascot.orb-expr-looking-left .ai-orb-eye-right,
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-right {
+    transform: translate(0px, -2px) rotate(-1deg) scale(0.96, 1);
+}
+
+/* 3. LOOKING_RIGHT (Silky-Smooth 3D Spherical Glance) */
+ai-orb-mascot.orb-expr-looking-right .ai-orb-face,
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-face {
+    transform: translate(18px, -1px);
+}
+ai-orb-mascot.orb-expr-looking-right .ai-orb-eye-left,
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-left {
+    transform: rotate(2deg) scale(0.96, 1);
+}
+ai-orb-mascot.orb-expr-looking-right .ai-orb-eye-right,
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-right {
+    transform: rotate(5deg) scale(0.88, 0.98);
+}
+
+/* 4. EXCITED */
+ai-orb-mascot.orb-expr-excited .ai-orb-group,
+ai-orb-mascot[data-expression="excited"] .ai-orb-group {
+    animation: aiOrbExcitedBounce 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
+}
+@keyframes aiOrbExcitedBounce {
+    0% { transform: translateY(0px) scale(1); }
+    100% { transform: translateY(-7px) scale(1.05); }
+}
+ai-orb-mascot.orb-expr-excited .ai-orb-eye-left,
+ai-orb-mascot[data-expression="excited"] .ai-orb-eye-left {
+    transform: translate(-3px, -7px) scale(1.18, 1.18) rotate(-4deg);
+}
+ai-orb-mascot.orb-expr-excited .ai-orb-eye-right,
+ai-orb-mascot[data-expression="excited"] .ai-orb-eye-right {
+    transform: translate(3px, -7px) scale(1.18, 1.18) rotate(4deg);
+}
+ai-orb-mascot.orb-expr-excited .ai-orb-sparkle,
+ai-orb-mascot[data-expression="excited"] .ai-orb-sparkle {
+    transform: scale(1.35);
+    filter: drop-shadow(0 0 3px #ffffff);
+}
+
+/* 5. HAPPY (Smiling Upward Arches ^ ^, NO Mouth) */
+ai-orb-mascot.orb-expr-happy .ai-orb-group,
+ai-orb-mascot[data-expression="happy"] .ai-orb-group {
+    animation: aiOrbHappyFloat 2.8s ease-in-out infinite alternate;
+}
+@keyframes aiOrbHappyFloat {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(1.5deg); }
+    100% { transform: translateY(-2px) rotate(-1.5deg); }
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-capsule,
+ai-orb-mascot[data-expression="happy"] .ai-orb-capsule {
+    opacity: 0;
+    transform: scaleY(0.1);
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-sparkle,
+ai-orb-mascot.orb-expr-happy .ai-orb-sparkle-micro,
+ai-orb-mascot[data-expression="happy"] .ai-orb-sparkle,
+ai-orb-mascot[data-expression="happy"] .ai-orb-sparkle-micro {
+    opacity: 0;
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-arch,
+ai-orb-mascot[data-expression="happy"] .ai-orb-arch {
+    opacity: 1;
+    transform: scale(1.1) translateY(-4px);
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-eye-left,
+ai-orb-mascot[data-expression="happy"] .ai-orb-eye-left {
+    transform: translate(-1px, -4px);
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-eye-right,
+ai-orb-mascot[data-expression="happy"] .ai-orb-eye-right {
+    transform: translate(1px, -4px);
+}
+
+/* 6. ANGRY (Sharp Inward Tilt \ /, Narrower Eyes, NO Eyebrows, NO Mouth) */
+ai-orb-mascot.orb-expr-angry .ai-orb-eye-left,
+ai-orb-mascot[data-expression="angry"] .ai-orb-eye-left {
+    transform: translate(2px, -1px) rotate(17deg) scale(0.85, 1.05);
+}
+ai-orb-mascot.orb-expr-angry .ai-orb-eye-right,
+ai-orb-mascot[data-expression="angry"] .ai-orb-eye-right {
+    transform: translate(-2px, -1px) rotate(-17deg) scale(0.85, 1.05);
+}
+ai-orb-mascot.orb-expr-angry .ai-orb-capsule,
+ai-orb-mascot[data-expression="angry"] .ai-orb-capsule {
+    filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.45));
+}
+
+/* 7. POUT / UPSET (Downward Droop, Outward Tilt / \) */
+ai-orb-mascot.orb-expr-pout .ai-orb-eye-left,
+ai-orb-mascot[data-expression="pout"] .ai-orb-eye-left {
+    transform: translate(1px, 8px) rotate(-13deg) scale(0.86, 0.86);
+}
+ai-orb-mascot.orb-expr-pout .ai-orb-eye-right,
+ai-orb-mascot[data-expression="pout"] .ai-orb-eye-right {
+    transform: translate(-1px, 8px) rotate(13deg) scale(0.86, 0.86);
+}
+ai-orb-mascot.orb-expr-pout .ai-orb-group,
+ai-orb-mascot[data-expression="pout"] .ai-orb-group {
+    animation: aiOrbPoutDrift 3.5s ease-in-out infinite;
+}
+@keyframes aiOrbPoutDrift {
+    0%, 100% { transform: translateY(3px) rotate(0deg); }
+    50% { transform: translateY(6px) rotate(-1.5deg); }
+}
+
+/* 8. SURPRISED (Wide Alert Capsules, Increased Spacing) */
+ai-orb-mascot.orb-expr-surprised .ai-orb-group,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-group {
+    transform: translateY(-4px) scale(1.04);
+}
+ai-orb-mascot.orb-expr-surprised .ai-orb-eye-left,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-eye-left {
+    transform: translate(-5px, -3px) scale(1.3, 1.25);
+}
+ai-orb-mascot.orb-expr-surprised .ai-orb-eye-right,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-eye-right {
+    transform: translate(5px, -3px) scale(1.3, 1.25);
+}
+ai-orb-mascot.orb-expr-surprised .ai-orb-sparkle,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-sparkle {
+    transform: scale(1.4);
+}
+
+/* 9. BLINK (Smooth Vertical Collapse) */
+ai-orb-mascot.orb-expr-blink .ai-orb-capsule,
+ai-orb-mascot.orb-expr-blink .ai-orb-sparkle,
+ai-orb-mascot.orb-expr-blink .ai-orb-sparkle-micro,
+ai-orb-mascot[data-expression="blink"] .ai-orb-capsule,
+ai-orb-mascot[data-expression="blink"] .ai-orb-sparkle,
+ai-orb-mascot[data-expression="blink"] .ai-orb-sparkle-micro {
+    transform: scaleY(0.06);
+    opacity: 0.1;
+}
+
+/* 10. THINKING (Subtle Processing Eye Drift & Micro-Blinks) */
+ai-orb-mascot.orb-expr-thinking .ai-orb-face,
+ai-orb-mascot[data-expression="thinking"] .ai-orb-face {
+    animation: aiOrbThinkingGaze 3.2s ease-in-out infinite;
+}
+@keyframes aiOrbThinkingGaze {
     0%, 100% {
-        transform: translateY(0px) rotate(0deg);
+        transform: translate(-8px, -6px) scale(0.96);
     }
-    30% {
-        transform: translateY(-2.5px) rotate(-1.5deg);
+    40% {
+        transform: translate(-6px, -7px) scale(0.96);
     }
-    70% {
-        transform: translateY(1.5px) rotate(1.2deg);
+    55% {
+        transform: translate(7px, -4px) scale(0.98);
+    }
+    80% {
+        transform: translate(6px, -2px) scale(0.98);
+    }
+}
+ai-orb-mascot.orb-expr-thinking .ai-orb-eye-inner,
+ai-orb-mascot[data-expression="thinking"] .ai-orb-eye-inner {
+    animation: aiOrbThinkingBlink 3.2s ease-in-out infinite;
+}
+@keyframes aiOrbThinkingBlink {
+    0%, 75%, 83%, 100% {
+        transform: scaleY(1);
+    }
+    79% {
+        transform: scaleY(0.08); /* Thoughtful blink */
     }
 }
 
-/* Grok Eye Gaze Movement (Looking around naturally) */
-@keyframes grokEyeGaze {
-    0%, 18% {
-        transform: translate(0, 0);
-    }
-    24%, 44% {
-        transform: translate(-7px, -4px); /* Glance up-left */
-    }
-    50%, 68% {
-        transform: translate(6px, -3px); /* Glance up-right */
-    }
-    74%, 86% {
-        transform: translate(-2px, 4px); /* Glance down */
-    }
-    92%, 100% {
-        transform: translate(0, 0);
-    }
+/* 11. RESPONDING (Attentive Pulse & Eye Widening) */
+ai-orb-mascot.orb-expr-responding .ai-orb-group,
+ai-orb-mascot[data-expression="responding"] .ai-orb-group {
+    animation: aiOrbRespondingPulse 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+@keyframes aiOrbRespondingPulse {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-6px) scale(1.05); }
+    100% { transform: translateY(0) scale(1); }
+}
+ai-orb-mascot.orb-expr-responding .ai-orb-eye-left,
+ai-orb-mascot[data-expression="responding"] .ai-orb-eye-left {
+    transform: translate(-1px, -3px) scale(1.12, 1.12);
+}
+ai-orb-mascot.orb-expr-responding .ai-orb-eye-right,
+ai-orb-mascot[data-expression="responding"] .ai-orb-eye-right {
+    transform: translate(1px, -3px) scale(1.12, 1.12);
 }
 
-/* Grok Eye Blinking Animation */
-@keyframes grokEyeBlinkLeft {
-    0%, 28%, 32%, 58%, 62%, 66%, 100% {
-        transform: scale(1, 1);
-    }
-    30% {
-        transform: scale(1, 0.08); /* Natural blink */
-    }
-    60% {
-        transform: scale(1, 0.08); /* Double blink 1 */
-    }
-    64% {
-        transform: scale(1, 0.08); /* Double blink 2 */
-    }
+/* 12. ERROR / SAD (Downward Droop, Slow Heavy Drift) */
+ai-orb-mascot.orb-expr-error .ai-orb-eye-left,
+ai-orb-mascot[data-expression="error"] .ai-orb-eye-left {
+    transform: translate(0, 10px) rotate(-12deg) scale(0.85, 0.85);
+}
+ai-orb-mascot.orb-expr-error .ai-orb-eye-right,
+ai-orb-mascot[data-expression="error"] .ai-orb-eye-right {
+    transform: translate(0, 10px) rotate(12deg) scale(0.85, 0.85);
+}
+ai-orb-mascot.orb-expr-error .ai-orb-group,
+ai-orb-mascot[data-expression="error"] .ai-orb-group {
+    animation: aiOrbErrorDrift 3.8s ease-in-out infinite;
+}
+@keyframes aiOrbErrorDrift {
+    0%, 100% { transform: translateY(4px) rotate(0deg); }
+    50% { transform: translateY(8px) rotate(-1deg); }
 }
 
-@keyframes grokEyeBlinkRight {
-    0%, 28%, 32%, 58%, 62%, 66%, 100% {
-        transform: scale(1, 1);
-    }
-    30% {
-        transform: scale(1, 0.08);
-    }
-    60% {
-        transform: scale(1, 0.08);
-    }
-    64% {
-        transform: scale(1, 0.08);
-    }
+/* ==========================================================================
+   SMART PROACTIVE GREETING SPEECH BUBBLE (IDLE TRIGGER)
+   Appears dynamically above the AI Orb Mascot when user stays idle for 6s
+   without scrolling. Dismisses automatically on scroll or close button.
+   ========================================================================== */
+
+.ai-orb-speech-bubble {
+    position: fixed !important;
+    bottom: 88px !important;
+    right: 24px !important;
+    width: 290px !important;
+    max-width: calc(100vw - 32px) !important;
+    background: rgba(10, 16, 30, 0.94) !important;
+    border: 1px solid var(--accent-1, #00f2fe) !important;
+    border-radius: 18px !important;
+    padding: 14px 16px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 
+                0 0 20px var(--accent-glow, rgba(0, 242, 254, 0.35)) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    z-index: 10001 !important;
+    transform-origin: bottom right;
+    animation: orbBubblePopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+    cursor: default !important;
+    user-select: none !important;
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    color: var(--text-primary, #f8fafc) !important;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: block !important;
 }
 
-/* =======================================================
-   GROK BOT INTERACTIVE LOOK-AT-USER & BLINK ON HOVER
-   ======================================================= */
-#ai-chat-widget.chat-collapsed:hover .grok-bot-group,
-#ai-chat-widget.chat-collapsed:active .grok-bot-group,
-#ai-chat-widget.chat-collapsed.grok-hovered .grok-bot-group,
-.grok-bot-avatar:hover .grok-bot-group {
-    animation: grokTurnToUser 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+.ai-orb-speech-bubble.bubble-closing {
+    animation: orbBubblePopOut 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    pointer-events: none !important;
 }
 
-#ai-chat-widget.chat-collapsed:hover .grok-bot-eyes,
-#ai-chat-widget.chat-collapsed:active .grok-bot-eyes,
-#ai-chat-widget.chat-collapsed.grok-hovered .grok-bot-eyes,
-.grok-bot-avatar:hover .grok-bot-eyes {
-    animation: grokEyesLookAtUser 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
-}
-
-#ai-chat-widget.chat-collapsed:hover .grok-bot-eye-left,
-#ai-chat-widget.chat-collapsed:hover .grok-bot-eye-right,
-#ai-chat-widget.chat-collapsed:active .grok-bot-eye-left,
-#ai-chat-widget.chat-collapsed:active .grok-bot-eye-right,
-#ai-chat-widget.chat-collapsed.grok-hovered .grok-bot-eye-left,
-#ai-chat-widget.chat-collapsed.grok-hovered .grok-bot-eye-right,
-.grok-bot-avatar:hover .grok-bot-eye-left,
-.grok-bot-avatar:hover .grok-bot-eye-right {
-    animation: grokHoverBlink 1.4s ease-in-out forwards !important;
-}
-
-#ai-chat-widget.chat-collapsed:hover .grok-eye-sparkle,
-#ai-chat-widget.chat-collapsed:active .grok-eye-sparkle,
-#ai-chat-widget.chat-collapsed.grok-hovered .grok-eye-sparkle,
-.grok-bot-avatar:hover .grok-eye-sparkle {
-    animation: grokSparkleGleam 1.4s ease-in-out infinite !important;
-}
-
-/* Head smoothly turns towards user */
-@keyframes grokTurnToUser {
+@keyframes orbBubblePopIn {
     0% {
-        transform: translateY(0) rotate(0deg) scale(1);
-    }
-    45% {
-        transform: translateY(-5px) rotate(-7deg) scale(1.06);
+        opacity: 0;
+        transform: translateY(12px) scale(0.85);
     }
     100% {
-        transform: translateY(-3px) rotate(-5deg) scale(1.05);
-    }
-}
-
-/* Eyes move forward to look straight into user's eyes */
-@keyframes grokEyesLookAtUser {
-    0% {
-        transform: translate(0, 0) scale(1);
-    }
-    30% {
-        transform: translate(-14px, 3px) scale(1.08);
-    }
-    100% {
-        transform: translate(-14px, 3px) scale(1.08);
-    }
-}
-
-/* Responsive blink upon locking gaze with user */
-@keyframes grokHoverBlink {
-    0%, 25% {
-        transform: scale(1, 1);
-    }
-    42% {
-        transform: scale(1, 0.08); /* curious friendly blink */
-    }
-    58%, 100% {
-        transform: scale(1, 1);
-    }
-}
-
-/* Sparkle in eyes gleams */
-@keyframes grokSparkleGleam {
-    0%, 100% {
-        opacity: 0.95;
-    }
-    50% {
         opacity: 1;
-        filter: drop-shadow(0 0 3px #ffffff);
+        transform: translateY(0) scale(1);
     }
 }
 
-/* Header Expanded States */
-.chat-expanded .grok-bot-head {
-    fill: url(#grokHead3DGrad);
+@keyframes orbBubblePopOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.9);
+    }
 }
-.chat-expanded .grok-bot-eye {
-    fill: url(#grokEye3DGrad);
+
+/* Arrow pointer pointing towards mascot */
+.ai-orb-bubble-arrow {
+    position: absolute !important;
+    bottom: -7px !important;
+    right: 36px !important;
+    width: 14px !important;
+    height: 14px !important;
+    background: rgba(10, 16, 30, 0.94) !important;
+    border-right: 1px solid var(--accent-1, #00f2fe) !important;
+    border-bottom: 1px solid var(--accent-1, #00f2fe) !important;
+    border-top: none !important;
+    border-left: none !important;
+    transform: rotate(45deg) !important;
+    pointer-events: none !important;
+    z-index: 10002 !important;
+}
+
+/* Header badge & waving hand */
+.ai-orb-bubble-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 6px !important;
+}
+
+.ai-orb-bubble-badge-wrap {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.ai-orb-bubble-badge {
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    padding: 2px 8px !important;
+    border-radius: 999px !important;
+    background: rgba(var(--accent-rgb, 0, 242, 254), 0.16) !important;
+    color: var(--accent-1, #00f2fe) !important;
+    border: 1px solid rgba(var(--accent-rgb, 0, 242, 254), 0.35) !important;
+}
+
+.ai-orb-bubble-wave {
+    display: inline-flex;
+    align-items: center;
+    color: var(--accent-1, #00f2fe);
+    filter: drop-shadow(0 0 4px var(--accent-glow, rgba(0, 242, 254, 0.45)));
+}
+
+/* --- Animated bubble icons (replace emoji) --- */
+.orb-ico { display: block; flex-shrink: 0; overflow: visible; }
+
+.orb-ico-sparkle path { fill: currentColor; transform-box: fill-box; transform-origin: center; }
+.orb-ico-sparkle .sp-big   { animation: orbSparkBig 2.4s ease-in-out infinite; }
+.orb-ico-sparkle .sp-small { animation: orbSparkSmall 2.4s ease-in-out infinite; opacity: 0.8; }
+
+@keyframes orbSparkBig {
+    0%, 100% { transform: scale(0.85) rotate(0deg); }
+    50%      { transform: scale(1.08) rotate(45deg); }
+}
+@keyframes orbSparkSmall {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    35%      { transform: scale(0.3); opacity: 0.2; }
+    60%      { transform: scale(1.15); opacity: 1; }
+}
+
+.orb-ico-layers path,
+.orb-ico-chat .ch-bubble {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.orb-ico-layers .ly-1 { fill: currentColor; fill-opacity: 0.18; animation: orbLayerFloat 2.2s ease-in-out infinite; }
+.orb-ico-layers .ly-2 { animation: orbLayerFloat 2.2s ease-in-out infinite 0.15s; opacity: 0.8; }
+.orb-ico-layers .ly-3 { animation: orbLayerFloat 2.2s ease-in-out infinite 0.3s; opacity: 0.6; }
+@keyframes orbLayerFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-1.2px); }
+}
+
+.orb-ico-chat .ch-dot { fill: currentColor; animation: orbTyping 1.2s ease-in-out infinite; }
+.orb-ico-chat .ch-dot:nth-of-type(2) { animation-delay: 0.15s; }
+.orb-ico-chat .ch-dot:nth-of-type(3) { animation-delay: 0.3s; }
+@keyframes orbTyping {
+    0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+    30%           { opacity: 1;    transform: translateY(-1px); }
+}
+
+.ai-orb-bubble-btn:hover .orb-ico-layers .ly { animation-duration: 1.1s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .orb-ico * { animation: none !important; }
+}
+
+.ai-orb-bubble-close {
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-secondary, #94a3b8) !important;
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    padding: 0 4px !important;
+    border-radius: 4px !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+.ai-orb-bubble-close:hover {
+    color: var(--text-primary, #ffffff) !important;
+    transform: scale(1.15) !important;
+}
+
+/* Bubble body text */
+.ai-orb-bubble-text {
+    font-size: 0.82rem !important;
+    line-height: 1.45 !important;
+    color: var(--text-primary, #f1f5f9) !important;
+    margin: 0 0 10px 0 !important;
+    font-weight: 500 !important;
+    min-height: 1.45em;
+}
+.ai-orb-bubble-text b {
+    font-weight: 700;
+    color: var(--accent-1, #00f2fe);
+}
+/* Typing indicator → message reveal */
+.ai-orb-bubble-text .orb-typing { display: none; gap: 4px; align-items: center; height: 1.45em; }
+.ai-orb-bubble-text .orb-typing i {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-1, #00f2fe);
+    animation: orbTyping 1s ease-in-out infinite;
+}
+.ai-orb-bubble-text .orb-typing i:nth-child(2) { animation-delay: 0.15s; }
+.ai-orb-bubble-text .orb-typing i:nth-child(3) { animation-delay: 0.3s; }
+.ai-orb-bubble-text.is-typing .orb-typing { display: inline-flex; }
+.ai-orb-bubble-text.is-typing .orb-msg { display: none; }
+.ai-orb-bubble-text .orb-msg { display: inline-block; animation: orbMsgIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes orbMsgIn {
+    from { opacity: 0; transform: translateY(4px); filter: blur(3px); }
+    to   { opacity: 1; transform: none; filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ai-orb-bubble-text .orb-msg, .ai-orb-bubble-text .orb-typing i { animation: none !important; }
+}
+
+/* Action button chips */
+.ai-orb-bubble-actions {
+    display: flex !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+}
+
+.ai-orb-bubble-btn {
+    flex: 1 1 auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding: 6px 10px !important;
+    border-radius: 10px !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: var(--text-primary, #f8fafc) !important;
+}
+
+.ai-orb-bubble-btn:hover {
+    background: rgba(var(--accent-rgb, 0, 242, 254), 0.2) !important;
+    border-color: var(--accent-1, #00f2fe) !important;
+    color: var(--accent-1, #00f2fe) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px var(--accent-glow, rgba(0, 242, 254, 0.25)) !important;
+}
+
+.ai-orb-bubble-btn-primary {
+    background: var(--gradient-accent, linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)) !important;
+    color: var(--accent-active-color, #0b1120) !important;
+    border: none !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 10px var(--accent-glow, rgba(0, 242, 254, 0.3)) !important;
+}
+
+.ai-orb-bubble-btn-primary:hover {
+    filter: brightness(1.1) !important;
+    transform: translateY(-1px) !important;
+    color: var(--accent-active-color, #0b1120) !important;
+    box-shadow: 0 4px 14px var(--accent-glow, rgba(0, 242, 254, 0.45)) !important;
+}
+
+/* --- Theme Adaptations for Speech Bubble --- */
+[data-theme="cyberpunk"] .ai-orb-speech-bubble {
+    background: rgba(24, 4, 14, 0.95) !important;
+    border-color: var(--accent-1, #f43f5e) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 22px rgba(244, 63, 94, 0.4) !important;
+}
+[data-theme="cyberpunk"] .ai-orb-bubble-arrow {
+    background: rgba(24, 4, 14, 0.95) !important;
+    border-color: var(--accent-1, #f43f5e) !important;
+}
+
+[data-theme="god-mode"] .ai-orb-speech-bubble {
+    background: rgba(2, 18, 6, 0.96) !important;
+    border-color: #00ff00 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 255, 0, 0.4) !important;
+}
+[data-theme="god-mode"] .ai-orb-bubble-arrow {
+    background: rgba(2, 18, 6, 0.96) !important;
+    border-color: #00ff00 !important;
+}
+
+[data-theme="light"] .ai-orb-speech-bubble {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18), 0 0 20px rgba(37, 99, 235, 0.25) !important;
+    color: #0f172a !important;
+}
+[data-theme="light"] .ai-orb-bubble-arrow {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: #2563eb !important;
+}
+[data-theme="light"] .ai-orb-bubble-text {
+    color: #1e293b !important;
+}
+[data-theme="light"] .ai-orb-bubble-btn {
+    background: rgba(15, 23, 42, 0.05) !important;
+    border-color: rgba(15, 23, 42, 0.15) !important;
+    color: #0f172a !important;
+}
+
+/* --- Mobile Responsiveness (max 768px) --- */
+@media (max-width: 768px) {
+    .ai-orb-speech-bubble {
+        bottom: 96px !important;
+        right: 16px !important;
+        width: 260px !important;
+        padding: 12px 14px !important;
+        border-radius: 16px !important;
+    }
+    .ai-orb-bubble-arrow {
+        right: 28px !important;
+    }
+    .ai-orb-bubble-text {
+        font-size: 0.78rem !important;
+        margin-bottom: 8px !important;
+    }
+    .ai-orb-bubble-btn {
+        padding: 5px 8px !important;
+        font-size: 0.68rem !important;
+    }
 }
 
 #chat-toggle-icon {
@@ -4731,12 +5266,13 @@ section {
         padding: 0 !important;
     }
 
-    #ai-chat-widget.chat-collapsed .grok-bot-avatar {
+    #ai-chat-widget.chat-collapsed .grok-bot-avatar,
+    #ai-chat-widget.chat-collapsed .ai-orb-avatar {
         display: inline-flex !important;
         width: 64px !important;
         height: 64px !important;
         margin: 0 auto !important;
-        filter: var(--grok-3d-drop-shadow) !important;
+        filter: drop-shadow(0 10px 22px var(--orb-shadow-color)) drop-shadow(0 0 16px rgba(0, 242, 254, 0.45)) !important;
     }
 
     /* Expanded: floating mobile panel anchored above bottom edge (Fixes Screenshot 3) */
@@ -4858,12 +5394,13 @@ section {
         padding: 0 !important;
     }
 
-    #ai-chat-widget.chat-collapsed .grok-bot-avatar {
+    #ai-chat-widget.chat-collapsed .grok-bot-avatar,
+    #ai-chat-widget.chat-collapsed .ai-orb-avatar {
         display: inline-flex !important;
         width: 64px !important;
         height: 64px !important;
         margin: 0 auto !important;
-        filter: var(--grok-3d-drop-shadow) !important;
+        filter: drop-shadow(0 10px 22px var(--orb-shadow-color)) drop-shadow(0 0 16px rgba(0, 242, 254, 0.45)) !important;
     }
 
     #ai-chat-widget.chat-collapsed .chat-header {
@@ -5500,17 +6037,89 @@ footer {
 /* Adjustments for the smaller widget context */
 .lb-content .radar-header {
     margin-bottom: 2rem;
-    gap: 1.5rem;
+    gap: 1rem;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     padding-bottom: 1.5rem;
     user-select: none;
 }
 
+.lb-content .radar-title-group {
+    flex-shrink: 0;
+}
+
 .lb-content .radar-title-group h3 {
-    font-size: 1.3rem;
-    letter-spacing: 0.05rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.03rem;
     color: #fff;
     text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+/* AI Leaderboard Title Telemetry Motion Icon */
+.lb-title-telemetry {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+    height: 18px;
+    width: 20px;
+    position: relative;
+    vertical-align: middle;
+    flex-shrink: 0;
+    margin-right: 2px;
+}
+
+.lb-title-telemetry .lb-title-bar {
+    display: block;
+    width: 3px;
+    background: linear-gradient(180deg, var(--accent-1, #00f2fe) 0%, var(--accent-2, #0284c7) 100%);
+    border-radius: 3px;
+    transform-origin: bottom;
+    box-shadow: 0 0 8px rgba(var(--accent-1-rgb, 0, 242, 254), 0.75), 0 0 12px rgba(var(--accent-1-rgb, 0, 242, 254), 0.3);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lb-title-telemetry .lb-tb-1 {
+    height: 8px;
+    animation: lbTitleWave1 1.25s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.lb-title-telemetry .lb-tb-2 {
+    height: 18px;
+    animation: lbTitleWave2 1.25s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite 0.18s;
+}
+
+.lb-title-telemetry .lb-tb-3 {
+    height: 11px;
+    animation: lbTitleWave3 1.25s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite 0.36s;
+}
+
+.lb-title-telemetry .lb-tb-4 {
+    height: 15px;
+    animation: lbTitleWave4 1.25s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite 0.12s;
+}
+
+@keyframes lbTitleWave1 {
+    0%, 100% { height: 6px; filter: brightness(0.9); }
+    50% { height: 16px; filter: brightness(1.3); box-shadow: 0 0 10px rgba(var(--accent-1-rgb, 0, 242, 254), 0.95); }
+}
+
+@keyframes lbTitleWave2 {
+    0%, 100% { height: 18px; filter: brightness(1.3); }
+    50% { height: 8px; filter: brightness(0.85); box-shadow: 0 0 5px rgba(var(--accent-1-rgb, 0, 242, 254), 0.5); }
+}
+
+@keyframes lbTitleWave3 {
+    0%, 100% { height: 10px; filter: brightness(0.95); }
+    50% { height: 17px; filter: brightness(1.35); box-shadow: 0 0 10px rgba(var(--accent-1-rgb, 0, 242, 254), 0.95); }
+}
+
+@keyframes lbTitleWave4 {
+    0%, 100% { height: 15px; filter: brightness(1.2); }
+    50% { height: 7px; filter: brightness(0.85); box-shadow: 0 0 5px rgba(var(--accent-1-rgb, 0, 242, 254), 0.5); }
 }
 
 .lb-content .radar-filters {
@@ -5644,9 +6253,9 @@ footer {
 }
 
 .radar-tab.active {
-    background: var(--accent-1);
-    color: #000;
-    box-shadow: 0 4px 12px rgba(0, 242, 254, 0.2);
+    background: var(--gradient-accent, var(--accent-1));
+    color: var(--accent-active-color, #000);
+    box-shadow: 0 4px 12px var(--accent-glow, rgba(0, 242, 254, 0.2));
 }
 
 /* Arena Sub-categories Navigation */
@@ -5696,10 +6305,10 @@ footer {
 }
 
 .radar-subtab.active {
-    background: rgba(var(--accent-rgb), 0.15);
+    background: rgba(var(--accent-rgb), 0.18);
     color: var(--accent-1);
     border-color: var(--accent-1);
-    box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.25);
+    box-shadow: 0 0 10px var(--accent-glow, rgba(var(--accent-rgb), 0.25));
     font-weight: 600;
 }
 
@@ -5823,9 +6432,9 @@ footer {
 
 /* Rank Specific Premium Gradients for Leaderboard */
 .rank-pill.rank-1 { 
-    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); 
-    color: #000; 
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+    background: var(--gradient-accent, linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)); 
+    color: var(--accent-active-color, #000); 
+    box-shadow: 0 0 20px var(--accent-glow, rgba(0, 242, 254, 0.3));
 }
 .rank-pill.rank-2 { 
     background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%); 
@@ -6792,6 +7401,17 @@ footer {
         font-size: 1.05rem !important;
     }
 
+    .lb-content .radar-title-group h3 .lb-title-telemetry {
+        height: 15px !important;
+        width: 17px !important;
+        gap: 2.2px !important;
+        margin-right: 2px !important;
+    }
+
+    .lb-content .radar-title-group h3 .lb-title-telemetry .lb-title-bar {
+        width: 2.5px !important;
+    }
+
     /* Mobile Close Button */
     .lb-mobile-close-btn {
         position: absolute !important;
@@ -6914,10 +7534,10 @@ footer {
     }
 
     .lb-content .radar-tab.active {
-        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
-        color: #000 !important;
+        background: var(--gradient-accent, linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)) !important;
+        color: var(--accent-active-color, #000) !important;
         font-weight: 700 !important;
-        box-shadow: 0 2px 10px rgba(0, 242, 254, 0.3) !important;
+        box-shadow: 0 2px 10px var(--accent-glow, rgba(0, 242, 254, 0.3)) !important;
     }
 
     /* Subcategory Pills */
@@ -6949,9 +7569,10 @@ footer {
     }
 
     .radar-subtab.active {
-        background: rgba(0, 242, 254, 0.16) !important;
-        border-color: rgba(0, 242, 254, 0.5) !important;
-        color: #00f2fe !important;
+        background: rgba(var(--accent-rgb), 0.18) !important;
+        border-color: var(--accent-1) !important;
+        color: var(--accent-1) !important;
+        box-shadow: 0 0 10px var(--accent-glow, rgba(var(--accent-rgb), 0.25)) !important;
         font-weight: 600 !important;
     }
 
@@ -7225,12 +7846,13 @@ footer {
         display: none !important;
     }
 
-    #ai-chat-widget.chat-collapsed .grok-bot-avatar {
+    #ai-chat-widget.chat-collapsed .grok-bot-avatar,
+    #ai-chat-widget.chat-collapsed .ai-orb-avatar {
         display: inline-flex !important;
         width: 64px !important;
         height: 64px !important;
         margin: 0 auto !important;
-        filter: var(--grok-3d-drop-shadow) !important;
+        filter: drop-shadow(0 10px 22px var(--orb-shadow-color)) drop-shadow(0 0 16px rgba(0, 242, 254, 0.45)) !important;
     }
 }
 
@@ -8008,12 +8630,13 @@ footer {
     }
     #ai-chat-widget.chat-collapsed .chat-header-title { display: none !important; }
     #ai-chat-widget.chat-collapsed .chat-header span i { display: none !important; }
-    #ai-chat-widget.chat-collapsed .grok-bot-avatar {
+    #ai-chat-widget.chat-collapsed .grok-bot-avatar,
+    #ai-chat-widget.chat-collapsed .ai-orb-avatar {
         display: inline-flex !important;
         width: 64px !important;
         height: 64px !important;
         margin: 0 auto !important;
-        filter: var(--grok-3d-drop-shadow) !important;
+        filter: drop-shadow(0 10px 22px var(--orb-shadow-color)) drop-shadow(0 0 16px rgba(0, 242, 254, 0.45)) !important;
     }
 
     /* System monitor already hidden on mobile via earlier rule */
@@ -8548,10 +9171,10 @@ footer {
 
 .arch-tab-btn.active {
     background: var(--accent-gradient, linear-gradient(135deg, #00f2fe, #4facfe));
-    color: #0b1120 !important;
+    color: var(--accent-active-color, #0b1120) !important;
     font-weight: 700;
-    border-color: rgba(0, 242, 254, 0.4);
-    box-shadow: 0 4px 14px rgba(0, 242, 254, 0.25);
+    border-color: var(--accent-1, rgba(0, 242, 254, 0.4));
+    box-shadow: 0 4px 14px var(--accent-glow, rgba(0, 242, 254, 0.25));
 }
 
 /* Pipeline Wrap & App Flow Header */
@@ -9672,8 +10295,14 @@ footer {
     backdrop-filter: blur(25px) !important;
 }
 
+[data-theme="light"] .lb-content .radar-title-group h3,
 [data-theme="light"] .radar-title-group h3 {
     color: #0f172a !important;
+}
+
+[data-theme="light"] .lb-title-telemetry .lb-title-bar {
+    background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.5), 0 0 10px rgba(37, 99, 235, 0.25) !important;
 }
 
 [data-theme="light"] #lb-expand-btn {
@@ -9852,7 +10481,8 @@ footer {
     display: none !important;
 }
 
-[data-theme="cyberpunk"] .lb-telemetry-bars .lb-bar {
+[data-theme="cyberpunk"] .lb-telemetry-bars .lb-bar,
+[data-theme="cyberpunk"] .lb-title-telemetry .lb-title-bar {
     background: linear-gradient(180deg, #ff1e56 0%, #f43f5e 50%, #be123c 100%) !important;
     box-shadow: 0 0 8px rgba(244, 63, 94, 0.9), 0 0 16px rgba(255, 30, 86, 0.5) !important;
 }
@@ -9879,7 +10509,8 @@ footer {
     display: none !important;
 }
 
-[data-theme="god-mode"] .lb-telemetry-bars .lb-bar {
+[data-theme="god-mode"] .lb-telemetry-bars .lb-bar,
+[data-theme="god-mode"] .lb-title-telemetry .lb-title-bar {
     background: linear-gradient(180deg, #00ff00 0%, #15803d 100%) !important;
     box-shadow: 0 0 8px rgba(0, 255, 0, 0.9), 0 0 16px rgba(0, 255, 0, 0.5) !important;
 }
@@ -10323,16 +10954,25 @@ footer {
 }
 
 /* ==========================================
-   CYBERPUNK & SMART DEPLOYMENT CARDS (OVERLAY BUTTON)
+   CYBERPUNK & SMART DEPLOYMENT CARDS (OVERLAY BUTTON & CLEAN DESIGN)
    ========================================== */
 .cyber-project-card {
     position: relative !important;
-    border: 1px solid rgba(0, 242, 254, 0.22) !important;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.55) !important;
     overflow: hidden !important;
-    background: var(--card-bg) !important;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.72) 0%, rgba(10, 15, 28, 0.88) 100%) !important;
+    backdrop-filter: blur(16px) !important;
     display: flex;
     flex-direction: column;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+}
+
+.cyber-project-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(var(--accent-rgb, 0, 242, 254), 0.38) !important;
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75), 0 0 25px rgba(var(--accent-rgb, 0, 242, 254), 0.12) !important;
 }
 
 .cyber-project-card::before {
@@ -10350,8 +10990,8 @@ footer {
 .preview-top-hud {
     position: absolute;
     top: 10px;
-    left: 12px;
-    right: 12px;
+    left: 10px;
+    right: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -10361,73 +11001,89 @@ footer {
 
 .hud-chip {
     font-family: 'Fira Code', monospace;
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 20px;
-    background: rgba(10, 15, 25, 0.82);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.67rem;
+    font-weight: 600;
+    padding: 3.5px 10px;
+    border-radius: 9999px;
+    background: rgba(10, 15, 25, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: #f1f5f9;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    letter-spacing: 0.2px;
 }
 
 .hud-chip.ssl {
     color: #10b981;
     border-color: rgba(16, 185, 129, 0.35);
+    background: rgba(6, 25, 18, 0.75);
 }
 
 .ping-dot-live {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: #10b981;
     box-shadow: 0 0 8px #10b981;
     animation: cyberPulseAnim 1.8s infinite;
 }
 
+/* Hover-Revealed Center Action (Clean Thumbnail on Idle) */
 .preview-center-action {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.32);
-    backdrop-filter: blur(1.5px);
+    background: rgba(5, 10, 20, 0.58);
+    backdrop-filter: blur(4px);
     z-index: 5;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.project-card:hover .preview-center-action,
+.project-preview-link:focus .preview-center-action,
+.project-preview-link:hover .preview-center-action {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 .cyber-overlay-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     font-family: 'Fira Code', monospace;
-    font-size: 0.78rem;
-    font-weight: 800;
+    font-size: 0.75rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    padding: 0.45rem 1.05rem;
-    border-radius: 6px;
-    background: #2563eb;
+    padding: 0.48rem 1.15rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--accent-1, #00f2fe) 0%, var(--accent-2, #0284c7) 100%);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 6px 20px rgba(var(--accent-rgb, 0, 242, 254), 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
 }
 
-.project-preview-link:hover .preview-center-action {
-    background: rgba(0, 0, 0, 0.12);
-    backdrop-filter: blur(0px);
+.cyber-overlay-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 10px 28px rgba(var(--accent-rgb, 0, 242, 254), 0.65);
+    filter: brightness(1.1);
 }
 
-.project-preview-link:hover .cyber-overlay-btn {
-    transform: scale(1.08) translateY(-2px);
-    box-shadow: 0 10px 28px rgba(37, 99, 235, 0.7);
-    background: #1d4ed8;
+.project-preview-link:hover .preview-center-action {
+    background: rgba(5, 10, 20, 0.62);
+    backdrop-filter: blur(5px);
 }
 
 .cyber-scanline {
@@ -10436,26 +11092,33 @@ footer {
     background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.25) 51%);
     background-size: 100% 4px;
     pointer-events: none;
-    opacity: 0.4;
+    opacity: 0.25;
     transition: opacity 0.3s ease;
     z-index: 4;
 }
 
 .project-card:hover .cyber-scanline {
-    opacity: 0.1;
+    opacity: 0.05;
 }
 
 .status-badge-advanced {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.25rem 0.8rem;
-    border-radius: 20px;
-    background: rgba(16, 185, 129, 0.15);
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2.5px 9px;
+    border-radius: 9999px;
+    background: rgba(16, 185, 129, 0.12);
     color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    line-height: 1.2;
+}
+
+.status-badge-advanced.ongoing-dev-badge {
+    background: rgba(56, 189, 248, 0.12);
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.28);
 }
 
 .live-pulse-dot {
@@ -10472,31 +11135,45 @@ footer {
     50% { opacity: 0.35; transform: scale(0.75); }
 }
 
+/* Modern Refined Tech Chips */
 .cyber-chip {
     font-family: 'Fira Code', monospace !important;
-    font-size: 0.72rem !important;
-    padding: 4px 8px !important;
-    border-radius: 4px !important;
-    background: rgba(0, 242, 254, 0.06) !important;
-    color: var(--accent-1) !important;
-    border: 1px solid rgba(0, 242, 254, 0.22) !important;
+    font-size: 0.69rem !important;
+    font-weight: 500 !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    color: #cbd5e1 !important;
+    border: 1px solid rgba(255, 255, 255, 0.09) !important;
     transition: all 0.2s ease !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 5px !important;
 }
 
+.cyber-chip i {
+    font-size: 0.7rem;
+    color: var(--accent-1);
+    opacity: 0.85;
+}
+
 .cyber-chip:hover {
     border-color: var(--accent-1) !important;
-    background: rgba(0, 242, 254, 0.15) !important;
+    color: #ffffff !important;
+    background: rgba(var(--accent-rgb, 0, 242, 254), 0.12) !important;
     transform: translateY(-1px);
 }
 
 /* Light Theme Overrides */
 [data-theme="light"] .cyber-project-card {
     background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="light"] .cyber-project-card:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.1), 0 0 20px rgba(59, 130, 246, 0.15) !important;
 }
 
 [data-theme="light"] .cyber-project-card::before {
@@ -10510,14 +11187,15 @@ footer {
 }
 
 [data-theme="light"] .cyber-chip {
-    background: #f1f5f9 !important;
-    color: #1e40af !important;
-    border: 1px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border: 1px solid #e2e8f0 !important;
 }
 
 [data-theme="light"] .cyber-chip:hover {
-    background: #e2e8f0 !important;
+    background: #f1f5f9 !important;
     border-color: #2563eb !important;
+    color: #1d4ed8 !important;
 }
 
 /* Cyberpunk Theme Overrides */
@@ -10529,6 +11207,46 @@ footer {
 [data-theme="cyberpunk"] .project-preview-link:hover .cyber-overlay-btn {
     background: #e11d48 !important;
     box-shadow: 0 8px 25px rgba(244, 63, 94, 0.8) !important;
+}
+
+/* Cyberpunk Active Tabs & Buttons (Desktop, Tablet, Mobile) */
+[data-theme="cyberpunk"] .arch-unified-filter-btn.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
+}
+
+[data-theme="cyberpunk"] .arch-tab-btn.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    border-color: #f43f5e !important;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important;
+}
+
+[data-theme="cyberpunk"] .radar-tab.active,
+[data-theme="cyberpunk"] .lb-content .radar-tab.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
+}
+
+[data-theme="cyberpunk"] .radar-subtab.active {
+    background: rgba(244, 63, 94, 0.2) !important;
+    border-color: #f43f5e !important;
+    color: #f43f5e !important;
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.35) !important;
+}
+
+[data-theme="cyberpunk"] .rank-pill.rank-1 {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.5) !important;
+}
+
+[data-theme="cyberpunk"] .status-badge-advanced.blueprint-badge {
+    background: rgba(244, 63, 94, 0.15) !important;
+    color: #f43f5e !important;
+    border-color: rgba(244, 63, 94, 0.4) !important;
 }
 
 /* Blueprint Badge Styling */
@@ -10551,6 +11269,40 @@ footer {
     background: #e0f2fe !important;
     color: #0284c7 !important;
     border-color: #7dd3fc !important;
+}
+
+/* God-Mode Active Tabs & Buttons (Desktop, Tablet, Mobile) */
+[data-theme="god-mode"] .arch-unified-filter-btn.active {
+    background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%) !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 14px rgba(0, 255, 0, 0.45) !important;
+}
+
+[data-theme="god-mode"] .arch-tab-btn.active {
+    background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%) !important;
+    color: #000000 !important;
+    border-color: #00ff00 !important;
+    box-shadow: 0 4px 14px rgba(0, 255, 0, 0.4) !important;
+}
+
+[data-theme="god-mode"] .radar-tab.active,
+[data-theme="god-mode"] .lb-content .radar-tab.active {
+    background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%) !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 14px rgba(0, 255, 0, 0.45) !important;
+}
+
+[data-theme="god-mode"] .radar-subtab.active {
+    background: rgba(0, 255, 0, 0.2) !important;
+    border-color: #00ff00 !important;
+    color: #00ff00 !important;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.35) !important;
+}
+
+[data-theme="god-mode"] .rank-pill.rank-1 {
+    background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%) !important;
+    color: #000000 !important;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5) !important;
 }
 
 /* Active Development Badge & Indicator */
@@ -10578,14 +11330,25 @@ footer {
 .active-dev-meta {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-family: 'Fira Code', monospace;
+    gap: 5px;
+    font-family: inherit;
     font-size: 0.72rem;
-    color: #38bdf8;
-    background: rgba(56, 189, 248, 0.08);
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px dashed rgba(56, 189, 248, 0.35);
+    font-weight: 500;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2.5px 9px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    line-height: 1.2;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.active-dev-meta:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
 }
 
 [data-theme="light"] .status-badge-advanced.ongoing-dev-badge {
@@ -10659,8 +11422,8 @@ footer {
 
 .arch-unified-filter-btn.active {
     background: var(--gradient-accent, linear-gradient(135deg, #00f2fe 0%, #4facfe 100%));
-    color: #0b0f19;
-    box-shadow: 0 4px 14px rgba(0, 242, 254, 0.35);
+    color: var(--accent-active-color, #0b0f19);
+    box-shadow: 0 4px 14px var(--accent-glow, rgba(0, 242, 254, 0.35));
     font-weight: 700;
 }
 
@@ -10676,7 +11439,7 @@ footer {
 
 .arch-unified-filter-btn.active .filter-count {
     background: rgba(11, 15, 25, 0.2);
-    color: #0b0f19;
+    color: var(--accent-active-color, #0b0f19);
 }
 
 .arch-unified-grid {
@@ -10819,13 +11582,29 @@ footer {
     color: #475569;
 }
 
+[data-theme="light"] .arch-unified-filter-btn .filter-count {
+    background: rgba(15, 23, 42, 0.08) !important;
+    color: #475569 !important;
+}
+
 [data-theme="light"] .arch-unified-filter-btn:hover {
     background: rgba(0, 0, 0, 0.05);
     color: #0f172a;
 }
 
 [data-theme="light"] .arch-unified-filter-btn.active {
-    color: #042f2e;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+}
+
+[data-theme="light"] .arch-unified-filter-btn.active * {
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .arch-unified-filter-btn.active .filter-count {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
 }
 
 [data-theme="light"] .arch-matrix-card {
@@ -11108,3 +11887,596 @@ footer {
         font-size: 0.68rem !important;
     }
 }
+
+/* ==========================================================
+   HERO CTA v2 — 1 primary + 1 secondary + quiet text links
+   (Replaces the old 4-button stack. Theme colors are inherited
+   from .primary-btn / .secondary-btn so every theme stays in sync.)
+   ========================================================== */
+.hero-cta-v2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    margin-top: 1.4rem;
+    position: relative;
+    z-index: 5;
+}
+
+
+.hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.hero-cta-row .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0.8rem 1.6rem;
+    min-height: 46px;
+    font-size: 0.85rem;
+    letter-spacing: 0.4px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.hero-cta-secondary .fa-whatsapp {
+    font-size: 1.05rem;
+}
+
+.hero-cta-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding-left: 2px;
+}
+
+.hero-text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary, #94a3b8);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-text-link:hover,
+.hero-text-link:focus-visible {
+    color: var(--accent-1);
+    border-bottom-color: currentColor;
+}
+
+.hero-link-sep {
+    color: var(--text-secondary, #94a3b8);
+    opacity: 0.5;
+}
+
+
+[data-theme="light"] .hero-text-link,
+[data-theme="light"] .hero-link-sep {
+    color: #475569;
+}
+
+[data-theme="light"] .hero-text-link:hover,
+[data-theme="light"] .hero-text-link:focus-visible {
+    color: #2563eb;
+}
+
+/* Terminal badge: borderless dual-strand ECG monitor sweep (theme colours) */
+.terminal-live-badge.is-pulse {
+    gap: 0 !important;
+    padding: 0 2px !important;
+    height: auto !important;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    --pulse-a: var(--accent-1);
+    --pulse-b: var(--accent-3);
+}
+
+.term-pulse {
+    display: block;
+    width: 64px;
+    height: 18px;
+    flex-shrink: 0;
+    overflow: visible;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+
+.term-pulse path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.term-pulse-a { stroke: var(--pulse-a); }
+.term-pulse-b { stroke: var(--pulse-b); }
+
+/* faint resting trace, like the phosphor grid of a monitor */
+.term-pulse-base.term-pulse-a { stroke-width: 1.2; opacity: 0.22; }
+.term-pulse-base.term-pulse-b { stroke-width: 0.8; opacity: 0.16; }
+
+/* bright beam that sweeps along the trace */
+.term-pulse-beam {
+    stroke-dasharray: 26 74;
+    animation: termPulseSweep 2.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.term-pulse-beam.term-pulse-a {
+    stroke-width: 1.9;
+    filter: drop-shadow(0 0 2.5px var(--pulse-a)) drop-shadow(0 0 5px var(--pulse-a));
+}
+
+.term-pulse-beam.term-pulse-b {
+    stroke-width: 1.05;
+    animation-delay: -0.14s;
+    filter: drop-shadow(0 0 2px var(--pulse-b));
+}
+
+@keyframes termPulseSweep {
+    0%   { stroke-dashoffset: 0;    opacity: 0.4; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { stroke-dashoffset: -100; opacity: 0.4; }
+}
+
+/* Cyberpunk: rose + gold (theme gradient pair) instead of two pinks */
+[data-theme="cyberpunk"] .terminal-live-badge.is-pulse { --pulse-b: var(--accent-2); }
+
+/* Light theme: royal blue + cyan, softer glow on white */
+[data-theme="light"] .terminal-live-badge.is-pulse { --pulse-b: #06b6d4; }
+[data-theme="light"] .term-pulse-base.term-pulse-a { opacity: 0.18; }
+[data-theme="light"] .term-pulse-beam.term-pulse-a { filter: drop-shadow(0 0 1.5px rgba(37, 99, 235, 0.55)); }
+[data-theme="light"] .term-pulse-beam.term-pulse-b { filter: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .term-pulse-beam { animation: none; stroke-dasharray: none; }
+}
+
+@media (max-width: 768px) {
+    .hero-cta-v2 {
+        align-items: stretch;
+        width: 100%;
+        margin-top: 1.2rem;
+        margin-bottom: 1.2rem;
+    }
+
+
+    .hero-cta-row {
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+
+    .hero-cta-row .btn {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 0.75rem 0.6rem;
+        font-size: 0.78rem;
+    }
+
+    .hero-cta-links {
+        justify-content: center;
+        padding-left: 0;
+    }
+
+    .hero-text-link {
+        min-height: 36px;
+    }
+}
+
+/* ==========================================================
+   SYS_MONITOR animated gauge icon
+   Needle swings like a live load meter; arc fill follows the needle.
+   Uses currentColor -> follows .mon-title colour in every theme.
+   ========================================================== */
+.mon-gauge-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    overflow: visible;
+    color: inherit;
+    filter: drop-shadow(0 0 3px rgba(var(--accent-1-rgb), 0.45));
+}
+
+.mon-gauge-icon path,
+.mon-gauge-icon line {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+}
+
+.mon-gauge-icon .g-track { stroke-width: 1.8; opacity: 0.22; }
+
+.mon-gauge-icon .g-fill {
+    stroke-width: 1.8;
+    stroke-dasharray: 100 100;
+    animation: gaugeFill 3.2s ease-in-out infinite;
+}
+
+.mon-gauge-icon .g-tick { stroke-width: 1; opacity: 0.45; }
+
+.mon-gauge-icon .g-needle {
+    stroke-width: 1.5;
+    transform-box: view-box;
+    transform-origin: 8px 11px;
+    animation: gaugeNeedle 3.2s ease-in-out infinite;
+}
+
+.mon-gauge-icon .g-hub { fill: currentColor; }
+
+/* needle angle a (deg) -> fill offset = 100 - (a + 90) / 180 * 100 */
+@keyframes gaugeNeedle {
+    0%, 100% { transform: rotate(-65deg); }
+    22%      { transform: rotate(35deg); }
+    40%      { transform: rotate(-10deg); }
+    62%      { transform: rotate(55deg); }
+    82%      { transform: rotate(-40deg); }
+}
+
+@keyframes gaugeFill {
+    0%, 100% { stroke-dashoffset: 86.1; }
+    22%      { stroke-dashoffset: 30.6; }
+    40%      { stroke-dashoffset: 55.6; }
+    62%      { stroke-dashoffset: 19.4; }
+    82%      { stroke-dashoffset: 72.2; }
+}
+
+.sys-monitor:hover .mon-gauge-icon .g-needle,
+.sys-monitor:hover .mon-gauge-icon .g-fill { animation-duration: 1.8s; }
+
+[data-theme="light"] .mon-gauge-icon { filter: drop-shadow(0 0 2px rgba(37, 99, 235, 0.35)); }
+
+@media (prefers-reduced-motion: reduce) {
+    .mon-gauge-icon .g-needle { animation: none; transform: rotate(20deg); }
+    .mon-gauge-icon .g-fill { animation: none; stroke-dashoffset: 38.9; }
+}
+
+/* ==========================================================
+   ASK MY AI PILL — Borderless frosted glass (desktop)
+   Replaces the hard 1px accent border with a glass edge
+   (inset highlight), soft depth shadow and a periodic sheen.
+   ========================================================== */
+@media (min-width: 861px) {
+    html:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
+        --pill-glass: rgba(15, 23, 42, 0.55);
+        --pill-edge: rgba(255, 255, 255, 0.14);
+        --pill-depth: rgba(0, 0, 0, 0.45);
+        position: fixed;
+        isolation: isolate;
+        border: none !important;
+        background:
+            linear-gradient(135deg, rgba(var(--accent-1-rgb), 0.10), transparent 60%),
+            var(--pill-glass) !important;
+        backdrop-filter: blur(18px) saturate(170%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+        box-shadow:
+            inset 0 1px 0 var(--pill-edge),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+            0 10px 28px -6px var(--pill-depth),
+            0 6px 22px -10px rgba(var(--accent-1-rgb), 0.45) !important;
+    }
+    /* Periodic light sweep across the glass */
+    html:is(*, [data-theme]) #ai-chat-widget.chat-collapsed::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: -1;
+        background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.16) 50%, transparent 65%) no-repeat;
+        background-size: 250% 100%;
+        background-position: 150% 0;
+        animation: pillSheen 5.5s ease-in-out infinite;
+    }
+    html:is(*, [data-theme]) #ai-chat-widget.chat-collapsed:hover {
+        border: none !important;
+        transform: translateY(-2px);
+        box-shadow:
+            inset 0 1px 0 var(--pill-edge),
+            inset 0 0 0 1px rgba(var(--accent-1-rgb), 0.18),
+            0 14px 34px -8px var(--pill-depth),
+            0 10px 30px -10px rgba(var(--accent-1-rgb), 0.65) !important;
+    }
+    html:is(*, [data-theme]) #ai-chat-widget.chat-collapsed:hover::before { animation-duration: 1.6s; }
+
+    html[data-theme="light"]:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
+        --pill-glass: rgba(255, 255, 255, 0.62);
+        --pill-edge: rgba(255, 255, 255, 0.95);
+        --pill-depth: rgba(15, 23, 42, 0.16);
+    }
+    html[data-theme="light"] #ai-chat-widget.chat-collapsed::before {
+        background-image: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%);
+    }
+    html[data-theme="cyberpunk"]:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
+        --pill-glass: rgba(30, 4, 16, 0.55);
+        --pill-depth: rgba(0, 0, 0, 0.6);
+    }
+    html[data-theme="god-mode"]:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
+        --pill-glass: rgba(0, 20, 4, 0.58);
+        --pill-depth: rgba(0, 0, 0, 0.7);
+    }
+}
+@keyframes pillSheen {
+    0%, 55% { background-position: 150% 0; }
+    85%, 100% { background-position: -50% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html:is(*, [data-theme]) #ai-chat-widget.chat-collapsed::before { animation: none; }
+}
+
+/* ==========================================================
+   CHAT WELCOME — intro, quick-action chips, reply actions
+   ========================================================== */
+.chat-welcome-title {
+    display: flex; align-items: center; gap: 7px;
+    font-weight: 700; font-size: 0.86rem; letter-spacing: 0.1px;
+    color: var(--text-primary);
+}
+.chat-welcome-title .orb-ico { color: var(--accent-1); flex-shrink: 0; }
+.chat-welcome-sub {
+    display: block; margin-top: 3px;
+    font-size: 0.76rem; line-height: 1.4;
+    color: var(--text-secondary, #94a3b8);
+}
+.smart-btn-container { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.smart-btn { justify-content: flex-start; padding: 8px 11px; border-radius: 12px; font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
+.smart-btn .chip-ico {
+    width: 15px; height: 15px; flex-shrink: 0;
+    fill: none; stroke: var(--accent-1); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round; overflow: visible;
+    transition: stroke 0.2s ease;
+}
+.smart-btn:hover .chip-ico { stroke: #020617; }
+.smart-btn .chip-ico .ci-clasp { fill: var(--accent-1); }
+.smart-btn:hover .chip-ico .ci-clasp { fill: #020617; }
+/* user: head bobs */
+.ci-user .ci-head { transform-box: fill-box; transform-origin: center; animation: ciBob 2.6s ease-in-out infinite; }
+@keyframes ciBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.2px); } }
+/* layers: stagger float */
+.ci-layers .ly { animation: ciLayer 2.4s ease-in-out infinite; }
+.ci-layers .ly-2 { animation-delay: 0.2s; } .ci-layers .ly-3 { animation-delay: 0.4s; }
+@keyframes ciLayer { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-0.9px); opacity: 0.7; } }
+/* briefcase: lid tilt */
+.ci-brief .ci-case { transform-box: fill-box; transform-origin: bottom; animation: ciCase 3s ease-in-out infinite; }
+@keyframes ciCase { 0%, 70%, 100% { transform: scaleY(1); } 82% { transform: scaleY(1.07); } }
+/* phone: ring waves */
+.ci-phone .ci-handset { transform-box: fill-box; transform-origin: center; animation: ciRing 3s ease-in-out infinite; }
+.ci-phone .ci-wave { animation: ciWave 3s ease-in-out infinite; opacity: 0; }
+.ci-phone .ci-w2 { animation-delay: 0.15s; }
+@keyframes ciRing { 0%, 60%, 100% { transform: rotate(0); } 66% { transform: rotate(-9deg); } 72% { transform: rotate(8deg); } 78% { transform: rotate(-6deg); } 84% { transform: rotate(0); } }
+@keyframes ciWave { 0%, 60%, 100% { opacity: 0; } 70%, 82% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .smart-btn .chip-ico * { animation: none !important; } .ci-phone .ci-wave { opacity: 1; } }
+
+/* action buttons inside bot replies */
+.chat-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.chat-action {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 11px; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 600; text-decoration: none;
+    color: var(--accent-1);
+    background: rgba(var(--accent-1-rgb, 0, 242, 254), 0.1);
+    box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb, 0, 242, 254), 0.28);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.chat-action::after { content: "\2192"; transition: transform 0.2s ease; }
+.chat-action:hover { background: var(--accent-1); color: #020617; transform: translateY(-1px); }
+.chat-action:hover::after { transform: translateX(2px); }
+
+/* ==========================================================
+   GREETING TEXT MOTION — word-by-word blur-rise reveal,
+   then a gradient light sweep passes over the name.
+   ========================================================== */
+.ai-orb-bubble-text.orb-motion .w {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    filter: blur(6px);
+    animation: orbWordIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(0.28s + var(--i) * 0.11s);
+}
+.ai-orb-bubble-text.orb-motion .w-name {
+    font-weight: 700;
+    background: linear-gradient(100deg, var(--accent-1) 0%, var(--accent-1) 40%, #ffffff 50%, var(--accent-1) 60%, var(--accent-1) 100%);
+    background-size: 250% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation:
+        orbWordIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+        orbNameSweep 4.5s ease-in-out 1.3s infinite;
+    animation-delay: calc(0.28s + var(--i) * 0.11s), 1.3s;
+}
+[data-theme="light"] .ai-orb-bubble-text.orb-motion .w-name {
+    background-image: linear-gradient(100deg, #2563eb 0%, #2563eb 40%, #93c5fd 50%, #2563eb 60%, #2563eb 100%);
+}
+@keyframes orbWordIn {
+    to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes orbNameSweep {
+    0%, 55% { background-position: 100% 0; }
+    90%, 100% { background-position: 0% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ai-orb-bubble-text.orb-motion .w { animation: none !important; opacity: 1; transform: none; filter: none; }
+}
+
+/* ==========================================================
+   CHAT PANEL — modern professional redesign
+   Header with subtitle, calmer message bubbles, floating
+   composer, animated typing dots, scroll-edge fade.
+   ========================================================== */
+html #ai-chat-widget {
+    --chat-bot-bg: rgba(255, 255, 255, 0.055);
+    --chat-bot-edge: rgba(255, 255, 255, 0.07);
+    --chat-user-fg: #03111a;
+    --chat-composer-bg: rgba(255, 255, 255, 0.045);
+    --chat-composer-edge: rgba(255, 255, 255, 0.10);
+    --chat-sub: rgba(226, 232, 240, 0.55);
+    --chat-hair: rgba(255, 255, 255, 0.08);
+}
+html[data-theme="light"] #ai-chat-widget {
+    --chat-bot-bg: #f1f5f9;
+    --chat-bot-edge: rgba(15, 23, 42, 0.06);
+    --chat-user-fg: #ffffff;
+    --chat-composer-bg: #f8fafc;
+    --chat-composer-edge: rgba(15, 23, 42, 0.12);
+    --chat-sub: #64748b;
+    --chat-hair: rgba(15, 23, 42, 0.08);
+}
+html[data-theme="cyberpunk"] #ai-chat-widget { --chat-user-fg: #1a0610; --chat-bot-bg: rgba(255, 255, 255, 0.05); }
+html[data-theme="god-mode"] #ai-chat-widget { --chat-user-fg: #021206; }
+
+/* Header: title + subtitle (subtitle only when expanded) */
+#ai-chat-widget .chat-header-sub { display: none; }
+#ai-chat-widget.chat-collapsed .chat-header-text { display: contents; }
+#ai-chat-widget.chat-expanded .chat-header-text { display: flex; flex-direction: column; gap: 1px; line-height: 1.15; }
+#ai-chat-widget.chat-expanded .chat-header-sub {
+    display: block;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.2px;
+    color: var(--chat-sub);
+}
+html #ai-chat-widget.chat-expanded .chat-header {
+    background: linear-gradient(180deg, rgba(var(--accent-1-rgb), 0.10), transparent) !important;
+    border-bottom: 1px solid var(--chat-hair) !important;
+}
+html #ai-chat-widget.chat-expanded .chat-header-title { font-weight: 700 !important; font-size: 0.92rem !important; letter-spacing: 0.1px; }
+
+/* Body: soft fade at the scroll edges */
+html #ai-chat-widget.chat-expanded .chat-body {
+    padding: 18px 14px 10px !important;
+    gap: 12px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+}
+
+/* Messages */
+html #ai-chat-widget .message { font-size: 0.84rem; line-height: 1.55; padding: 10px 14px; max-width: 86%; }
+html #ai-chat-widget .bot-msg {
+    background: var(--chat-bot-bg);
+    border: none;
+    box-shadow: inset 0 0 0 1px var(--chat-bot-edge);
+    color: var(--text-primary);
+    border-radius: 4px 16px 16px 16px;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+html #ai-chat-widget .bot-msg strong { font-weight: 700; color: var(--text-primary); }
+html #ai-chat-widget .user-msg {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: var(--chat-user-fg);
+    font-weight: 600; font-size: 0.82rem;
+    border-radius: 16px 4px 16px 16px;
+    box-shadow: 0 6px 16px -6px rgba(var(--accent-1-rgb), 0.55);
+    animation: chatUserIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes chatUserIn { from { opacity: 0; transform: translate(10px, 6px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+/* Welcome card spans the full width and carries a faint accent glow */
+html #ai-chat-widget .chat-body > .bot-msg:first-child {
+    max-width: 100%;
+    padding: 14px;
+    background:
+        radial-gradient(120% 90% at 0% 0%, rgba(var(--accent-1-rgb), 0.12), transparent 60%),
+        var(--chat-bot-bg);
+}
+html #ai-chat-widget .chat-welcome-sub { color: var(--chat-sub); }
+
+/* Quick-action chips */
+html #ai-chat-widget .smart-btn-container { margin-top: 12px; padding-top: 0; }
+html #ai-chat-widget .smart-btn {
+    background: rgba(var(--accent-1-rgb), 0.07);
+    border: none;
+    box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), 0.22);
+    color: var(--text-primary);
+    border-radius: 11px;
+}
+html #ai-chat-widget .smart-btn:hover { background: var(--accent-1); box-shadow: 0 6px 16px -4px rgba(var(--accent-1-rgb), 0.5); color: var(--chat-user-fg) !important; }
+html #ai-chat-widget .smart-btn:hover .chip-ico { stroke: var(--chat-user-fg); }
+html #ai-chat-widget .smart-btn:hover .chip-ico .ci-clasp { fill: var(--chat-user-fg); }
+html #ai-chat-widget .smart-btn.is-used { opacity: 0.5; }
+
+/* Typing dots */
+.chat-dots { display: inline-flex; align-items: center; gap: 5px; height: 1.2em; padding: 2px 2px; }
+.chat-dots i {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-1);
+    animation: chatDot 1.1s ease-in-out infinite;
+}
+.chat-dots i:nth-child(2) { animation-delay: 0.15s; }
+.chat-dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes chatDot { 0%, 70%, 100% { opacity: 0.3; transform: translateY(0); } 35% { opacity: 1; transform: translateY(-3px); } }
+html #ai-chat-widget .typing-indicator { padding: 12px 16px; }
+
+/* Composer: one rounded field containing input, mic and send */
+html #ai-chat-widget.chat-expanded .chat-input-area {
+    margin: 0 12px 12px !important;
+    padding: 5px 5px 5px 14px !important;
+    gap: 4px !important;
+    border: none !important;
+    border-radius: 16px !important;
+    background: var(--chat-composer-bg) !important;
+    box-shadow: inset 0 0 0 1px var(--chat-composer-edge);
+    transition: box-shadow 0.25s ease;
+}
+html #ai-chat-widget.chat-expanded .chat-input-area:focus-within {
+    box-shadow: inset 0 0 0 1.5px var(--accent-1), 0 0 0 4px rgba(var(--accent-1-rgb), 0.14);
+}
+html #ai-chat-widget #chat-input {
+    background: transparent !important; border: none !important; box-shadow: none !important;
+    padding: 8px 0 !important; border-radius: 0;
+}
+html #ai-chat-widget #voice-btn {
+    width: 34px; height: 34px; padding: 0 !important; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--chat-sub) !important; transition: background 0.2s, color 0.2s;
+}
+html #ai-chat-widget #voice-btn:hover { background: rgba(var(--accent-1-rgb), 0.12); color: var(--accent-1) !important; }
+html #ai-chat-widget #chat-send {
+    width: 36px; height: 36px; padding: 0 !important; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--chat-user-fg);
+    box-shadow: 0 6px 14px -6px rgba(var(--accent-1-rgb), 0.6);
+}
+html #ai-chat-widget #chat-send:hover { transform: translateY(-1px) scale(1.04); box-shadow: 0 8px 18px -6px rgba(var(--accent-1-rgb), 0.75); }
+
+/* ==========================================================
+   CHAT CONTRAST FIX — explicit, readable text colours per theme
+   (overrides the older !important per-theme chip rules)
+   ========================================================== */
+html #ai-chat-widget { --chip-fg: #e8fbff; --chip-ico: var(--accent-1); --action-fg: var(--accent-1); }
+html[data-theme="light"] #ai-chat-widget { --chip-fg: #0f172a; --chip-ico: #2563eb; --action-fg: #1d4ed8; }
+html[data-theme="cyberpunk"] #ai-chat-widget { --chip-fg: #ffeab0; --chip-ico: #fbbf24; --action-fg: #fcd34d; --chat-sub: rgba(255, 226, 170, 0.72); }
+html[data-theme="god-mode"] #ai-chat-widget { --chip-fg: #c8ffd4; --chip-ico: #4ade80; --action-fg: #86efac; }
+
+html #ai-chat-widget .smart-btn {
+    background: rgba(var(--accent-1-rgb), 0.08) !important;
+    border: none !important;
+    box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), 0.28) !important;
+    color: var(--chip-fg) !important;
+}
+html #ai-chat-widget .smart-btn .chip-ico { stroke: var(--chip-ico); }
+html #ai-chat-widget .smart-btn .chip-ico .ci-clasp { fill: var(--chip-ico); }
+html #ai-chat-widget .smart-btn:hover {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2)) !important;
+    color: var(--chat-user-fg) !important;
+    box-shadow: 0 6px 16px -4px rgba(var(--accent-1-rgb), 0.55) !important;
+}
+html #ai-chat-widget .smart-btn:hover .chip-ico { stroke: var(--chat-user-fg); }
+html #ai-chat-widget .smart-btn:hover .chip-ico .ci-clasp { fill: var(--chat-user-fg); }
+html #ai-chat-widget .smart-btn.is-used { opacity: 0.78; }
+
+html #ai-chat-widget .chat-action { color: var(--action-fg); }
+html #ai-chat-widget .chat-action:hover { color: var(--chat-user-fg); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); }
+html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }

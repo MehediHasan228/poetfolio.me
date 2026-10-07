@@ -1498,23 +1498,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (chatWidget && chatHeader) {
+        // AI Orb Mascot Reference
+        const getMascot = () => document.getElementById('chat-mascot') || chatWidget.querySelector('ai-orb-mascot');
+
         chatHeader.addEventListener('click', () => {
             console.log("[AI_CHAT] Toggle Initiated via Header Click");
             toggleChat();
         });
 
-        // Interactive Grok Bot touch & hover feedback (looks directly at user)
+        // Interactive AI Orb Mascot touch & hover feedback
         chatWidget.addEventListener('mouseenter', () => {
             chatWidget.classList.add('grok-hovered');
+            const mascot = getMascot();
+            if (mascot && mascot.expression === 'idle') {
+                mascot.triggerReaction('excited', 1200);
+            }
         });
         chatWidget.addEventListener('mouseleave', () => {
             chatWidget.classList.remove('grok-hovered');
+            const mascot = getMascot();
+            if (mascot && mascot.expression === 'excited') {
+                mascot.setExpression('idle');
+            }
         });
         chatWidget.addEventListener('touchstart', () => {
             chatWidget.classList.add('grok-hovered');
+            const mascot = getMascot();
+            if (mascot && mascot.expression === 'idle') {
+                mascot.triggerReaction('excited', 1200);
+            }
         }, { passive: true });
         chatWidget.addEventListener('touchend', () => {
-            setTimeout(() => chatWidget.classList.remove('grok-hovered'), 1400);
+            setTimeout(() => {
+                chatWidget.classList.remove('grok-hovered');
+                const mascot = getMascot();
+                if (mascot && mascot.expression === 'excited') {
+                    mascot.setExpression('idle');
+                }
+            }, 1400);
         }, { passive: true });
 
         function toggleChat() {
@@ -1525,17 +1546,36 @@ document.addEventListener('DOMContentLoaded', () => {
             chatWidget.style.bottom = '';
             chatWidget.style.maxHeight = '';
             
+            const mascot = getMascot();
             const icon = document.getElementById('chat-toggle-icon');
             if (icon) {
                 if (chatWidget.classList.contains('chat-expanded')) {
                     icon.classList.remove('fa-chevron-up');
                     icon.classList.add('fa-chevron-down');
+                    
+                    // USER OPENS CHAT:
+                    // -> Blink
+                    // -> Slight excited expression
+                    // -> Tiny bounce
+                    // -> Return to normal
+                    if (mascot) {
+                        mascot.setExpression('blink');
+                        setTimeout(() => {
+                            if (chatWidget.classList.contains('chat-expanded')) {
+                                mascot.triggerReaction('excited', 1400);
+                            }
+                        }, 140);
+                    }
+
                     setTimeout(() => {
                         if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
                     }, 100);
                 } else {
                     icon.classList.remove('fa-chevron-down');
                     icon.classList.add('fa-chevron-up');
+                    if (mascot) {
+                        mascot.setExpression('idle');
+                    }
                 }
             }
             if (typeof playSound === 'function') playSound('click');
@@ -1569,6 +1609,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 voiceBtn.classList.add('mic-active');
                 chatInput.placeholder = "Listening... speak now";
                 chatInput.focus();
+                const mascot = getMascot();
+                if (mascot) mascot.setExpression('surprised');
                 if (typeof playSound === 'function') playSound('click');
             };
 
@@ -1588,6 +1630,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 isListening = false;
                 voiceBtn.classList.remove('mic-active');
                 chatInput.placeholder = "Type a query...";
+                const mascot = getMascot();
+                if (mascot) mascot.triggerReaction('error', 1800);
                 if (typeof playSound === 'function') playSound('error');
             };
 
@@ -1596,6 +1640,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 voiceBtn.classList.remove('mic-active');
                 chatInput.placeholder = "Type a query...";
                 chatInput.focus();
+                const mascot = getMascot();
+                if (mascot && mascot.expression === 'surprised') {
+                    mascot.setExpression('idle');
+                }
             };
         } else if (voiceBtn) {
             voiceBtn.style.display = 'none';
@@ -1614,24 +1662,72 @@ document.addEventListener('DOMContentLoaded', () => {
             return div;
         }
 
+        // Animated inline icons for the quick-action chips (colour = currentColor)
+        const CHIP_ICONS = {
+            user: '<svg class="chip-ico ci-user" viewBox="0 0 16 16" aria-hidden="true"><circle class="ci-head" cx="8" cy="5.2" r="2.6"/><path class="ci-body" d="M2.6 14c.6-3 2.7-4.6 5.4-4.6s4.8 1.6 5.4 4.6"/></svg>',
+            layers: '<svg class="chip-ico ci-layers" viewBox="0 0 16 16" aria-hidden="true"><path class="ly ly-3" d="M2 10.2 L8 13.4 L14 10.2"/><path class="ly ly-2" d="M2 7.6 L8 10.8 L14 7.6"/><path class="ly ly-1" d="M8 2.2 L14 5.2 L8 8.2 L2 5.2 Z"/></svg>',
+            briefcase: '<svg class="chip-ico ci-brief" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.6 4.2V3.1c0-.6.4-1 1-1h2.8c.6 0 1 .4 1 1v1.1"/><rect class="ci-case" x="1.8" y="4.2" width="12.4" height="8.6" rx="1.6"/><path d="M1.8 8h12.4"/><circle class="ci-clasp" cx="8" cy="8" r="0.9"/></svg>',
+            phone: '<svg class="chip-ico ci-phone" viewBox="0 0 16 16" aria-hidden="true"><path class="ci-handset" d="M3.2 2h2.4l1.1 3-1.5 1c.7 1.5 1.8 2.6 3.3 3.3l1-1.5 3 1.1v2.4c0 .7-.6 1.2-1.3 1.2C6.7 13.3 2.7 9.3 2 3.3 2 2.600 2.500 2 3.200 2z"/><path class="ci-wave ci-w1" d="M10 2.6c1.8.4 3 1.600 3.400 3.400"/><path class="ci-wave ci-w2" d="M9.800 4.800c.9.200 1.500.8 1.700 1.700"/></svg>'
+        };
+
+        // Rich, instant local replies (no network) so the quick actions always feel immediate
+        function chipReplies() {
+            const onHome = !!document.getElementById('projects');
+            const projectsHref = onHome ? '#projects' : (location.pathname.indexOf('/projects/') !== -1 ? './' : './index.html#projects');
+            const cvEl = document.getElementById('hero-link-cv');
+            const cvHref = cvEl ? cvEl.getAttribute('href') : ((location.pathname.indexOf('/projects/') !== -1 ? '../' : './') + 'uploads/Mehedi_Hasan_CV.pdf?v=2');
+            const wa = (msg) => 'https://wa.me/8801799447594?text=' + encodeURIComponent(msg);
+            const act = (href, label, ext) => `<a class="chat-action" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`;
+            return {
+                about: {
+                    q: 'Who is Mehedi?',
+                    a: `<strong>Mehedi Hasan</strong> — AI-Native Software Engineer.<br>He designs distributed systems (NestJS, Kafka, PostgreSQL) and autonomous AI agents (LangGraph, MCP, local LLMs) with 4+ years in production.<div class="chat-actions">${act(cvHref, 'Download CV')}${act(projectsHref, 'See his work')}</div>`
+                },
+                projects: {
+                    q: 'View Projects',
+                    a: `Featured systems:<br>• <strong>AI-Native NGO ERP</strong> — 85+ microservices<br>• <strong>HR &amp; Payroll</strong> — BD compliance suite<br>• <strong>Karbar ERP</strong> — VAT &amp; payroll<br>• <strong>Autonomous AI swarms</strong> — local LLM sandbox<div class="chat-actions">${act(projectsHref, 'Open Projects')}</div>`
+                },
+                hire: {
+                    q: 'Hire / Collaborate',
+                    a: `Open to <strong>freelance &amp; contract</strong> work: AI agents, ERP/enterprise systems, cloud &amp; automation.<br>The fastest way to start is a short brief — scope, timeline, budget.<div class="chat-actions">${act('#contact', 'Send a brief')}${act(wa('Hi Mehedi, I would like to discuss a project.'), 'WhatsApp', true)}</div>`
+                },
+                call: {
+                    q: 'Book a Call',
+                    a: `Happy to talk. Message on WhatsApp to pick a time that suits you.<div class="chat-actions">${act(wa('Hi Mehedi, I would like to book a call.'), 'Book on WhatsApp', true)}</div>`
+                }
+            };
+        }
+
         function createSmartButtons() {
             const container = document.createElement('div');
             container.className = 'smart-btn-container';
             const buttons = [
-                { text: "Who is Mehedi?", icon: "fa-user" },
-                { text: "Enterprise NGO ERP", icon: "fa-server" },
-                { text: "AI & Swarms", icon: "fa-brain" },
-                { text: "Contact Mehedi", icon: "fa-handshake" }
+                { key: 'about', text: 'Who is Mehedi?', icon: CHIP_ICONS.user },
+                { key: 'projects', text: 'View Projects', icon: CHIP_ICONS.layers },
+                { key: 'hire', text: 'Hire / Collaborate', icon: CHIP_ICONS.briefcase },
+                { key: 'call', text: 'Book a Call', icon: CHIP_ICONS.phone }
             ];
 
             buttons.forEach(btn => {
                 const b = document.createElement('button');
                 b.className = 'smart-btn';
                 b.setAttribute('type', 'button');
-                b.innerHTML = `<i class="fa-solid ${btn.icon}"></i> ${btn.text}`;
+                b.innerHTML = `${btn.icon}<span>${btn.text}</span>`;
                 b.onclick = () => {
-                    chatInput.value = btn.text;
-                    sendChat();
+                    b.classList.add('is-used');
+                    const reply = chipReplies()[btn.key];
+                    if (typeof playSound === 'function') playSound('type');
+                    appendMsg(reply.q, 'user');
+                    const mascot = getMascot();
+                    if (mascot) mascot.setExpression('thinking');
+                    const typingEl = appendMsg('<span class="chat-dots" aria-label="Typing"><i></i><i></i><i></i></span>', 'bot', true);
+                    typingEl.classList.add('typing-indicator');
+                    setTimeout(() => {
+                        typingEl.classList.remove('typing-indicator');
+                        typingEl.innerHTML = reply.a;
+                        chatBody.scrollTop = chatBody.scrollHeight;
+                        if (mascot) mascot.triggerReaction('excited', 1600);
+                    }, 650);
                 };
                 container.appendChild(b);
             });
@@ -1642,7 +1738,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             if (chatBody) {
                 chatBody.innerHTML = '';
-                const welcomeMsg = appendMsg("Hi! 👋 I'm Mehedi's AI assistant. How can I help you today?", 'bot');
+                const welcomeMsg = appendMsg("<strong class=\"chat-welcome-title\"><svg class=\"orb-ico orb-ico-sparkle\" viewBox=\"0 0 20 20\" width=\"15\" height=\"15\" aria-hidden=\"true\"><path class=\"sp-big\" d=\"M9 2 C9.6 6.2 10.8 7.4 15 8 C10.8 8.6 9.6 9.8 9 14 C8.4 9.8 7.2 8.6 3 8 C7.2 7.4 8.4 6.2 9 2 Z\"/><path class=\"sp-small\" d=\"M15.5 12 C15.8 13.6 16.4 14.2 18 14.5 C16.4 14.8 15.8 15.4 15.5 17 C15.2 15.4 14.6 14.8 13 14.5 C14.6 14.2 15.2 13.6 15.5 12 Z\"/></svg>Hi, I'm Mehedi's AI assistant.</strong><span class=\"chat-welcome-sub\">Ask about his work, stack, or how to collaborate.</span>", 'bot', true);
                 welcomeMsg.appendChild(createSmartButtons());
             }
         }, 150);
@@ -1657,9 +1753,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // User Message
             appendMsg(txt, 'user');
 
+            // Mascot state: USER SENDS MESSAGE & AI IS PROCESSING -> THINKING
+            const mascot = getMascot();
+            if (mascot) {
+                mascot.setExpression('thinking');
+            }
+
             // Bot Response (Simulated Delay for typing feel)
-            const typingEl = appendMsg('⬤ ⬤ ⬤', 'bot');
+            const typingEl = appendMsg('<span class="chat-dots" aria-label="Typing"><i></i><i></i><i></i></span>', 'bot', true);
             typingEl.classList.add('typing-indicator');
+
+            let isSuccess = false;
+            let isError = false;
 
             try {
                 // Primary: Try Local AI Bridge
@@ -1679,9 +1784,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (primaryResponse.ok) {
                     const data = await primaryResponse.json();
                     typingEl.textContent = data.choices[0].message.content;
-                    return; // Exit if primary succeeds
+                    isSuccess = true;
+                } else {
+                    throw new Error("Primary Handshake Failed");
                 }
-                throw new Error("Primary Handshake Failed");
 
             } catch (primaryError) {
                 console.warn("[AI_CHAT] Local Bridge Offline. Attempting Secondary Cloud AI...");
@@ -1701,21 +1807,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         if (reply) {
                             typingEl.textContent = reply;
-                            return; // Exit if secondary succeeds
+                            isSuccess = true;
+                        } else {
+                            throw new Error("Reply was empty after stripping notice");
                         }
-                        throw new Error("Reply was empty after stripping notice");
+                    } else {
+                        throw new Error("Secondary API Failed");
                     }
-                    throw new Error("Secondary API Failed");
 
                 } catch (secondaryError) {
                     // Tertiary: Hardcoded Rule-Based Fallback
                     console.warn("[AI_CHAT] All APIs Offline. Reverting to Offline Rule-Based Protocol.");
                     typingEl.innerHTML = getBotResponse(txt);
+                    isSuccess = true;
                 }
             } finally {
                 typingEl.classList.remove('typing-indicator');
                 chatBody.scrollTop = chatBody.scrollHeight;
                 if (typeof playSound === 'function') playSound('type');
+
+                // Update mascot state based on result:
+                if (mascot) {
+                    if (isError) {
+                        mascot.triggerReaction('error', 2200);
+                    } else if (isSuccess) {
+                        const isFriendly = /\b(hi|hello|hey|thanks|thank you|good|great|awesome|cool|love|nice)\b/i.test(txt);
+                        const reaction = isFriendly ? 'happy' : 'excited';
+                        mascot.triggerReaction(reaction, 1800);
+                    } else {
+                        mascot.setExpression('idle');
+                    }
+                }
             }
         }
 
@@ -2371,10 +2493,10 @@ document.addEventListener('DOMContentLoaded', () => {
        13. TYPEWRITER EFFECT
     ========================================== */
     const tArr = [
-        { prefix: "I am a", text: "Full-Stack Web Developer" },
-        { prefix: "I am an", text: "AI Automation Engineer" },
+        { prefix: "I am an", text: "AI-Native Software Engineer" },
         { prefix: "I am an", text: "LLM Integration Specialist" },
-        { prefix: "I am a", text: "Digital Efficiency Architect" }
+        { prefix: "I am an", text: "Autonomous Agent Developer" },
+        { prefix: "I am a", text: "Full-Stack System Architect" }
     ];
     let tIdx = 0, cIdx = 0;
     const typingSpan = document.querySelector(".typing-text");
@@ -3678,4 +3800,3 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });
-

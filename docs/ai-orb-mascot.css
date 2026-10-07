@@ -1,0 +1,706 @@
+/* ==========================================================================
+   AI ORB MASCOT — ORIGINAL FUTURISTIC MASCOT FOR MEHEDI.PRO.BD
+   Communicates purely through TWO dark capsule eyes on a 3D cyan/blue sphere.
+   NO eyebrows. NO mouth. NO accessories.
+   ========================================================================== */
+
+/* --- Dynamic Theme Color Variables for AI Orb Mascot --- */
+:root,
+[data-theme="dark"] {
+    --orb-stop-highlight: #dbeafe;
+    --orb-stop-bright: #38bdf8;
+    --orb-stop-primary: #0284c7;
+    --orb-stop-deep: #03447c;
+    --orb-stop-dark: #021f42;
+    --orb-stop-rim: #00d2f0;
+    --orb-glow-color: #0284c7;
+    --orb-shadow-color: rgba(0, 0, 0, 0.45);
+    --orb-eye-top: #0a1526;
+    --orb-eye-bot: #01040a;
+    --orb-eye-shadow: rgba(2, 132, 199, 0.3);
+}
+
+[data-theme="light"] {
+    --orb-stop-highlight: #eff6ff;
+    --orb-stop-bright: #93c5fd;
+    --orb-stop-primary: #3b82f6;
+    --orb-stop-deep: #1d4ed8;
+    --orb-stop-dark: #0f2766;
+    --orb-stop-rim: #2563eb;
+    --orb-glow-color: #2563eb;
+    --orb-shadow-color: rgba(15, 23, 42, 0.25);
+    --orb-eye-top: #1e293b;
+    --orb-eye-bot: #090d16;
+    --orb-eye-shadow: rgba(37, 99, 235, 0.25);
+}
+
+[data-theme="cyberpunk"] {
+    --orb-stop-highlight: #ffe4e6;
+    --orb-stop-bright: #fb7185;
+    --orb-stop-primary: #e11d48;
+    --orb-stop-deep: #881337;
+    --orb-stop-dark: #400516;
+    --orb-stop-rim: #ff0055;
+    --orb-glow-color: #ff0055;
+    --orb-shadow-color: rgba(0, 0, 0, 0.55);
+    --orb-eye-top: #2a0512;
+    --orb-eye-bot: #0a0104;
+    --orb-eye-shadow: rgba(255, 0, 85, 0.4);
+}
+
+[data-theme="god-mode"] {
+    --orb-stop-highlight: #f0fdf4;
+    --orb-stop-bright: #4ade80;
+    --orb-stop-primary: #16a34a;
+    --orb-stop-deep: #14532d;
+    --orb-stop-dark: #05230c;
+    --orb-stop-rim: #00ff66;
+    --orb-glow-color: #00ff66;
+    --orb-shadow-color: rgba(0, 0, 0, 0.55);
+    --orb-eye-top: #052e16;
+    --orb-eye-bot: #021206;
+    --orb-eye-shadow: rgba(0, 255, 102, 0.45);
+}
+
+/* --- Mascot Custom Element Base --- */
+ai-orb-mascot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.45))
+            drop-shadow(0 2px 8px rgba(2, 132, 199, 0.3));
+    transition: filter 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --orb-look-x: 0px;
+    --orb-look-y: 0px;
+}
+
+ai-orb-mascot:hover {
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.5))
+            drop-shadow(0 4px 14px rgba(2, 132, 199, 0.45));
+    transform: translateY(-2px) scale(1.03);
+}
+
+.ai-orb-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    display: block;
+}
+
+/* --- Sphere Floating Motion --- */
+.ai-orb-group {
+    transform-origin: 100px 100px;
+    animation: aiOrbFloat 4.2s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes aiOrbFloat {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-4px) scale(1.015);
+    }
+}
+
+/* --- Face & Eye Base --- */
+.ai-orb-face {
+    transform-origin: 100px 97px;
+    transform: translate(var(--orb-look-x, 0px), var(--orb-look-y, 0px));
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.ai-orb-eye {
+    transform-origin: center;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.ai-orb-eye-inner {
+    transform-origin: center;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+}
+
+.ai-orb-capsule {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+}
+
+.ai-orb-sparkle {
+    transform-origin: 3px -9px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.ai-orb-sparkle-micro {
+    transform-origin: -3.2px 8px;
+    transition: opacity 0.25s ease;
+}
+
+.ai-orb-arch {
+    opacity: 0;
+    transform-origin: 0px 0px;
+    transform: scaleY(0.1);
+    transition: opacity 0.25s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   EXPRESSION STATES (ONLY TWO CAPSULE EYES, NO EYEBROWS, NO MOUTH)
+   ========================================================================== */
+
+/* 1. IDLE / NORMAL */
+ai-orb-mascot.orb-expr-idle .ai-orb-eye-left,
+ai-orb-mascot[data-expression="idle"] .ai-orb-eye-left {
+    transform: translate(0, 0) rotate(0deg) scale(1, 1);
+}
+ai-orb-mascot.orb-expr-idle .ai-orb-eye-right,
+ai-orb-mascot[data-expression="idle"] .ai-orb-eye-right {
+    transform: translate(0, 0) rotate(0deg) scale(1, 1);
+}
+
+/* Organic Blinking for Idle State */
+ai-orb-mascot.orb-is-blinking .ai-orb-capsule,
+ai-orb-mascot.orb-is-blinking .ai-orb-sparkle,
+ai-orb-mascot.orb-is-blinking .ai-orb-sparkle-micro {
+    transform: scaleY(0.06);
+    opacity: 0.1;
+    transition: transform 0.12s ease-in, opacity 0.12s ease-in;
+}
+
+/* 2. LOOKING_LEFT (Upward Curious 3D Spherical Glance) */
+ai-orb-mascot.orb-expr-looking-left .ai-orb-face,
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-face {
+    transform: translate(-18px, -8px);
+}
+ai-orb-mascot.orb-expr-looking-left .ai-orb-eye-left,
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-left {
+    transform: translate(0px, -2px) rotate(-3deg) scale(0.88, 0.98);
+}
+ai-orb-mascot.orb-expr-looking-left .ai-orb-eye-right,
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-right {
+    transform: translate(0px, -2px) rotate(-1deg) scale(0.96, 1);
+}
+
+/* 3. LOOKING_RIGHT (Silky-Smooth 3D Spherical Glance) */
+ai-orb-mascot.orb-expr-looking-right .ai-orb-face,
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-face {
+    transform: translate(18px, -1px);
+}
+ai-orb-mascot.orb-expr-looking-right .ai-orb-eye-left,
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-left {
+    transform: rotate(2deg) scale(0.96, 1);
+}
+ai-orb-mascot.orb-expr-looking-right .ai-orb-eye-right,
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-right {
+    transform: rotate(5deg) scale(0.88, 0.98);
+}
+
+/* 4. EXCITED */
+ai-orb-mascot.orb-expr-excited .ai-orb-group,
+ai-orb-mascot[data-expression="excited"] .ai-orb-group {
+    animation: aiOrbExcitedBounce 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
+}
+@keyframes aiOrbExcitedBounce {
+    0% { transform: translateY(0px) scale(1); }
+    100% { transform: translateY(-7px) scale(1.05); }
+}
+ai-orb-mascot.orb-expr-excited .ai-orb-eye-left,
+ai-orb-mascot[data-expression="excited"] .ai-orb-eye-left {
+    transform: translate(-3px, -7px) scale(1.18, 1.18) rotate(-4deg);
+}
+ai-orb-mascot.orb-expr-excited .ai-orb-eye-right,
+ai-orb-mascot[data-expression="excited"] .ai-orb-eye-right {
+    transform: translate(3px, -7px) scale(1.18, 1.18) rotate(4deg);
+}
+ai-orb-mascot.orb-expr-excited .ai-orb-sparkle,
+ai-orb-mascot[data-expression="excited"] .ai-orb-sparkle {
+    transform: scale(1.35);
+    filter: drop-shadow(0 0 3px #ffffff);
+}
+
+/* 5. HAPPY (Smiling Upward Arches ^ ^, NO Mouth) */
+ai-orb-mascot.orb-expr-happy .ai-orb-group,
+ai-orb-mascot[data-expression="happy"] .ai-orb-group {
+    animation: aiOrbHappyFloat 2.8s ease-in-out infinite alternate;
+}
+@keyframes aiOrbHappyFloat {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(1.5deg); }
+    100% { transform: translateY(-2px) rotate(-1.5deg); }
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-capsule,
+ai-orb-mascot[data-expression="happy"] .ai-orb-capsule {
+    opacity: 0;
+    transform: scaleY(0.1);
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-sparkle,
+ai-orb-mascot.orb-expr-happy .ai-orb-sparkle-micro,
+ai-orb-mascot[data-expression="happy"] .ai-orb-sparkle,
+ai-orb-mascot[data-expression="happy"] .ai-orb-sparkle-micro {
+    opacity: 0;
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-arch,
+ai-orb-mascot[data-expression="happy"] .ai-orb-arch {
+    opacity: 1;
+    transform: scale(1.1) translateY(-4px);
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-eye-left,
+ai-orb-mascot[data-expression="happy"] .ai-orb-eye-left {
+    transform: translate(-1px, -4px);
+}
+ai-orb-mascot.orb-expr-happy .ai-orb-eye-right,
+ai-orb-mascot[data-expression="happy"] .ai-orb-eye-right {
+    transform: translate(1px, -4px);
+}
+
+/* 6. ANGRY (Sharp Inward Tilt \ /, Narrower Eyes, NO Eyebrows, NO Mouth) */
+ai-orb-mascot.orb-expr-angry .ai-orb-eye-left,
+ai-orb-mascot[data-expression="angry"] .ai-orb-eye-left {
+    transform: translate(2px, -1px) rotate(17deg) scale(0.85, 1.05);
+}
+ai-orb-mascot.orb-expr-angry .ai-orb-eye-right,
+ai-orb-mascot[data-expression="angry"] .ai-orb-eye-right {
+    transform: translate(-2px, -1px) rotate(-17deg) scale(0.85, 1.05);
+}
+ai-orb-mascot.orb-expr-angry .ai-orb-capsule,
+ai-orb-mascot[data-expression="angry"] .ai-orb-capsule {
+    filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.45));
+}
+
+/* 7. POUT / UPSET (Downward Droop, Outward Tilt / \) */
+ai-orb-mascot.orb-expr-pout .ai-orb-eye-left,
+ai-orb-mascot[data-expression="pout"] .ai-orb-eye-left {
+    transform: translate(1px, 8px) rotate(-13deg) scale(0.86, 0.86);
+}
+ai-orb-mascot.orb-expr-pout .ai-orb-eye-right,
+ai-orb-mascot[data-expression="pout"] .ai-orb-eye-right {
+    transform: translate(-1px, 8px) rotate(13deg) scale(0.86, 0.86);
+}
+ai-orb-mascot.orb-expr-pout .ai-orb-group,
+ai-orb-mascot[data-expression="pout"] .ai-orb-group {
+    animation: aiOrbPoutDrift 3.5s ease-in-out infinite;
+}
+@keyframes aiOrbPoutDrift {
+    0%, 100% { transform: translateY(3px) rotate(0deg); }
+    50% { transform: translateY(6px) rotate(-1.5deg); }
+}
+
+/* 8. SURPRISED (Wide Alert Capsules, Increased Spacing) */
+ai-orb-mascot.orb-expr-surprised .ai-orb-group,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-group {
+    transform: translateY(-4px) scale(1.04);
+}
+ai-orb-mascot.orb-expr-surprised .ai-orb-eye-left,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-eye-left {
+    transform: translate(-5px, -3px) scale(1.3, 1.25);
+}
+ai-orb-mascot.orb-expr-surprised .ai-orb-eye-right,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-eye-right {
+    transform: translate(5px, -3px) scale(1.3, 1.25);
+}
+ai-orb-mascot.orb-expr-surprised .ai-orb-sparkle,
+ai-orb-mascot[data-expression="surprised"] .ai-orb-sparkle {
+    transform: scale(1.4);
+}
+
+/* 9. BLINK (Smooth Vertical Collapse) */
+ai-orb-mascot.orb-expr-blink .ai-orb-capsule,
+ai-orb-mascot.orb-expr-blink .ai-orb-sparkle,
+ai-orb-mascot.orb-expr-blink .ai-orb-sparkle-micro,
+ai-orb-mascot[data-expression="blink"] .ai-orb-capsule,
+ai-orb-mascot[data-expression="blink"] .ai-orb-sparkle,
+ai-orb-mascot[data-expression="blink"] .ai-orb-sparkle-micro {
+    transform: scaleY(0.06);
+    opacity: 0.1;
+}
+
+/* 10. THINKING (Subtle Processing Eye Drift & Micro-Blinks) */
+ai-orb-mascot.orb-expr-thinking .ai-orb-face,
+ai-orb-mascot[data-expression="thinking"] .ai-orb-face {
+    animation: aiOrbThinkingGaze 3.2s ease-in-out infinite;
+}
+@keyframes aiOrbThinkingGaze {
+    0%, 100% {
+        transform: translate(-8px, -6px) scale(0.96);
+    }
+    40% {
+        transform: translate(-6px, -7px) scale(0.96);
+    }
+    55% {
+        transform: translate(7px, -4px) scale(0.98);
+    }
+    80% {
+        transform: translate(6px, -2px) scale(0.98);
+    }
+}
+ai-orb-mascot.orb-expr-thinking .ai-orb-eye-inner,
+ai-orb-mascot[data-expression="thinking"] .ai-orb-eye-inner {
+    animation: aiOrbThinkingBlink 3.2s ease-in-out infinite;
+}
+@keyframes aiOrbThinkingBlink {
+    0%, 75%, 83%, 100% {
+        transform: scaleY(1);
+    }
+    79% {
+        transform: scaleY(0.08); /* Thoughtful blink */
+    }
+}
+
+/* 11. RESPONDING (Attentive Pulse & Eye Widening) */
+ai-orb-mascot.orb-expr-responding .ai-orb-group,
+ai-orb-mascot[data-expression="responding"] .ai-orb-group {
+    animation: aiOrbRespondingPulse 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+@keyframes aiOrbRespondingPulse {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-6px) scale(1.05); }
+    100% { transform: translateY(0) scale(1); }
+}
+ai-orb-mascot.orb-expr-responding .ai-orb-eye-left,
+ai-orb-mascot[data-expression="responding"] .ai-orb-eye-left {
+    transform: translate(-1px, -3px) scale(1.12, 1.12);
+}
+ai-orb-mascot.orb-expr-responding .ai-orb-eye-right,
+ai-orb-mascot[data-expression="responding"] .ai-orb-eye-right {
+    transform: translate(1px, -3px) scale(1.12, 1.12);
+}
+
+/* 12. ERROR / SAD (Downward Droop, Slow Heavy Drift) */
+ai-orb-mascot.orb-expr-error .ai-orb-eye-left,
+ai-orb-mascot[data-expression="error"] .ai-orb-eye-left {
+    transform: translate(0, 10px) rotate(-12deg) scale(0.85, 0.85);
+}
+ai-orb-mascot.orb-expr-error .ai-orb-eye-right,
+ai-orb-mascot[data-expression="error"] .ai-orb-eye-right {
+    transform: translate(0, 10px) rotate(12deg) scale(0.85, 0.85);
+}
+ai-orb-mascot.orb-expr-error .ai-orb-group,
+ai-orb-mascot[data-expression="error"] .ai-orb-group {
+    animation: aiOrbErrorDrift 3.8s ease-in-out infinite;
+}
+@keyframes aiOrbErrorDrift {
+    0%, 100% { transform: translateY(4px) rotate(0deg); }
+    50% { transform: translateY(8px) rotate(-1deg); }
+}
+
+/* --- Compatibility with existing chatbot avatar classes --- */
+.grok-bot-avatar,
+.ai-orb-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.chat-expanded .grok-bot-avatar,
+.chat-expanded .ai-orb-avatar {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+#ai-chat-widget.chat-collapsed .grok-bot-avatar,
+#ai-chat-widget.chat-collapsed .ai-orb-avatar {
+    width: 38px;
+    height: 38px;
+}
+
+#ai-chat-widget.chat-collapsed:hover .grok-bot-avatar,
+#ai-chat-widget.chat-collapsed:hover .ai-orb-avatar {
+    transform: scale(1.22) translateY(-2px);
+}
+
+/* ==========================================================================
+   SMART PROACTIVE GREETING SPEECH BUBBLE (IDLE TRIGGER)
+   Appears dynamically above the AI Orb Mascot when user stays idle for 6s
+   without scrolling. Dismisses automatically on scroll or close button.
+   ========================================================================== */
+
+.ai-orb-speech-bubble {
+    position: fixed;
+    bottom: 88px;
+    right: 24px;
+    width: 290px;
+    max-width: calc(100vw - 32px);
+    background: rgba(10, 16, 30, 0.94);
+    border: 1px solid var(--accent-1, #00f2fe);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 
+                0 0 20px var(--accent-glow, rgba(0, 242, 254, 0.35));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 10001;
+    transform-origin: bottom right;
+    animation: orbBubblePopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    cursor: default;
+    user-select: none;
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-primary, #f8fafc);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-orb-speech-bubble.bubble-closing {
+    animation: orbBubblePopOut 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    pointer-events: none;
+}
+
+@keyframes orbBubblePopIn {
+    0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.85);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes orbBubblePopOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.9);
+    }
+}
+
+/* Arrow pointer pointing towards mascot */
+.ai-orb-bubble-arrow {
+    position: absolute;
+    bottom: -7px;
+    right: 36px;
+    width: 14px;
+    height: 14px;
+    background: rgba(10, 16, 30, 0.94);
+    border-right: 1px solid var(--accent-1, #00f2fe);
+    border-bottom: 1px solid var(--accent-1, #00f2fe);
+    transform: rotate(45deg);
+    pointer-events: none;
+}
+
+/* Header badge & waving hand */
+.ai-orb-bubble-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.ai-orb-bubble-badge-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ai-orb-bubble-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(var(--accent-rgb, 0, 242, 254), 0.16);
+    color: var(--accent-1, #00f2fe);
+    border: 1px solid rgba(var(--accent-rgb, 0, 242, 254), 0.35);
+}
+
+.ai-orb-bubble-wave {
+    display: inline-flex;
+    align-items: center;
+    color: var(--accent-1, #00f2fe);
+    filter: drop-shadow(0 0 4px var(--accent-glow, rgba(0, 242, 254, 0.45)));
+}
+
+/* --- Animated bubble icons (replace emoji) --- */
+.orb-ico { display: block; flex-shrink: 0; overflow: visible; }
+
+.orb-ico-sparkle path { fill: currentColor; transform-box: fill-box; transform-origin: center; }
+.orb-ico-sparkle .sp-big   { animation: orbSparkBig 2.4s ease-in-out infinite; }
+.orb-ico-sparkle .sp-small { animation: orbSparkSmall 2.4s ease-in-out infinite; opacity: 0.8; }
+
+@keyframes orbSparkBig {
+    0%, 100% { transform: scale(0.85) rotate(0deg); }
+    50%      { transform: scale(1.08) rotate(45deg); }
+}
+@keyframes orbSparkSmall {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    35%      { transform: scale(0.3); opacity: 0.2; }
+    60%      { transform: scale(1.15); opacity: 1; }
+}
+
+.orb-ico-layers path,
+.orb-ico-chat .ch-bubble {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.orb-ico-layers .ly-1 { fill: currentColor; fill-opacity: 0.18; animation: orbLayerFloat 2.2s ease-in-out infinite; }
+.orb-ico-layers .ly-2 { animation: orbLayerFloat 2.2s ease-in-out infinite 0.15s; opacity: 0.8; }
+.orb-ico-layers .ly-3 { animation: orbLayerFloat 2.2s ease-in-out infinite 0.3s; opacity: 0.6; }
+@keyframes orbLayerFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-1.2px); }
+}
+
+.orb-ico-chat .ch-dot { fill: currentColor; animation: orbTyping 1.2s ease-in-out infinite; }
+.orb-ico-chat .ch-dot:nth-of-type(2) { animation-delay: 0.15s; }
+.orb-ico-chat .ch-dot:nth-of-type(3) { animation-delay: 0.3s; }
+@keyframes orbTyping {
+    0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+    30%           { opacity: 1;    transform: translateY(-1px); }
+}
+
+.ai-orb-bubble-btn:hover .orb-ico-layers .ly { animation-duration: 1.1s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .orb-ico * { animation: none !important; }
+}
+
+.ai-orb-bubble-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.ai-orb-bubble-close:hover {
+    color: var(--text-primary, #ffffff);
+    transform: scale(1.15);
+}
+
+/* Bubble body text */
+.ai-orb-bubble-text {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--text-primary, #f1f5f9);
+    margin: 0 0 10px 0;
+    font-weight: 500;
+}
+
+/* Action button chips */
+.ai-orb-bubble-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ai-orb-bubble-btn {
+    flex: 1 1 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary, #f8fafc);
+}
+
+.ai-orb-bubble-btn:hover {
+    background: rgba(var(--accent-rgb, 0, 242, 254), 0.2);
+    border-color: var(--accent-1, #00f2fe);
+    color: var(--accent-1, #00f2fe);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--accent-glow, rgba(0, 242, 254, 0.25));
+}
+
+.ai-orb-bubble-btn-primary {
+    background: var(--gradient-accent, linear-gradient(135deg, #00f2fe 0%, #4facfe 100%));
+    color: var(--accent-active-color, #0b1120);
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 2px 10px var(--accent-glow, rgba(0, 242, 254, 0.3));
+}
+
+.ai-orb-bubble-btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    color: var(--accent-active-color, #0b1120);
+    box-shadow: 0 4px 14px var(--accent-glow, rgba(0, 242, 254, 0.45));
+}
+
+/* --- Theme Adaptations for Speech Bubble --- */
+[data-theme="cyberpunk"] .ai-orb-speech-bubble {
+    background: rgba(24, 4, 14, 0.95);
+    border-color: var(--accent-1, #f43f5e);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 22px rgba(244, 63, 94, 0.4);
+}
+[data-theme="cyberpunk"] .ai-orb-bubble-arrow {
+    background: rgba(24, 4, 14, 0.95);
+    border-color: var(--accent-1, #f43f5e);
+}
+
+[data-theme="god-mode"] .ai-orb-speech-bubble {
+    background: rgba(2, 18, 6, 0.96);
+    border-color: #00ff00;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 255, 0, 0.4);
+}
+[data-theme="god-mode"] .ai-orb-bubble-arrow {
+    background: rgba(2, 18, 6, 0.96);
+    border-color: #00ff00;
+}
+
+[data-theme="light"] .ai-orb-speech-bubble {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #2563eb;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18), 0 0 20px rgba(37, 99, 235, 0.25);
+    color: #0f172a;
+}
+[data-theme="light"] .ai-orb-bubble-arrow {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #2563eb;
+}
+[data-theme="light"] .ai-orb-bubble-text {
+    color: #1e293b;
+}
+[data-theme="light"] .ai-orb-bubble-btn {
+    background: rgba(15, 23, 42, 0.05);
+    border-color: rgba(15, 23, 42, 0.15);
+    color: #0f172a;
+}
+
+/* --- Mobile Responsiveness (max 768px) --- */
+@media (max-width: 768px) {
+    .ai-orb-speech-bubble {
+        bottom: 96px;
+        right: 16px;
+        width: 260px;
+        padding: 12px 14px;
+        border-radius: 16px;
+    }
+    .ai-orb-bubble-arrow {
+        right: 28px;
+    }
+    .ai-orb-bubble-text {
+        font-size: 0.78rem;
+        margin-bottom: 8px;
+    }
+    .ai-orb-bubble-btn {
+        padding: 5px 8px;
+        font-size: 0.68rem;
+    }
+}

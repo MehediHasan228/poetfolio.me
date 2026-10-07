@@ -20,7 +20,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=164">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=181">
 </head>
 
 <body>
@@ -30,7 +30,7 @@
 
     <div id="sys-monitor" class="sys-monitor">
         <div class="mon-title draggable-header">
-            <span><i class="fa-solid fa-microchip"></i> SYS_MONITOR</span>
+            <span><svg class="mon-gauge-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path class="g-track" d="M2,11 A6,6 0 0 1 14,11"/><path class="g-fill" pathLength="100" d="M2,11 A6,6 0 0 1 14,11"/><line class="g-tick" x1="8" y1="3.2" x2="8" y2="4.4"/><line class="g-tick" x1="3.3" y1="6.4" x2="4.2" y2="7.1"/><line class="g-tick" x1="12.7" y1="6.4" x2="11.8" y2="7.1"/><line class="g-needle" x1="8" y1="11" x2="8" y2="5.6"/><circle class="g-hub" cx="8" cy="11" r="1.4"/></svg> SYS_MONITOR</span>
             <div class="mon-controls">
                 <button id="mon-minimize-btn" class="mon-btn hover-sound" title="Minimize Monitor" aria-label="Minimize Monitor"><i class="fa-solid fa-minus"></i></button>
             </div>
@@ -79,39 +79,10 @@
     <div id="ai-chat-widget" class="chat-collapsed hover-sound">
         <div class="chat-header" id="chat-header">
             <span class="chat-header-content">
-                <span class="grok-bot-avatar" aria-label="Grok AI Assistant">
-                    <svg class="grok-bot-svg" viewBox="-20 -20 268 268" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <radialGradient id="grokHead3DGrad" cx="32%" cy="28%" r="75%" fx="25%" fy="20%">
-                                <stop class="grok-stop-highlight" offset="0%" style="stop-color: var(--grok-3d-highlight, #ffffff); stop-opacity: 1;" />
-                                <stop class="grok-stop-mid" offset="25%" style="stop-color: var(--grok-3d-mid, #e0f7fa); stop-opacity: 1;" />
-                                <stop class="grok-stop-base" offset="58%" style="stop-color: var(--grok-3d-base, #38bdf8); stop-opacity: 1;" />
-                                <stop class="grok-stop-shadow" offset="84%" style="stop-color: var(--grok-3d-shadow, #0284c7); stop-opacity: 1;" />
-                                <stop class="grok-stop-rim" offset="100%" style="stop-color: var(--grok-3d-rim, #00f2fe); stop-opacity: 1;" />
-                            </radialGradient>
-                            <linearGradient id="grokGloss3DGrad" x1="15%" y1="0%" x2="70%" y2="85%">
-                                <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 0.9;" />
-                                <stop offset="45%" style="stop-color: #ffffff; stop-opacity: 0.25;" />
-                                <stop offset="100%" style="stop-color: #ffffff; stop-opacity: 0;" />
-                            </linearGradient>
-                            <linearGradient id="grokEye3DGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop class="grok-stop-eyetop" offset="0%" style="stop-color: var(--grok-eye-top, #083344); stop-opacity: 1;" />
-                                <stop class="grok-stop-eyebot" offset="100%" style="stop-color: var(--grok-eye-bottom, #020617); stop-opacity: 1;" />
-                            </linearGradient>
-                        </defs>
-                        <g class="grok-bot-group">
-                            <path class="grok-bot-head" fill="url(#grokHead3DGrad)" d="M228.541 114.228C228.541 130.133 225.184 145.994 218.738 160.534C212.674 174.217 203.904 186.669 193.065 196.988C155.933 232.34 99.497 238.596 55.5255 212.24C45.097 205.99 35.6851 198.072 27.7451 188.866C19.1926 178.953 12.3686 167.569 7.65781 155.351C2.60712 142.264 0 128.257 0 114.228C0 98.3219 3.35751 82.4611 9.80315 67.9215C15.8672 54.2382 24.6377 41.7862 35.4767 31.4668C72.6081 -3.88483 129.044 -10.1413 173.016 16.2153C183.444 22.4653 192.856 30.3829 200.796 39.5896C209.349 49.5018 216.173 60.8859 220.883 73.1037C225.934 86.1906 228.541 100.198 228.541 114.228Z" />
-                            <ellipse class="grok-bot-sheen" cx="82" cy="60" rx="46" ry="24" transform="rotate(-30 82 60)" fill="url(#grokGloss3DGrad)" opacity="0.8" pointer-events="none" />
-                            <g class="grok-bot-eyes">
-                                <path class="grok-bot-eye grok-bot-eye-left" fill="url(#grokEye3DGrad)" d="M118.17 70.73L120.45 71.04L122.59 71.76L124.55 72.87L126.18 74.38L127.42 76.24L128.34 78.29L129.10 80.42L129.83 82.57L130.55 84.72L131.27 86.86L131.97 89.02L132.64 91.19L133.29 93.36L133.91 95.55L134.50 97.74L135.05 99.95L135.36 102.23L135.16 104.55L134.41 106.80L133.11 108.84L131.36 110.51L129.28 111.73L127.01 112.45L124.68 112.65L122.41 112.33L120.31 111.51L118.45 110.26L116.93 108.62L115.81 106.69L115.01 104.57L114.39 102.39L113.80 100.19L113.17 98.01L112.52 95.84L111.85 93.66L111.17 91.51L110.47 89.35L109.75 87.20L108.94 85.09L108.17 82.96L107.64 80.75L107.63 78.44L108.31 76.16L109.61 74.14L111.41 72.51L113.54 71.41L115.84 70.83Z" />
-                                <circle class="grok-eye-sparkle" cx="122.5" cy="79" r="3.2" fill="#ffffff" opacity="0.95" />
-                                <path class="grok-bot-eye grok-bot-eye-right" fill="url(#grokEye3DGrad)" d="M179.77 59.76L182.04 60.05L184.10 60.75L185.92 61.77L187.55 63.03L188.95 64.50L190.10 66.16L191.07 67.95L191.90 69.82L192.67 71.74L193.41 73.66L194.13 75.60L194.80 77.56L195.42 79.55L196.02 81.54L196.56 83.57L197.06 85.61L197.50 87.67L197.90 89.77L198.06 91.94L197.82 94.21L197.15 96.51L195.85 98.72L193.75 100.38L191.30 101.01L189.00 100.81L186.99 100.03L185.30 98.85L183.91 97.38L182.84 95.66L182.05 93.76L181.48 91.76L181.00 89.71L180.53 87.64L180.02 85.60L179.48 83.58L178.89 81.58L178.26 79.60L177.60 77.62L176.90 75.68L176.15 73.76L175.36 71.86L174.53 69.98L173.78 68.06L173.41 65.97L173.71 63.70L175.05 61.53L177.32 60.14Z" />
-                                <circle class="grok-eye-sparkle" cx="184.5" cy="68" r="3.2" fill="#ffffff" opacity="0.95" />
-                            </g>
-                        </g>
-                    </svg>
+                <span class="grok-bot-avatar ai-orb-avatar" aria-label="Mehedi's AI Assistant">
+                    <ai-orb-mascot id="chat-mascot" expression="idle"></ai-orb-mascot>
                 </span>
-                <span class="chat-header-title">Ask My AI</span>
+                <span class="chat-header-text"><span class="chat-header-title">Ask My AI</span><span class="chat-header-sub">Portfolio assistant</span></span>
             </span>
             <i class="fa-solid fa-chevron-up" id="chat-toggle-icon"></i>
         </div>
@@ -150,7 +121,7 @@
                 <div class="hero-text-side">
                     <h1 class="decrypt-text" data-value="Hi, I'm Mehedi Hasan">Hi, I'm <span
                             class="gradient-text">Mehedi Hasan</span></h1>
-                    <h2><span class="prefix-text">I am a</span> <span class="typing-text"></span><span
+                    <h2><span class="prefix-text">I am an</span> <span class="typing-text"></span><span
                             class="cursor">&nbsp;</span></h2>
 
                     <div class="terminal-feed" id="terminal-feed" role="region" aria-label="Live System Telemetry Feed">
@@ -164,9 +135,15 @@
                                 <span class="term-prompt"><i class="fa-solid fa-terminal"></i></span>
                                 <span class="term-protocol">node://</span><span class="term-host">ap-south-1.telemetry.sre</span>
                             </div>
-                            <div class="terminal-live-badge">
-                                <span class="live-dot"></span>
-                                <span class="live-text">STREAMING</span>
+                            <div class="terminal-live-badge is-simulated is-pulse" title="Illustrative demo feed — not live production metrics">
+                                <svg class="term-pulse" width="64" height="18" viewBox="0 0 64 18" aria-hidden="true" focusable="false">
+                                    <g class="term-pulse-track">
+                                        <path class="term-pulse-base term-pulse-a" d="M-32.00,9.0 L-25.00,9.00 Q-23.50,7.20 -22.00,9.00 L-20.00,9.00 L-19.00,10.60 L-17.50,2.00 L-16.00,14.00 L-14.50,9.00 L-12.00,9.00 Q-9.50,6.00 -7.00,9.00 L0.00,9.00 L7.00,9.00 Q8.50,7.20 10.00,9.00 L12.00,9.00 L13.00,10.60 L14.50,2.00 L16.00,14.00 L17.50,9.00 L20.00,9.00 Q22.50,6.00 25.00,9.00 L32.00,9.00 L39.00,9.00 Q40.50,7.20 42.00,9.00 L44.00,9.00 L45.00,10.60 L46.50,2.00 L48.00,14.00 L49.50,9.00 L52.00,9.00 Q54.50,6.00 57.00,9.00 L64.00,9.00 L71.00,9.00 Q72.50,7.20 74.00,9.00 L76.00,9.00 L77.00,10.60 L78.50,2.00 L80.00,14.00 L81.50,9.00 L84.00,9.00 Q86.50,6.00 89.00,9.00 L96.00,9.00" />
+                                        <path class="term-pulse-base term-pulse-b" d="M-29.80,9.0 L-22.80,9.00 Q-21.30,7.52 -19.80,9.00 L-17.80,9.00 L-16.80,10.31 L-15.30,3.26 L-13.80,13.10 L-12.30,9.00 L-9.80,9.00 Q-7.30,6.54 -4.80,9.00 L2.20,9.00 L9.20,9.00 Q10.70,7.52 12.20,9.00 L14.20,9.00 L15.20,10.31 L16.70,3.26 L18.20,13.10 L19.70,9.00 L22.20,9.00 Q24.70,6.54 27.20,9.00 L34.20,9.00 L41.20,9.00 Q42.70,7.52 44.20,9.00 L46.20,9.00 L47.20,10.31 L48.70,3.26 L50.20,13.10 L51.70,9.00 L54.20,9.00 Q56.70,6.54 59.20,9.00 L66.20,9.00 L73.20,9.00 Q74.70,7.52 76.20,9.00 L78.20,9.00 L79.20,10.31 L80.70,3.26 L82.20,13.10 L83.70,9.00 L86.20,9.00 Q88.70,6.54 91.20,9.00 L98.20,9.00" />
+                                        <path class="term-pulse-beam term-pulse-a" pathLength="100" d="M-32.00,9.0 L-25.00,9.00 Q-23.50,7.20 -22.00,9.00 L-20.00,9.00 L-19.00,10.60 L-17.50,2.00 L-16.00,14.00 L-14.50,9.00 L-12.00,9.00 Q-9.50,6.00 -7.00,9.00 L0.00,9.00 L7.00,9.00 Q8.50,7.20 10.00,9.00 L12.00,9.00 L13.00,10.60 L14.50,2.00 L16.00,14.00 L17.50,9.00 L20.00,9.00 Q22.50,6.00 25.00,9.00 L32.00,9.00 L39.00,9.00 Q40.50,7.20 42.00,9.00 L44.00,9.00 L45.00,10.60 L46.50,2.00 L48.00,14.00 L49.50,9.00 L52.00,9.00 Q54.50,6.00 57.00,9.00 L64.00,9.00 L71.00,9.00 Q72.50,7.20 74.00,9.00 L76.00,9.00 L77.00,10.60 L78.50,2.00 L80.00,14.00 L81.50,9.00 L84.00,9.00 Q86.50,6.00 89.00,9.00 L96.00,9.00" />
+                                        <path class="term-pulse-beam term-pulse-b" pathLength="100" d="M-29.80,9.0 L-22.80,9.00 Q-21.30,7.52 -19.80,9.00 L-17.80,9.00 L-16.80,10.31 L-15.30,3.26 L-13.80,13.10 L-12.30,9.00 L-9.80,9.00 Q-7.30,6.54 -4.80,9.00 L2.20,9.00 L9.20,9.00 Q10.70,7.52 12.20,9.00 L14.20,9.00 L15.20,10.31 L16.70,3.26 L18.20,13.10 L19.70,9.00 L22.20,9.00 Q24.70,6.54 27.20,9.00 L34.20,9.00 L41.20,9.00 Q42.70,7.52 44.20,9.00 L46.20,9.00 L47.20,10.31 L48.70,3.26 L50.20,13.10 L51.70,9.00 L54.20,9.00 Q56.70,6.54 59.20,9.00 L66.20,9.00 L73.20,9.00 Q74.70,7.52 76.20,9.00 L78.20,9.00 L79.20,10.31 L80.70,3.26 L82.20,13.10 L83.70,9.00 L86.20,9.00 Q88.70,6.54 91.20,9.00 L98.20,9.00" />
+                                    </g>
+                                </svg>
                             </div>
                         </div>
                         <div class="terminal-body" id="terminal-ticker" role="log" aria-live="polite" aria-relevant="additions text">
@@ -178,21 +155,25 @@
                         </div>
                     </div>
 
-                    <div class="hero-buttons">
-                        <a href="./contact_process.html"
-                            class="btn primary-btn glow-effect magnetic-element hover-sound">Explore Systems</a>
-
-                        <a href="./uploads/Mehedi_Hasan_CV.pdf"
-                            download="Mehedi_Hasan_CV.pdf" class="btn secondary-btn magnetic-element hover-sound">
-                            <i class="fa-solid fa-file-arrow-down"></i> Download CV</a>
-
-                        <a href="./index.html#contact" class="btn primary-btn glow-effect magnetic-element hover-sound">Hire Me</a>
-                    </div>
-                    <div style="margin-top: 1.5rem; text-align: left;" class="mobile-center">
-                        <a href="https://wa.me/8801799447594" target="_blank"
-                            class="btn support-btn magnetic-element hover-sound">
-                            <i class="fa-solid fa-bolt" style="color: #fbbf24;"></i> Initiate Support Protocol
-                        </a>
+                    <div class="hero-cta-v2">
+                        <div class="hero-cta-row">
+                            <a href="./index.html#projects" id="hero-cta-explore" class="btn primary-btn hero-cta-primary glow-effect magnetic-element hover-sound">
+                                <i class="fa-solid fa-layer-group"></i> Explore Systems
+                            </a>
+                            <a href="https://wa.me/8801799447594?text=Hi%20Mehedi%2C%20I%27d%20like%20to%20book%20a%20call%20about%20a%20project." id="hero-cta-call" target="_blank" rel="noopener noreferrer"
+                                class="btn secondary-btn hero-cta-secondary magnetic-element hover-sound">
+                                <i class="fa-brands fa-whatsapp"></i> Book a Call
+                            </a>
+                        </div>
+                        <div class="hero-cta-links">
+                            <a href="./uploads/Mehedi_Hasan_CV.pdf?v=2" id="hero-link-cv" download="Mehedi_Hasan_CV.pdf" class="hero-text-link hover-sound">
+                                <i class="fa-solid fa-file-arrow-down"></i> Download CV
+                            </a>
+                            <span class="hero-link-sep" aria-hidden="true">·</span>
+                            <a href="./index.html#contact" id="hero-link-brief" class="hero-text-link hover-sound">
+                                <i class="fa-solid fa-paper-plane"></i> Send a Brief
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -896,7 +877,8 @@
                 title="Initiate Self Destruct"></button>
         </div>
     </footer>
-    <script src="./script~9e1709.js?v=153"></script>
+    <script src="./ai-orb-mascot.js?v=5"></script>
+    <script src="./script~9e1709.js?v=158"></script>
 
 </body>
 
