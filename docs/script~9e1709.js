@@ -795,11 +795,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     isDeploymentUnlocked = true;
                     if (!isScrollDeployed) {
                         isScrollDeployed = true;
-                        if (!isMobile) {
-                            card.classList.add('is-active', 'is-scroll-deployed');
-                            if (!isDirectHover) {
-                                card.setAttribute('data-active-flank', 'all');
-                            }
+                        // Scroll reveals the floating logos on mobile too (not only desktop)
+                        card.classList.add('is-active', 'is-scroll-deployed');
+                        if (!isDirectHover) {
+                            card.setAttribute('data-active-flank', 'all');
                         }
                     }
                     if (!isDirectHover && !isGyroActive) {
@@ -890,10 +889,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else if (currentDeltaGamma < -3.5) {
                             card.setAttribute('data-active-flank', 'left');
                             card.classList.add('is-active');
+                        } else if (isScrollDeployed) {
+                            card.setAttribute('data-active-flank', 'all');
+                            card.classList.add('is-active', 'is-scroll-deployed');
                         } else {
                             card.removeAttribute('data-active-flank');
                             card.classList.remove('is-active');
                         }
+                    } else if (isScrollDeployed) {
+                        card.setAttribute('data-active-flank', 'all');
+                        card.classList.add('is-active', 'is-scroll-deployed');
                     } else {
                         card.removeAttribute('data-active-flank');
                         card.classList.remove('is-active');
@@ -954,6 +959,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             card.classList.add('is-active');
                         } else if (deltaGamma < -3.5) {
                             card.setAttribute('data-active-flank', 'left');
+                            card.classList.add('is-active');
+                        } else if (isScrollDeployed) {
+                            card.setAttribute('data-active-flank', 'all');
                             card.classList.add('is-active');
                         } else {
                             card.removeAttribute('data-active-flank');
