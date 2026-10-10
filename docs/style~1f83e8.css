@@ -13415,19 +13415,28 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 .mobile-header-right {
     display: none;
 }
-#mobile-menu-drawer,
 .mobile-menu-drawer {
-    display: none !important; 
+    display: none; 
 }
-#mobile-menu-close,
 .mobile-menu-close {
-    display: none !important;
+    display: none;
 }
 .drawer-controls {
-    display: none !important;
+    display: none;
 }
 
 @media (min-width: 769px) {
+    #mobile-menu-drawer,
+    .mobile-menu-drawer {
+        display: none !important; 
+    }
+    #mobile-menu-close,
+    .mobile-menu-close {
+        display: none !important;
+    }
+    .drawer-controls {
+        display: none !important;
+    }
     nav .nav-links a.nav-link-item svg {
         display: none !important;
     }
@@ -13515,6 +13524,9 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         display: flex;
         align-items: center;
         justify-content: center;
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: 100007 !important;
     }
 
     .mobile-menu-close {
@@ -13558,6 +13570,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     }
     
     /* Frosted Blurry Glass Side Menu Drawer */
+    #mobile-menu-drawer,
     .mobile-menu-drawer {
         display: flex !important;
         position: fixed !important;
@@ -13575,6 +13588,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     
+    #mobile-menu-drawer.drawer-open,
     .mobile-menu-drawer.drawer-open {
         right: 0 !important;
     }
