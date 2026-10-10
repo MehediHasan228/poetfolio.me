@@ -40,17 +40,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioCtx;
     let isMuted = localStorage.getItem('mehedi_muted') === 'true';
 
-    const soundToggle = document.getElementById('sound-toggler');
-    if (soundToggle) {
-        soundToggle.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
-
-        soundToggle.addEventListener('click', () => {
-            isMuted = !isMuted;
-            localStorage.setItem('mehedi_muted', isMuted);
-            soundToggle.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
-            if (!audioCtx && !isMuted) audioCtx = new AudioContext();
+    function updateSoundIcons() {
+        const iconHtml = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+        document.querySelectorAll('#sound-toggler, .sound-btn').forEach(btn => {
+            btn.innerHTML = iconHtml;
         });
     }
+    updateSoundIcons();
+
+    document.addEventListener('click', (e) => {
+        const soundBtn = e.target.closest('#sound-toggler, .sound-btn');
+        if (soundBtn) {
+            e.preventDefault();
+            isMuted = !isMuted;
+            localStorage.setItem('mehedi_muted', isMuted);
+            updateSoundIcons();
+            if (!audioCtx && !isMuted) audioCtx = new AudioContext();
+        }
+    });
 
     function playSound(type) {
         if (isMuted) return;
@@ -2018,20 +2025,29 @@ document.addEventListener('DOMContentLoaded', () => {
        11. THEME SWITCHER & DEEP DIVE MATRIX
     ========================================== */
     const themeBtn = document.getElementById('theme-toggler');
-    const themes = ['dark', 'cyberpunk', 'light', 'god-mode'];
+    const themes = ['dark', 'cyberpunk', 'light', 'mint', 'god-mode'];
 
     let savedTheme = localStorage.getItem('mehedi_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     let cTheme = themes.indexOf(savedTheme) !== -1 ? themes.indexOf(savedTheme) : 0;
 
-    if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-            do { cTheme = (cTheme + 1) % themes.length; } while (themes[cTheme] === 'god-mode');
-            document.documentElement.setAttribute('data-theme', themes[cTheme]);
-            localStorage.setItem('mehedi_theme', themes[cTheme]);
-            if (typeof initParticles === 'function') initParticles();
-        });
+    function cycleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || savedTheme;
+        let idx = themes.indexOf(current);
+        if (idx === -1) idx = 0;
+        do { idx = (idx + 1) % themes.length; } while (themes[idx] === 'god-mode');
+        document.documentElement.setAttribute('data-theme', themes[idx]);
+        localStorage.setItem('mehedi_theme', themes[idx]);
+        if (typeof initParticles === 'function') initParticles();
     }
+
+    document.addEventListener('click', (e) => {
+        const tBtn = e.target.closest('#theme-toggler, .theme-btn, [data-theme-toggle]');
+        if (tBtn) {
+            e.preventDefault();
+            cycleTheme();
+        }
+    });
 
     const canvas = document.getElementById('particle-canvas');
     let ctx, pArray;
@@ -3808,3 +3824,73 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });
+
+// --- Mobile Menu Drawer Toggle ---
+function initMobileMenu() {
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+    const navLinks = document.querySelectorAll('#mobile-menu-drawer .nav-links a');
+    
+    function openDrawer() {
+        if (mobileMenuDrawer) {
+            mobileMenuDrawer.classList.add('drawer-open');
+            document.body.classList.add('drawer-open');
+        }
+    }
+
+    function closeDrawer() {
+        if (mobileMenuDrawer) {
+            mobileMenuDrawer.classList.remove('drawer-open');
+            document.body.classList.remove('drawer-open');
+        }
+    }
+
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (mobileMenuDrawer && mobileMenuDrawer.classList.contains('drawer-open')) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
+        });
+    }
+    
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeDrawer();
+        });
+    }
+    
+    // Close drawer when a nav link is clicked
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            closeDrawer();
+        });
+    });
+
+    // Close on click outside (backdrop tap)
+    document.addEventListener('click', (e) => {
+        if (mobileMenuDrawer && mobileMenuDrawer.classList.contains('drawer-open')) {
+            if (!mobileMenuDrawer.contains(e.target) && !e.target.closest('#mobile-menu-toggle')) {
+                closeDrawer();
+            }
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeDrawer();
+        }
+    });
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    initMobileMenu();
+}

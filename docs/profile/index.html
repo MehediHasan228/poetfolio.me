@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Mehedi Hasan">
+    <meta name="description" content="Mehedi Hasan: Full-Stack Web Developer & AI Automation Engineer. Software Developer at SAWAB Bangladesh. Laravel, NestJS, Kafka and agentic AI systems.">
+    <meta name="keywords" content="Mehedi Hasan, Full-Stack Developer, AI Automation, LLM Integration, Web Engineering, Bangladesh">
+    <link rel="canonical" href="https://mehedi.pro.bd/profile/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mehedi.pro.bd/profile/">
+    <meta property="og:title" content="Profile | Mehedi Hasan">
+    <meta property="og:description" content="Architecting the future of web and AI automation. Explore my technical arsenal and production deployments.">
+    <meta property="og:image" content="https://mehedi.pro.bd/mehedi-logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mehedi.pro.bd/profile/">
+    <meta property="twitter:title" content="Profile | Mehedi Hasan">
+    <meta property="twitter:description" content="Architecting the future of web and AI automation. Explore my technical arsenal and production deployments.">
+    <meta property="twitter:image" content="https://mehedi.pro.bd/mehedi-logo.png">
+    <title>Profile | Mehedi Hasan</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../mehedi-logo.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../mehedi-logo.png">
+    <link rel="icon" href="../mehedi-logo.png">
+    <link rel="manifest" href="../favicon/site.webmanifest">
+
+    <!-- Performance: preconnect to external origins early -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Non-blocking Google Fonts (print/onload trick eliminates render-block) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Reliable FontAwesome with fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
+
+    <link rel="stylesheet" href="../style~1f83e8.css?v=187">
+
+    <!-- JSON-LD Structured Data for Google Rich Results -->
+    
+<link rel="stylesheet" href="../nx/nx.scoped.css?v=13">
+</head>
+
+<body class="subpage nx-page" data-page="profile">
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div id="sys-monitor" class="sys-monitor">
+        <div class="mon-title draggable-header">
+            <span><svg class="mon-gauge-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path class="g-track" d="M2,11 A6,6 0 0 1 14,11"/><path class="g-fill" pathLength="100" d="M2,11 A6,6 0 0 1 14,11"/><line class="g-tick" x1="8" y1="3.2" x2="8" y2="4.4"/><line class="g-tick" x1="3.3" y1="6.4" x2="4.2" y2="7.1"/><line class="g-tick" x1="12.7" y1="6.4" x2="11.8" y2="7.1"/><line class="g-needle" x1="8" y1="11" x2="8" y2="5.6"/><circle class="g-hub" cx="8" cy="11" r="1.4"/></svg> SYS_MONITOR</span>
+            <div class="mon-controls">
+                <button id="mon-minimize-btn" class="mon-btn hover-sound" title="Minimize Monitor" aria-label="Minimize Monitor"><i class="fa-solid fa-minus"></i></button>
+            </div>
+        </div>
+        <div class="mon-stat">
+            <div class="mon-stat-label"><span>FPS:</span> <span id="mon-fps" class="stat-highlight">60 FPS</span></div>
+            <div class="mon-bar"><div id="mon-fps-bar" style="width: 100%; background: #10b981;"></div></div>
+        </div>
+        <div class="mon-stat">
+            <div class="mon-stat-label"><span>CPU:</span> <span id="mon-cpu">4%</span></div>
+            <div class="mon-bar"><div id="mon-cpu-bar" style="width: 4%;"></div></div>
+        </div>
+        <div class="mon-stat">
+            <div class="mon-stat-label"><span>RAM:</span> <span id="mon-ram">18%</span></div>
+            <div class="mon-bar"><div id="mon-ram-bar" style="width: 18%;"></div></div>
+        </div>
+        <div class="mon-stat mon-net-row">
+            <span>NET:</span> <span id="mon-net" class="ping-active">18ms • IDLE</span>
+        </div>
+        <div class="mon-divider"></div>
+        <div class="mon-stat mon-uptime-row">
+            <span>UPTIME:</span>
+            <span class="uptime-val-wrap"><span id="uptime-counter">212d 19h 50m</span><span class="blink-dot"></span></span>
+        </div>
+        <div class="mon-stat mon-clr-row">
+            <span>CLR:</span>
+            <button id="clearance-level" class="clr-badge hover-sound" title="Click to elevate clearance">LVL 1 (GUEST)</button>
+        </div>
+        <button id="mon-diag-btn" class="mon-diag-action hover-sound"><i class="fa-solid fa-bolt"></i> DIAGNOSTIC</button>
+    </div>
+
+    <!-- Mini Dock Pill when minimized -->
+    <div id="sys-monitor-dock" class="sys-monitor-dock hidden hover-sound" title="Click to open SYS_MONITOR">
+        <i class="fa-solid fa-server" style="color:var(--accent-1);"></i> <span id="dock-fps">60 FPS</span> • <span id="dock-ping">18ms</span>
+    </div>
+
+    <div class="ui-controls">
+        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn magnetic-element"
+            aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <button id="sound-toggler" class="control-btn sound-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
+                class="fa-solid fa-volume-high"></i></button>
+        <button id="theme-toggler" class="control-btn theme-btn magnetic-element" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
+                class="fa-solid fa-palette"></i></button>
+    </div>
+
+    <nav aria-label="Main navigation">
+        <a href="../" class="logo-link glitch-hover">
+            <picture>
+                <source srcset="../mehedi-logo.webp" type="image/webp">
+                <img src="../mehedi-logo.png" alt="Mehedi Hasan - AI Automation Expert Logo" class="site-logo" loading="eager">
+            </picture>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="../profile/" class="active magnetic-element hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../writing/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 17V5c0-1.121-.879-2-2-2s-2 .879-2 2v12l2 2zM16 7h4m-2 12H5a2 2 0 1 1 0-4h4a2 2 0 1 0 0-4H6"/></svg> <span>Writing</span></a></li>
+            <li><a href="../people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="../ai-insights/index.html" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> <span>AI Insights</span></a></li>
+            <li><a href="../" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+        </ul>
+
+        <div class="mobile-header-right">
+            <a href="../contact/" class="mobile-contact-btn hover-sound">Contact</a>
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobile-menu-drawer" class="mobile-menu-drawer">
+        <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="../profile/" class="active magnetic-element hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../writing/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 17V5c0-1.121-.879-2-2-2s-2 .879-2 2v12l2 2zM16 7h4m-2 12H5a2 2 0 1 1 0-4h4a2 2 0 1 0 0-4H6"/></svg> <span>Writing</span></a></li>
+            <li><a href="../people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="../ai-insights/index.html" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> <span>AI Insights</span></a></li>
+            <li><a href="../" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+        </ul>
+        <div class="drawer-controls">
+            <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
+                aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <button class="control-btn sound-btn" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
+                    class="fa-solid fa-volume-high"></i></button>
+            <button class="control-btn theme-btn" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
+                    class="fa-solid fa-palette"></i></button>
+        </div>
+    </div>
+
+    
+<div class="nx">
+
+<div class="shell">
+<main class="main">
+<div class="relative overflow-hidden cover-banner-wrap" data-slats style="position:relative;overflow:hidden;width:100%;"><div class="cover absolute inset-0" aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;"><span class="cover-blob" style="--blob: var(--cover-1); top: -45%; left: -12%; --dur: 24s; --delay: 0s;"></span><span class="cover-blob" style="--blob: var(--cover-2); top: 15%; left: 8%; --dur: 27s; --delay: -4s;"></span><span class="cover-blob" style="--blob: var(--cover-3); top: -35%; left: 32%; --dur: 29s; --delay: -8s;"></span><span class="cover-blob" style="--blob: var(--cover-4); top: 5%; left: 55%; --dur: 23s; --delay: -12s;"></span><span class="cover-blob" style="--blob: var(--cover-5); top: -30%; left: 76%; --dur: 31s; --delay: -6s;"></span><span class="cover-blob" style="--blob: var(--cover-6); top: 45%; left: 38%; --dur: 33s; --delay: -16s; width: 45%;"></span></div><div class="absolute inset-0" data-slats-canvas style="position:absolute;inset:0;opacity:0;transition:opacity .7s;"></div><div class="cover-gradient-vignette" aria-hidden="true"></div></div>
+<section class="nx-hero">
+<img class="avatar" src="../uploads/Mehedi.pro.png" alt="Mehedi Hasan" width="240" height="240" fetchpriority="high">
+<h1 class="nx-name">Mehedi Hasan <span class="verified-badge" title="Verified Profile" aria-label="Verified"><svg viewBox="0 0 24 24" aria-hidden="true" class="verified"><path fill="currentColor" d="M12.01 2.011a3.2 3.2 0 0 1 2.113.797l.154.145l.698.698a1.2 1.2 0 0 0 .71.341L15.82 4h1a3.2 3.2 0 0 1 3.195 3.018l.005.182v1c0 .27.092.533.258.743l.09.1l.697.698a3.2 3.2 0 0 1 .147 4.382l-.145.154l-.698.698a1.2 1.2 0 0 0-.341.71l-.008.135v1a3.2 3.2 0 0 1-3.018 3.195l-.182.005h-1a1.2 1.2 0 0 0-.743.258l-.1.09l-.698.697a3.2 3.2 0 0 1-4.382.147l-.154-.145l-.698-.698a1.2 1.2 0 0 0-.71-.341L8.2 20.02h-1a3.2 3.2 0 0 1-3.195-3.018L4 16.82v-1a1.2 1.2 0 0 0-.258-.743l-.09-.1l-.697-.698a3.2 3.2 0 0 1-.147-4.382l.145-.154l.698-.698a1.2 1.2 0 0 0 .341-.71L4 8.2v-1l.005-.182a3.2 3.2 0 0 1 3.013-3.013L7.2 4h1a1.2 1.2 0 0 0 .743-.258l.1-.09l.698-.697a3.2 3.2 0 0 1 2.269-.944m3.697 7.282a1 1 0 0 0-1.414 0L11 12.585l-1.293-1.292l-.094-.083a1 1 0 0 0-1.32 1.497l2 2l.094.083a1 1 0 0 0 1.32-.083l4-4l.083-.094a1 1 0 0 0-.083-1.32"/></svg></span></h1>
+<p class="tagline">Full-Stack Web Developer & AI Automation Engineer</p>
+<a class="pill-status" href="../contact/"><span class="dot"></span>Open to new conversations</a>
+<ul class="facts">
+<li><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm5-2V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m-4 5v.01"/><path d="M3 13a20 20 0 0 0 18 0"/></g></svg> Software Developer at SAWAB Bangladesh &middot; 4+ years</li>
+<li><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0"/></g></svg> Dhaka, Bangladesh <span class="t">&middot; <span data-time></span></span></li>
+</ul>
+<div class="pills" aria-label="AI tools"><span class="pill ai" style="--c:#d97757"><img src="../uploads/brand-icons/claude.svg" alt="" width="14" height="14">Claude</span><span class="pill ai" style="--c:#10a37f"><img src="../uploads/brand-icons/openai.svg" alt="" width="14" height="14">OpenAI</span><span class="pill ai" style="--c:#3186ff"><img src="../uploads/brand-icons/gemini.svg" alt="" width="14" height="14">Gemini</span><span class="pill ai" style="--c:#3186ff"><img src="../uploads/brand-icons/antigravity.svg" alt="" width="14" height="14">Antigravity</span><span class="pill ai" style="--c:#9a9897"><img src="../uploads/brand-icons/ollama.svg" alt="" width="14" height="14">Ollama</span></div>
+<div class="pills" aria-label="Tech stack" style="margin-top:10px"><span class="pill"><img src="../uploads/brand-icons/laravel.svg" alt="" width="14" height="14">Laravel</span><span class="pill"><img src="../uploads/brand-icons/php.svg" alt="" width="14" height="14">PHP</span><span class="pill"><img src="../uploads/brand-icons/nestjs.svg" alt="" width="14" height="14">NestJS</span><span class="pill"><img src="../uploads/brand-icons/typescript.svg" alt="" width="14" height="14">TypeScript</span><span class="pill"><img src="../uploads/brand-icons/nextjs.svg" alt="" width="14" height="14">Next.js</span><span class="pill"><img src="../uploads/brand-icons/react.svg" alt="" width="14" height="14">React</span><span class="pill"><img src="../uploads/brand-icons/postgresql.svg" alt="" width="14" height="14">PostgreSQL</span><span class="pill"><img src="../uploads/brand-icons/mysql.svg" alt="" width="14" height="14">MySQL</span><span class="pill"><img src="../uploads/brand-icons/redis.svg" alt="" width="14" height="14">Redis</span><span class="pill"><img src="../uploads/brand-icons/apachekafka.svg" alt="" width="14" height="14">Kafka</span><span class="pill"><img src="../uploads/brand-icons/langgraph.svg" alt="" width="14" height="14">LangGraph</span><span class="pill"><img src="../uploads/brand-icons/docker.svg" alt="" width="14" height="14">Docker</span><span class="pill"><img src="../uploads/brand-icons/kubernetes.svg" alt="" width="14" height="14">Kubernetes</span><span class="pill"><img src="../uploads/brand-icons/n8n.svg" alt="" width="14" height="14">n8n</span></div>
+<div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-tab="resume">RESUME</button><button class="tab" role="tab" aria-selected="false" data-tab="work">WORK</button></div>
+</section>
+<div class="pad">
+<div class="panel" data-panel="resume">
+<h2 class="sec-title"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0m-2 14v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></g></svg> About</h2>
+<div class="prose"><p>Full-Stack Software Engineer with 4+ years of hands-on experience architecting high-performance web applications and scalable APIs. Core expertise spans modern TypeScript, React, and Next.js on the frontend, paired with robust NestJS and PHP / Laravel backend microservices. Proven track record delivering everything from custom platforms and WordPress / WooCommerce solutions to complex, event-driven distributed systems.</p><p>An AI-native engineer who leverages state-of-the-art LLM workflows (Claude, OpenAI, Gemini) to accelerate engineering velocity without sacrificing code hygiene. Actively building multi-agent automation systems using LangGraph, MCP, and retrieval-augmented workflows (PGVector), backed by Kafka event streaming and Docker containerisation.</p><p>Currently leading development for SAWAB Bangladesh&#x27;s digital web platforms and architecting an AI-native NGO ERP spanning 85+ planned modules. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.</p></div>
+<div class="metrics big-metrics"><div class="metric"><b>4+</b><span>years building software</span></div><div class="metric"><b>85+</b><span>modules planned in the NGO ERP</span></div><div class="metric"><b>~50%</b><span>less manual effort via LLM automation</span></div><div class="metric"><b>20+</b><span>users supported day to day</span></div></div>
+<div class="meta-widgets">
+  <div class="meta-grid-2">
+    <!-- Card 1: Based in -->
+    <div class="widget-card widget-location">
+      <div class="widget-head">
+        <span class="widget-icon location-ico">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </span>
+        <span class="widget-label">Based in</span>
+      </div>
+      <h3 class="widget-title">Dhaka, Bangladesh</h3>
+      <div class="clock-display">
+        <span class="clock-time" data-time>2:32 PM</span>
+        <span class="clock-tz">GMT+6</span>
+      </div>
+      <div class="clock-daypart" data-daypart>
+        <span class="daypart-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="daypart-svg"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span> <span class="daypart-text">Afternoon in Dhaka</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Works -->
+    <div class="widget-card widget-works">
+      <div class="widget-head">
+        <span class="widget-icon globe-ico">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </span>
+        <span class="widget-label">Works</span>
+      </div>
+      <h3 class="widget-title">Remote / Office Work</h3>
+      <p class="widget-desc">Open to on-site and hybrid roles in Dhaka, as well as remote collaboration across global time zones (US, EU, APAC).</p>
+      <div class="works-chips">
+        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Remote</span>
+        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Office / On-site (Dhaka)</span>
+        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Hybrid</span>
+        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Async-friendly</span>
+        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Flexible schedule</span>
+        <a class="work-chip work-chip-cv" href="../uploads/Mehedi_Hasan_CV.pdf" target="_blank" rel="noopener noreferrer"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6m-3 3l3 3 3-3"/></svg> Download CV</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Languages (Full width) -->
+  <div class="widget-card widget-languages">
+    <div class="widget-head">
+      <span class="widget-icon lang-ico">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+      </span>
+      <span class="widget-label">Languages</span>
+    </div>
+    
+    <div class="lang-grid">
+      <!-- English -->
+      <div class="lang-col">
+        <div class="lang-title-row">
+          <h4 class="lang-name">English</h4>
+          <button type="button" class="lang-audio-btn" data-lang="en" title="Listen to English" aria-label="Listen English">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+        </div>
+        <div class="lang-bars" aria-label="Proficiency: 5 of 5">
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+        </div>
+        <div class="lang-pill"><span class="lang-dot"></span>Near-native</div>
+        <p class="lang-sub">British and American accents</p>
+      </div>
+
+      <!-- Bangla -->
+      <div class="lang-col">
+        <div class="lang-title-row">
+          <h4 class="lang-name">Bangla</h4>
+          <button type="button" class="lang-audio-btn" data-lang="bn" title="বাংলা শুনুন" aria-label="Listen Bangla">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+        </div>
+        <div class="lang-bars" aria-label="Proficiency: 5 of 5">
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+        </div>
+        <div class="lang-pill"><span class="lang-dot"></span>Native</div>
+        <p class="lang-sub">First language & mother tongue</p>
+      </div>
+
+      <!-- Arabic -->
+      <div class="lang-col">
+        <div class="lang-title-row">
+          <h4 class="lang-name">Arabic</h4>
+          <button type="button" class="lang-audio-btn" data-lang="ar" title="استمع إلى العربية" aria-label="Listen Arabic">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+        </div>
+        <div class="lang-bars" aria-label="Proficiency: 3 of 5">
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg active"></span>
+          <span class="bar-seg"></span>
+          <span class="bar-seg"></span>
+        </div>
+        <div class="lang-pill"><span class="lang-dot"></span>Reading and small talk</div>
+        <p class="lang-sub">Elementary reading & conversational comprehension</p>
+      </div>
+    </div>
+  </div>
+</div>
+<h2 class="sec-title" style="margin-top:44px"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm5-2V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m-4 5v.01"/><path d="M3 13a20 20 0 0 0 18 0"/></g></svg> Experience</h2>
+<div class="exp-modern"><article class="exp-item-modern"><div class="exp-timeline"><div class="exp-logo-box">SB<span class="status-dot" title="Presently working here"></span></div><div class="exp-line"></div></div><div class="exp-content"><div class="exp-header-row"><h3>Software Developer, Web Platforms &amp; NGO ERP</h3><span class="exp-date">Jul 2026 - Present</span></div><div class="exp-sub">SAWAB Bangladesh &middot; Full-time &middot; Dhaka, Bangladesh</div><ul class="exp-bullets"><li>Build and maintain SAWAB Bangladesh&#x27;s public web platforms (sawabbd.org, sawabfoundation.org.bd) on Node.js / React: donation pipelines, bilingual (Bangla/English) content, and program pages for education, healthcare and WASH initiatives.</li><li>Design and develop an AI-native NGO ERP: NestJS microservices, Kafka event streaming, Redis, PGVector-based retrieval and LangGraph multi-agent workflows, planned across 85+ modules; currently in active development.</li></ul><div class="exp-tech"><span class="chip-solid">Node.js</span><span class="chip-solid">React</span><span class="chip-solid">NestJS</span><span class="chip-solid">Kafka</span><span class="chip-solid">PGVector</span><span class="chip-solid">LangGraph</span></div></div></article><article class="exp-item-modern"><div class="exp-timeline"><div class="exp-logo-box">JI</div><div class="exp-line"></div></div><div class="exp-content"><div class="exp-header-row"><h3>Software Developer &amp; AI Technology Specialist</h3><span class="exp-date">Jan 2025 - Jun 2026</span></div><div class="exp-sub">Jibika Intelligic Ltd. &middot; Full-time &middot; Dhaka, Bangladesh</div><ul class="exp-bullets"><li>Developed, tested and deployed PHP / Laravel and WordPress web applications across the full SDLC: custom themes, plugins, responsive UIs (HTML5, CSS3, JavaScript, Bootstrap) and REST APIs for a diverse client base.</li><li>Integrated third-party and LLM APIs (OpenAI, Claude, Gemini) to automate content, research and reporting workflows, reducing manual effort by approximately 50%.</li><li>Designed and maintained relational databases (MySQL / PostgreSQL) and managed Linux / cPanel hosting, deployments, backups and uptime monitoring.</li><li>Provided full-cycle IT support, managed organisational social media and authored technical documentation, product guides and SOPs.</li></ul><div class="exp-tech"><span class="chip-solid">Laravel</span><span class="chip-solid">WordPress</span><span class="chip-solid">LLM APIs</span><span class="chip-solid">MySQL</span><span class="chip-solid">PostgreSQL</span></div></div></article><article class="exp-item-modern"><div class="exp-timeline"><div class="exp-logo-box">SS</div><div class="exp-line"></div></div><div class="exp-content"><div class="exp-header-row"><h3>Software Developer, ERP Technology</h3><span class="exp-date">Jan 2024 - Dec 2024</span></div><div class="exp-sub">Smart Software Limited &middot; Full-time &middot; Dhaka, Bangladesh</div><ul class="exp-bullets"><li>Built and demonstrated PHP &amp; JavaScript ERP web modules (HRIS / Payroll, School Management, Hospital Management) for prospective institutional clients; gathered requirements and prepared SRS / BRD and UAT documentation.</li><li>Performed module testing, bug tracking and defect fixing throughout the SDLC and supported client onboarding, configuration and end-user training.</li><li>Delivered day-to-day IT support, system debugging and hardware troubleshooting for 20+ concurrent users across departments.</li></ul><div class="exp-tech"><span class="chip-solid">PHP</span><span class="chip-solid">JavaScript</span><span class="chip-solid">ERP</span><span class="chip-solid">SRS / BRD</span><span class="chip-solid">UAT</span></div></div></article><article class="exp-item-modern"><div class="exp-timeline"><div class="exp-logo-box">HG</div><div class="exp-line"></div></div><div class="exp-content"><div class="exp-header-row"><h3>Documentation &amp; IT Executive</h3><span class="exp-date">Aug 2022 - Dec 2023</span></div><div class="exp-sub">HBIZZ Group Company &middot; Full-time &middot; Karwan Bazar, Dhaka</div><ul class="exp-bullets"><li>Provided IT support across hardware, software, networking and connectivity; maintained IT assets, user accounts and system documentation.</li><li>Enforced data security through access control, secure document handling and scheduled system backups.</li><li>Developed and maintained the corporate website (hbizz.com) on WordPress with cPanel hosting configuration and performance monitoring.</li></ul><div class="exp-tech"><span class="chip-solid">WordPress</span><span class="chip-solid">cPanel</span><span class="chip-solid">IT support</span><span class="chip-solid">Security</span></div></div></article><article class="exp-item-modern"><div class="exp-timeline"><div class="exp-logo-box">TQ<span class="status-dot" title="Presently working here"></span></div><div class="exp-line"></div></div><div class="exp-content"><div class="exp-header-row"><h3>Voluntary Web Developer</h3><span class="exp-date">2024 - Present</span></div><div class="exp-sub">Tafseerul Quran Foundation (TQF) &middot; Full-time &middot; Bangladesh</div><ul class="exp-bullets"><li>Build and maintain the official TQF website (tqfbd.org) on WordPress: custom theme configuration, plugin management, security patching, performance optimisation and a mobile-responsive layout for a national non-profit audience.</li><li>Collaborate with the TQF team on digital-outreach strategy and social-media integration.</li></ul><div class="exp-tech"><span class="chip-solid">WordPress</span><span class="chip-solid">Volunteer</span><span class="chip-solid">Non-profit</span></div></div></article></div>
+<h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-code"></i> Skills</h2>
+<div class="sk-grid"><div class="sk"><h4>Languages</h4><div class="chips"><span class="chip">PHP</span><span class="chip">JavaScript / TypeScript</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">HTML5 / CSS3</span><span class="chip">C# / .NET Core (working)</span></div></div><div class="sk"><h4>Frameworks & CMS</h4><div class="chips"><span class="chip">Laravel</span><span class="chip">NestJS</span><span class="chip">Node.js / Express</span><span class="chip">React</span><span class="chip">Next.js</span><span class="chip">Vue.js</span><span class="chip">WordPress / WooCommerce</span><span class="chip">Tailwind CSS</span><span class="chip">Bootstrap 5</span></div></div><div class="sk"><h4>Databases</h4><div class="chips"><span class="chip">MySQL</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">Firebase</span><span class="chip">Redis</span><span class="chip">PGVector</span></div></div><div class="sk"><h4>AI & APIs</h4><div class="chips"><span class="chip">OpenAI / Claude / Gemini APIs</span><span class="chip">LangGraph</span><span class="chip">MCP</span><span class="chip">RAG</span><span class="chip">FastAPI</span><span class="chip">Whisper</span><span class="chip">REST &amp; WebSocket</span></div></div><div class="sk"><h4>DevOps & Cloud</h4><div class="chips"><span class="chip">Git &amp; GitHub</span><span class="chip">CI/CD</span><span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">AWS EC2 / S3</span><span class="chip">Kafka / RabbitMQ</span><span class="chip">Linux</span><span class="chip">Nginx / Apache</span></div></div><div class="sk"><h4>IT & Security</h4><div class="chips"><span class="chip">Networking (LAN/WAN)</span><span class="chip">Microsoft 365 admin</span><span class="chip">VAPT</span><span class="chip">Backup &amp; recovery</span><span class="chip">CCTV / ELV</span></div></div></div>
+<h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-graduation-cap"></i> Education</h2>
+<div class="exp"><div class="edu"><span class="logo-sq">DI</span><div><h3>B.Sc. in Computer Science &amp; Engineering</h3><p class="exp-meta">Daffodil International University (DIU), Dhaka &middot; CGPA 3.11 / 4.00 · Graduated 2022</p></div></div></div>
+<h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-award"></i> Certifications &amp; training</h2>
+<ul class="certs"><li><i class="fa-solid fa-award"></i><div><b>Web Development: HTML, CSS, JavaScript &amp; Advanced React (6 months)</b><small>SR Institute of Design</small></div></li><li><i class="fa-solid fa-award"></i><div><b>Cybersecurity Training: VAPT</b><small>Security Mind Pro</small></div></li><li><i class="fa-solid fa-award"></i><div><b>Google AI Essentials: Generative AI, Prompt Engineering &amp; Responsible AI</b><small>Google / Coursera</small></div></li><li><i class="fa-solid fa-award"></i><div><b>AI Tools &amp; Automation: ChatGPT, Gemini, Claude, OpenClaw</b><small>Professional Development</small></div></li><li><i class="fa-solid fa-award"></i><div><b>B2B Lead Generation</b><small>BITM</small></div></li></ul>
+<h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-circle-info"></i> Additional</h2>
+<div class="cards3"><div class="card"><h4>Leadership & Community</h4><div class="sm" style="margin-top:0;color:var(--ink-2)">President, Gobindopur Rising Tigers Club: led a 100+ member community organisation across social-development, youth mentorship, and public communications initiatives.</div></div><div class="card"><h4>Philosophy & R&D</h4><div class="sm" style="margin-top:0;color:var(--ink-2)">Passionate about autonomous agent architectures, local LLM inference, and building developer tools that maximize flow state and engineering velocity.</div></div><div class="card"><h4>Voluntary Work</h4><div class="sm" style="margin-top:0;color:var(--ink-2)">Technical contributor for community websites and open-source non-profit initiatives.</div></div></div>
+</div>
+<div class="panel" data-panel="work" hidden>
+<h2 class="sec-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> Selected work</h2>
+<div class="posts"><a class="post" href="../projects/"><h3>AI-Native NGO ERP</h3><small>Distributed humanitarian ERP with NestJS microservices, Kafka event streaming, PGVector RAG, Redis locks and LangGraph multi-agents. Planned across 85+ modules; in active development.</small></a><a class="post" href="../projects/"><h3>Karbar ERP</h3><small>Business suite for Bangladesh: accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), payroll with TDS and tax slabs, inventory, sales, purchases and project tracking.</small></a><a class="post" href="../projects/"><h3>SAWAB Bangladesh Platform</h3><small>Production NGO portal for education, healthcare, WASH and humanitarian aid, with donation pipelines and a bilingual (Bangla/English) architecture on Node.js 22, PostgreSQL and Docker.</small></a><a class="post" href="../projects/"><h3>SAWAB Foundation Portal</h3><small>Charity and zakat platform (React 18, TypeScript, Tailwind CSS) with an automated zakat calculator, relief tracking and instant donation integration.</small></a><a class="post" href="../projects/"><h3>AI Video Making Engine</h3><small>FastAPI + Next.js pipeline that turns long-form video and podcasts into 9:16 short clips using Whisper speech-to-text, Bengali NLP, a virality-scoring model and FFmpeg rendering.</small></a><a class="post" href="../projects/"><h3>AI Chat Web App</h3><small>Conversational AI web interface built with React, NestJS and WebSockets, with streaming LLM completions and low-latency message pipelines.</small></a></div>
+<p style="margin-top:18px"><a class="btn btn-secondary" href="../projects/">See all projects</a></p>
+</div>
+</div>
+</main>
+<aside class="rail"><div class="rail-top"><a class="btn-rail-top" href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer"><span class="git-icon-wrap"><i class="fa-brands fa-github"></i></span><span>Follow on GitHub</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="git-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a></div><div class="rail-body"><div class="r-card r-card-open">
+      <div class="r-status-pill">
+        <span class="live-dot-wrap">
+          <span class="live-dot-ping"></span>
+          <span class="live-dot-core"></span>
+        </span>
+        <span class="r-status-label">Available for work</span>
+      </div>
+      <h3 class="r-card-title">Open to new conversations</h3>
+      <p class="r-card-desc">AI automation engineer & full-stack builder. Always happy to talk products, collaborations and consultations.</p>
+      <a class="r-cta-btn" href="../contact/">
+        <span>Let's talk</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="r-btn-arrow"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>
+      </a>
+    </div><div class="r-card"><div class="r-card-head"><div class="r-head-title"><span class="r-head-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Who to follow</span></div></div><div class="follow-list"><div class="f-row"><span class="av p-img" style="background-image:url(https://nahian.bd/_astro/ahmed-shamim-hassan-shaon.BIgVFP6s_Z1hpCVE.webp)"><span class="plat"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span></span><div class="p-id" title="My mentor and the senior brother everyone wants by their side. I admire him the most."><b title="My mentor and the senior brother everyone wants by their side. I admire him the most.">Ahmed Shamim Hassan Shaon</b><small>CEO of Megaminds Learning, software architect and Laravel contributor</small></div><a class="f-btn" href="https://x.com/me_shaon" target="_blank" rel="noopener noreferrer">Follow</a></div><div class="f-row"><span class="av p-img" style="background-image:url(https://nahian.bd/_astro/mohammad-emran-hasan.B3Wat4fb_2rMcEN.webp)"><span class="plat"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span></span><div class="p-id" title="The guru of gurus, with extensive experience behind every tip."><b title="The guru of gurus, with extensive experience behind every tip.">Mohammad Emran Hasan</b><small>Building SaaS at klasio.com and helping teams ship Laravel products at figlab.io</small></div><a class="f-btn" href="https://x.com/phpfour" target="_blank" rel="noopener noreferrer">Follow</a></div><div class="f-row"><span class="av p-img" style="background-image:url(https://nahian.bd/_astro/hm-nayem.Ds5mCNNA_Z8zyPc.webp)"><span class="plat"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span></span><div class="p-id" title="Founder of Stack Learner, full-stack developer and trainer"><b title="Founder of Stack Learner, full-stack developer and trainer">HM Nayem</b><small>Founder of Stack Learner, full-stack developer and trainer</small></div><a class="f-btn" href="https://github.com/mrhm-dev" target="_blank" rel="noopener noreferrer">Follow</a></div></div><a class="see-all-people" href="../people/"><span class="see-all-label">See all 10 people <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></span><span class="see-all-avs"><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(https://nahian.bd/_astro/muntaser-muttaqi.kNFzAuiZ_ZVBNB4.webp);background-size:cover;background-position:center;display:inline-block;"></span><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(https://nahian.bd/_astro/mehbub-rashid-rabu.M5BbTgk6_1L2swT.webp);background-size:cover;background-position:center;display:inline-block;"></span><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(https://nahian.bd/_astro/jeffrey-way.DplsT5Lt_1zBnpr.webp);background-size:cover;background-position:center;display:inline-block;"></span><span class="av-more" style="width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px var(--surface);border:1px solid var(--line);margin-left:-8px;">+4</span></span></a></div><div class="r-card"><div class="r-card-head"><div class="r-head-title"><span class="r-head-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><span>Find me on</span></div></div><div class="find-list"><a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span><span class="find-info"><b>GitHub</b><small>@MehediHasan228</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></span><span class="find-info"><b>LinkedIn</b><small>in/mehedi-hasan-2859383b4</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></span><span class="find-info"><b>WhatsApp</b><small>+880 1799-447594</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="mailto:mehedihasan228.cse@gmail.com" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="find-info"><b>Email</b><small>mehedihasan228.cse@gmail.com</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://mehedi.pro.bd" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><span class="find-info"><b>Portfolio</b><small>mehedi.pro.bd</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a></div><div class="find-foot"><a class="see-all-profiles" href="../contact/"><span>See all contact channels</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a></div></div></div></aside>
+</div>
+<div class="bottom-nav" role="navigation" aria-label="Main"><a href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a><a href="../profile/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg><span>Profile</span></a><a href="../projects/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg><span>Projects</span></a><a href="../writing/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 17V5c0-1.121-.879-2-2-2s-2 .879-2 2v12l2 2zM16 7h4m-2 12H5a2 2 0 1 1 0-4h4a2 2 0 1 0 0-4H6"/></svg><span>Writing</span></a><a href="../people/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg><span>People</span></a></div>
+</div>
+<script src="../nx/nx.js?v=3"></script>
+<script type="module" src="../nx/slats-cover.js?v=8"></script>
+<script src="../nx/proj-dots.js?v=3"></script>
+<div style="text-align: center; padding-bottom: 2rem; display: none;">
+        <button id="launch-mines-btn" class="btn secondary-btn magnetic-element hover-sound"
+            style="font-size: 0.8rem; border-color: rgba(0, 242, 254, 0.3); color: var(--text-secondary);">[ Initiate
+            Diagnostic Protocol ]</button>
+    </div>
+
+    <div id="mines-overlay" class="hidden-overlay">
+        <div class="mines-container">
+            <div class="mines-header draggable-header">
+                <h3>System Diagnostic <span style="color:var(--accent-1);">(Find 3 Safe Nodes)</span></h3>
+                <span id="close-mines" class="hover-sound"><i class="fa-solid fa-xmark"></i></span>
+            </div>
+            <div class="mines-grid" id="mines-grid"></div>
+            <div class="mines-status" id="mines-status">Awaiting input...</div>
+            <div id="promo-code-box"
+                style="display:none; margin-top:1rem; padding:1rem; background: rgba(74, 222, 128, 0.2); border: 1px dashed #4ade80; color: #4ade80; border-radius: 8px; font-weight: bold; font-size: 1.1rem;">
+                Congrats </div>
+            <button id="reset-mines" class="btn primary-btn full-width-btn hover-sound"
+                style="margin-top: 1rem; display:none;">Reboot System</button>
+        </div>
+    </div>
+
+    <div id="cli-terminal" class="hidden-overlay" style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
+        <div class="cli-container">
+            <div class="cli-header draggable-header">
+                <span>root@mehedi.pro:~</span>
+                <i class="fa-solid fa-xmark hover-sound" id="close-cli" style="cursor:none; color:#ef4444;"></i>
+            </div>
+            <div class="cli-output" id="cli-output">
+                <div>Mehedi.pro OS v2.0.4 loaded.</div>
+                <div>Type <span style="color:var(--accent-1);">help</span> for a list of available commands.</div>
+            </div>
+            <div class="cli-input-line">
+                <span class="cli-prompt">root@mehedi.pro:~$</span>
+                <input type="text" id="cli-input" autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+    </div>
+
+    <div id="easter-egg-overlay" class="hidden-overlay">
+        <div id="hack-terminal"><span class="hack-cursor"></span></div>
+    </div>
+
+    <footer>
+        <p>© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
+        <div style="margin-top: 25px;">
+            <button id="self-destruct-btn" class="hover-sound"
+                style="width: 12px; height: 12px; background: #ef4444; border: none; border-radius: 50%; cursor: none; box-shadow: 0 0 10px #ef4444;"
+                title="Initiate Self Destruct"></button>
+        </div>
+    </footer>
+    <!-- ==========================================
+         FLOATING AI LEADERBOARD WIDGET
+    ========================================== -->
+    <div id="leaderboard-widget" class="lb-collapsed">
+        <div class="lb-toggle hover-sound" role="button" aria-label="Open AI Leaderboard">
+            <div class="lb-telemetry-bars" id="lb-toggle-icon" aria-hidden="true">
+                <span class="lb-bar lb-bar-1"></span>
+                <span class="lb-bar lb-bar-2"></span>
+                <span class="lb-bar lb-bar-3"></span>
+            </div>
+            <span class="lb-tooltip">AI Leaderboard</span>
+        </div>
+
+        <div class="radar-container lb-content">
+            <div class="radar-header">
+                <div class="radar-title-group draggable-header" style="cursor: move; flex-grow: 1;">
+                    <h3><span class="lb-title-telemetry" aria-hidden="true"><span class="lb-title-bar lb-tb-1"></span><span class="lb-title-bar lb-tb-2"></span><span class="lb-title-bar lb-tb-3"></span><span class="lb-title-bar lb-tb-4"></span></span> AI Leaderboard</h3>
+                </div>
+                <div class="radar-header-controls" style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="radar-filters">
+                        <button class="radar-tab active" data-category="agent">AGENT</button>
+                        <button class="radar-tab" data-category="chat">CHAT</button>
+                        <button class="radar-tab" data-category="code">CODE</button>
+                        <button class="radar-tab" data-category="image">IMAGE</button>
+                        <button class="radar-tab" data-category="video">VIDEO</button>
+                    </div>
+                    <button id="lb-expand-btn" class="hover-sound" title="Toggle Full View" style="background: transparent; border: 1px solid rgba(var(--accent-rgb), 0.3); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer;">
+                        <i class="fa-solid fa-expand"></i>
+                    </button>
+                    <button id="lb-close-btn" class="lb-mobile-close-btn hover-sound" title="Close Leaderboard" aria-label="Close Leaderboard">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="sync-indicator">
+                    <div class="live-badge">
+                        <span class="ping-dot"></span>
+                        <span class="badge-text" style="font-size: 0.55rem;">LIVE</span>
+                    </div>
+                    <div class="sync-time">
+                        <span class="sync-label">LAST REFRESH</span>
+                        <span id="radar-sync-val" class="sync-val">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="radar-sub-header">
+                <div class="radar-subtabs" id="radar-subtabs">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <div class="radar-table-wrapper">
+                <table id="ai-leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>RANK</th>
+                            <th>MODEL &amp; LAB</th>
+                            <th id="th-metric-score">SCORE / NET</th>
+                            <th id="th-metric-secondary">CONFIRMED / VOTES</th>
+                            <th>LICENSE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <!-- Dynamic Content Inject -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="radar-footer" style="margin-top: 1rem;">
+                <div class="source-info"><span>ARENA.AI / LMSYS</span></div>
+                <div class="status-indicator"><span class="status-dot"></span><span>SYNC</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-chat-widget" class="chat-collapsed hover-sound">
+        <div class="chat-header" id="chat-header">
+            <span class="chat-header-content">
+                <span class="grok-bot-avatar ai-orb-avatar" aria-label="Mehedi's AI Assistant">
+                    <ai-orb-mascot id="chat-mascot" expression="idle"></ai-orb-mascot>
+                </span>
+                <span class="chat-header-text"><span class="chat-header-title">Ask My AI</span><span class="chat-header-sub">Portfolio assistant</span></span>
+            </span>
+            <i class="fa-solid fa-chevron-up" id="chat-toggle-icon"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Dynamic chat messages rendered via JS -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Type a query...">
+            <button id="voice-btn" class="magnetic-element hover-sound"
+                style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:pointer;"
+                title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
+            <button id="chat-send" class="magnetic-element hover-sound"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+    <script src="../ai-orb-mascot.js?v=5"></script>
+    <script src="../script~9e1709.js?v=160" defer></script>
+
+</body>
+
+</html>

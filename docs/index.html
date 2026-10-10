@@ -41,7 +41,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=181">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=187">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -115,12 +115,11 @@
     <div class="ui-controls">
         <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn magnetic-element"
             aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <button id="sound-toggler" class="control-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
+        <button id="sound-toggler" class="control-btn sound-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
                 class="fa-solid fa-volume-high"></i></button>
-        <button id="theme-toggler" class="control-btn magnetic-element" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
+        <button id="theme-toggler" class="control-btn theme-btn magnetic-element" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
                 class="fa-solid fa-palette"></i></button>
     </div>
-
 
     <nav aria-label="Main navigation">
         <a href="./index.html" class="logo-link glitch-hover">
@@ -131,16 +130,47 @@
         </a>
 
         <ul class="nav-links">
-            <li><a href="#about" class="magnetic-element hover-sound">Architecture</a></li>
-            <li><a href="#skills" class="magnetic-element hover-sound">Stack</a></li>
-            <li><a href="#projects" class="magnetic-element hover-sound">Deployments</a></li>
-            <li><a href="./ai-insights/index.html" class="magnetic-element hover-sound">AI Insights</a></li>
-            <li><a href="#contact" class="magnetic-element hover-sound">Contact</a></li>
-            <li><a href="#archives" class="magnetic-element hover-sound">Sandbox</a></li>
+            <li><a href="./profile/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="./projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="./writing/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 17V5c0-1.121-.879-2-2-2s-2 .879-2 2v12l2 2zM16 7h4m-2 12H5a2 2 0 1 1 0-4h4a2 2 0 1 0 0-4H6"/></svg> <span>Writing</span></a></li>
+            <li><a href="./people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="./contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="./ai-insights/index.html" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> <span>AI Insights</span></a></li>
             <li><a href="./index.html" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i
                         class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
         </ul>
+
+        <div class="mobile-header-right">
+            <a href="./contact/" class="mobile-contact-btn hover-sound">Contact</a>
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
     </nav>
+
+    <div id="mobile-menu-drawer" class="mobile-menu-drawer">
+        <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="./profile/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="./projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="./writing/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 17V5c0-1.121-.879-2-2-2s-2 .879-2 2v12l2 2zM16 7h4m-2 12H5a2 2 0 1 1 0-4h4a2 2 0 1 0 0-4H6"/></svg> <span>Writing</span></a></li>
+            <li><a href="./people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="./contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="./ai-insights/index.html" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> <span>AI Insights</span></a></li>
+            <li><a href="./index.html" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i
+                        class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+        </ul>
+        <div class="drawer-controls">
+            <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
+                aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <button class="control-btn sound-btn" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
+                    class="fa-solid fa-volume-high"></i></button>
+            <button class="control-btn theme-btn" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
+                    class="fa-solid fa-palette"></i></button>
+        </div>
+    </div>
 
     <header class="hero" id="home">
         <canvas id="particle-canvas" aria-hidden="true" width="762" height="484"></canvas>
@@ -669,7 +699,7 @@
                         <span class="arch-tech-tag hover-sound"><i class="fa-solid fa-layer-group" style="color:#06b6d4;"></i> RAG</span>
                         <span class="arch-tech-tag hover-sound"><i class="fa-solid fa-users-gear" style="color:#a855f7;"></i> Multi-Agent Systems</span>
                         <span class="arch-tech-tag hover-sound"><img src="./uploads/brand-icons/openai.svg" alt="OpenAI" class="arch-tag-icon"> OpenAI</span>
-                        <span class="arch-tech-tag hover-sound"><img src="./uploads/brand-icons/anthropic.svg" alt="Claude" class="arch-tag-icon"> Claude</span>
+                        <span class="arch-tech-tag hover-sound"><img src="./uploads/brand-icons/claude.svg" alt="Claude" class="arch-tag-icon"> Claude</span>
                         <span class="arch-tech-tag hover-sound"><img src="./uploads/brand-icons/gemini.svg" alt="Gemini" class="arch-tag-icon"> Gemini</span>
                         <span class="arch-tech-tag hover-sound"><img src="./uploads/brand-icons/ollama.svg" alt="Ollama" class="arch-tag-icon"> Ollama</span>
                     </div>
@@ -739,7 +769,7 @@
                     </div>
                     <p class="arch-matrix-desc">Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.</p>
                     <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/openai.svg" alt="OpenAI" class="arch-tag-icon"> OpenAI</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/anthropic.svg" alt="Claude" class="arch-tag-icon"> Claude</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/gemini.svg" alt="Gemini" class="arch-tag-icon"> Gemini</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/qwen.svg" alt="Qwen" class="arch-tag-icon"> Qwen</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/meta.svg" alt="Llama" class="arch-tag-icon"> Llama</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/mistral.svg" alt="Mistral" class="arch-tag-icon"> Mistral</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/deepseek.svg" alt="DeepSeek" class="arch-tag-icon"> DeepSeek</span>
+                        <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/openai.svg" alt="OpenAI" class="arch-tag-icon"> OpenAI</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/claude.svg" alt="Claude" class="arch-tag-icon"> Claude</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/gemini.svg" alt="Gemini" class="arch-tag-icon"> Gemini</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/qwen.svg" alt="Qwen" class="arch-tag-icon"> Qwen</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/meta.svg" alt="Llama" class="arch-tag-icon"> Llama</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/mistral.svg" alt="Mistral" class="arch-tag-icon"> Mistral</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/deepseek.svg" alt="DeepSeek" class="arch-tag-icon"> DeepSeek</span>
                     </div>
                 </div>
                 <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-agents">
@@ -1618,7 +1648,19 @@
             <span class="arch-dot" data-index="5" title="Synthesized Wisdom"></span>
         </div>
     </section>
+    <section id="people" class="people-section" style="display: none;"></section>
 
+    <script>
+        (function () {
+
+            var t = document.getElementById('dhaka-time');
+            function tick() {
+                t.textContent = '· ' + new Intl.DateTimeFormat('en', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Dhaka' }).format(new Date());
+            }
+            tick();
+            setInterval(tick, 30000);
+        })();
+    </script>
 
     <section id="contact" class="contact-section">
         <div class="section-title hidden">
@@ -1719,7 +1761,8 @@
         </div>
     </section>
 
-    <div style="text-align: center; padding-bottom: 2rem;">
+    <div class="bottom-nav" role="navigation" aria-label="Main"><a href="./index.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a><a href="./profile/"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg><span>Profile</span></a><a href="./projects/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg><span>Projects</span></a><a href="./writing/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 17V5c0-1.121-.879-2-2-2s-2 .879-2 2v12l2 2zM16 7h4m-2 12H5a2 2 0 1 1 0-4h4a2 2 0 1 0 0-4H6"/></svg><span>Writing</span></a><a href="./people/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg><span>People</span></a></div>
+<div style="text-align: center; padding-bottom: 2rem;">
         <button id="launch-mines-btn" class="btn secondary-btn magnetic-element hover-sound"
             style="font-size: 0.8rem; border-color: rgba(0, 242, 254, 0.3); color: var(--text-secondary);">[ Initiate
             Diagnostic Protocol ]</button>
@@ -1866,7 +1909,7 @@
         </div>
     </div>
     <script src="./ai-orb-mascot.js?v=5"></script>
-    <script src="./script~9e1709.js?v=159" defer></script>
+    <script src="./script~9e1709.js?v=160" defer></script>
 
 </body>
 

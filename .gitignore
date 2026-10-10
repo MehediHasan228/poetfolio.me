@@ -37,7 +37,8 @@ Thumbs.db
 .tmp/
 tmp/
 .old
-*.[0-9][0-9][0-9]
-*.[0-9][0-9][0-9].*
-*:Zone.Identifier
+# Python & scratch
+__pycache__/
+*.pyc
+scratch/
 
