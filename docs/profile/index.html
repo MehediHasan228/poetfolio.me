@@ -121,14 +121,14 @@
 
         <div class="mobile-header-right">
             <a href="../contact/" class="mobile-contact-btn hover-sound">Contact</a>
-            <button id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Toggle Menu">
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Toggle Menu" onclick="toggleMobileMenu(event)">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </nav>
 
     <div id="mobile-menu-drawer" class="mobile-menu-drawer">
-        <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu">
+        <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu" onclick="closeMobileMenu(event)">
             <i class="fa-solid fa-xmark"></i>
         </button>
         <ul class="nav-links">
@@ -149,6 +149,31 @@
                     class="fa-solid fa-palette"></i></button>
         </div>
     </div>
+
+    <script>
+    function toggleMobileMenu(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        var d = document.getElementById('mobile-menu-drawer');
+        if (!d) return;
+        var open = d.classList.toggle('drawer-open');
+        document.body.classList.toggle('drawer-open', open);
+    }
+    function closeMobileMenu(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        var d = document.getElementById('mobile-menu-drawer');
+        if (!d) return;
+        d.classList.remove('drawer-open');
+        document.body.classList.remove('drawer-open');
+    }
+    document.addEventListener('click', function(e) {
+        var d = document.getElementById('mobile-menu-drawer');
+        if (d && d.classList.contains('drawer-open')) {
+            if (!d.contains(e.target) && !e.target.closest('#mobile-menu-toggle')) {
+                closeMobileMenu(e);
+            }
+        }
+    });
+    </script>
 
     
 <div class="nx">
@@ -470,7 +495,7 @@
         </div>
     </div>
     <script src="../ai-orb-mascot.js?v=5"></script>
-    <script src="../script~9e1709.js?v=160" defer></script>
+    <script src="../script~9e1709.js?v=188" defer></script>
 
 </body>
 
