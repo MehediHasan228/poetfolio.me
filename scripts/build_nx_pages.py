@@ -304,6 +304,90 @@ body.nx-page[data-page="profile"] .nx {
   }
 }
 
+/* Mobile App Native Flush Bottom Nav */
+@media (max-width: 767px) {
+  .nx .bottom-nav,
+  .bottom-nav {
+    position: fixed !important;
+    z-index: 9999 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 8px)) 6px !important;
+    border-radius: 0 !important;
+    border-top: 1px solid var(--line, rgba(255, 255, 255, 0.12)) !important;
+    background: color-mix(in srgb, var(--card-bg, var(--surface, #0b1120)) 88%, transparent) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.22) !important;
+  }
+  .nx .bottom-nav a,
+  .bottom-nav a {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+    gap: 3px !important;
+    padding: 6px 4px !important;
+    border-radius: 12px !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: var(--text-color, var(--ink-3)) !important;
+    text-decoration: none !important;
+    transition: background 0.2s, color 0.2s, transform 0.15s !important;
+  }
+  .nx .bottom-nav a svg,
+  .bottom-nav a svg {
+    width: 22px !important;
+    height: 22px !important;
+    flex-shrink: 0 !important;
+  }
+  .nx .bottom-nav a[aria-current="page"],
+  .bottom-nav a[aria-current="page"] {
+    background: var(--accent-1, #2563eb) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+  }
+  .nx .bottom-nav a:active,
+  .bottom-nav a:active {
+    transform: scale(0.94) !important;
+  }
+
+  html[data-theme="light"] .nx .bottom-nav,
+  html[data-theme="light"] .bottom-nav,
+  [data-theme="light"] .nx .bottom-nav,
+  [data-theme="light"] .bottom-nav,
+  html.light-mode .bottom-nav,
+  body.light-mode .bottom-nav {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06) !important;
+  }
+  html[data-theme="light"] .nx .bottom-nav a,
+  html[data-theme="light"] .bottom-nav a,
+  [data-theme="light"] .nx .bottom-nav a,
+  [data-theme="light"] .bottom-nav a,
+  body.light-mode .bottom-nav a {
+    color: #475569 !important;
+  }
+  html[data-theme="light"] .nx .bottom-nav a[aria-current="page"],
+  html[data-theme="light"] .bottom-nav a[aria-current="page"],
+  [data-theme="light"] .nx .bottom-nav a[aria-current="page"],
+  [data-theme="light"] .bottom-nav a[aria-current="page"],
+  body.light-mode .bottom-nav a[aria-current="page"] {
+    background: #2563eb !important;
+    color: #ffffff !important;
+  }
+}
+
 /* Hide telemetry cockpit clutter on subpages */
 body.nx-page .sys-monitor {
   display: none !important;
@@ -1492,7 +1576,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
 
 def shell(slug, title, desc, cur):
     head = build_pages.set_meta(_head, slug, title.replace(f"{NAME} · ", ""), desc, "../")
-    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=20">\n</head>')
+    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=21">\n</head>')
     opening = swap_nav_active(_open, "../", cur)
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 
