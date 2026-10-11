@@ -30,14 +30,15 @@ ABOUT = [
     "and scalable APIs. Core expertise spans modern TypeScript, React, and Next.js on the frontend, paired with robust "
     "NestJS and PHP / Laravel backend microservices. Proven track record delivering everything from custom platforms and "
     "WordPress / WooCommerce solutions to complex, event-driven distributed systems.",
-    "An AI-native engineer who leverages state-of-the-art LLM workflows (Claude, OpenAI, Gemini) to accelerate engineering "
+    "An AI-native engineer who leverages state-of-the-art LLM workflows (Claude, OpenAI, Antigravity, OpenCode, Ollama) to accelerate engineering "
     "velocity without sacrificing code hygiene. Actively building multi-agent automation systems using LangGraph, MCP, and "
     "retrieval-augmented workflows (PGVector), backed by Kafka event streaming and Docker containerisation.",
     "Currently leading development for SAWAB Bangladesh's digital web platforms and architecting an AI-native NGO ERP spanning "
     "85+ planned modules. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.",
 ]
-AI_TOOLS = [("Claude", "claude", "#d97757"), ("OpenAI", "openai", "#10a37f"), ("Gemini", "gemini", "#3186ff"),
-            ("Antigravity", "antigravity", "#3186ff"), ("Ollama", "ollama", "#9a9897")]
+AI_TOOLS = [("Claude", "claude", "#d97757"), ("OpenAI", "openai", "#10a37f"),
+            ("Antigravity", "antigravity", "#3b82f6"), ("OpenCode", "opencode", "#64748b"),
+            ("Ollama", "ollama", "#475569")]
 STACK = [("Laravel", "laravel"), ("PHP", "php"), ("NestJS", "nestjs"), ("TypeScript", "typescript"), ("Next.js", "nextjs"),
          ("React", "react"), ("PostgreSQL", "postgresql"), ("MySQL", "mysql"), ("Redis", "redis"),
          ("Kafka", "apachekafka"), ("LangGraph", "langgraph"), ("Docker", "docker"), ("Kubernetes", "kubernetes"),
@@ -976,6 +977,54 @@ body.nx-page #leaderboard-widget {
   color: #ffffff;
 }
 
+/* AI Tools and Tech Stack Pills (Design Specified Soft Gradient Badges) */
+.nx .pills {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 640px;
+}
+.nx .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.2;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  user-select: none;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink-1);
+}
+.nx .pill img,
+.nx .pill svg,
+.nx .pill i {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+.nx .pill.ai {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, color-mix(in srgb, var(--c) 16%, rgba(15, 23, 42, 0.75)) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent), 0 2px 8px -2px color-mix(in srgb, var(--c) 25%, transparent);
+  color: #f8fafc;
+}
+[data-theme="light"] .nx .pill.ai {
+  background: linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, var(--c) 16%, #ffffff) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 42%, transparent), 0 2px 8px -1px color-mix(in srgb, var(--c) 20%, transparent);
+  color: #0f172a;
+}
+.nx .pill.ai:hover {
+  transform: translateY(-1.5px);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 70%, transparent), 0 6px 16px -2px color-mix(in srgb, var(--c) 35%, transparent);
+}
+
 /* Modern Profile Meta Widgets (Location, Works, Languages - Theme Adaptive) */
 .meta-widgets {
   display: flex;
@@ -1377,7 +1426,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
 
 def shell(slug, title, desc, cur):
     head = build_pages.set_meta(_head, slug, title.replace(f"{NAME} · ", ""), desc, "../")
-    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=17">\n</head>')
+    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=19">\n</head>')
     opening = swap_nav_active(_open, "../", cur)
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 
