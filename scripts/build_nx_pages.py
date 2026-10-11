@@ -1011,18 +1011,84 @@ body.nx-page #leaderboard-widget {
   display: block;
 }
 .nx .pill.ai {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, color-mix(in srgb, var(--c) 16%, rgba(15, 23, 42, 0.75)) 100%);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent), 0 2px 8px -2px color-mix(in srgb, var(--c) 25%, transparent);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, color-mix(in srgb, var(--c) 16%, rgba(15, 23, 42, 0.78)) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 46%, transparent), 0 2px 10px -2px color-mix(in srgb, var(--c) 25%, transparent);
   color: #f8fafc;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background 0.3s ease;
+  animation: ai-pill-breathe 4.5s ease-in-out infinite alternate;
 }
+.nx .pill.ai:nth-child(1) { animation-delay: 0s; }
+.nx .pill.ai:nth-child(2) { animation-delay: 0.8s; }
+.nx .pill.ai:nth-child(3) { animation-delay: 1.6s; }
+.nx .pill.ai:nth-child(4) { animation-delay: 2.4s; }
+.nx .pill.ai:nth-child(5) { animation-delay: 3.2s; }
+
 [data-theme="light"] .nx .pill.ai {
-  background: linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, var(--c) 16%, #ffffff) 100%);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 42%, transparent), 0 2px 8px -1px color-mix(in srgb, var(--c) 20%, transparent);
+  background: linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, var(--c) 15%, #ffffff) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 44%, transparent), 0 2px 10px -2px color-mix(in srgb, var(--c) 20%, transparent);
   color: #0f172a;
 }
+
+/* Glass Shimmer Sheen Light Reflection */
+.nx .pill.ai::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.32) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: left 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 1;
+}
+[data-theme="light"] .nx .pill.ai::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
+}
+.nx .pill.ai:hover::after {
+  left: 170%;
+}
+
+/* Hover: Elevation, Brand Glow Aura & Expansion */
 .nx .pill.ai:hover {
-  transform: translateY(-1.5px);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 70%, transparent), 0 6px 16px -2px color-mix(in srgb, var(--c) 35%, transparent);
+  transform: translateY(-2.5px) scale(1.04);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 80%, transparent),
+              0 10px 24px -3px color-mix(in srgb, var(--c) 45%, transparent),
+              0 0 18px 2px color-mix(in srgb, var(--c) 28%, transparent);
+}
+.nx .pill.ai:active {
+  transform: translateY(0) scale(0.96);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 60%, transparent),
+              0 2px 6px color-mix(in srgb, var(--c) 25%, transparent);
+}
+
+/* Icon Micro-Spring Interaction */
+.nx .pill.ai img,
+.nx .pill.ai svg {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 2;
+}
+.nx .pill.ai:hover img,
+.nx .pill.ai:hover svg {
+  transform: scale(1.18) rotate(5deg);
+}
+
+/* Ambient Breathing Glow Keyframes */
+@keyframes ai-pill-breathe {
+  0% {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent),
+                0 2px 8px -2px color-mix(in srgb, var(--c) 18%, transparent);
+  }
+  100% {
+    box-shadow: inset 0 0 0 1.2px color-mix(in srgb, var(--c) 65%, transparent),
+                0 4px 16px 0px color-mix(in srgb, var(--c) 35%, transparent);
+  }
 }
 
 /* Modern Profile Meta Widgets (Location, Works, Languages - Theme Adaptive) */
@@ -1426,7 +1492,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
 
 def shell(slug, title, desc, cur):
     head = build_pages.set_meta(_head, slug, title.replace(f"{NAME} · ", ""), desc, "../")
-    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=19">\n</head>')
+    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=20">\n</head>')
     opening = swap_nav_active(_open, "../", cur)
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 
