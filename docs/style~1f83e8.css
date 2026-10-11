@@ -1743,7 +1743,7 @@ section {
 
 /* Clean Crisp Brand Accents with Specular Lighting for all Brands */
 .unit-openai { border-color: rgba(16, 185, 129, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(16, 185, 129, 0.40); }
-.unit-claude { border-color: rgba(245, 158, 11, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(245, 158, 11, 0.40); }
+.unit-claude { border-color: rgba(217, 119, 87, 0.95); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 12px rgba(217, 119, 87, 0.50); }
 .unit-gemini { border-color: rgba(192, 132, 252, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(192, 132, 252, 0.40); }
 .unit-deepseek { border-color: rgba(96, 165, 250, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(96, 165, 250, 0.40); }
 .unit-qwen { border-color: rgba(167, 139, 250, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(167, 139, 250, 0.40); }
