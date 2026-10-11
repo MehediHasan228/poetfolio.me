@@ -95,46 +95,36 @@
         });
     });
 
-    // Project card touch animation for mobile devices (momentary feedback on tap, auto-reset)
-    document.querySelectorAll('.nx .proj-cover').forEach(function (cover) {
-        var card = cover.closest('.proj');
-        var touchTimer = null;
-        var startX = 0, startY = 0;
-        var isScrolling = false;
+    // Project cards interaction: click/tap on card reveals animation & button; clicking button opens link
+    var projCards = document.querySelectorAll('.nx .proj');
+    if (projCards.length) {
+        projCards.forEach(function (card) {
+            card.addEventListener('click', function (e) {
+                // If clicked on center button or footer links, let native link navigation happen
+                if (e.target.closest('.proj-center-btn') || e.target.closest('.proj-links')) {
+                    return;
+                }
 
-        cover.addEventListener('touchstart', function (e) {
-            if (e.touches.length !== 1) return;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            isScrolling = false;
-            if (card) {
-                card.classList.add('is-touch-active');
+                var wasActive = card.classList.contains('is-active');
+                projCards.forEach(function (c) {
+                    if (c !== card) c.classList.remove('is-active');
+                });
+
+                if (wasActive) {
+                    card.classList.remove('is-active');
+                } else {
+                    card.classList.add('is-active');
+                }
+            });
+        });
+
+        // Click outside closes active cards
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.nx .proj')) {
+                projCards.forEach(function (c) {
+                    c.classList.remove('is-active');
+                });
             }
-        }, { passive: true });
-
-        cover.addEventListener('touchmove', function (e) {
-            if (e.touches.length !== 1) return;
-            var dx = Math.abs(e.touches[0].clientX - startX);
-            var dy = Math.abs(e.touches[0].clientY - startY);
-            if (dx > 8 || dy > 8) {
-                isScrolling = true;
-                if (card) card.classList.remove('is-touch-active');
-            }
-        }, { passive: true });
-
-        cover.addEventListener('touchend', function () {
-            if (isScrolling) {
-                if (card) card.classList.remove('is-touch-active');
-                return;
-            }
-            clearTimeout(touchTimer);
-            touchTimer = setTimeout(function () {
-                if (card) card.classList.remove('is-touch-active');
-            }, 350);
-        }, { passive: true });
-
-        cover.addEventListener('touchcancel', function () {
-            if (card) card.classList.remove('is-touch-active');
-        }, { passive: true });
-    });
+        });
+    }
 })();

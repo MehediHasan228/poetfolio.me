@@ -821,6 +821,7 @@ body.nx-page #leaderboard-widget {
   box-shadow: inset 0 0 0 1px var(--line);
   transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .25s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
+  cursor: pointer;
 }
 .nx .proj-cover {
   position: relative;
@@ -830,6 +831,7 @@ body.nx-page #leaderboard-widget {
   background: #090e17;
   display: block;
   text-decoration: none;
+  cursor: pointer;
 }
 .nx .proj-cover::after {
   display: none !important;
@@ -876,7 +878,7 @@ body.nx-page #leaderboard-widget {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.86);
-  z-index: 5;
+  z-index: 10;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -888,9 +890,11 @@ body.nx-page #leaderboard-widget {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   color: #ffffff;
+  text-decoration: none !important;
   pointer-events: none;
   opacity: 0;
-  transition: opacity .32s cubic-bezier(0.16, 1, 0.3, 1), transform .32s cubic-bezier(0.16, 1, 0.3, 1), border-color .25s ease, box-shadow .25s ease, background .25s ease;
+  cursor: pointer;
+  transition: opacity .18s cubic-bezier(0.16, 1, 0.3, 1), transform .18s cubic-bezier(0.16, 1, 0.3, 1), border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
 .nx .proj-center-btn .btn-ico {
   width: 26px;
@@ -914,107 +918,62 @@ body.nx-page #leaderboard-widget {
   white-space: nowrap;
 }
 
-/* Hover effects ONLY on devices that support true pointer hover (mouse/trackpad on desktop) */
-@media (hover: hover) and (pointer: fine) {
-  .nx .proj:hover {
-    transform: translateY(-4px);
-    box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .8), 0 20px 40px -20px rgba(var(--brand-rgb, 0, 242, 254), .45);
-  }
-  .nx .proj:hover .proj-img {
-    transform: scale(1.05);
-    filter: brightness(0.4);
-  }
-  .nx .proj:hover .proj-overlay {
-    opacity: 1;
-  }
-  .nx .proj:hover .proj-dots-canvas {
-    opacity: 1;
-  }
-  .nx .proj:hover .proj-center-btn {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  .nx .proj-cover:hover .proj-center-btn {
-    background: rgba(10, 18, 34, 0.96);
-    border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.85);
-    transform: translate(-50%, -50%) scale(1.05);
-    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.6), 0 0 32px 2px rgba(var(--brand-rgb, 0, 242, 254), 0.5);
-  }
-  .nx .proj-cover:hover .proj-center-btn .btn-ico {
-    transform: translate(1px, -1px);
-    background: rgba(var(--brand-rgb, 0, 242, 254), 0.35);
-    color: #ffffff;
-  }
-}
-
-/* Touch & Mobile Guard: completely prevent sticky touch hover, image dimming, and stuck floating buttons */
-@media (hover: none), (pointer: coarse), (max-width: 768px) {
-  .nx .proj,
-  .nx .proj:hover,
-  .nx .proj:focus,
-  .nx .proj:active {
-    transform: none !important;
-    box-shadow: inset 0 0 0 1px var(--line) !important;
-  }
-  .nx .proj-cover,
-  .nx .proj-cover:hover,
-  .nx .proj-cover:focus,
-  .nx .proj-cover:active {
-    transform: none !important;
-  }
-  .nx .proj-img,
-  .nx .proj:hover .proj-img,
-  .nx .proj:focus .proj-img,
-  .nx .proj:active .proj-img {
-    transform: none !important;
-    filter: brightness(1) !important;
-  }
-  .nx .proj-overlay,
-  .nx .proj:hover .proj-overlay {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-  .nx .proj-dots-canvas,
-  .nx .proj:hover .proj-dots-canvas {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-  .nx .proj-center-btn,
-  .nx .proj:hover .proj-center-btn,
-  .nx .proj-cover:hover .proj-center-btn {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-}
-
-/* Controlled touch feedback animation for mobile & touchscreens (momentary, active on touch) */
+/* Universal Hover & Active Animation (Desktop Mouse + Mobile Touch & Tap) */
+.nx .proj:hover,
+.nx .proj:active,
+.nx .proj:focus-within,
+.nx .proj.is-active,
 .nx .proj.is-touch-active {
-  transform: translateY(-2px) scale(0.99) !important;
-  box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .85), 0 16px 36px -12px rgba(var(--brand-rgb, 0, 242, 254), .5) !important;
-  transition: transform .18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transform: translateY(-4px);
+  box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .85), 0 20px 40px -20px rgba(var(--brand-rgb, 0, 242, 254), .5);
 }
+.nx .proj:hover .proj-img,
+.nx .proj:active .proj-img,
+.nx .proj:focus-within .proj-img,
+.nx .proj.is-active .proj-img,
 .nx .proj.is-touch-active .proj-img {
-  transform: scale(1.04) !important;
-  filter: brightness(0.4) !important;
-  transition: transform .22s cubic-bezier(0.16, 1, 0.3, 1), filter .2s ease !important;
+  transform: scale(1.05);
+  filter: brightness(0.4);
 }
+.nx .proj:hover .proj-overlay,
+.nx .proj:active .proj-overlay,
+.nx .proj:focus-within .proj-overlay,
+.nx .proj.is-active .proj-overlay,
 .nx .proj.is-touch-active .proj-overlay {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
-  transition: opacity .2s ease !important;
 }
+.nx .proj:hover .proj-dots-canvas,
+.nx .proj:active .proj-dots-canvas,
+.nx .proj:focus-within .proj-dots-canvas,
+.nx .proj.is-active .proj-dots-canvas,
+.nx .proj.is-touch-active .proj-dots-canvas {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.nx .proj:hover .proj-center-btn,
+.nx .proj:active .proj-center-btn,
+.nx .proj:focus-within .proj-center-btn,
+.nx .proj.is-active .proj-center-btn,
 .nx .proj.is-touch-active .proj-center-btn {
   display: inline-flex !important;
   opacity: 1 !important;
   visibility: visible !important;
-  transform: translate(-50%, -50%) scale(1) !important;
-  transition: opacity .2s cubic-bezier(0.16, 1, 0.3, 1), transform .2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  pointer-events: none !important;
+  pointer-events: auto !important;
+  transform: translate(-50%, -50%) scale(1);
+}
+.nx .proj-center-btn:hover {
+  background: rgba(10, 18, 34, 0.98) !important;
+  border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.9) !important;
+  transform: translate(-50%, -50%) scale(1.08) !important;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.8), 0 0 36px 4px rgba(var(--brand-rgb, 0, 242, 254), 0.6) !important;
+}
+.nx .proj-center-btn:hover .btn-ico {
+  transform: translate(1px, -1px);
+  background: rgba(var(--brand-rgb, 0, 242, 254), 0.45) !important;
+  color: #ffffff;
 }
 
 /* Modern Profile Meta Widgets (Location, Works, Languages - Theme Adaptive) */
@@ -1418,7 +1377,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
 
 def shell(slug, title, desc, cur):
     head = build_pages.set_meta(_head, slug, title.replace(f"{NAME} · ", ""), desc, "../")
-    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=15">\n</head>')
+    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=17">\n</head>')
     opening = swap_nav_active(_open, "../", cur)
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 
@@ -1457,9 +1416,9 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True):
 </div>
 {bottom_nav(cur, prefix="../")}
 </div>
-<script src="../nx/nx.js?v=4"></script>
+<script src="../nx/nx.js?v=6"></script>
 <script type="module" src="../nx/slats-cover.js?v=8"></script>
-<script src="../nx/proj-dots.js?v=3"></script>
+<script src="../nx/proj-dots.js?v=5"></script>
 {tail}'''
 
 
@@ -1671,15 +1630,15 @@ def projects():
             for k, u in links)
         tg = "".join(f'<span class="tag">{x}</span>' for x in tags)
         prim = links[0][1] if links else None
-        cov_open = f'<a href="{prim}" target="_blank" rel="noopener noreferrer" class="proj-cover" aria-label="Open {e(t)}">' if prim else '<div class="proj-cover">'
-        cov_close = '</a>' if prim else '</div>'
+        cov_open = '<div class="proj-cover">'
+        cov_close = '</div>'
         if prim:
             btn_label = "Live Preview" if badge == "Live" else ("View Code" if (links and links[0][0] == "github") else "View Project")
             btn_ico = '<i class="fa-solid fa-arrow-up-right-from-square"></i>'
-            center_btn = (f'<span class="proj-center-btn">'
+            center_btn = (f'<a href="{prim}" target="_blank" rel="noopener noreferrer" class="proj-center-btn" aria-label="{btn_label} for {e(t)}">'
                           f'<span class="btn-ico">{btn_ico}</span>'
                           f'<span class="btn-text">{btn_label}</span>'
-                          f'</span>')
+                          f'</a>')
         else:
             center_btn = ('<span class="proj-center-btn in-dev">'
                           '<span class="btn-ico"><i class="fa-solid fa-code"></i></span>'

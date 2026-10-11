@@ -95,31 +95,44 @@
       mouse.active = true;
     }
 
-    card.addEventListener('pointerenter', (e) => {
-      if (e.pointerType === 'touch') return;
+    function handlePointer(e) {
       isHovered = true;
       updateMouse(e);
-      startLoop();
-    }, { passive: true });
-
-    card.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'touch') return;
-      updateMouse(e);
       if (!animId) startLoop();
-    }, { passive: true });
+    }
+
+    card.addEventListener('pointerenter', handlePointer, { passive: true });
+    card.addEventListener('pointermove', handlePointer, { passive: true });
+    card.addEventListener('pointerdown', handlePointer, { passive: true });
 
     card.addEventListener('pointerleave', () => {
       isHovered = false;
       mouse.active = false;
       // Keep animating during the 0.45s CSS fade-out transition, then pause to save resources
       stopTimeout = setTimeout(() => {
-        if (!isHovered && animId) {
+        if (!isHovered && animId && !card.classList.contains('is-active')) {
           cancelAnimationFrame(animId);
           animId = null;
           ctx.clearRect(0, 0, width, height);
         }
       }, 500);
     }, { passive: true });
+
+    const activeObserver = new MutationObserver(() => {
+      if (card.classList.contains('is-active')) {
+        isHovered = true;
+        if (!mouse.active) {
+          mouse.x = width / 2;
+          mouse.y = height / 2;
+          mouse.active = true;
+        }
+        startLoop();
+      } else if (!card.matches(':hover')) {
+        isHovered = false;
+        mouse.active = false;
+      }
+    });
+    activeObserver.observe(card, { attributes: true, attributeFilter: ['class'] });
 
     function draw() {
       if (!isVisible) {
