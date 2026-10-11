@@ -94,4 +94,47 @@
             document.querySelectorAll('.person').forEach(function (p) { p.hidden = !(f === 'all' || p.dataset.platform === f); });
         });
     });
+
+    // Project card touch animation for mobile devices (momentary feedback on tap, auto-reset)
+    document.querySelectorAll('.nx .proj-cover').forEach(function (cover) {
+        var card = cover.closest('.proj');
+        var touchTimer = null;
+        var startX = 0, startY = 0;
+        var isScrolling = false;
+
+        cover.addEventListener('touchstart', function (e) {
+            if (e.touches.length !== 1) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isScrolling = false;
+            if (card) {
+                card.classList.add('is-touch-active');
+            }
+        }, { passive: true });
+
+        cover.addEventListener('touchmove', function (e) {
+            if (e.touches.length !== 1) return;
+            var dx = Math.abs(e.touches[0].clientX - startX);
+            var dy = Math.abs(e.touches[0].clientY - startY);
+            if (dx > 8 || dy > 8) {
+                isScrolling = true;
+                if (card) card.classList.remove('is-touch-active');
+            }
+        }, { passive: true });
+
+        cover.addEventListener('touchend', function () {
+            if (isScrolling) {
+                if (card) card.classList.remove('is-touch-active');
+                return;
+            }
+            clearTimeout(touchTimer);
+            touchTimer = setTimeout(function () {
+                if (card) card.classList.remove('is-touch-active');
+            }, 350);
+        }, { passive: true });
+
+        cover.addEventListener('touchcancel', function () {
+            if (card) card.classList.remove('is-touch-active');
+        }, { passive: true });
+    });
 })();

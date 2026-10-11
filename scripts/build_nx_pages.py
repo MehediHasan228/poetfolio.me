@@ -991,6 +991,32 @@ body.nx-page #leaderboard-widget {
   }
 }
 
+/* Controlled touch feedback animation for mobile & touchscreens (momentary, active on touch) */
+.nx .proj.is-touch-active {
+  transform: translateY(-2px) scale(0.99) !important;
+  box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .85), 0 16px 36px -12px rgba(var(--brand-rgb, 0, 242, 254), .5) !important;
+  transition: transform .18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.nx .proj.is-touch-active .proj-img {
+  transform: scale(1.04) !important;
+  filter: brightness(0.4) !important;
+  transition: transform .22s cubic-bezier(0.16, 1, 0.3, 1), filter .2s ease !important;
+}
+.nx .proj.is-touch-active .proj-overlay {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: opacity .2s ease !important;
+}
+.nx .proj.is-touch-active .proj-center-btn {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate(-50%, -50%) scale(1) !important;
+  transition: opacity .2s cubic-bezier(0.16, 1, 0.3, 1), transform .2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  pointer-events: none !important;
+}
+
 /* Modern Profile Meta Widgets (Location, Works, Languages - Theme Adaptive) */
 .meta-widgets {
   display: flex;
@@ -1392,7 +1418,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
 
 def shell(slug, title, desc, cur):
     head = build_pages.set_meta(_head, slug, title.replace(f"{NAME} · ", ""), desc, "../")
-    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=14">\n</head>')
+    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=15">\n</head>')
     opening = swap_nav_active(_open, "../", cur)
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 
@@ -1431,7 +1457,7 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True):
 </div>
 {bottom_nav(cur, prefix="../")}
 </div>
-<script src="../nx/nx.js?v=3"></script>
+<script src="../nx/nx.js?v=4"></script>
 <script type="module" src="../nx/slats-cover.js?v=8"></script>
 <script src="../nx/proj-dots.js?v=3"></script>
 {tail}'''
