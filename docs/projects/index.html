@@ -41,7 +41,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=189">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=190">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -127,6 +127,7 @@
         </div>
     </nav>
 
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop" onclick="closeMobileMenu(event)"></div>
     <div id="mobile-menu-drawer" class="mobile-menu-drawer">
         <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu" onclick="closeMobileMenu(event)">
             <i class="fa-solid fa-xmark"></i>
@@ -151,29 +152,32 @@
     </div>
 
     <script>
-    function toggleMobileMenu(e) {
-        if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+    function openMobileMenu() {
         var d = document.getElementById('mobile-menu-drawer');
-        if (!d) return;
-        var open = d.classList.toggle('drawer-open');
-        document.body.classList.toggle('drawer-open', open);
+        var b = document.getElementById('mobile-menu-backdrop');
+        if (d) d.classList.add('drawer-open');
+        if (b) b.classList.add('active');
+        document.body.classList.add('drawer-open');
     }
     function closeMobileMenu(e) {
-        if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
+        if (e && e.stopPropagation) { e.stopPropagation(); }
         var d = document.getElementById('mobile-menu-drawer');
-        if (!d) return;
-        d.classList.remove('drawer-open');
+        var b = document.getElementById('mobile-menu-backdrop');
+        if (d) d.classList.remove('drawer-open');
+        if (b) b.classList.remove('active');
         document.body.classList.remove('drawer-open');
     }
-    document.addEventListener('click', function(e) {
+    function toggleMobileMenu(e) {
+        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
+        if (e && e.stopPropagation) { e.stopPropagation(); }
         var d = document.getElementById('mobile-menu-drawer');
-        var btn = document.getElementById('mobile-menu-toggle');
         if (d && d.classList.contains('drawer-open')) {
-            if (!d.contains(e.target) && (!btn || !btn.contains(e.target))) {
-                closeMobileMenu(e);
-            }
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
         }
-    });
+    }
     </script>
 
     
@@ -364,7 +368,7 @@
         </div>
     </div>
     <script src="../ai-orb-mascot.js?v=5"></script>
-    <script src="../script~9e1709.js?v=189" defer></script>
+    <script src="../script~9e1709.js?v=190" defer></script>
 
 </body>
 

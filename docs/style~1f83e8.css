@@ -13412,30 +13412,26 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 /* ========================================================
    MOBILE MENU DRAWER & DRAWER CONTROLS
    ======================================================== */
-.mobile-header-right {
-    display: none;
-}
-.mobile-menu-drawer {
-    display: none; 
-}
-.mobile-menu-close {
-    display: none;
-}
+.mobile-header-right,
+.mobile-menu-drawer,
+.mobile-menu-close,
+.mobile-menu-backdrop,
 .drawer-controls {
     display: none;
 }
 
 @media (min-width: 769px) {
+    #mobile-menu-backdrop,
+    .mobile-menu-backdrop,
     #mobile-menu-drawer,
-    .mobile-menu-drawer {
-        display: none !important; 
-    }
+    .mobile-menu-drawer,
     #mobile-menu-close,
-    .mobile-menu-close {
-        display: none !important;
-    }
+    .mobile-menu-close,
+    #mobile-menu-toggle,
+    .mobile-menu-toggle,
+    .mobile-header-right,
     .drawer-controls {
-        display: none !important;
+        display: none !important; 
     }
     nav .nav-links a.nav-link-item svg {
         display: none !important;
@@ -13527,6 +13523,8 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         pointer-events: auto !important;
         position: relative !important;
         z-index: 100007 !important;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
     }
 
     .mobile-menu-close {
@@ -13545,10 +13543,38 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         font-size: 1.2rem;
         cursor: pointer;
         transition: transform 0.2s, background 0.2s;
+        z-index: 100008 !important;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
     }
     .mobile-menu-close:hover {
         transform: scale(1.1);
         background: color-mix(in srgb, var(--text-primary) 18%, transparent) !important;
+    }
+
+    /* Dedicated Backdrop Dim Overlay */
+    #mobile-menu-backdrop,
+    .mobile-menu-backdrop {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.45) !important;
+        z-index: 100004 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        -webkit-tap-highlight-color: transparent;
+    }
+    body.drawer-open #mobile-menu-backdrop,
+    body.drawer-open .mobile-menu-backdrop {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+    [data-theme="light"] body.drawer-open .mobile-menu-backdrop,
+    [data-theme="mint"] body.drawer-open .mobile-menu-backdrop {
+        background: rgba(0, 0, 0, 0.22) !important;
     }
 
     /* When drawer is open, elevate nav and hide bottom-nav & AI mascot */
@@ -13564,7 +13590,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         transition: opacity 0.25s ease, visibility 0.25s ease !important;
     }
 
-    /* Hide desktop nav links initially */
+    /* Hide desktop nav links initially on mobile */
     nav .nav-links {
         display: none !important;
     }
@@ -13593,46 +13619,37 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         right: 0 !important;
     }
 
-    /* Theme-specific Frosted Glass Background & Border */
+    /* Theme-specific Frosted Translucent Glass Background & Border */
     [data-theme="dark"] .mobile-menu-drawer,
     :root:not([data-theme]) .mobile-menu-drawer {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(11, 17, 32, 0.68) 100%), rgba(11, 17, 32, 0.60) !important;
-        border-left: 1px solid rgba(255, 255, 255, 0.16) !important;
-        box-shadow: -15px 0 45px rgba(0, 0, 0, 0.65), inset 1px 0 0 rgba(255, 255, 255, 0.12) !important;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(11, 17, 32, 0.50) 100%) !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.18) !important;
+        box-shadow: -15px 0 45px rgba(0, 0, 0, 0.5), inset 1px 0 0 rgba(255, 255, 255, 0.15) !important;
     }
     [data-theme="light"] .mobile-menu-drawer {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.75) 100%), rgba(255, 255, 255, 0.65) !important;
-        border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
-        box-shadow: -15px 0 45px rgba(15, 23, 42, 0.12), inset 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.72) 0%, rgba(245, 247, 250, 0.58) 100%) !important;
+        border-left: 1px solid rgba(0, 0, 0, 0.09) !important;
+        box-shadow: -15px 0 45px rgba(15, 23, 42, 0.08), inset 1px 0 0 rgba(255, 255, 255, 0.95) !important;
     }
     [data-theme="mint"] .mobile-menu-drawer {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.55) 0%, rgba(244, 250, 247, 0.75) 100%), rgba(244, 250, 247, 0.65) !important;
-        border-left: 1px solid rgba(16, 185, 129, 0.22) !important;
-        box-shadow: -15px 0 45px rgba(5, 150, 105, 0.12), inset 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.68) 0%, rgba(240, 253, 244, 0.58) 100%) !important;
+        border-left: 1px solid rgba(16, 185, 129, 0.25) !important;
+        box-shadow: -15px 0 45px rgba(5, 150, 105, 0.08), inset 1px 0 0 rgba(255, 255, 255, 0.95) !important;
     }
     [data-theme="cyberpunk"] .mobile-menu-drawer {
-        background: linear-gradient(135deg, rgba(244, 63, 94, 0.12) 0%, rgba(15, 6, 13, 0.72) 100%), rgba(15, 6, 13, 0.62) !important;
-        border-left: 1px solid rgba(244, 63, 94, 0.4) !important;
-        box-shadow: -15px 0 45px rgba(244, 63, 94, 0.22), inset 1px 0 0 rgba(255, 255, 255, 0.15) !important;
+        background: linear-gradient(145deg, rgba(244, 63, 94, 0.14) 0%, rgba(20, 5, 15, 0.55) 100%) !important;
+        border-left: 1px solid rgba(244, 63, 94, 0.45) !important;
+        box-shadow: -15px 0 45px rgba(244, 63, 94, 0.2), inset 1px 0 0 rgba(255, 255, 255, 0.18) !important;
     }
     [data-theme="god-mode"] .mobile-menu-drawer {
-        background: linear-gradient(135deg, rgba(0, 255, 0, 0.08) 0%, rgba(0, 12, 0, 0.75) 100%), rgba(0, 12, 0, 0.68) !important;
-        border-left: 1px solid rgba(0, 255, 0, 0.35) !important;
-        box-shadow: -15px 0 45px rgba(0, 255, 0, 0.2), inset 1px 0 0 rgba(0, 255, 0, 0.25) !important;
+        background: linear-gradient(145deg, rgba(0, 255, 0, 0.08) 0%, rgba(0, 15, 0, 0.58) 100%) !important;
+        border-left: 1px solid rgba(0, 255, 0, 0.4) !important;
+        box-shadow: -15px 0 45px rgba(0, 255, 0, 0.18), inset 1px 0 0 rgba(0, 255, 0, 0.3) !important;
     }
 
-    /* Drawer backdrop dim overlay (Dark translucent dim behind drawer) */
-    body.drawer-open::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        z-index: 100000 !important;
-        pointer-events: auto;
-    }
-    [data-theme="light"] body.drawer-open::before,
-    [data-theme="mint"] body.drawer-open::before {
-        background: rgba(0, 0, 0, 0.25);
+    .mobile-menu-drawer .nav-links #cli-toggle,
+    .mobile-menu-drawer .nav-links a#cli-toggle {
+        display: none !important;
     }
     
     .mobile-menu-drawer .nav-links {

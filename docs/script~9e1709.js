@@ -3828,33 +3828,38 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // --- Mobile Menu Drawer Toggle ---
 function openMobileMenu() {
     const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+    const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
     if (mobileMenuDrawer) {
         mobileMenuDrawer.classList.add('drawer-open');
-        document.body.classList.add('drawer-open');
     }
+    if (mobileBackdrop) {
+        mobileBackdrop.classList.add('active');
+    }
+    document.body.classList.add('drawer-open');
 }
 
 function closeMobileMenu(e) {
-    if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+    if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
+    if (e && e.stopPropagation) { e.stopPropagation(); }
     const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+    const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
     if (mobileMenuDrawer) {
         mobileMenuDrawer.classList.remove('drawer-open');
-        document.body.classList.remove('drawer-open');
     }
+    if (mobileBackdrop) {
+        mobileBackdrop.classList.remove('active');
+    }
+    document.body.classList.remove('drawer-open');
 }
 
 function toggleMobileMenu(e) {
-    if (e && e.preventDefault) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
+    if (e && e.stopPropagation) { e.stopPropagation(); }
     const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
-    if (mobileMenuDrawer) {
-        if (mobileMenuDrawer.classList.contains('drawer-open')) {
-            closeMobileMenu();
-        } else {
-            openMobileMenu();
-        }
+    if (mobileMenuDrawer && mobileMenuDrawer.classList.contains('drawer-open')) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
     }
 }
 
@@ -3866,9 +3871,9 @@ function initMobileMenu() {
     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
     const mobileMenuClose = document.getElementById('mobile-menu-close');
     const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+    const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
     const navLinks = document.querySelectorAll('#mobile-menu-drawer .nav-links a');
 
-    // Only bind if no inline onclick attribute exists
     if (mobileMenuToggle && !mobileMenuToggle.getAttribute('onclick')) {
         mobileMenuToggle.addEventListener('click', toggleMobileMenu);
     }
@@ -3876,22 +3881,17 @@ function initMobileMenu() {
     if (mobileMenuClose && !mobileMenuClose.getAttribute('onclick')) {
         mobileMenuClose.addEventListener('click', closeMobileMenu);
     }
+
+    if (mobileBackdrop) {
+        mobileBackdrop.addEventListener('click', closeMobileMenu);
+        mobileBackdrop.addEventListener('touchend', closeMobileMenu);
+    }
     
     // Close drawer when a nav link is clicked
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             closeMobileMenu();
         });
-    });
-
-    // Close on click outside (backdrop tap)
-    document.addEventListener('click', (e) => {
-        if (mobileMenuDrawer && mobileMenuDrawer.classList.contains('drawer-open')) {
-            const toggleBtn = document.getElementById('mobile-menu-toggle');
-            if (!mobileMenuDrawer.contains(e.target) && (!toggleBtn || !toggleBtn.contains(e.target))) {
-                closeMobileMenu();
-            }
-        }
     });
 
     // Close on Escape key
