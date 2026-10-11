@@ -822,10 +822,6 @@ body.nx-page #leaderboard-widget {
   transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .25s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
-.nx .proj:hover {
-  transform: translateY(-4px);
-  box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .8), 0 20px 40px -20px rgba(var(--brand-rgb, 0, 242, 254), .45);
-}
 .nx .proj-cover {
   position: relative;
   height: 195px;
@@ -849,10 +845,6 @@ body.nx-page #leaderboard-widget {
   z-index: 1;
   filter: brightness(1);
 }
-.nx .proj:hover .proj-img {
-  transform: scale(1.05);
-  filter: brightness(0.4);
-}
 .nx .proj-overlay {
   position: absolute;
   inset: 0;
@@ -861,9 +853,6 @@ body.nx-page #leaderboard-widget {
   pointer-events: none;
   opacity: 0;
   transition: opacity .4s ease;
-}
-.nx .proj:hover .proj-overlay {
-  opacity: 1;
 }
 .nx .proj-dots-canvas {
   position: absolute;
@@ -875,9 +864,6 @@ body.nx-page #leaderboard-widget {
   mix-blend-mode: screen;
   opacity: 0;
   transition: opacity .4s ease;
-}
-.nx .proj:hover .proj-dots-canvas {
-  opacity: 1;
 }
 .nx .proj-cover .badge {
   position: absolute;
@@ -906,16 +892,6 @@ body.nx-page #leaderboard-widget {
   opacity: 0;
   transition: opacity .32s cubic-bezier(0.16, 1, 0.3, 1), transform .32s cubic-bezier(0.16, 1, 0.3, 1), border-color .25s ease, box-shadow .25s ease, background .25s ease;
 }
-.nx .proj:hover .proj-center-btn {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.nx .proj-cover:hover .proj-center-btn {
-  background: rgba(10, 18, 34, 0.96);
-  border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.85);
-  transform: translate(-50%, -50%) scale(1.05);
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.6), 0 0 32px 2px rgba(var(--brand-rgb, 0, 242, 254), 0.5);
-}
 .nx .proj-center-btn .btn-ico {
   width: 26px;
   height: 26px;
@@ -930,17 +906,89 @@ body.nx-page #leaderboard-widget {
   transition: transform .25s ease, background .25s ease, color .25s ease;
   flex-shrink: 0;
 }
-.nx .proj-cover:hover .proj-center-btn .btn-ico {
-  transform: translate(1px, -1px);
-  background: rgba(var(--brand-rgb, 0, 242, 254), 0.35);
-  color: #ffffff;
-}
 .nx .proj-center-btn .btn-text {
   font-size: 13px;
   font-weight: 600;
   color: #f8fafc;
   letter-spacing: -0.01em;
   white-space: nowrap;
+}
+
+/* Hover effects ONLY on devices that support true pointer hover (mouse/trackpad on desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj:hover {
+    transform: translateY(-4px);
+    box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .8), 0 20px 40px -20px rgba(var(--brand-rgb, 0, 242, 254), .45);
+  }
+  .nx .proj:hover .proj-img {
+    transform: scale(1.05);
+    filter: brightness(0.4);
+  }
+  .nx .proj:hover .proj-overlay {
+    opacity: 1;
+  }
+  .nx .proj:hover .proj-dots-canvas {
+    opacity: 1;
+  }
+  .nx .proj:hover .proj-center-btn {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .nx .proj-cover:hover .proj-center-btn {
+    background: rgba(10, 18, 34, 0.96);
+    border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.85);
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.6), 0 0 32px 2px rgba(var(--brand-rgb, 0, 242, 254), 0.5);
+  }
+  .nx .proj-cover:hover .proj-center-btn .btn-ico {
+    transform: translate(1px, -1px);
+    background: rgba(var(--brand-rgb, 0, 242, 254), 0.35);
+    color: #ffffff;
+  }
+}
+
+/* Touch & Mobile Guard: completely prevent sticky touch hover, image dimming, and stuck floating buttons */
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+  .nx .proj,
+  .nx .proj:hover,
+  .nx .proj:focus,
+  .nx .proj:active {
+    transform: none !important;
+    box-shadow: inset 0 0 0 1px var(--line) !important;
+  }
+  .nx .proj-cover,
+  .nx .proj-cover:hover,
+  .nx .proj-cover:focus,
+  .nx .proj-cover:active {
+    transform: none !important;
+  }
+  .nx .proj-img,
+  .nx .proj:hover .proj-img,
+  .nx .proj:focus .proj-img,
+  .nx .proj:active .proj-img {
+    transform: none !important;
+    filter: brightness(1) !important;
+  }
+  .nx .proj-overlay,
+  .nx .proj:hover .proj-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  .nx .proj-dots-canvas,
+  .nx .proj:hover .proj-dots-canvas {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  .nx .proj-center-btn,
+  .nx .proj:hover .proj-center-btn,
+  .nx .proj-cover:hover .proj-center-btn {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
 }
 
 /* Modern Profile Meta Widgets (Location, Works, Languages - Theme Adaptive) */
@@ -1344,7 +1392,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
 
 def shell(slug, title, desc, cur):
     head = build_pages.set_meta(_head, slug, title.replace(f"{NAME} · ", ""), desc, "../")
-    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=13">\n</head>')
+    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=14">\n</head>')
     opening = swap_nav_active(_open, "../", cur)
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 

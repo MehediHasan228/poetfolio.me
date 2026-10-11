@@ -136,7 +136,7 @@
 .nx .metric span { font-size: 13px; color: var(--ink-3); }
 .nx .grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 .nx .proj { display: flex; flex-direction: column; padding: 6px; border-radius: 28px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); transition: transform .2s, box-shadow .2s; }
-.nx .proj:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--brand), 0 18px 40px -22px rgba(var(--brand-rgb), .6); }
+@media (hover: hover) and (pointer: fine){.nx .proj:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--brand), 0 18px 40px -22px rgba(var(--brand-rgb), .6); }}
 .nx .proj-cover { position: relative; height: 168px; border-radius: 22px; display: grid; place-items: center; overflow: hidden; background: radial-gradient(120% 120% at 20% 0%, var(--pc-1) 0%, var(--pc-2) 45%, var(--pc-3) 100%); }
 .nx .proj-cover::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255, 255, 255, .12) 1px, transparent 1px); background-size: 14px 14px; }
 .nx .proj-tile { position: relative; z-index: 1; width: 104px; height: 84px; border-radius: 20px; display: grid; place-items: center; font-size: 34px; color: #fff; background: rgba(255, 255, 255, .14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); backdrop-filter: blur(6px); }
@@ -1355,10 +1355,6 @@ body.nx-page #leaderboard-widget {
   transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .25s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
-.nx .proj:hover {
-  transform: translateY(-4px);
-  box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .8), 0 20px 40px -20px rgba(var(--brand-rgb, 0, 242, 254), .45);
-}
 .nx .proj-cover {
   position: relative;
   height: 195px;
@@ -1382,10 +1378,6 @@ body.nx-page #leaderboard-widget {
   z-index: 1;
   filter: brightness(1);
 }
-.nx .proj:hover .proj-img {
-  transform: scale(1.05);
-  filter: brightness(0.4);
-}
 .nx .proj-overlay {
   position: absolute;
   inset: 0;
@@ -1394,9 +1386,6 @@ body.nx-page #leaderboard-widget {
   pointer-events: none;
   opacity: 0;
   transition: opacity .4s ease;
-}
-.nx .proj:hover .proj-overlay {
-  opacity: 1;
 }
 .nx .proj-dots-canvas {
   position: absolute;
@@ -1408,9 +1397,6 @@ body.nx-page #leaderboard-widget {
   mix-blend-mode: screen;
   opacity: 0;
   transition: opacity .4s ease;
-}
-.nx .proj:hover .proj-dots-canvas {
-  opacity: 1;
 }
 .nx .proj-cover .badge {
   position: absolute;
@@ -1439,16 +1425,6 @@ body.nx-page #leaderboard-widget {
   opacity: 0;
   transition: opacity .32s cubic-bezier(0.16, 1, 0.3, 1), transform .32s cubic-bezier(0.16, 1, 0.3, 1), border-color .25s ease, box-shadow .25s ease, background .25s ease;
 }
-.nx .proj:hover .proj-center-btn {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.nx .proj-cover:hover .proj-center-btn {
-  background: rgba(10, 18, 34, 0.96);
-  border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.85);
-  transform: translate(-50%, -50%) scale(1.05);
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.6), 0 0 32px 2px rgba(var(--brand-rgb, 0, 242, 254), 0.5);
-}
 .nx .proj-center-btn .btn-ico {
   width: 26px;
   height: 26px;
@@ -1463,17 +1439,89 @@ body.nx-page #leaderboard-widget {
   transition: transform .25s ease, background .25s ease, color .25s ease;
   flex-shrink: 0;
 }
-.nx .proj-cover:hover .proj-center-btn .btn-ico {
-  transform: translate(1px, -1px);
-  background: rgba(var(--brand-rgb, 0, 242, 254), 0.35);
-  color: #ffffff;
-}
 .nx .proj-center-btn .btn-text {
   font-size: 13px;
   font-weight: 600;
   color: #f8fafc;
   letter-spacing: -0.01em;
   white-space: nowrap;
+}
+
+/* Hover effects ONLY on devices that support true pointer hover (mouse/trackpad on desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj:hover {
+    transform: translateY(-4px);
+    box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .8), 0 20px 40px -20px rgba(var(--brand-rgb, 0, 242, 254), .45);
+  }
+  .nx .proj:hover .proj-img {
+    transform: scale(1.05);
+    filter: brightness(0.4);
+  }
+  .nx .proj:hover .proj-overlay {
+    opacity: 1;
+  }
+  .nx .proj:hover .proj-dots-canvas {
+    opacity: 1;
+  }
+  .nx .proj:hover .proj-center-btn {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .nx .proj-cover:hover .proj-center-btn {
+    background: rgba(10, 18, 34, 0.96);
+    border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.85);
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.6), 0 0 32px 2px rgba(var(--brand-rgb, 0, 242, 254), 0.5);
+  }
+  .nx .proj-cover:hover .proj-center-btn .btn-ico {
+    transform: translate(1px, -1px);
+    background: rgba(var(--brand-rgb, 0, 242, 254), 0.35);
+    color: #ffffff;
+  }
+}
+
+/* Touch & Mobile Guard: completely prevent sticky touch hover, image dimming, and stuck floating buttons */
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+  .nx .proj,
+  .nx .proj:hover,
+  .nx .proj:focus,
+  .nx .proj:active {
+    transform: none !important;
+    box-shadow: inset 0 0 0 1px var(--line) !important;
+  }
+  .nx .proj-cover,
+  .nx .proj-cover:hover,
+  .nx .proj-cover:focus,
+  .nx .proj-cover:active {
+    transform: none !important;
+  }
+  .nx .proj-img,
+  .nx .proj:hover .proj-img,
+  .nx .proj:focus .proj-img,
+  .nx .proj:active .proj-img {
+    transform: none !important;
+    filter: brightness(1) !important;
+  }
+  .nx .proj-overlay,
+  .nx .proj:hover .proj-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  .nx .proj-dots-canvas,
+  .nx .proj:hover .proj-dots-canvas {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  .nx .proj-center-btn,
+  .nx .proj:hover .proj-center-btn,
+  .nx .proj-cover:hover .proj-center-btn {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
 }
 
 /* Modern Profile Meta Widgets (Location, Works, Languages - Theme Adaptive) */

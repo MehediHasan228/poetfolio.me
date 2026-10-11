@@ -96,12 +96,14 @@
     }
 
     card.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'touch') return;
       isHovered = true;
       updateMouse(e);
       startLoop();
     }, { passive: true });
 
     card.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') return;
       updateMouse(e);
       if (!animId) startLoop();
     }, { passive: true });
