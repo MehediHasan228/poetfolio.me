@@ -41,7 +41,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=188">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=189">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -152,14 +152,14 @@
 
     <script>
     function toggleMobileMenu(e) {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
+        if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
         var d = document.getElementById('mobile-menu-drawer');
         if (!d) return;
         var open = d.classList.toggle('drawer-open');
         document.body.classList.toggle('drawer-open', open);
     }
     function closeMobileMenu(e) {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
+        if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
         var d = document.getElementById('mobile-menu-drawer');
         if (!d) return;
         d.classList.remove('drawer-open');
@@ -167,8 +167,9 @@
     }
     document.addEventListener('click', function(e) {
         var d = document.getElementById('mobile-menu-drawer');
+        var btn = document.getElementById('mobile-menu-toggle');
         if (d && d.classList.contains('drawer-open')) {
-            if (!d.contains(e.target) && !e.target.closest('#mobile-menu-toggle')) {
+            if (!d.contains(e.target) && (!btn || !btn.contains(e.target))) {
                 closeMobileMenu(e);
             }
         }
@@ -363,7 +364,7 @@
         </div>
     </div>
     <script src="../ai-orb-mascot.js?v=5"></script>
-    <script src="../script~9e1709.js?v=188" defer></script>
+    <script src="../script~9e1709.js?v=189" defer></script>
 
 </body>
 
