@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+    <!-- LOCAL-ONLY TOOL: do not deploy. Use a fine-grained PAT scoped to this repo (Contents: read/write) with a short expiry. Token lives in sessionStorage only. -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI_INSIGHTS | Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./style~1f83e8.css?v=7">
+    <link rel="stylesheet" href="../docs/style~1f83e8.css?v=7">
     <style>
         :root {
             --bg-admin: #050508;
@@ -179,7 +180,7 @@
 
     <!-- JS LOGIC -->
     <script>
-        let GITHUB_TOKEN = localStorage.getItem('gh_token') || '';
+        let GITHUB_TOKEN = sessionStorage.getItem('gh_token') || '';
         let REPO_PATH = 'MehediHasan228/poetfolio.me'; // Your repo
         let POSTS_DATA = [];
         let EDITING_ID = null;
@@ -204,7 +205,7 @@
                     headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
                 });
                 if (res.ok) {
-                    localStorage.setItem('gh_token', GITHUB_TOKEN);
+                    sessionStorage.setItem('gh_token', GITHUB_TOKEN);
                     document.getElementById('login-view').classList.add('hidden');
                     document.getElementById('user-info').classList.remove('hidden');
                     document.getElementById('dashboard-view').classList.remove('hidden');
@@ -216,12 +217,12 @@
             } catch (err) {
                 document.getElementById('login-error').classList.remove('hidden');
                 document.getElementById('login-error').textContent = 'AUTH_FAILURE: Check your PAT or Repo Permission.';
-                localStorage.removeItem('gh_token');
+                sessionStorage.removeItem('gh_token');
             }
         }
 
         function logout() {
-            localStorage.removeItem('gh_token');
+            sessionStorage.removeItem('gh_token');
             window.location.reload();
         }
 

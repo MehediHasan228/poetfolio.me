@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://mehedi.pro.bd/contact/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="description" content="Contact Mehedi Hasan for AI automation and full-stack web development projects.">
     
@@ -20,7 +22,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=190">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=191">
 </head>
 
 <body>
@@ -68,7 +70,7 @@
     </div>
 
     <div class="ui-controls">
-        <a href="https://wa.me/8801799447594" target="_blank" class="control-btn whatsapp-btn magnetic-element"
+        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn magnetic-element"
             title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
         <button id="sound-toggler" class="control-btn magnetic-element" title="Toggle UI Audio"><i
                 class="fa-solid fa-volume-high"></i></button>
@@ -90,7 +92,7 @@
             <!-- Dynamic chat messages rendered via JS -->
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Type a query...">
+            <input aria-label="Message the AI assistant" type="text" id="chat-input" placeholder="Type a query...">
             <button id="voice-btn" class="magnetic-element hover-sound"
                 style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:none;"
                 title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
@@ -777,9 +779,9 @@
                     <form action="https://formspree.io/f/mwvrbjke" method="POST" id="pos-form">
                         <input type="hidden" name="_subject" value="New Portfolio Service Order!">
                         <input type="hidden" name="_next" value="https://mehedi.pro.bd/contact_process.html">
-                        <input type="text" name="name" class="pos-input" placeholder="Client ID (Your Name)"
+                        <input aria-label="Your name" type="text" name="name" class="pos-input" placeholder="Client ID (Your Name)"
                             required="">
-                        <input type="email" name="email" class="pos-input" placeholder="Ping Address (Your Email)"
+                        <input aria-label="Your email" type="email" name="email" class="pos-input" placeholder="Ping Address (Your Email)"
                             required="">
                         <textarea name="message" id="pos-hidden-msg" style="display:none;"></textarea>
 
@@ -804,11 +806,11 @@
                 style="display: flex; flex-direction: column; gap: 1rem;">
                 <input type="hidden" name="_subject" value="DIRECT_MESSAGE_OVERRIDE Received">
                 <input type="hidden" name="_next" value="https://mehedi.pro.bd/contact_process.html">
-                <input type="text" name="name" placeholder="Client ID (Your Name)" required=""
+                <input aria-label="Your name" type="text" name="name" placeholder="Client ID (Your Name)" required=""
                     style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace;">
-                <input type="email" name="email" placeholder="Ping Address (Your Email)" required=""
+                <input aria-label="Your email" type="email" name="email" placeholder="Ping Address (Your Email)" required=""
                     style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace;">
-                <textarea name="message" rows="4" placeholder="Data Payload (Your Message)" required=""
+                <textarea aria-label="Your message" name="message" rows="4" placeholder="Data Payload (Your Message)" required=""
                     style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-family: 'Fira Code', monospace; resize: vertical;"></textarea>
                 <button type="submit" class="btn primary-btn glow-effect magnetic-element hover-sound"
                     style="border: none; width: 100%; padding: 1rem; cursor: none;">TRANSMIT MESSAGE</button>
@@ -816,9 +818,9 @@
         </div>
 
         <div class="social-links" style="margin-top: 4rem;">
-            <a href="https://github.com/MehediHasan228" target="_blank" class="magnetic-element hover-sound"><i
+            <a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="magnetic-element hover-sound"><i
                     class="fa-brands fa-github"></i></a>
-            <a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank"
+            <a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank" rel="noopener noreferrer"
                 class="magnetic-element hover-sound"><i class="fa-brands fa-linkedin"></i></a>
             <a href="mailto:mehedihasan228.cse@gmail.com" class="magnetic-element hover-sound"><i
                     class="fa-solid fa-envelope"></i></a>
@@ -860,7 +862,7 @@
             </div>
             <div class="cli-input-line">
                 <span class="cli-prompt">root@mehedi.pro:~$</span>
-                <input type="text" id="cli-input" autocomplete="off" spellcheck="false">
+                <input aria-label="Terminal command" type="text" id="cli-input" autocomplete="off" spellcheck="false">
             </div>
         </div>
     </div>
@@ -877,8 +879,8 @@
                 title="Initiate Self Destruct"></button>
         </div>
     </footer>
-    <script src="./ai-orb-mascot.js?v=5"></script>
-    <script src="./script~9e1709.js?v=190"></script>
+    <script src="./ai-orb-mascot.js?v=6" defer></script>
+    <script src="./script~9e1709.js?v=191"></script>
 
 </body>
 

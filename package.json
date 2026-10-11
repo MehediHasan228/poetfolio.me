@@ -1,7 +1,7 @@
 {
-  "name": "portfolio.me",
+  "name": "poetfolio.me",
   "version": "1.1.0",
-  "description": "`webclone.js` is a Node.js script designed to archive websites and download videos.",
+  "description": "Personal portfolio of Mehedi Hasan (mehedi.pro.bd): static site in docs/, build scripts in scripts/.",
   "main": "webclone.js",
   "scripts": {
     "start": "python3 -m http.server 8000 --directory docs",
@@ -12,10 +12,11 @@
     "docker:logs": "docker compose logs -f",
     "sync:arena": "node scripts/sync_arena.js",
     "mcp:arena": "node scripts/arena_mcp_server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "python3 scripts/build_pages.py && python3 scripts/build_nx_pages.py"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mehedi Hasan",
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.1.2",

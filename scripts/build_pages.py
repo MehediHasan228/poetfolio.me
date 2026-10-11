@@ -67,7 +67,7 @@ def swap_nav(html: str, prefix: str) -> str:
     items = "".join(f'<li><a href="{prefix}{k}/" {cls}>{ico(k)} <span>{l}</span></a></li>\n            ' for k, l in NAV_ITEMS)
     items += f'<li><a href="{prefix}ai-insights/index.html" {cls}>{ico("library")} <span>AI Insights</span></a></li>\n            '
     nav_inner = "\n            " + items + cli + "\n        "
-    return re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S)
+    return dedupe_cli(re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S))
 
 
 def section(src: str, sid: str) -> str:
@@ -83,6 +83,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from icons import BOTTOM_NAV, ico, bottom_nav
 
 
+PERSON_LD = """<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Mehedi Hasan","url":"https://mehedi.pro.bd/",
+"image":"https://mehedi.pro.bd/uploads/hero_profile_1771668518.webp",
+"jobTitle":"Full-Stack Web Developer & AI Automation Engineer",
+"sameAs":["https://github.com/MehediHasan228"],"email":"mehedihasan228.cse@gmail.com",
+"address":{"@type":"PostalAddress","addressLocality":"Dhaka","addressCountry":"BD"}}
+</script>
+"""
+
+
+def dedupe_cli(html: str) -> str:
+    """Keep only the first #cli-toggle (the drawer copy is hidden by CSS and duplicated the id)."""
+    pat = re.compile(r'<li><a href="[^"]*" id="cli-toggle".*?</li>\s*', re.S)
+    hits = list(pat.finditer(html))
+    for m in reversed(hits[1:]):
+        html = html[:m.start()] + html[m.end():]
+    return html
+
+
 def set_meta(head: str, slug: str, title: str, desc: str, prefix: str) -> str:
     url = f"{SITE}/{slug}/" if slug else f"{SITE}/"
     head = re.sub(r"<title>.*?</title>", f"<title>{title} | Mehedi Hasan</title>", head, flags=re.S)
@@ -90,6 +109,8 @@ def set_meta(head: str, slug: str, title: str, desc: str, prefix: str) -> str:
     head = re.sub(r'(<link rel="canonical" href=")[^"]*', rf"\g<1>{url}", head)
     head = re.sub(r'(property="(?:og|twitter):url" content=")[^"]*', rf"\g<1>{url}", head)
     head = re.sub(r'(property="(?:og|twitter):title" content=")[^"]*', rf"\g<1>{title} | Mehedi Hasan", head)
+    if slug in ("profile", "contact") and "application/ld+json" not in head:
+        head = head.replace("</head>", PERSON_LD + "</head>", 1)
     return head
 
 

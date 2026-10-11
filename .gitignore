@@ -42,3 +42,8 @@ __pycache__/
 *.pyc
 scratch/
 
+
+# Local databases & env
+*.sqlite3
+.env
+.env.*

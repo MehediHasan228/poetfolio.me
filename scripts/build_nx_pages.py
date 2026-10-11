@@ -1339,7 +1339,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
         items += f'<li><a href="{prefix}{k}/" {cls}{cur_attr}>{ico(k)} <span>{l}</span></a></li>\n            '
     items += f'<li><a href="{prefix}ai-insights/index.html" class="magnetic-element hover-sound nav-link-item">{ico("library")} <span>AI Insights</span></a></li>\n            '
     nav_inner = "\n            " + items + cli + "\n        "
-    return re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S)
+    return build_pages.dedupe_cli(re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S))
 
 
 def shell(slug, title, desc, cur):
@@ -1549,7 +1549,7 @@ def profile():
         f'<a class="post" href="../projects/"><h3>{e(p[0])}</h3><small>{e(p[1])}</small></a>' for p in PROJECTS[:6])
     body = f'''{cover_banner()}
 <section class="nx-hero">
-<img class="avatar" src="../uploads/Mehedi.pro.png" alt="{NAME}" width="240" height="240" fetchpriority="high">
+<img class="avatar" src="../uploads/Mehedi.pro-480.webp" alt="{NAME}" width="240" height="240" fetchpriority="high">
 <h1 class="nx-name">{NAME} <span class="verified-badge" title="Verified Profile" aria-label="Verified">{ico("badge","verified")}</span></h1>
 <p class="tagline">{TAGLINE}</p>
 <a class="pill-status" href="../contact/"><span class="dot"></span>Open to new conversations</a>

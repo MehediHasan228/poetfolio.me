@@ -7,7 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers so any client can fetch it
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
