@@ -40,8 +40,8 @@ ABOUT = [
     "85+ planned modules. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.",
 ]
 AI_TOOLS = [("Claude", "claude", "#d97757"), ("OpenAI", "openai", "#10a37f"),
-            ("Antigravity", "antigravity", "#3b82f6"), ("OpenCode", "opencode", "#64748b"),
-            ("Ollama", "ollama", "#475569")]
+            ("Ollama", "ollama", "#475569"), ("Antigravity", "antigravity", "#3b82f6"),
+            ("OpenCode", "opencode", "#64748b")]
 STACK = [("LangGraph", "langgraph"), ("NestJS", "nestjs"), ("TypeScript", "typescript"), ("Next.js", "nextjs"),
          ("React", "react"), ("Python", "python"), ("FastAPI", "fastapi"), ("PostgreSQL", "postgresql"),
          ("Redis", "redis"), ("Kafka", "apachekafka"), ("Docker", "docker"), ("Kubernetes", "kubernetes"),

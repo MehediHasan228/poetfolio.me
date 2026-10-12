@@ -13833,3 +13833,8 @@ body.light-mode .bottom-nav a[aria-current="page"] {
         scroll-behavior: auto !important;
     }
 }
+
+/* phones: the bottom nav is the footer, so the copyright line and the self-destruct dot are hidden */
+@media (max-width: 767px) {
+    footer .footer-copy, footer .footer-egg { display: none; }
+}
