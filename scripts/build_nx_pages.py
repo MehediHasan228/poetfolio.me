@@ -1279,53 +1279,18 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-artist-head a { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); text-decoration: none; }
 .nl-artist-head a:hover { color: var(--brand); }
 
-/* voiceovers */
-.nl-eps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.nl-channel { grid-column: 1 / -1; overflow: hidden; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); }
-.nl-banner { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); height: 150px; }
-.nl-banner img { width: 100%; height: 100%; object-fit: cover; }
-.nl-banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, var(--surface)); }
-.nl-banner-count { position: absolute; right: 14px; top: 14px; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px;
-  font-size: 13px; font-weight: 600; color: #fff; background: rgba(15, 23, 42, 0.78); }
-.nl-banner-count svg { color: #ef233c; }
-.nl-channel-body { position: relative; padding: 0 26px 26px; margin-top: -44px; }
-.nl-channel-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-.nl-channel-logo { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--surface); object-fit: cover; background: var(--surface); }
-.nl-sub { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 14px; font-size: 15px; font-weight: 700; color: #fff;
-  text-decoration: none; background: #ef233c; box-shadow: 0 10px 26px -8px rgba(239, 35, 60, 0.6); transition: transform 0.2s ease; }
-.nl-sub:hover { transform: translateY(-2px); }
-.nl-eyebrow { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
-.nl-channel-body h3 { margin: 4px 0 2px; font-size: 24px; font-weight: 800; color: var(--ink); }
-.nl-meta { margin: 0 0 18px; font-size: 14px; color: var(--ink-3); }
-.nl-fb { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--surface-2); border: 1px solid var(--line); }
-.nl-fb-ico { color: #1877f2; display: inline-flex; flex-shrink: 0; }
-.nl-fb p { flex: 1; margin: 0; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--ink); }
-.nl-ep { display: flex; flex-direction: column; padding: 6px; border-radius: 26px; background: var(--surface); border: 1px solid var(--line); }
-.nl-ep.is-wide { grid-column: 1 / -1; }
-.nl-ep-screen { border-radius: 20px; }
-.nl-ep-badge { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px;
-  font-size: 12.5px; font-weight: 600; color: #fff; background: rgba(15, 23, 42, 0.78); }
-.nl-ep-badge svg { color: #fbbf24; }
-.nl-ep-screen.is-playing .nl-ep-badge { display: none; }
-.nl-ep-body { padding: 14px 12px 10px; }
-.nl-ep-body h3 { margin: 0; font-size: 15.5px; font-weight: 700; line-height: 1.5; color: var(--ink); }
-.nl-ep-by { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 13px; color: var(--ink-3); }
-
 @media (max-width: 767px) {
   .nl-page { gap: 40px; }
   .nl-hero { padding: 20px; border-radius: 22px; }
   .nl-hero-title { font-size: 28px; }
   .nl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .nl-grid, .nl-eps, .nl-ext-list { grid-template-columns: 1fr; }
+  .nl-grid, .nl-ext-list { grid-template-columns: 1fr; }
   .nl-feature, .nl-ext-feature { grid-template-columns: 1fr; padding: 8px 8px 18px; gap: 14px; }
   .nl-feature-body, .nl-ext-feature-body { padding: 0 10px; }
   .nl-feature-body h3 { font-size: 21px; }
   .nl-head { flex-wrap: wrap; }
   .nl-head-text { flex: 1; min-width: 0; }
   .nl-ar { display: none; }
-  .nl-banner { height: 110px; }
-  .nl-channel-body { padding: 0 16px 18px; }
-  .nl-fb { flex-wrap: wrap; }
 }
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
@@ -2982,9 +2947,9 @@ def projects():
 # ------------------------------------------------------------------ LIBRARY
 # Content lives in scripts/library_data.json (copied from nahian.bd/library as a starting point; edit that file, then rebuild).
 LIB = json.loads((Path(__file__).resolve().parent / "library_data.json").read_text(encoding="utf-8"))
-LIB_SUBS = [("skills", "AI Skills"), ("bookmarks", "Bookmarks"), ("music", "Music & Nasheeds"), ("voiceovers", "Voiceovers")]
+LIB_SUBS = [("skills", "AI Skills"), ("bookmarks", "Bookmarks"), ("music", "Music & Nasheeds")]
 LIB_SUB_ICON = {"skills": LIB["skills"]["icon"], "bookmarks": LIB["bookmarks"]["icon"],
-                "music": LIB["music"]["icon"], "voiceovers": LIB["voiceovers"]["icon"]}
+                "music": LIB["music"]["icon"]}
 NL_UI = {  # small UI glyphs not in the data file
     "out": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M7 7h10v10"/>',
     "right": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/>',
@@ -3013,7 +2978,7 @@ def nl_icon(name, size=18):
 def lib_counts():
     return {"skills": sum(len(g["items"]) for g in LIB["skills"]["groups"]),
             "bookmarks": next(f["count"] for f in LIB["bookmarks"]["filters"] if f["label"] == "All"),
-            "music": len(LIB["music"]["tracks"]), "voiceovers": len(LIB["voiceovers"]["episodes"])}
+            "music": len(LIB["music"]["tracks"])}
 
 
 def yt_thumb(vid, q="mqdefault"):
@@ -3091,28 +3056,6 @@ def nl_track(i, t):
             f'<span class="nl-tmeta"><span>{e(t["title"])}</span><span>{e(t["sub"])}</span></span>{ar}</button></li>')
 
 
-def nl_channel():
-    v = LIB["voiceovers"]
-    c = v["channel"]
-    banner = "".join(f'<img src="{yt_thumb(ep["yt"])}" alt="" loading="lazy">' for ep in v["episodes"])
-    return (f'<div class="nl-channel"><div class="nl-banner">{banner}<span class="nl-banner-count">{nl_icon("yt", 14)}{e(c["count_label"])}</span></div>'
-            f'<div class="nl-channel-body"><div class="nl-channel-top"><img class="nl-channel-logo" src="{c["logo"]}" alt="{e(c["name"])} logo" width="80" height="80">'
-            f'<a class="nl-sub" href="{c["subscribe_url"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 18)}Subscribe</a></div>'
-            f'<p class="nl-eyebrow">{e(c["label"])}</p><h3>{e(c["name"])}</h3><p class="nl-meta">{e(c["meta"])}</p>'
-            f'<div class="nl-fb"><span class="nl-fb-ico">{nl_icon("fb", 22)}</span><p>{e(c["note"])}</p>'
-            f'<a class="nl-ghost" href="{c["follow_url"]}" target="_blank" rel="noopener noreferrer">Follow{nl_icon("out", 14)}</a></div></div></div>')
-
-
-def nl_episode(ep, wide=None):
-    wide = ep["wide"] if wide is None else wide
-    badge = f'<span class="nl-ep-badge">{nl_icon("trophy", 13)}{e(ep["badge"])}</span>' if ep.get("badge") else ""
-    by = f'<p class="nl-ep-by">{nl_icon("pen", 14)}{e(ep["written_by"])}</p>' if ep.get("written_by") else ""
-    return (f'<article class="nl-ep{" is-wide" if wide else ""}"><div class="nl-ep-screen" data-yt="{ep["yt"]}">'
-            f'<img src="{yt_thumb(ep["yt"], "hqdefault")}" alt="" loading="lazy">'
-            f'<button type="button" class="nl-play" data-yt-play aria-label="Play: {e(ep["title"])}">{nl_icon("play", 26)}</button>{badge}</div>'
-            f'<div class="nl-ep-body"><h3 lang="bn">{e(ep["title"])}</h3>{by}</div></article>')
-
-
 def library():
     c = lib_counts()
     o = LIB["overview"]
@@ -3129,7 +3072,6 @@ def library():
     bms = "".join(nl_bm_card(*bm_all[n]) for n in o["bookmarks"] if n in bm_all)
     tracks = LIB["music"]["tracks"]
     tlist = "".join(nl_track(i, t) for i, t in enumerate(tracks[:6]))
-    eps = LIB["voiceovers"]["episodes"][:2]
     body = (f'<div class="pad nl-page">{hero}'
             f'<div class="nl-section">{nl_head("skills", "AI Skills", secs.get("AI Skills", ""), c["skills"])}'
             f'<div class="nl-grid">{skills}</div>{nl_more("skills", f"See all {c["skills"]} skills")}</div>'
@@ -3137,11 +3079,8 @@ def library():
             f'{nl_feature()}<div class="nl-grid">{bms}</div>{nl_more("bookmarks", f"See all {c["bookmarks"]} links")}</div>'
             f'<div class="nl-section">{nl_head("music", "Music & Nasheeds", secs.get("Music & Nasheeds", ""), c["music"])}'
             f'{nl_player()}<ol class="nl-tracks">{tlist}</ol>{nl_more("music", f"See all {c["music"]} tracks")}</div>'
-            f'<div class="nl-section">{nl_head("voiceovers", "Voiceovers", secs.get("Voiceovers", ""), c["voiceovers"])}'
-            f'<div class="nl-eps">{nl_channel()}{"".join(nl_episode(ep, wide=False) for ep in eps)}</div>'
-            f'{nl_more("voiceovers", f"See all {c["voiceovers"]} episodes")}</div>'
             f'</div>{LIB_JS}')
-    return page("library", "Library", "AI skills, bookmarks, music and voiceovers I use, love and recommend.",
+    return page("library", "Library", "AI skills, bookmarks and music I use, love and recommend.",
                 "Library", body, "library")
 
 
@@ -3188,8 +3127,6 @@ def library_sub(key):
             groups += (f'<div class="nl-artist"><div class="nl-artist-head"><h3><img src="{a["avatar"]}" alt="" width="32" height="32" loading="lazy">'
                        f'{e(a["name"])}<span>{e(a["count"])}</span></h3>{ch}</div><ol class="nl-tracks">{items}</ol></div>')
         content = nl_player() + groups
-    else:
-        content = f'<div class="nl-eps">{nl_channel()}{"".join(nl_episode(ep) for ep in d["episodes"])}</div>'
     body = f'<div class="pad nl-page">{nl_tabs(key)}<div class="nl-section">{head}{content}</div></div>{LIB_JS}'
     html_out = page(f"library/{key}", f"{title} · Library", d["intro"], "Library", body, "library")
     # the shell writes paths for pages one level deep; these live two levels deep

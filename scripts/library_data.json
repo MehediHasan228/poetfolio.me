@@ -669,62 +669,10 @@
       }
     ]
   },
-  "voiceovers": {
-    "title": "Voiceovers",
-    "intro": "Bangla voiceovers I’ve recorded for my YouTube channel, Tafheem.",
-    "icon": "tabler:microphone-2",
-    "channel": {
-      "label": "My YouTube channel",
-      "name": "Tafheem",
-      "meta": "@TafheemOfficial · 5 voiceovers in Bangla",
-      "logo": "https://nahian.bd/_astro/tafheem.CHuypbgY_ZuLtek.webp",
-      "subscribe_url": "https://www.youtube.com/@TafheemOfficial?sub_confirmation=1",
-      "count_label": "5 voiceovers",
-      "note": "I always upload new voiceovers to my Facebook profile first. Follow me there so you don’t miss one.",
-      "follow_url": "https://www.facebook.com/alnahian2003"
-    },
-    "episodes": [
-      {
-        "yt": "qtdpiHGxd74",
-        "title": "'অবক্ষয়কাল' অডিওবুক কন্টেস্ট এর বিজয়ী সাবমিশন | Al Nahian | Obokkhoykal | Asif Adnan | Tafheem",
-        "written_by": "Written by Asif Adnan",
-        "badge": "Contest winner",
-        "wide": true
-      },
-      {
-        "yt": "-1f2JPicZ8I",
-        "title": "কেমন লাগবে রাসুল (সা.) এর মুখে নিজের নাম শুনতে? | Tafheem",
-        "written_by": null,
-        "badge": null,
-        "wide": false
-      },
-      {
-        "yt": "ggvlUGfMfmE",
-        "title": "কেমন হবে জান্নাতে প্রবেশের ঠিক পূর্বের অভিজ্ঞতা? | Tafheem",
-        "written_by": null,
-        "badge": null,
-        "wide": false
-      },
-      {
-        "yt": "iSqEjSvUWvc",
-        "title": "তথাকথিত পশ্চিমা সভ্য সমাজে পরিচয়ের বিকৃতি | 'অবক্ষয়কাল' বইয়ের ভূমিকা | Asif Adnan | Tafheem",
-        "written_by": "Written by Asif Adnan",
-        "badge": null,
-        "wide": false
-      },
-      {
-        "yt": "jE9soZCohhY",
-        "title": "অগোচরে: একটি অপ্রেমের উপাখ্যান | ভ্যালেন্টাইন্স ডে স্পেশাল | এনামুল হক ইবনে ইউসুফ | Tafheem",
-        "written_by": "Written by Enamul Haque Ibn Yusuf",
-        "badge": null,
-        "wide": false
-      }
-    ]
-  },
   "overview": {
     "pill": "59 things I use, love and recommend",
     "title": "My library",
-    "intro": "The AI skills in my daily workflow, the sites I keep bookmarked, the nasheeds on repeat while I code, and the voiceovers I record.",
+    "intro": "The AI skills in my daily workflow, the sites I keep bookmarked and the nasheeds on repeat while I code.",
     "sections": [
       {
         "title": "AI Skills",
@@ -737,10 +685,6 @@
       {
         "title": "Music & Nasheeds",
         "sub": "The nasheeds on repeat, most loved first. All vocals only."
-      },
-      {
-        "title": "Voiceovers",
-        "sub": "Bangla voiceovers I’ve recorded for my YouTube channel, Tafheem."
       }
     ],
     "skills": [
@@ -824,10 +768,6 @@
     "tabler:headphones": {
       "vb": "0 0 24 24",
       "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M4 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm11 0a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2z\"></path><path d=\"M4 15v-3a8 8 0 0 1 16 0v3\"></path></g>"
-    },
-    "tabler:microphone-2": {
-      "vb": "0 0 24 24",
-      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12.9A5 5 0 1 0 11.098 9M15 12.9l-3.902-3.899l-7.513 8.584a2 2 0 1 0 2.827 2.83z\"></path>"
     }
   },
   "_note": "Library content. Copied from nahian.bd/library as a starting point; replace with your own items. Rebuild with: python3 scripts/build_nx_pages.py"
