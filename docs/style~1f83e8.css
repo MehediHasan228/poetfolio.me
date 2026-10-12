@@ -13291,11 +13291,20 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     width: 22px;
     height: 22px;
     flex-shrink: 0;
+    /* every icon gets the same pill box, so selecting one never shifts the layout */
+    padding: 4px 16px;
+    box-sizing: content-box;
+    border-radius: 999px;
+    transition: background 0.2s ease;
 }
+/* selected tab: tinted pill behind the icon, icon and label in the theme accent (no filled block) */
 .bottom-nav a[aria-current="page"] {
-    background: var(--accent-1, #2563eb);
-    color: #ffffff !important;
+    background: transparent;
+    color: var(--accent-1, #2563eb) !important;
     font-weight: 600;
+}
+.bottom-nav a[aria-current="page"] svg {
+    background: color-mix(in srgb, var(--accent-1, #2563eb) 18%, transparent);
 }
 .bottom-nav a:active {
     transform: scale(0.94);
@@ -13312,8 +13321,8 @@ body.light-mode .bottom-nav a {
 }
 [data-theme="light"] .bottom-nav a[aria-current="page"],
 body.light-mode .bottom-nav a[aria-current="page"] {
-    background: var(--accent-1, #2563eb) !important;
-    color: #ffffff !important;
+    background: transparent !important;
+    color: var(--accent-1, #2563eb) !important;
 }
 @media (min-width: 768px) {
     .bottom-nav { display: none !important; }

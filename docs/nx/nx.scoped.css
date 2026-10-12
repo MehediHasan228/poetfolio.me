@@ -882,12 +882,22 @@ body.nx-page[data-page="profile"] .nx {
     width: 22px !important;
     height: 22px !important;
     flex-shrink: 0 !important;
+    /* every icon gets the same pill box, so selecting one never shifts the layout */
+    padding: 4px 16px !important;
+    box-sizing: content-box !important;
+    border-radius: 999px !important;
+    transition: background 0.2s ease !important;
   }
+  /* selected tab: tinted pill behind the icon, icon and label in the theme accent (no filled block) */
   .nx .bottom-nav a[aria-current="page"],
   .bottom-nav a[aria-current="page"] {
-    background: var(--accent-1, #2563eb) !important;
-    color: #ffffff !important;
+    background: transparent !important;
+    color: var(--accent-1, #2563eb) !important;
     font-weight: 600 !important;
+  }
+  .nx .bottom-nav a[aria-current="page"] svg,
+  .bottom-nav a[aria-current="page"] svg {
+    background: color-mix(in srgb, var(--accent-1, #2563eb) 18%, transparent) !important;
   }
   .nx .bottom-nav a:active,
   .bottom-nav a:active {
@@ -916,8 +926,8 @@ body.nx-page[data-page="profile"] .nx {
   [data-theme="light"] .nx .bottom-nav a[aria-current="page"],
   [data-theme="light"] .bottom-nav a[aria-current="page"],
   body.light-mode .bottom-nav a[aria-current="page"] {
-    background: #2563eb !important;
-    color: #ffffff !important;
+    background: transparent !important;
+    color: var(--accent-1, #2563eb) !important;
   }
 }
 
