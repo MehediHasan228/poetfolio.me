@@ -127,4 +127,31 @@
             }
         });
     }
+
+    // Glass card cursor tracking spotlight (Smooth & precise 1:1 pixel tracking)
+    document.addEventListener('pointermove', function (e) {
+        var card = e.target.closest('.widget-location, .r-card-open, .people-hero, .cta-hero, .svc-card.wide');
+        if (card) {
+            var rect = card.getBoundingClientRect();
+            card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+            card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+        }
+    }, { passive: true });
+
+    // About Bio Read More / Read Less toggle
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('#about-toggle-btn');
+        if (!btn) return;
+        var wrap = document.getElementById('about-bio-wrap');
+        if (!wrap) return;
+        var isExpanded = wrap.classList.toggle('is-expanded');
+        btn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+        var btnText = btn.querySelector('.about-btn-text');
+        if (btnText) {
+            btnText.textContent = isExpanded ? 'Read less' : 'Read more';
+        }
+        if (!isExpanded) {
+            wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    });
 })();

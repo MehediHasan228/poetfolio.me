@@ -4,10 +4,13 @@
 Run: python3 scripts/build_nx_pages.py
 Edit the DATA section below to change content.
 """
+import hashlib
 import html
 import json
 import re
 import sys
+from collections import Counter
+from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -28,74 +31,107 @@ ROLE_NOW = "Software Developer at SAWAB Bangladesh"
 ABOUT = [
     "Full-Stack Software Engineer with 4+ years of hands-on experience architecting high-performance web applications "
     "and scalable APIs. Core expertise spans modern TypeScript, React, and Next.js on the frontend, paired with robust "
-    "NestJS and PHP / Laravel backend microservices. Proven track record delivering everything from custom platforms and "
-    "WordPress / WooCommerce solutions to complex, event-driven distributed systems.",
+    "NestJS, Python (FastAPI), and event-driven distributed architectures. Also familiar and extensively experienced "
+    "with PHP / Laravel backend microservices, custom web platforms, and WordPress / WooCommerce solutions.",
     "An AI-native engineer who leverages state-of-the-art LLM workflows (Claude, OpenAI, Antigravity, OpenCode, Ollama) to accelerate engineering "
     "velocity without sacrificing code hygiene. Actively building multi-agent automation systems using LangGraph, MCP, and "
-    "retrieval-augmented workflows (PGVector), backed by Kafka event streaming and Docker containerisation.",
+    "retrieval-augmented workflows (PGVector), backed by Kafka event streaming, Docker containerisation, and Kubernetes.",
     "Currently leading development for SAWAB Bangladesh's digital web platforms and architecting an AI-native NGO ERP spanning "
     "85+ planned modules. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.",
 ]
 AI_TOOLS = [("Claude", "claude", "#d97757"), ("OpenAI", "openai", "#10a37f"),
             ("Antigravity", "antigravity", "#3b82f6"), ("OpenCode", "opencode", "#64748b"),
             ("Ollama", "ollama", "#475569")]
-STACK = [("Laravel", "laravel"), ("PHP", "php"), ("NestJS", "nestjs"), ("TypeScript", "typescript"), ("Next.js", "nextjs"),
-         ("React", "react"), ("PostgreSQL", "postgresql"), ("MySQL", "mysql"), ("Redis", "redis"),
-         ("Kafka", "apachekafka"), ("LangGraph", "langgraph"), ("Docker", "docker"), ("Kubernetes", "kubernetes"),
-         ("n8n", "n8n")]
-# (title, company, place, period, current?, [bullets], [chips])
+STACK = [("LangGraph", "langgraph"), ("NestJS", "nestjs"), ("TypeScript", "typescript"), ("Next.js", "nextjs"),
+         ("React", "react"), ("Python", "python"), ("FastAPI", "fastapi"), ("PostgreSQL", "postgresql"),
+         ("Redis", "redis"), ("Kafka", "apachekafka"), ("Docker", "docker"), ("Kubernetes", "kubernetes"),
+         ("n8n", "n8n"), ("Tailwind CSS", "tailwind")]
+# (title, company, place, period, kind: Full-time|Volunteer, [bullets], [chips])
 JOBS = [
-    ("Software Developer, Web Platforms & NGO ERP", "SAWAB Bangladesh", "Dhaka, Bangladesh", "Jul 2026 - Present", True,
+    ("Software Developer", "SAWAB Bangladesh", "Dhaka, Bangladesh", "Jul 2026 - Present", "Full-time",
      ["Build and maintain SAWAB Bangladesh's public web platforms (sawabbd.org, sawabfoundation.org.bd) on Node.js / "
       "React: donation pipelines, bilingual (Bangla/English) content, and program pages for education, healthcare and WASH initiatives.",
       "Design and develop an AI-native NGO ERP: NestJS microservices, Kafka event streaming, Redis, PGVector-based "
       "retrieval and LangGraph multi-agent workflows, planned across 85+ modules; currently in active development."],
      ["Node.js", "React", "NestJS", "Kafka", "PGVector", "LangGraph"]),
-    ("Software Developer & AI Technology Specialist", "Jibika Intelligic Ltd.", "Dhaka, Bangladesh",
-     "Jan 2025 - Jun 2026", False,
-     ["Developed, tested and deployed PHP / Laravel and WordPress web applications across the full SDLC: custom themes, "
-      "plugins, responsive UIs (HTML5, CSS3, JavaScript, Bootstrap) and REST APIs for a diverse client base.",
-      "Integrated third-party and LLM APIs (OpenAI, Claude, Gemini) to automate content, research and reporting workflows, "
-      "reducing manual effort by approximately 50%.",
-      "Designed and maintained relational databases (MySQL / PostgreSQL) and managed Linux / cPanel hosting, deployments, "
-      "backups and uptime monitoring.",
-      "Provided full-cycle IT support, managed organisational social media and authored technical documentation, product guides and SOPs."],
-     ["Laravel", "WordPress", "LLM APIs", "MySQL", "PostgreSQL"]),
-    ("Software Developer, ERP Technology", "Smart Software Limited", "Dhaka, Bangladesh", "Jan 2024 - Dec 2024", False,
-     ["Built and demonstrated PHP & JavaScript ERP web modules (HRIS / Payroll, School Management, Hospital Management) "
-      "for prospective institutional clients; gathered requirements and prepared SRS / BRD and UAT documentation.",
-      "Performed module testing, bug tracking and defect fixing throughout the SDLC and supported client onboarding, "
-      "configuration and end-user training.",
-      "Delivered day-to-day IT support, system debugging and hardware troubleshooting for 20+ concurrent users across departments."],
+    ("Software Developer & AI Specialist", "Jibika Intelligic Ltd.", "Dhaka, Bangladesh",
+     "Jan 2025 - Jun 2026", "Full-time",
+     ["Worked on Jibika Plexus, a web-based HR & payroll platform used by 300+ companies, covering personnel, leave, "
+      "attendance, payroll, loans and performance appraisal.",
+      "Integrated OpenAI, Claude and Gemini APIs into Reports, Appraisal, Leave and Personnel modules to automate "
+      "report narratives, appraisal drafts, leave-policy answers and HR documents, cutting manual effort by ~50%.",
+      "Delivered attendance processing with device and GPS tracking, multi-layer approvals and auto leave "
+      "calculation. Built the Flutter mobile app, with NID OCR onboarding and GPS duty tracking.",
+      "Supported client implementation, training and maintenance, keeping payroll current with government gazette updates."],
+     [".NET", "Oracle", "Flutter", "LLM APIs", "HR & Payroll"]),
+    ("ERP Developer", "Smart Software Limited", "Dhaka, Bangladesh", "Jan 2024 - Dec 2024", "Full-time",
+     ["Designed and built PHP & JavaScript ERP modules for institutional clients: HRIS & Payroll, School Management "
+      "and Hospital Management.",
+      "Turned client requirements into SRS / BRD and UAT documents, then drove module testing, defect tracking and fixes "
+      "through every SDLC phase.",
+      "Led client onboarding, configuration and end-user training, and kept the system stable for 20+ concurrent users "
+      "with day-to-day debugging and hardware support."],
      ["PHP", "JavaScript", "ERP", "SRS / BRD", "UAT"]),
-    ("Documentation & IT Executive", "HBIZZ Group Company", "Karwan Bazar, Dhaka", "Aug 2022 - Dec 2023", False,
+    ("Documentation & IT Executive", "HBIZZ Group Company", "Karwan Bazar, Dhaka", "Aug 2022 - Dec 2023", "Full-time",
      ["Provided IT support across hardware, software, networking and connectivity; maintained IT assets, user accounts and system documentation.",
       "Enforced data security through access control, secure document handling and scheduled system backups.",
       "Developed and maintained the corporate website (hbizz.com) on WordPress with cPanel hosting configuration and performance monitoring."],
      ["WordPress", "cPanel", "IT support", "Security"]),
-    ("Voluntary Web Developer", "Tafseerul Quran Foundation (TQF)", "Bangladesh", "2024 - Present", True,
+    ("Voluntary Web Developer", "Tafseerul Quran Foundation (TQF)", "Bangladesh", "2024 - Present", "Volunteer",
      ["Build and maintain the official TQF website (tqfbd.org) on WordPress: custom theme configuration, plugin management, "
       "security patching, performance optimisation and a mobile-responsive layout for a national non-profit audience.",
       "Collaborate with the TQF team on digital-outreach strategy and social-media integration."],
      ["WordPress", "Volunteer", "Non-profit"]),
 ]
-METRICS = [("4+", "years building software"), ("85+", "modules planned in the NGO ERP"),
-           ("~50%", "less manual effort via LLM automation"), ("20+", "users supported day to day")]
+# Per-role headline numbers shown as a stat strip (figures taken from the bullets above)
+JOB_STATS = {
+    "SAWAB Bangladesh": [("Scope", "85+", "modules planned in the NGO ERP", "layers"),
+                         ("Delivery", "2", "public web platforms maintained", "globe")],
+    "Jibika Intelligic Ltd.": [("Efficiency", "~50%", "less manual effort on HRM content, research and reporting, with humans approving every output", "zap")],
+    "Smart Software Limited": [("Scope", "3", "ERP modules built for institutional clients", "layers"),
+                               ("Reach", "20+", "concurrent users supported day to day", "users")],
+}
+# Company logo tiles for experience cards (official logos saved under docs/uploads/company-logos/)
+COMPANY_LOGOS = {
+    "SAWAB Bangladesh": "uploads/company-logos/sawab.png",
+    "Jibika Intelligic Ltd.": "uploads/company-logos/jibika.png",
+    "Smart Software Limited": "uploads/company-logos/smart-software.png",
+    "Tafseerul Quran Foundation (TQF)": "uploads/company-logos/tqf.png",
+}
+STAT_ICONS = {
+    "layers": '<path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>',
+    "globe": '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/>',
+    "zap": '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+    "users": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>'
+             '<path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+}
 EDUCATION = [("B.Sc. in Computer Science & Engineering", "Daffodil International University (DIU), Dhaka",
-              "CGPA 3.11 / 4.00 · Graduated 2022")]
+              "Graduated 2022", "uploads/company-logos/diu.png")]
 CERTS = [("Web Development: HTML, CSS, JavaScript & Advanced React (6 months)", "SR Institute of Design"),
          ("Cybersecurity Training: VAPT", "Security Mind Pro"),
          ("Google AI Essentials: Generative AI, Prompt Engineering & Responsible AI", "Google / Coursera"),
          ("AI Tools & Automation: ChatGPT, Gemini, Claude, OpenClaw", "Professional Development"),
          ("B2B Lead Generation", "BITM")]
+# (group, one-line use, core [(label, brand-icon slug)], also [(label, slug)]); "core" = used daily
 SKILLS = [
-    ("Languages", ["PHP", "JavaScript / TypeScript", "Python", "SQL", "HTML5 / CSS3", "C# / .NET Core (working)"]),
-    ("Frameworks & CMS", ["Laravel", "NestJS", "Node.js / Express", "React", "Next.js", "Vue.js", "WordPress / WooCommerce",
-                          "Tailwind CSS", "Bootstrap 5"]),
-    ("Databases", ["MySQL", "PostgreSQL", "MongoDB", "Firebase", "Redis", "PGVector"]),
-    ("AI & APIs", ["OpenAI / Claude / Gemini APIs", "LangGraph", "MCP", "RAG", "FastAPI", "Whisper", "REST & WebSocket"]),
-    ("DevOps & Cloud", ["Git & GitHub", "CI/CD", "Docker", "Kubernetes", "AWS EC2 / S3", "Kafka / RabbitMQ", "Linux", "Nginx / Apache"]),
-    ("IT & Security", ["Networking (LAN/WAN)", "Microsoft 365 admin", "VAPT", "Backup & recovery", "CCTV / ELV"]),
+    ("Core stack", "Web platforms, APIs and backend services",
+     [("TypeScript", "typescript"), ("React", "react"), ("Next.js", "nextjs"), ("Tailwind", "tailwind"),
+      ("NestJS", "nestjs"), ("FastAPI", "fastapi"), ("Python", "python")],
+     [("PHP", "php"), ("Laravel", "laravel")]),
+    ("AI & agents", "LLM features, multi-agent workflows and RAG",
+     [("OpenAI", "openai"), ("Claude", "claude"), ("Gemini", "gemini"), ("LangGraph", "langgraph"), ("MCP", "mcp")],
+     [("PydanticAI", "pydantic"), ("Ollama", "ollama"), ("vLLM", "vllm"), ("Qwen", "qwen"), ("DeepSeek", "deepseek"),
+      ("Vercel AI SDK", "vercel"), ("Function Calling", None), ("n8n", "n8n"), ("Zapier", "zapier")]),
+    ("AI-assisted development", "Coding and design with AI tools",
+     [("Claude Code", "claudecode"), ("Antigravity", "antigravity")],
+     [("Cursor", "cursor"), ("Aider", "aider"), ("v0", "v0"), ("Google Stitch", "stitch"), ("Hermes Agent", "hermis")]),
+    ("Data & streaming", "Storage, vector search and event pipelines",
+     [("PostgreSQL", "postgresql"), ("pgvector", "pgvector"), ("Kafka", "apachekafka"), ("Redis Pub/Sub", "redis")],
+     [("Qdrant", "qdrant"), ("Supabase", "supabase"), ("RabbitMQ", "rabbitmq")]),
+    ("Infra & observability", "Containers, cloud and monitoring",
+     [("Docker", "docker"), ("GitHub Actions", "githubactions")],
+     [("Cloudflare", "cloudflare"), ("AWS", "aws"), ("Google Cloud", "googlecloud"), ("Namecheap", "namecheap"),
+      ("Langfuse", None), ("OpenTelemetry", "opentelemetry"), ("Grafana", "grafana")]),
 ]
 EXTRA = [("Leadership & Community", "President, Gobindopur Rising Tigers Club: led a 100+ member community organisation across "
                                     "social-development, youth mentorship, and public communications initiatives."),
@@ -165,7 +201,7 @@ PLATFORM_ICON = {"X": "fa-brands fa-twitter", "Website": "fa-solid fa-globe", "G
 
 from icons import P, ico, BOTTOM_NAV, bottom_nav
 NAV = [("profile", "Profile"), ("projects", "Projects"), ("writing", "Writing"), ("people", "People"),
-       ("contact", "Contact")]
+       ("library", "Library"), ("contact", "Contact")]
 e = html.escape
 
 
@@ -193,8 +229,43 @@ def follow_rows(n=3):
     return rows
 
 
+def nahian_aurora_html():
+    return '''<div class="halo-glow" aria-hidden="true"></div>
+<div class="cover" aria-hidden="true">
+  <span class="cover-blob" style="--blob: var(--cover-3); top: -45%; left: -12%; --dur: 24s; --delay: 0s;"></span>
+  <span class="cover-blob" style="--blob: var(--cover-4); top: 15%; left: 8%; --dur: 27s; --delay: -4s;"></span>
+  <span class="cover-blob" style="--blob: var(--cover-5); top: -35%; left: 32%; --dur: 29s; --delay: -8s;"></span>
+  <span class="cover-blob" style="--blob: var(--cover-6); top: 5%; left: 55%; --dur: 23s; --delay: -12s;"></span>
+  <span class="cover-blob" style="--blob: var(--cover-1); top: -30%; left: 76%; --dur: 31s; --delay: -6s;"></span>
+  <span class="cover-blob" style="--blob: var(--cover-2); top: 45%; left: 38%; --dur: 33s; --delay: -16s; width: 45%;"></span>
+</div>
+<div class="cover-frost" aria-hidden="true"></div>
+<div class="halo-spot" aria-hidden="true"></div>'''
+
+
+GLOW_JS = """<script>
+function glowTrack(card, x, y) {
+  card._tx = x; card._ty = y;
+  if (card._x === undefined) { card._x = x; card._y = y; }
+  if (card._raf) return;
+  (function step() {
+    card._x += (card._tx - card._x) * 0.2; card._y += (card._ty - card._y) * 0.2;
+    card.style.setProperty("--mx", card._x + "px"); card.style.setProperty("--my", card._y + "px");
+    card._raf = (Math.abs(card._tx - card._x) > 0.5 || Math.abs(card._ty - card._y) > 0.5) ? requestAnimationFrame(step) : null;
+  })();
+}
+document.addEventListener("pointermove", function (ev) {
+  var card = ev.target.closest && ev.target.closest(".glow-tile");
+  if (!card) return;
+  var r = card.getBoundingClientRect();
+  glowTrack(card, ev.clientX - r.left, ev.clientY - r.top);
+});
+</script>"""
+
+
 def rail(show_open=True, show_top=False):
-    openc = ('''<div class="r-card r-card-open">
+    openc = (f'''<div class="r-card r-card-open glow-tile">
+      <span class="glow-tile-face" aria-hidden="true"></span>
       <div class="r-status-pill">
         <span class="live-dot-wrap">
           <span class="live-dot-ping"></span>
@@ -208,7 +279,8 @@ def rail(show_open=True, show_top=False):
         <span>Let's talk</span>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="r-btn-arrow"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>
       </a>
-    </div>''' if show_open else "")
+    </div>
+    {GLOW_JS}''' if show_open else "")
 
     avs = "".join(f'<span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url({p[0]});background-size:cover;background-position:center;display:inline-block;"></span>' for p in PEOPLE[3:6])
     more_count = max(0, len(PEOPLE) - 6)
@@ -264,7 +336,7 @@ def rail(show_open=True, show_top=False):
             f'<div class="find-list">{find_rows}</div>'
             f'<div class="find-foot"><a class="see-all-profiles" href="../contact/"><span>See all contact channels</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a></div>'
             f'</div>'
-            f'</div></aside>')
+            f'</aside>')
 
 
 def cover_banner():
@@ -862,18 +934,399 @@ body.nx-page[data-page="profile"] .nx .rail {
 .exp-item-modern { display: flex; gap: 24px; position: relative; text-align: left; }
 .exp-timeline { display: flex; flex-direction: column; align-items: center; width: 48px; flex-shrink: 0; }
 .exp-logo-box { width: 48px; height: 48px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; position: relative; z-index: 2; }
-.status-dot { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; background: #10b981; border: 2px solid var(--bg); border-radius: 50%; }
+.status-dot { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; background: var(--brand); border: 2px solid var(--bg); border-radius: 50%; }
 .exp-line { flex: 1; width: 2px; background: var(--line); margin-top: 8px; margin-bottom: 8px; min-height: 40px; }
 .exp-item-modern:last-child .exp-line { display: none; }
 .exp-content { flex: 1; padding-bottom: 40px; }
 .exp-item-modern:last-child .exp-content { padding-bottom: 0; }
 .exp-header-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 6px; flex-wrap: wrap; }
 .exp-header-row h3 { font-size: 19px; font-weight: 700; color: var(--ink); margin: 0; }
-.exp-date { font-size: 15px; color: var(--ink-3); font-weight: 500; white-space: nowrap; }
+.exp-when { font-size: 15px; color: var(--ink-3); font-weight: 500; white-space: nowrap; }
 .exp-sub { font-size: 16px; color: var(--ink-2); margin-bottom: 16px; font-weight: 500; }
 .exp-bullets { list-style: disc; padding-left: 20px; margin: 0 0 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .exp-bullets li { font-size: 15px; color: var(--ink-2); line-height: 1.6; }
 .exp-tech { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.exp-title-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.exp-now { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, transparent); border-radius: 999px; padding: 2px 9px; }
+.exp-now::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+.exp-bullets { position: relative; list-style: none; padding-left: 0; gap: 12px; }
+.exp-bullets::before { content: ""; position: absolute; left: 8px; top: 10px; bottom: 10px; width: 2px; border-radius: 2px; background: linear-gradient(to bottom, color-mix(in srgb, var(--brand) 55%, transparent), color-mix(in srgb, var(--brand) 12%, transparent)); }
+.exp-bullets li { position: relative; padding-left: 28px; }
+.xb-ico { position: absolute; left: 0; top: 3px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg); color: var(--brand); border: 1.5px solid var(--brand); box-sizing: border-box; }
+.exp-bullets li b { color: var(--ink); font-weight: 700; }
+.exp-more-li { display: none; padding-left: 0; }
+.exp-more-btn { display: none; }
+.exp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 4px 0 16px; }
+.exp-stat-card { min-height: 150px; padding: 18px 20px; }
+.exp-stat-card .exp-stat-num { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; color: #ffffff; margin: 6px 0 8px; }
+.exp-stat-card .exp-stat-cap { font-size: 14px; color: #cbd5e1; line-height: 1.4; margin: 0; }
+.nx .widget-location.exp-stat-card .exp-stat-num { color: var(--ink) !important; text-shadow: none; }
+/* same pastel brand gradient as the Based-in card, theme-adaptive; the dark frost layer is hidden so the tint shows */
+/* stat tiles: standard surface like the cards below, with a faint brand tint; light theme gets the white-mint look */
+.nx .widget-location.exp-stat-card { background: linear-gradient(120deg, color-mix(in srgb, var(--brand) 6%, var(--surface)) 0%, color-mix(in srgb, var(--brand) 12%, var(--surface)) 100%) !important; border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent) !important; box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.25) !important; }
+.exp-stat-card .cover, .exp-stat-card .cover-frost, .exp-stat-card .halo-spot, .exp-stat-card .halo-glow { display: none !important; }
+.nx .widget-location.exp-stat-card .widget-icon { color: var(--brand) !important; width: 26px; height: 26px; border-radius: 50%; background: color-mix(in srgb, var(--brand) 16%, transparent); }
+.nx .widget-location.exp-stat-card .widget-label { color: var(--ink-2) !important; }
+.nx .widget-location.exp-stat-card .exp-stat-cap { color: color-mix(in srgb, var(--ink) 80%, transparent) !important; }
+.exp-stat-num { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: left center; }
+.exp-stat-card::before { content: ""; position: absolute; left: 20px; right: 20px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: linear-gradient(90deg, transparent, var(--brand), transparent); opacity: 0.8; pointer-events: none; }
+.exp-stat-card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 22%, transparent), transparent 65%); }
+.nx .widget-location.exp-stat-card:hover { transform: translateY(-5px) !important; border-color: color-mix(in srgb, var(--brand) 60%, transparent) !important;
+  box-shadow: 0 22px 44px -14px color-mix(in srgb, var(--brand) 50%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important; }
+.nx .widget-location.exp-stat-card:hover::after { opacity: 1; }
+.nx .widget-location.exp-stat-card:hover .exp-stat-num { transform: scale(1.06); }
+/* same pointer-following glow as the Open-to-conversations card, painted on the tile's own background */
+.chip-logo { display: inline-flex; align-items: center; gap: 6px; }
+.chip-core { font-weight: 600; color: var(--ink); }
+.chip-more { opacity: 0.7; }
+.sk-desc { font-size: 13px; color: var(--ink-3); margin: 2px 0 10px; line-height: 1.45; }
+.chip-logo img { width: 16px; height: 16px; flex-shrink: 0; object-fit: contain; }
+.exp-logo-box img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: inherit; }
+.edu-logo { flex-shrink: 0; width: 48px; height: 48px; object-fit: contain; background: transparent; border: 0; padding: 0; }
+.exp-summary { font-size: 14px; color: var(--ink-3); margin: 6px 0 0; }
+.exp-dur { color: var(--ink-3); opacity: 0.85; }
+.exp-kind { font-weight: 600; color: var(--ink-2); }
+.exp-kind.is-volunteer { color: #b45309; }
+.exp-sep { color: var(--ink-3); margin: 0 6px; }
+@media (max-width: 767px) {
+  .exp-item-modern { gap: 14px; }
+  .exp-timeline { width: 40px; }
+  .exp-logo-box { width: 40px; height: 40px; font-size: 16px; border-radius: 10px; }
+  .exp-content { padding-bottom: 28px; }
+  .exp-header-row h3 { font-size: 17px; }
+  .exp-header-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .exp-when { display: block; white-space: normal; font-size: 13px; line-height: 1.4; padding: 0; text-align: left; }
+  .exp-stat-card:only-child { grid-column: 1 / -1; }
+  .exp-sub { font-size: 14px; line-height: 1.5; margin-bottom: 12px; }
+  .exp-sep { margin: 0 4px; }
+  .exp-bullets li { font-size: 14px; }
+  .exp-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .exp-stat-card { min-height: 0; padding: 14px 16px; }
+  .exp-stat-card .exp-stat-num { font-size: 30px; }
+  .exp-stat-card .exp-stat-cap { font-size: 13px; }
+  .exp-more-li { display: block; }
+  .exp-more-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 0; margin: 0; color: var(--brand); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .exp-more-btn svg { transition: transform 0.2s ease; }
+  .exp-item-modern.is-expanded .exp-more-btn svg { transform: rotate(180deg); }
+  .bullet-rest { display: none; }
+  .exp-item-modern.is-expanded .bullet-rest { display: list-item; }
+}
+/* Open-to-conversations card: white at rest in the light theme only; dark and other themes keep their own standard look.
+   The pointer glow works in every theme. */
+/* same standard card surface as the cards below in every theme; light theme gets the white look */
+.nx .glow-tile.r-card { background-color: var(--surface) !important; border: 1px solid var(--line) !important; box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.18) !important; }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card { background-color: #ffffff !important; border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent) !important; }
+.glow-tile .cover, .glow-tile .cover-frost, .glow-tile .halo-spot, .glow-tile .halo-glow { display: none !important; }
+.nx .glow-tile.r-card { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease !important; }
+.glow-tile-face { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+  z-index: 0; background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 40%, transparent), transparent 70%); }
+.glow-tile > *:not(.glow-tile-face) { position: relative; z-index: 1; }
+.nx .glow-tile.r-card:hover { transform: translateY(-4px) !important; border-color: color-mix(in srgb, var(--brand) 60%, transparent) !important; box-shadow: 0 22px 44px -14px color-mix(in srgb, var(--brand) 50%, transparent) !important; }
+.nx .glow-tile.r-card:hover .glow-tile-face { opacity: 1; }
+/* glow painted on the card's own background, so it does not depend on the overlay element */
+.nx .glow-tile .r-cta-btn { transition: box-shadow 0.3s ease, transform 0.3s ease; }
+.nx .glow-tile .r-cta-btn:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent), 0 10px 28px -6px color-mix(in srgb, var(--brand) 60%, transparent) !important; }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-title { color: #0f172a !important; }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-desc { color: #334155 !important; }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-label { color: #0f766e !important; }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-pill { background: color-mix(in srgb, var(--brand) 12%, #ffffff) !important; border-color: color-mix(in srgb, var(--brand) 35%, transparent) !important; }
+/* pointer glow: soft ellipse that fades in/out and eases toward the pointer */
+@property --glow { syntax: "<number>"; inherits: true; initial-value: 0; }
+.nx .glow-tile.r-card, .nx .widget-location.exp-stat-card { transition: --glow 0.5s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease !important; }
+.nx .glow-tile.r-card, .nx .widget-location.exp-stat-card {
+  background-image: radial-gradient(ellipse 260px 190px at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--brand) calc(var(--glow) * 20%), transparent) 0%,
+    color-mix(in srgb, var(--brand) calc(var(--glow) * 7%), transparent) 45%,
+    transparent 78%), var(--tile-base, linear-gradient(#ffffff, #ffffff)) !important; }
+/* base surface: standard tint on dark themes, plain white in light and mint */
+.nx .glow-tile.r-card, .nx .widget-location.exp-stat-card { --tile-base: linear-gradient(120deg, color-mix(in srgb, var(--brand) 6%, var(--surface)) 0%, color-mix(in srgb, var(--brand) 12%, var(--surface)) 100%); }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card, :is([data-theme="light"], [data-theme="mint"]) .nx .widget-location.exp-stat-card { --tile-base: linear-gradient(#ffffff, #ffffff); }
+.nx .glow-tile.r-card:hover, .nx .widget-location.exp-stat-card:hover { --glow: 1; }
+/* certifications: theme-coloured cards in a responsive grid */
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
+.cert-card { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.cert-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--brand) 45%, transparent); }
+.cert-ico { flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); }
+.cert-card h4 { margin: 0 0 4px; font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--ink); }
+.cert-card p { margin: 0; font-size: 13px; color: var(--ink-3); }
+/* additional: same card language as certifications, with a headline stat and tags */
+.extra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
+.extra-card { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.extra-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--brand) 45%, transparent); }
+.extra-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; min-height: 40px; }
+.extra-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand); padding-top: 4px; }
+.extra-stat { text-align: right; white-space: nowrap; flex-shrink: 0; }
+.extra-stat b { display: block; font-size: 22px; font-weight: 800; line-height: 1.1; color: var(--ink); }
+.extra-stat span { font-size: 12px; color: var(--ink-3); }
+.extra-card h4 { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink); }
+.extra-card p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.extra-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+/* sidebar: no inner scroller; it stays sticky while the page scrolls and reaches its full height at the page end */
+body.nx-page[data-page] .nx .rail { max-height: none !important; overflow: visible !important; }
+body.nx-page[data-page="profile"] .nx .rail {
+  scrollbar-width: thin !important;
+  scrollbar-color: color-mix(in srgb, var(--brand) 45%, transparent) transparent !important;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent 100%);
+  padding-bottom: 24px;
+}
+body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar { display: block !important; width: 6px; }
+body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--brand) 45%, transparent); border-radius: 6px; }
+/* library (overview + /library/<section>/), laid out like nahian.bd/library; colours come from theme variables */
+.nl-page { display: flex; flex-direction: column; gap: 48px; }
+.nl-page [hidden] { display: none !important; }
+.nl-tile { flex-shrink: 0; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  color: var(--brand); background: var(--surface-2); border: 1px solid var(--line); }
+.nl-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.nl-head-text { min-width: 0; }
+.nl-head-text h2, .nl-head-text h1 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+.nl-head-text p { margin: 3px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-3); }
+.nl-seeall { margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600;
+  color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color 0.2s ease; }
+.nl-seeall:hover { color: var(--brand); }
+.nl-more { align-self: center; margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px;
+  font-size: 14px; font-weight: 600; color: var(--ink); text-decoration: none; background: var(--surface); border: 1px solid var(--line);
+  transition: border-color 0.2s ease, color 0.2s ease; }
+.nl-more:hover { color: var(--brand); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+.nl-section { display: flex; flex-direction: column; }
+.nl-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+
+/* hero */
+.nl-hero { padding: 30px; border-radius: 28px; border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
+  background: radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--brand) 16%, var(--surface)) 0%, var(--surface) 65%);
+  box-shadow: 0 24px 50px -30px color-mix(in srgb, var(--brand) 55%, transparent); }
+.nl-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; font-size: 13px; color: var(--ink-2);
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.nl-pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+.nl-hero-title { margin: 16px 0 10px; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+.nl-hero > p { margin: 0 0 24px; max-width: 560px; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
+.nl-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.nl-stat { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 18px; border: 1px solid var(--line); text-decoration: none;
+  background: color-mix(in srgb, var(--surface) 75%, transparent); transition: transform 0.25s ease, border-color 0.25s ease; }
+.nl-stat:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+.nl-stat-ico { color: var(--brand); display: inline-flex; margin-bottom: 6px; }
+.nl-stat b { font-size: 24px; font-weight: 800; line-height: 1.1; color: var(--ink); }
+.nl-stat > span:last-child { font-size: 13.5px; line-height: 1.35; color: var(--ink-2); }
+
+/* tabs on the section pages */
+.nl-tabs ul { display: flex; gap: 8px; margin: 0; padding: 0 0 4px; list-style: none; overflow-x: auto; scrollbar-width: none; }
+.nl-tabs ul::-webkit-scrollbar { display: none; }
+.nl-tabs a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; white-space: nowrap; text-decoration: none;
+  font-size: 14px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); transition: all 0.2s ease; }
+.nl-tabs a b { font-weight: 600; color: var(--ink-3); }
+.nl-tabs a:hover { color: var(--ink); border-color: color-mix(in srgb, var(--brand) 45%, transparent); }
+.nl-tabs a.is-active { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+.nl-tabs a.is-active b { color: color-mix(in srgb, var(--bg) 70%, transparent); }
+.nl-page > .nl-tabs + .nl-section { margin-top: -20px; }
+
+/* skill cards */
+.nl-card { display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.nl-card:hover, .nl-bm:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 50%, transparent);
+  box-shadow: 0 18px 36px -20px color-mix(in srgb, var(--brand) 50%, transparent); }
+.nl-card-head { display: flex; align-items: flex-start; gap: 12px; }
+.nl-card-title { min-width: 0; flex: 1; }
+.nl-card-title h3 { margin: 0; font-size: 17px; line-height: 1.35; overflow-wrap: anywhere; }
+.nl-card-title h3 a { color: var(--ink); text-decoration: none; }
+.nl-card-title code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 600; }
+.nl-card-title code span { color: var(--brand); }
+.nl-by { display: flex; align-items: center; gap: 6px; margin-top: 5px; font-size: 13.5px; color: var(--ink-3); }
+.nl-by img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+.nl-count { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+  color: var(--ink-2); border: 1px solid var(--line); background: var(--surface-2); }
+.nl-count i { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+.nl-open { flex-shrink: 0; color: var(--ink-3); display: inline-flex; transition: color 0.2s ease; }
+.nl-open:hover { color: var(--brand); }
+.nl-card > p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
+.nl-cmd { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 16px; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--ink) 5%, var(--surface)); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
+.nl-cmd code { flex: 1; min-width: 0; overflow-wrap: anywhere; font: inherit; line-height: 1.5; color: var(--ink-2); }
+.nl-cmd code span { color: var(--brand); }
+.nl-copy { flex-shrink: 0; width: 36px; height: 36px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+  display: grid; place-items: center; cursor: pointer; transition: color 0.2s ease, border-color 0.2s ease; }
+.nl-copy svg { grid-area: 1 / 1; transition: opacity 0.2s ease, transform 0.2s ease; }
+.nl-copy svg:last-child { opacity: 0; transform: scale(0.6); }
+.nl-copy:hover { color: var(--brand); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+.nl-copy.is-copied { color: var(--brand); }
+.nl-copy.is-copied svg:first-child { opacity: 0; transform: scale(0.6); }
+.nl-copy.is-copied svg:last-child { opacity: 1; transform: none; }
+.nl-group + .nl-group { margin-top: 36px; }
+.nl-group-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.nl-group-head img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
+.nl-group-head h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--ink); }
+.nl-group-head p { margin: 2px 0 0; font-size: 13.5px; color: var(--ink-3); }
+.nl-group-head p a { color: inherit; text-decoration: none; }
+.nl-group-head p a:hover { color: var(--brand); }
+
+/* bookmarks */
+.nl-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 20px; scrollbar-width: none; }
+.nl-chips::-webkit-scrollbar { display: none; }
+.nl-chips button { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; white-space: nowrap; cursor: pointer;
+  font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); transition: all 0.2s ease; }
+.nl-chips button b { font-weight: 600; color: var(--ink-3); }
+.nl-chips button.is-active { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+.nl-chips button.is-active b { color: color-mix(in srgb, var(--bg) 70%, transparent); }
+.nl-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: center; padding: 10px 26px 10px 10px; margin-bottom: 20px;
+  border-radius: 28px; border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
+  background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--brand) 18%, var(--surface)) 0%, var(--surface) 70%); }
+.nl-feature-img img { display: block; width: 100%; aspect-ratio: 960 / 504; object-fit: cover; border-radius: 20px; }
+.nl-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.nl-badges span, .nl-bm-badges span { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+  color: var(--ink); background: color-mix(in srgb, var(--surface) 80%, transparent); border: 1px solid var(--line); }
+.nl-badges .nl-top, .nl-bm-badges .nl-top { color: var(--brand); }
+.nl-feature-body h3 { margin: 14px 0 4px; font-size: 26px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); }
+.nl-feature-by { margin: 0 0 10px; font-size: 14px; color: var(--ink-3); }
+.nl-feature-body > p:not(.nl-badges):not(.nl-feature-by) { margin: 0 0 18px; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
+.nl-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 14px; font-size: 14px; font-weight: 700; text-decoration: none;
+  background: var(--brand); color: color-mix(in srgb, var(--bg) 92%, #000); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.nl-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--brand) 70%, transparent); }
+.nl-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; text-decoration: none;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line); transition: border-color 0.2s ease, color 0.2s ease; }
+.nl-ghost:hover { color: var(--brand); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+.nl-bm { display: flex; flex-direction: column; padding: 6px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.nl-bm-thumb { position: relative; display: block; overflow: hidden; border-radius: 19px; background: var(--surface-2); }
+.nl-bm-thumb img { display: block; width: 100%; aspect-ratio: 960 / 504; object-fit: cover; transition: transform 0.4s ease; }
+.nl-bm:hover .nl-bm-thumb img { transform: scale(1.03); }
+.nl-bm-badges { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px; }
+.nl-bm-badges span { color: #fff; background: rgba(15, 23, 42, 0.78); border-color: transparent; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.nl-bm-badges .nl-top { color: #fff; }
+.nl-bm-badges .nl-top svg { color: #34d399; }
+.nl-bm-body { display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 12px; flex: 1; }
+.nl-bm-body h3 { margin: 0; font-size: 16.5px; font-weight: 700; }
+.nl-bm-body h3 a { color: var(--ink); text-decoration: none; }
+.nl-bm-body > p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+.nl-domain { display: flex; align-items: center; gap: 8px; margin-top: auto !important; padding-top: 8px; font-size: 13px !important; color: var(--ink-3) !important; }
+.nl-domain span { flex: 1; }
+.nl-bm-sec { margin-top: 28px; }
+.nl-bm-sec-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.nl-bm-sec-head h3 { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 17px; font-weight: 700; color: var(--ink); }
+.nl-bm-sec-head h3 svg { color: var(--brand); }
+.nl-bm-sec-head p { margin: 0; font-size: 14px; color: var(--ink-3); }
+.nl-ext { margin-top: 36px; }
+.nl-ext-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; color: var(--brand); }
+.nl-ext-head h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--ink); }
+.nl-tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--ink-2);
+  background: var(--surface-2); border: 1px solid var(--line); }
+.nl-ext-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: center; padding: 20px; border-radius: 24px;
+  background: var(--surface); border: 1px solid var(--line); }
+.nl-ext-id { display: flex; align-items: center; gap: 12px; }
+.nl-ext-id img { width: 48px; height: 48px; border-radius: 12px; }
+.nl-ext-id h4 { margin: 0 0 4px; font-size: 18px; font-weight: 700; color: var(--ink); }
+.nl-ext-feature-body > p { margin: 14px 0 16px; font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
+.nl-ext-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.nl-ext-shot img { display: block; width: 100%; aspect-ratio: 960 / 504; object-fit: cover; border-radius: 16px; border: 1px solid var(--line); }
+.nl-ext-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.nl-ext-list a { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; text-decoration: none; color: var(--ink-3);
+  background: var(--surface); border: 1px solid var(--line); transition: border-color 0.2s ease; }
+.nl-ext-list a:hover { border-color: color-mix(in srgb, var(--brand) 50%, transparent); }
+.nl-ext-ico img { display: block; width: 40px; height: 40px; border-radius: 10px; }
+.nl-ext-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.nl-ext-meta span:first-child { font-size: 15px; font-weight: 700; color: var(--ink); }
+.nl-ext-meta span:last-child { font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+/* music */
+.nl-player { padding: 8px; border-radius: 28px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
+  box-shadow: 0 24px 50px -32px color-mix(in srgb, var(--brand) 60%, transparent); }
+.nl-screen, .nl-ep-screen { position: relative; overflow: hidden; border-radius: 22px; background: #000; aspect-ratio: 16 / 9; }
+.nl-screen-thumb, .nl-ep-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.nl-page .nl-play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 68px; height: 68px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; color: #fff !important; background: #ef233c !important; box-shadow: 0 10px 30px rgba(239, 35, 60, 0.45); transition: transform 0.2s ease; padding: 0; }
+.nl-page .nl-play:hover { transform: scale(1.06); }
+.nl-page .nl-play svg { margin-left: 4px; }
+.nl-frame, .nl-frame iframe, .nl-ep-screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.nl-frame { display: none; }
+.nl-player.is-playing .nl-frame { display: block; }
+.nl-player.is-playing .nl-play, .nl-player.is-playing .nl-screen-thumb { display: none !important; }
+.nl-player-bar { display: flex; align-items: center; gap: 14px; padding: 14px 10px 8px; }
+.nl-player-av { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.nl-player-meta { flex: 1; min-width: 0; }
+.nl-player-meta p { margin: 0; }
+.nl-upnext { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--brand); }
+.nl-eq { display: none; align-items: flex-end; gap: 2px; height: 10px; }
+.nl-eq i { width: 2px; background: var(--brand); animation: nl-eq 0.9s ease-in-out infinite; }
+.nl-eq i:nth-child(2) { animation-delay: 0.2s; } .nl-eq i:nth-child(3) { animation-delay: 0.4s; } .nl-eq i:nth-child(4) { animation-delay: 0.1s; }
+.nl-player.is-playing .nl-eq { display: inline-flex; }
+@keyframes nl-eq { 0%, 100% { height: 3px; } 50% { height: 10px; } }
+.nl-player-title { font-size: 16.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nl-player-sub { display: flex; gap: 10px; font-size: 13.5px; color: var(--ink-3); }
+.nl-player-ctrl { display: flex; gap: 8px; flex-shrink: 0; }
+.nl-player-ctrl button { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; color: var(--ink);
+  background: var(--surface-2); border: 1px solid var(--line); transition: border-color 0.2s ease, color 0.2s ease; }
+.nl-player-ctrl button:hover { color: var(--brand); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+.nl-tracks { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.nl-tracks button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 8px 12px 8px 8px; border-radius: 18px; cursor: pointer; text-align: left;
+  font: inherit; color: inherit; background: transparent; border: 1px solid transparent; transition: background 0.2s ease, border-color 0.2s ease; }
+.nl-tracks button:hover { background: var(--surface); }
+.nl-tracks button.is-current { background: var(--surface); border-color: var(--line); }
+.nl-n { width: 24px; text-align: center; font-size: 13px; color: var(--ink-3); flex-shrink: 0; }
+.nl-tthumb { position: relative; flex-shrink: 0; width: 80px; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: #000; }
+.nl-tthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nl-tthumb span { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; background: rgba(0, 0, 0, 0.35); opacity: 0; transition: opacity 0.2s ease; }
+.nl-tracks button:hover .nl-tthumb span { opacity: 1; }
+.nl-tmeta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.nl-tmeta span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nl-tmeta span:first-child { font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.nl-tmeta span:last-child { font-size: 12.5px; color: var(--ink-3); }
+.nl-tracks button.is-current .nl-tmeta span:first-child { color: var(--brand); }
+.nl-ar { flex-shrink: 0; font-size: 13.5px; color: var(--ink-3); }
+.nl-artist { margin-top: 26px; }
+.nl-artist-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 8px; }
+.nl-artist-head h3 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 16px; font-weight: 700; color: var(--ink); }
+.nl-artist-head h3 img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.nl-artist-head h3 span { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+.nl-artist-head a { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); text-decoration: none; }
+.nl-artist-head a:hover { color: var(--brand); }
+
+/* voiceovers */
+.nl-eps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.nl-channel { grid-column: 1 / -1; overflow: hidden; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); }
+.nl-banner { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); height: 150px; }
+.nl-banner img { width: 100%; height: 100%; object-fit: cover; }
+.nl-banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, var(--surface)); }
+.nl-banner-count { position: absolute; right: 14px; top: 14px; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px;
+  font-size: 13px; font-weight: 600; color: #fff; background: rgba(15, 23, 42, 0.78); }
+.nl-banner-count svg { color: #ef233c; }
+.nl-channel-body { position: relative; padding: 0 26px 26px; margin-top: -44px; }
+.nl-channel-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.nl-channel-logo { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--surface); object-fit: cover; background: var(--surface); }
+.nl-sub { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 14px; font-size: 15px; font-weight: 700; color: #fff;
+  text-decoration: none; background: #ef233c; box-shadow: 0 10px 26px -8px rgba(239, 35, 60, 0.6); transition: transform 0.2s ease; }
+.nl-sub:hover { transform: translateY(-2px); }
+.nl-eyebrow { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.nl-channel-body h3 { margin: 4px 0 2px; font-size: 24px; font-weight: 800; color: var(--ink); }
+.nl-meta { margin: 0 0 18px; font-size: 14px; color: var(--ink-3); }
+.nl-fb { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--surface-2); border: 1px solid var(--line); }
+.nl-fb-ico { color: #1877f2; display: inline-flex; flex-shrink: 0; }
+.nl-fb p { flex: 1; margin: 0; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--ink); }
+.nl-ep { display: flex; flex-direction: column; padding: 6px; border-radius: 26px; background: var(--surface); border: 1px solid var(--line); }
+.nl-ep.is-wide { grid-column: 1 / -1; }
+.nl-ep-screen { border-radius: 20px; }
+.nl-ep-badge { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; color: #fff; background: rgba(15, 23, 42, 0.78); }
+.nl-ep-badge svg { color: #fbbf24; }
+.nl-ep-screen.is-playing .nl-ep-badge { display: none; }
+.nl-ep-body { padding: 14px 12px 10px; }
+.nl-ep-body h3 { margin: 0; font-size: 15.5px; font-weight: 700; line-height: 1.5; color: var(--ink); }
+.nl-ep-by { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 13px; color: var(--ink-3); }
+
+@media (max-width: 767px) {
+  .nl-page { gap: 40px; }
+  .nl-hero { padding: 20px; border-radius: 22px; }
+  .nl-hero-title { font-size: 28px; }
+  .nl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nl-grid, .nl-eps, .nl-ext-list { grid-template-columns: 1fr; }
+  .nl-feature, .nl-ext-feature { grid-template-columns: 1fr; padding: 8px 8px 18px; gap: 14px; }
+  .nl-feature-body, .nl-ext-feature-body { padding: 0 10px; }
+  .nl-feature-body h3 { font-size: 21px; }
+  .nl-head { flex-wrap: wrap; }
+  .nl-head-text { flex: 1; min-width: 0; }
+  .nl-ar { display: none; }
+  .nl-banner { height: 110px; }
+  .nl-channel-body { padding: 0 16px 18px; }
+  .nl-fb { flex-wrap: wrap; }
+}
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
 /* Floating Controls (Theme, Sound, WhatsApp) & AI Widget */
@@ -1098,9 +1551,9 @@ body.nx-page #leaderboard-widget {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, color-mix(in srgb, var(--c) 16%, rgba(15, 23, 42, 0.78)) 100%);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 46%, transparent), 0 2px 10px -2px color-mix(in srgb, var(--c) 25%, transparent);
-  color: #f8fafc;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 35%, var(--line)), 0 2px 8px -2px color-mix(in srgb, var(--c) 16%, transparent);
+  color: var(--ink-1);
   cursor: pointer;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background 0.3s ease;
   animation: ai-pill-breathe 4.5s ease-in-out infinite alternate;
@@ -1111,10 +1564,16 @@ body.nx-page #leaderboard-widget {
 .nx .pill.ai:nth-child(4) { animation-delay: 2.4s; }
 .nx .pill.ai:nth-child(5) { animation-delay: 3.2s; }
 
-[data-theme="light"] .nx .pill.ai {
-  background: linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, var(--c) 15%, #ffffff) 100%);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 44%, transparent), 0 2px 10px -2px color-mix(in srgb, var(--c) 20%, transparent);
-  color: #0f172a;
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .pill.ai {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, color-mix(in srgb, var(--c) 16%, rgba(15, 23, 42, 0.78)) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 46%, transparent), 0 2px 10px -2px color-mix(in srgb, var(--c) 25%, transparent);
+  color: #f8fafc;
+}
+
+:is([data-theme="light"], [data-theme="mint"], .light) .nx .pill.ai {
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 35%, var(--line)), 0 2px 8px -2px color-mix(in srgb, var(--c) 16%, transparent);
+  color: var(--ink-1);
 }
 
 /* Glass Shimmer Sheen Light Reflection */
@@ -1131,8 +1590,8 @@ body.nx-page #leaderboard-widget {
   transition: left 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 1;
 }
-[data-theme="light"] .nx .pill.ai::after {
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
+:is([data-theme="light"], [data-theme="mint"], .light) .nx .pill.ai::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
 }
 .nx .pill.ai:hover::after {
   left: 170%;
@@ -1166,12 +1625,12 @@ body.nx-page #leaderboard-widget {
 /* Ambient Breathing Glow Keyframes */
 @keyframes ai-pill-breathe {
   0% {
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent),
-                0 2px 8px -2px color-mix(in srgb, var(--c) 18%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 35%, var(--line)),
+                0 2px 6px -2px color-mix(in srgb, var(--c) 16%, transparent);
   }
   100% {
-    box-shadow: inset 0 0 0 1.2px color-mix(in srgb, var(--c) 65%, transparent),
-                0 4px 16px 0px color-mix(in srgb, var(--c) 35%, transparent);
+    box-shadow: inset 0 0 0 1.2px color-mix(in srgb, var(--c) 55%, var(--line)),
+                0 4px 12px 0px color-mix(in srgb, var(--c) 26%, transparent);
   }
 }
 
@@ -1323,12 +1782,6 @@ body.nx-page #leaderboard-widget {
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04);
-}
-.widget-works .globe-ico {
-  color: #059669;
-}
-[data-theme="dark"] .widget-works .globe-ico {
-  color: #34d399;
 }
 [data-theme="dark"] .widget-works {
   box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.35);
@@ -1493,11 +1946,496 @@ body.nx-page #leaderboard-widget {
   background: var(--brand);
 }
 
+.lang-legend { margin: 14px 0 0; font-size: 12px; color: var(--ink-3); }
 .lang-sub {
   font-size: 13px;
   color: var(--ink-3);
   margin: 0;
   line-height: 1.4;
+}
+
+/* ==========================================================================
+   Theme-Adaptive Emerald/Cyan/Rose/Matrix Aurora Glass & Spotlight
+   Applied ONLY to the 4 Screenshot Cards:
+   1. Location Card (.widget-location)
+   2. Open to Work Card (.r-card-open)
+   3. People Hero (.people-hero)
+   4. Contact Heroes (.cta-hero, .svc-card.wide)
+   ========================================================================== */
+
+/* --- 1. DARK THEME (Default: Deep Midnight Navy & Electric Cyan / Blue) --- */
+:root,
+[data-theme="dark"],
+:root[data-theme="dark"] {
+  --color-brand-300: #38bdf8;
+  --color-brand-400: #00f2fe;
+  --cover-base-1: #071326;
+  --cover-base-2: #0a1931;
+  --cover-1: #00f2fe;
+  --cover-2: #38bdf8;
+  --cover-3: #2563eb;
+  --cover-4: #0ea5e9;
+  --cover-5: #818cf8;
+  --cover-6: #06b6d4;
+  --aurora-frost: rgba(7, 19, 38, 0.55);
+  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.28), color-mix(in srgb, #00f2fe 50%, transparent) 30%, transparent 55%, color-mix(in srgb, #2563eb 55%, transparent));
+  --aurora-title: #ffffff;
+  --aurora-label: #7dd3fc;
+  --aurora-ico: #00f2fe;
+  --aurora-tz: #94a3b8;
+  --aurora-daypart: #cbd5e1;
+}
+
+/* --- 2. LIGHT THEME (Clean Royal Sapphire Blue & Ice Sky) --- */
+[data-theme="light"],
+:root[data-theme="light"] {
+  --color-brand-300: #60a5fa;
+  --color-brand-400: #2563eb;
+  --cover-base-1: #eff6ff;
+  --cover-base-2: #f0fdf4;
+  --cover-1: #3b82f6;
+  --cover-2: #60a5fa;
+  --cover-3: #2563eb;
+  --cover-4: #93c5fd;
+  --cover-5: #a5f3fc;
+  --cover-6: #1d4ed8;
+  --aurora-frost: rgba(255, 255, 255, 0.65);
+  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.85), color-mix(in srgb, #2563eb 45%, transparent) 30%, transparent 55%, color-mix(in srgb, #38bdf8 45%, transparent));
+  --aurora-title: #0f172a;
+  --aurora-label: #1e40af;
+  --aurora-ico: #2563eb;
+  --aurora-tz: #475569;
+  --aurora-daypart: #334155;
+}
+
+/* --- 3. CYBERPUNK THEME (Neon Rose Pink, Magenta & Cyber Gold) --- */
+[data-theme="cyberpunk"],
+:root[data-theme="cyberpunk"] {
+  --color-brand-300: #fb7185;
+  --color-brand-400: #f43f5e;
+  --cover-base-1: #16060f;
+  --cover-base-2: #120409;
+  --cover-1: #f43f5e;
+  --cover-2: #eab308;
+  --cover-3: #ec4899;
+  --cover-4: #fb7185;
+  --cover-5: #f59e0b;
+  --cover-6: #be123c;
+  --aurora-frost: rgba(22, 6, 15, 0.55);
+  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.28), color-mix(in srgb, #f43f5e 50%, transparent) 30%, transparent 55%, color-mix(in srgb, #eab308 50%, transparent));
+  --aurora-title: #fbbf24;
+  --aurora-label: #fda4af;
+  --aurora-ico: #f43f5e;
+  --aurora-tz: #a1a1aa;
+  --aurora-daypart: #dcbf86;
+}
+
+/* --- 4. MINT THEME (Nahian.bd Emerald & Pine Signature) --- */
+[data-theme="mint"],
+:root[data-theme="mint"] {
+  --color-brand-300: #34d399;
+  --color-brand-400: #10b981;
+  --cover-base-1: #03140d;
+  --cover-base-2: #04120f;
+  --cover-1: #059669;
+  --cover-2: #0d9488;
+  --cover-3: #047857;
+  --cover-4: #0f766e;
+  --cover-5: #065f46;
+  --cover-6: #10b981;
+  --aurora-frost: rgba(3, 20, 13, 0.52);
+  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.24), color-mix(in srgb, #10b981 45%, transparent) 30%, transparent 55%, color-mix(in srgb, #0f766e 50%, transparent));
+  --aurora-title: #ffffff;
+  --aurora-label: #a7f3d0;
+  --aurora-ico: #34d399;
+  --aurora-tz: #94a3b8;
+  --aurora-daypart: #cbd5e1;
+}
+
+/* --- 5. GOD-MODE THEME (Matrix Phosphor Green & Pure Cyber Black) --- */
+[data-theme="god-mode"],
+:root[data-theme="god-mode"] {
+  --color-brand-300: #4ade80;
+  --color-brand-400: #00ff00;
+  --cover-base-1: #020a02;
+  --cover-base-2: #010601;
+  --cover-1: #00ff00;
+  --cover-2: #00cc00;
+  --cover-3: #008800;
+  --cover-4: #22c55e;
+  --cover-5: #15803d;
+  --cover-6: #16a34a;
+  --aurora-frost: rgba(2, 10, 2, 0.58);
+  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.35), color-mix(in srgb, #00ff00 55%, transparent) 30%, transparent 55%, color-mix(in srgb, #008800 60%, transparent));
+  --aurora-title: #00ff00;
+  --aurora-label: #86efac;
+  --aurora-ico: #00ff00;
+  --aurora-tz: #00aa00;
+  --aurora-daypart: #4ade80;
+}
+
+@property --halo-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes halo-spin {
+  to {
+    --halo-angle: 360deg;
+  }
+}
+
+@keyframes cover-drift {
+  0% {
+    transform: translate(0) scale(1) rotate(0);
+  }
+  50% {
+    transform: translate(12%, -10%) scale(1.15) rotate(20deg);
+  }
+  to {
+    transform: translate(-10%, 8%) scale(.95) rotate(-15deg);
+  }
+}
+
+/* Base Card Shell matching Nahian.bd */
+.nx .widget-location,
+.nx .r-card-open,
+.nx .people-hero,
+.nx .cta-hero,
+.nx .svc-card.wide {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 0 rgba(255, 255, 255, 0.05),
+              0 18px 40px -24px rgba(0, 0, 0, 0.35) !important;
+  transition: transform .28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow .28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.nx .widget-location { border-radius: 24px !important; }
+.nx .r-card-open { border-radius: 22px !important; }
+.nx .people-hero { border-radius: 28px !important; }
+.nx .cta-hero { border-radius: 28px !important; }
+.nx .svc-card.wide { border-radius: 24px !important; }
+
+/* Hairline Glass Border with theme-adaptive light reflection */
+.nx .widget-location::after,
+.nx .r-card-open::after,
+.nx .people-hero::after,
+.nx .cta-hero::after,
+.nx .svc-card.wide::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  padding: 1px !important;
+  background: var(--aurora-border) !important;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0) !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+/* Ambient Edge Aura behind card */
+.halo-glow {
+  position: absolute !important;
+  inset: 2px !important;
+  z-index: 0 !important;
+  border-radius: inherit !important;
+  background: conic-gradient(
+    from var(--halo-angle, 0deg),
+    var(--color-brand-400),
+    transparent 22%,
+    var(--cover-3) 38%,
+    transparent 55%,
+    var(--cover-4) 72%,
+    transparent 88%,
+    var(--color-brand-400)
+  ) !important;
+  filter: blur(22px) !important;
+  opacity: .25 !important;
+  pointer-events: none !important;
+  transition: opacity .4s ease !important;
+  animation: 9s linear infinite halo-spin !important;
+}
+
+.nx .widget-location:hover .halo-glow,
+.nx .r-card-open:hover .halo-glow,
+.nx .people-hero:hover .halo-glow,
+.nx .cta-hero:hover .halo-glow,
+.nx .svc-card.wide:hover .halo-glow {
+  opacity: .55 !important;
+}
+
+/* Aurora Cover Layer */
+.cover {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  border-radius: inherit !important;
+  isolation: isolate !important;
+  background: linear-gradient(120deg, var(--cover-base-1), var(--cover-base-2)) !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  opacity: .85 !important;
+}
+
+/* Drifting Aurora Blobs */
+.cover-blob {
+  aspect-ratio: 1 !important;
+  background: radial-gradient(closest-side, var(--blob), transparent) !important;
+  opacity: .75 !important;
+  will-change: transform !important;
+  width: 70% !important;
+  animation: cover-drift var(--dur, 22s) ease-in-out infinite alternate !important;
+  animation-delay: var(--delay, 0s) !important;
+  border-radius: 9999px !important;
+  position: absolute !important;
+  pointer-events: none !important;
+}
+
+/* Frosted Glass Blur Overlay */
+.cover-frost {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  border-radius: inherit !important;
+  background: var(--aurora-frost) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.5) !important;
+  backdrop-filter: blur(24px) saturate(1.5) !important;
+  pointer-events: none !important;
+}
+
+/* Cursor Tracking Spotlight */
+.halo-spot {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  border-radius: inherit !important;
+  background: radial-gradient(
+    26rem circle at var(--mx, 50%) var(--my, -20%),
+    color-mix(in srgb, var(--color-brand-300) 24%, transparent),
+    transparent 60%
+  ) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity .35s ease !important;
+}
+
+.nx .widget-location:hover .halo-spot,
+.nx .r-card-open:hover .halo-spot,
+.nx .people-hero:hover .halo-spot,
+.nx .cta-hero:hover .halo-spot,
+.nx .svc-card.wide:hover .halo-spot {
+  opacity: 1 !important;
+}
+
+/* Foreground content stays crisp, vibrant & clickable */
+.nx .widget-location > *:not(.halo-glow):not(.cover):not(.cover-frost):not(.halo-spot),
+.nx .r-card-open > *:not(.halo-glow):not(.cover):not(.cover-frost):not(.halo-spot),
+.nx .people-hero > *:not(.halo-glow):not(.cover):not(.cover-frost):not(.halo-spot),
+.nx .cta-hero > *:not(.halo-glow):not(.cover):not(.cover-frost):not(.halo-spot),
+.nx .svc-card.wide > *:not(.halo-glow):not(.cover):not(.cover-frost):not(.halo-spot) {
+  position: relative !important;
+  z-index: 4 !important;
+}
+
+/* Typography auto-updates with current theme */
+.nx .widget-location .widget-title,
+.nx .widget-location .clock-time {
+  color: var(--aurora-title) !important;
+}
+.nx .widget-location .widget-label {
+  color: var(--aurora-label) !important;
+}
+.nx .widget-location .location-ico {
+  color: var(--aurora-ico) !important;
+}
+.nx .widget-location .clock-tz {
+  color: var(--aurora-tz) !important;
+}
+.nx .widget-location .daypart-text {
+  color: var(--aurora-daypart) !important;
+}
+
+.nx .r-card-open .r-card-title,
+.nx .people-hero h2,
+.nx .cta-hero h2,
+.nx .svc-card.wide h3 {
+  color: var(--aurora-title) !important;
+}
+
+.nx .r-card-open .r-status-label {
+  color: var(--aurora-label) !important;
+}
+
+.nx .r-card-open .r-card-desc,
+.nx .people-hero p,
+.nx .cta-hero p,
+.nx .svc-card.wide p {
+  color: var(--aurora-daypart) !important;
+}
+
+/* CTA Buttons in Aurora Cards: Both Sidebar "Let's talk" (.r-card-open .r-cta-btn) and Contact Page "Let's talk" (.svc-card.wide .btn-primary) */
+.nx .r-card-open .r-cta-btn,
+.nx .svc-card.wide .btn-primary {
+  background: color-mix(in srgb, var(--color-brand-400) 22%, var(--cover-base-1)) !important;
+  color: var(--aurora-title) !important;
+  border: 1px solid color-mix(in srgb, var(--color-brand-400) 45%, transparent) !important;
+  box-shadow: 0 4px 14px -2px color-mix(in srgb, var(--color-brand-400) 25%, transparent) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.nx .r-card-open .r-cta-btn span,
+.nx .svc-card.wide .btn-primary span {
+  color: var(--aurora-title) !important;
+  font-weight: 600 !important;
+}
+.nx .r-card-open .r-cta-btn svg,
+.nx .svc-card.wide .btn-primary i,
+.nx .svc-card.wide .btn-primary svg {
+  color: var(--aurora-title) !important;
+  stroke: var(--aurora-title) !important;
+  transition: transform 0.2s ease !important;
+}
+.nx .r-card-open .r-cta-btn:hover,
+.nx .svc-card.wide .btn-primary:hover {
+  background: var(--color-brand-400) !important;
+  color: var(--on-brand, #ffffff) !important;
+  border-color: var(--color-brand-400) !important;
+  box-shadow: 0 8px 22px -3px color-mix(in srgb, var(--color-brand-400) 50%, transparent) !important;
+  transform: translateY(-1.5px) !important;
+}
+.nx .r-card-open .r-cta-btn:hover span,
+.nx .svc-card.wide .btn-primary:hover span {
+  color: var(--on-brand, #ffffff) !important;
+}
+.nx .r-card-open .r-cta-btn:hover svg,
+.nx .svc-card.wide .btn-primary:hover i,
+.nx .svc-card.wide .btn-primary:hover svg {
+  color: var(--on-brand, #ffffff) !important;
+  stroke: var(--on-brand, #ffffff) !important;
+  transform: translateX(3px) !important;
+}
+
+/* Light Theme: Vibrant Royal Blue CTA Button with Crisp White Text (Standard Primary Button) */
+:is([data-theme="light"], :root[data-theme="light"]) .nx .r-card-open .r-cta-btn,
+:is([data-theme="light"], :root[data-theme="light"]) .nx .svc-card.wide .btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.42), 0 2px 6px -1px rgba(0, 0, 0, 0.08) !important;
+}
+:is([data-theme="light"], :root[data-theme="light"]) .nx .r-card-open .r-cta-btn span,
+:is([data-theme="light"], :root[data-theme="light"]) .nx .svc-card.wide .btn-primary span {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+:is([data-theme="light"], :root[data-theme="light"]) .nx .r-card-open .r-cta-btn svg,
+:is([data-theme="light"], :root[data-theme="light"]) .nx .svc-card.wide .btn-primary i,
+:is([data-theme="light"], :root[data-theme="light"]) .nx .svc-card.wide .btn-primary svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+:is([data-theme="light"], :root[data-theme="light"]) .nx .r-card-open .r-cta-btn:hover,
+:is([data-theme="light"], :root[data-theme="light"]) .nx .svc-card.wide .btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  box-shadow: 0 8px 22px -3px rgba(37, 99, 235, 0.58) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Hover elevation */
+.nx .widget-location:hover,
+.nx .r-card-open:hover,
+.nx .people-hero:hover,
+.nx .cta-hero:hover,
+.nx .svc-card.wide:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* About Bio Read More / Clamp Across Mobile, Tablet & Web */
+.nx .about-bio-wrap {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.nx .about-prose {
+  position: relative;
+  max-height: 84px;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nx .about-prose::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.nx .about-bio-wrap.is-expanded .about-prose {
+  max-height: 1400px;
+}
+
+.nx .about-bio-wrap.is-expanded .about-prose::after {
+  opacity: 0;
+}
+
+.nx .about-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 10%, var(--surface-2, transparent));
+  border: 1px solid color-mix(in srgb, var(--brand) 28%, var(--line, transparent));
+  cursor: pointer;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nx .about-toggle-btn:hover {
+  background: var(--brand);
+  color: var(--on-brand, #ffffff);
+  border-color: var(--brand);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 14px -2px rgba(var(--brand-rgb), 0.4);
+}
+
+.nx .about-toggle-btn .about-btn-icon {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  stroke: currentColor;
+}
+
+.nx .about-bio-wrap.is-expanded .about-toggle-btn .about-btn-icon {
+  transform: rotate(180deg);
+}
+
+/* Light Theme Button Tuning */
+:is([data-theme="light"], :root[data-theme="light"]) .nx .about-toggle-btn {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #2563eb !important;
+}
+:is([data-theme="light"], :root[data-theme="light"]) .nx .about-toggle-btn:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
 }
 """
 
@@ -1551,7 +2489,7 @@ _tail = _tail.replace('<div style="text-align: center; padding-bottom: 2rem;">',
 
 def global_top_nav(cur):
     links = [("profile", "Profile"), ("projects", "Projects"), ("writing", "Writing"),
-             ("people", "People"), ("contact", "Contact")]
+             ("people", "People"), ("library", "Library"), ("contact", "Contact")]
     links_html = "".join([f'<a href="../{k}/" class="{"active" if k==cur else ""}">{l}</a>' for k, l in links])
     links_html += f'<a href="../ai-insights/index.html">AI Insights</a>'
     return (f'<header class="nx-global-nav"><div class="nx-nav-container">'
@@ -1576,7 +2514,7 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
 
 def shell(slug, title, desc, cur):
     head = build_pages.set_meta(_head, slug, title.replace(f"{NAME} · ", ""), desc, "../")
-    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=21">\n</head>')
+    head = head.replace("</head>", '<link rel="stylesheet" href="../nx/nx.scoped.css?v=' + CSS_VER + '">\n</head>')
     opening = swap_nav_active(_open, "../", cur)
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 
@@ -1615,7 +2553,7 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True):
 </div>
 {bottom_nav(cur, prefix="../")}
 </div>
-<script src="../nx/nx.js?v=6"></script>
+<script src="../nx/nx.js?v=8"></script>
 <script type="module" src="../nx/slats-cover.js?v=8"></script>
 <script src="../nx/proj-dots.js?v=5"></script>
 {tail}'''
@@ -1633,15 +2571,22 @@ def pill_img(label, icon, color=None):
 
 
 # ------------------------------------------------------------------ PAGES
+def skill_chip(label, icon, tier):
+    src = icon_src(icon) if icon else None
+    im = f'<img src="{src}" alt="" width="16" height="16" loading="lazy">' if src else ""
+    return f'<span class="chip chip-logo {tier}">{im}{e(label)}</span>'
+
+
 def initials(name):
     return "".join(w[0] for w in re.findall(r"[A-Za-z0-9&]+", name)[:2]).upper()
 
 
 def profile_meta_widgets():
-    return '''<div class="meta-widgets">
+    return f'''<div class="meta-widgets">
   <div class="meta-grid-2">
     <!-- Card 1: Based in -->
-    <div class="widget-card widget-location">
+    <div class="widget-card widget-location" data-halo>
+      {nahian_aurora_html()}
       <div class="widget-head">
         <span class="widget-icon location-ico">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1666,14 +2611,13 @@ def profile_meta_widgets():
         </span>
         <span class="widget-label">Works</span>
       </div>
-      <h3 class="widget-title">Remote / Office Work</h3>
-      <p class="widget-desc">Open to on-site and hybrid roles in Dhaka, as well as remote collaboration across global time zones (US, EU, APAC).</p>
+      <h3 class="widget-title">Remote-first</h3>
+      <p class="widget-desc">Open to hybrid roles and on-site work in Dhaka, with remote collaboration across US, EU and APAC time zones.</p>
       <div class="works-chips">
         <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Remote</span>
-        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Office / On-site (Dhaka)</span>
         <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Hybrid</span>
+        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> On-site (Dhaka)</span>
         <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Async-friendly</span>
-        <span class="work-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Flexible schedule</span>
         <a class="work-chip work-chip-cv" href="../uploads/Mehedi_Hasan_CV.pdf" target="_blank" rel="noopener noreferrer"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6m-3 3l3 3 3-3"/></svg> Download CV</a>
       </div>
     </div>
@@ -1697,15 +2641,15 @@ def profile_meta_widgets():
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
           </button>
         </div>
-        <div class="lang-bars" aria-label="Proficiency: 5 of 5">
+        <div class="lang-bars" aria-label="Proficiency: 4 of 5">
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
-          <span class="bar-seg active"></span>
+          <span class="bar-seg"></span>
         </div>
-        <div class="lang-pill"><span class="lang-dot"></span>Near-native</div>
-        <p class="lang-sub">British and American accents</p>
+        <div class="lang-pill"><span class="lang-dot"></span>Professional</div>
+        <p class="lang-sub">Business communication, presentations and writing.</p>
       </div>
 
       <!-- Bangla -->
@@ -1724,14 +2668,14 @@ def profile_meta_widgets():
           <span class="bar-seg active"></span>
         </div>
         <div class="lang-pill"><span class="lang-dot"></span>Native</div>
-        <p class="lang-sub">First language & mother tongue</p>
+        <p class="lang-sub">First language.</p>
       </div>
 
-      <!-- Arabic -->
+      <!-- Hindi -->
       <div class="lang-col">
         <div class="lang-title-row">
-          <h4 class="lang-name">Arabic</h4>
-          <button type="button" class="lang-audio-btn" data-lang="ar" title="استمع إلى العربية" aria-label="Listen Arabic">
+          <h4 class="lang-name">Hindi</h4>
+          <button type="button" class="lang-audio-btn" data-lang="hi" title="हिंदी सुनें" aria-label="Listen Hindi">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
           </button>
         </div>
@@ -1742,41 +2686,208 @@ def profile_meta_widgets():
           <span class="bar-seg"></span>
           <span class="bar-seg"></span>
         </div>
-        <div class="lang-pill"><span class="lang-dot"></span>Reading and small talk</div>
-        <p class="lang-sub">Elementary reading & conversational comprehension</p>
+        <div class="lang-pill"><span class="lang-dot"></span>Speaking &amp; listening</div>
+        <p class="lang-sub">Everyday conversation and listening.</p>
       </div>
     </div>
   </div>
 </div>'''
 
 
+MONTHS = {m: i for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun",
+                                      "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
+
+
+def _ym(text, default_month):
+    """'Jun 2026' -> (2026, 6), '2024' -> (2024, default_month), 'Present' -> today."""
+    parts = text.strip().split()
+    if parts[0].lower() == "present":
+        today = date.today()
+        return (today.year, today.month)
+    if len(parts) == 2:
+        return (int(parts[1]), MONTHS[parts[0][:3].lower()])
+    return (int(parts[0]), default_month)
+
+
+def job_span(period):
+    start, _, end = period.partition(" - ")
+    return _ym(start, 1), _ym(end, 12)
+
+
+def duration_label(start, end):
+    months = (end[0] - start[0]) * 12 + (end[1] - start[1]) + 1
+    years, rem = divmod(months, 12)
+    parts = []
+    if years:
+        parts.append(f"{years} yr" + ("s" if years > 1 else ""))
+    if rem:
+        parts.append(f"{rem} mo" + ("s" if rem > 1 else ""))
+    return " ".join(parts) or "< 1 mo"
+
+
+KEY_FIGURE = re.compile(r"(?<![\w.])~?\d[\d,.]*\+?%?(?![\w])")
+
+
+def emphasise(text):
+    """Escape a bullet and bold its headline figures (85+, ~50%, 1,200+); bare years are left alone."""
+    def bold(m):
+        tok = m.group(0)
+        return tok if re.fullmatch(r"(19|20)\d\d", tok) else f"<b>{tok}</b>"
+    return KEY_FIGURE.sub(bold, e(text))
+
+
+ICON_PATHS = {
+    "code": '<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>',
+    "sparkle": '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+    "database": '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+    "shield": '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+    "server": '<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 8h.01M7 17h.01"/>',
+    "book": '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/>',
+}
+# first matching rule wins: security before data, AI before code
+ICON_RULES = [
+    (re.compile(r"security|VAPT|secure|backup|access control|patch|uptime", re.I), "shield"),
+    (re.compile(r"\bAI\b|LLM|agent\w*|LangGraph|RAG|OpenAI|Claude|Gemini|MCP", re.I), "sparkle"),
+    (re.compile(r"database|MySQL|PostgreSQL|PGVector|Redis|Kafka|\bdata\b", re.I), "database"),
+    (re.compile(r"server|hosting|cPanel|Linux|Docker|Kubernetes|deploy|infrastructure|Nginx|network", re.I), "server"),
+    (re.compile(r"support|training|documentation|SOP|guide|UAT|SRS|configur|onboard|social media|end-user|users?\b", re.I), "book"),
+]
+CHEVRON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
+EXP_JS = """<script>
+/* eases the glow toward the pointer; shared by every card with class exp-stat-card or glow-tile */
+function glowTrack(card, x, y) {
+  card._tx = x; card._ty = y;
+  if (card._x === undefined) { card._x = x; card._y = y; }
+  if (card._raf) return;
+  (function step() {
+    card._x += (card._tx - card._x) * 0.2; card._y += (card._ty - card._y) * 0.2;
+    card.style.setProperty("--mx", card._x + "px"); card.style.setProperty("--my", card._y + "px");
+    card._raf = (Math.abs(card._tx - card._x) > 0.5 || Math.abs(card._ty - card._y) > 0.5) ? requestAnimationFrame(step) : null;
+  })();
+}
+document.addEventListener("pointermove", function (ev) {
+  var card = ev.target.closest && ev.target.closest(".exp-stat-card");
+  if (!card) return;
+  var r = card.getBoundingClientRect();
+  glowTrack(card, ev.clientX - r.left, ev.clientY - r.top);
+});
+document.addEventListener("click", function (ev) {
+  var btn = ev.target.closest(".exp-more-btn");
+  if (!btn) return;
+  var item = btn.closest(".exp-item-modern");
+  var open = item.classList.toggle("is-expanded");
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  btn.querySelector("span").textContent = open ? "Show less" : "Read more";
+});
+</script>"""
+
+
+def bullet_icon(text):
+    name = next((icon for rx, icon in ICON_RULES if rx.search(text)), "code")
+    return (f'<span class="xb-ico" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" '
+            f'stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'
+            f'{ICON_PATHS[name]}</svg></span>')
+
+
+def bullet_li(text, rest=False):
+    cls = ' class="bullet-rest"' if rest else ""
+    return f"<li{cls}>{bullet_icon(text)}{emphasise(text)}</li>"
+
+
+def stat_card(category, num, caption, icon):
+    return (f'<div class="widget-card widget-location exp-stat-card" data-halo>{nahian_aurora_html()}'
+            f'<div class="widget-head"><span class="widget-icon location-ico">'
+            f'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
+            f'stroke-linecap="round" stroke-linejoin="round">{STAT_ICONS[icon]}</svg></span>'
+            f'<span class="widget-label">{e(category)}</span></div>'
+            f'<div class="exp-stat-num">{e(num)}</div>'
+            f'<p class="exp-stat-cap">{e(caption)}</p></div>')
+
+
+def company_mark(comp):
+    if comp in COMPANY_LOGOS:
+        return f'<img src="../{COMPANY_LOGOS[comp]}" alt="{e(comp)} logo" width="48" height="48" loading="lazy">'
+    return initials(comp)
+
+
+def experience_html():
+    """Newest role first (ongoing roles included), with per-role duration and a one-line summary."""
+    ordered = sorted(JOBS, key=lambda j: job_span(j[3]), reverse=True)
+    spans = [job_span(j[3]) for j in JOBS]
+    total = duration_label(min(s for s, _ in spans), max(t for _, t in spans))
+    kinds = Counter(j[4] for j in JOBS)
+    summary = (f"{total} overall &middot; {kinds['Full-time']} full-time &middot; "
+               f"{kinds['Volunteer']} volunteer")
+    items = ""
+    for title, comp, place, period, kind, pts, chips in ordered:
+        start, end = job_span(period)
+        current = period.endswith("Present")
+        lis = bullet_li(pts[0])
+        if len(pts) > 1:
+            lis += ('<li class="exp-more-li"><button class="exp-more-btn" type="button" aria-expanded="false">'
+                    f'<span>Read more</span>{CHEVRON}</button></li>')
+            lis += "".join(bullet_li(p, rest=True) for p in pts[1:])
+        cc = "".join(f'<span class="chip-solid">{c}</span>' for c in chips)
+        now_dot = '<span class="status-dot" title="Currently working here"></span>' if current else ""
+        now_pill = '<span class="exp-now">Current</span>' if current else ""
+        kind_cls = " is-volunteer" if kind == "Volunteer" else ""
+        sub_text = (f'{e(comp)}<span class="exp-sep">&middot;</span>'
+                    f'<span class="exp-kind{kind_cls}">{kind}</span>'
+                    f'<span class="exp-sep">&middot;</span>{e(place)}')
+        when = f'{e(period.replace(" - ", " – "))} <span class="exp-dur">&middot; {duration_label(start, end)}</span>'
+        stats = JOB_STATS.get(comp, [])
+        stat_html = ""
+        if stats:
+            stat_html = '<div class="exp-stats">' + "".join(stat_card(*st) for st in stats) + "</div>"
+        items += (f'<article class="exp-item-modern">'
+                  f'<div class="exp-timeline">'
+                  f'<div class="exp-logo-box">{company_mark(comp)}{now_dot}</div>'
+                  f'<div class="exp-line"></div>'
+                  f'</div>'
+                  f'<div class="exp-content">'
+                  f'<div class="exp-header-row"><div class="exp-title-group"><h3>{e(title)}</h3>{now_pill}</div>'
+                  f'<span class="exp-when">{when}</span></div>'
+                  f'<div class="exp-sub">{sub_text}</div>'
+                  f'{stat_html}'
+                  f'<ul class="exp-bullets">{lis}</ul>'
+                  f'<div class="exp-tech">{cc}</div>'
+                  f'</div></article>')
+    return summary, items
+
+
+EXTRA_META = {  # title -> (kicker label, headline stat or None, tags)
+    "Leadership & Community": ("Leadership", ("100+", "members led"), ["Youth mentorship", "Public communications", "Social development"]),
+    "Philosophy & R&D": ("Research", None, ["Agent architectures", "Local LLM inference", "Developer tools"]),
+    "Voluntary Work": ("Volunteer", ("2024", "volunteering since"), ["Non-profit", "WordPress", "Community tech"]),
+}
+
+
+def extra_card(title, text):
+    kicker, stat, tags = EXTRA_META[title]
+    stat_html = f'<div class="extra-stat"><b>{e(stat[0])}</b><span>{e(stat[1])}</span></div>' if stat else ""
+    tag_html = "".join(f'<span class="chip">{e(t)}</span>' for t in tags)
+    return (f'<article class="extra-card"><div class="extra-top"><span class="extra-kicker">{e(kicker)}</span>{stat_html}</div>'
+            f'<h4>{e(title)}</h4><p>{e(text)}</p><div class="extra-tags">{tag_html}</div></article>')
+
+
 def profile():
     ai = "".join(pill_img(l, i, c) for l, i, c in AI_TOOLS)
     st = "".join(pill_img(l, i) for l, i in STACK)
-    metrics = "".join(f'<div class="metric"><b>{a}</b><span>{b}</span></div>' for a, b in METRICS)
-    jobs = ""
-    for title, comp, place, period, current, pts, chips in JOBS:
-        lis = "".join(f"<li>{e(p)}</li>" for p in pts)
-        cc = "".join(f'<span class="chip-solid">{c}</span>' for c in chips)
-        now = '<span class="status-dot" title="Presently working here"></span>' if current and "Present" in period else ""
-        sub_text = f"{e(comp)} &middot; Full-time &middot; {e(place)}"
-        jobs += (f'<article class="exp-item-modern">'
-                 f'<div class="exp-timeline">'
-                 f'<div class="exp-logo-box">{initials(comp)}{now}</div>'
-                 f'<div class="exp-line"></div>'
-                 f'</div>'
-                 f'<div class="exp-content">'
-                 f'<div class="exp-header-row"><h3>{e(title)}</h3><span class="exp-date">{period}</span></div>'
-                 f'<div class="exp-sub">{sub_text}</div>'
-                 f'<ul class="exp-bullets">{lis}</ul>'
-                 f'<div class="exp-tech">{cc}</div>'
-                 f'</div></article>')
-    edu = "".join(f'<div class="edu"><span class="logo-sq">{initials(s)}</span><div><h3>{e(d)}</h3>'
-                  f'<p class="exp-meta">{e(s)} &middot; {e(m)}</p></div></div>' for d, s, m in EDUCATION)
-    certs = "".join(f'<li><i class="fa-solid fa-award"></i><div><b>{e(t)}</b><small>{e(o)}</small></div></li>' for t, o in CERTS)
-    skills = "".join(f'<div class="sk"><h4>{g}</h4><div class="chips">' + "".join(f'<span class="chip">{e(x)}</span>' for x in xs)
-                     + "</div></div>" for g, xs in SKILLS)
-    extra = "".join(f'<div class="card"><h4>{k}</h4><div class="sm" style="margin-top:0;color:var(--ink-2)">{e(v)}</div></div>' for k, v in EXTRA)
+    exp_summary, jobs = experience_html()
+    edu = "".join(f'<div class="edu"><img class="edu-logo" src="../{logo}" alt="{e(s)} logo" width="48" height="48" loading="lazy">'
+                  f'<div><h3>{e(d)}</h3><p class="exp-meta">{e(s)} &middot; {e(m)}</p></div></div>'
+                  for d, s, m, logo in EDUCATION)
+    certs = "".join(
+        f'<article class="cert-card"><span class="cert-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" '
+        f'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'
+        f'<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>'
+        f'<div><h4>{e(t)}</h4><p>{e(o)}</p></div></article>' for t, o in CERTS)
+    skills = "".join(
+        f'<div class="sk"><h4>{g}</h4><p class="sk-desc">{e(d)}</p><div class="chips">'
+        + "".join(skill_chip(l, i, "chip-core") for l, i in core)
+        + "".join(skill_chip(l, i, "chip-more") for l, i in more)
+        + "</div></div>" for g, d, core, more in SKILLS)
+    extra = "".join(extra_card(k, v) for k, v in EXTRA)
     work = "".join(
         f'<a class="post" href="../projects/"><h3>{e(p[0])}</h3><small>{e(p[1])}</small></a>' for p in PROJECTS[:6])
     body = f'''{cover_banner()}
@@ -1796,20 +2907,29 @@ def profile():
 <div class="pad">
 <div class="panel" data-panel="resume">
 <h2 class="sec-title">{ico("user")} About</h2>
-<div class="prose">{"".join(f"<p>{e(p)}</p>" for p in ABOUT)}</div>
-<div class="metrics big-metrics">{metrics}</div>
+<div class="about-bio-wrap" id="about-bio-wrap">
+  <div class="prose about-prose" id="about-prose">
+    {"".join(f"<p>{e(p)}</p>" for p in ABOUT)}
+  </div>
+  <button class="about-toggle-btn" id="about-toggle-btn" type="button" aria-expanded="false" aria-controls="about-prose">
+    <span class="about-btn-text">Read more</span>
+    <svg class="about-btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+</div>
 {profile_meta_widgets()}
 <h2 class="sec-title" style="margin-top:44px">{ico("case")} Experience</h2>
+<p class="exp-summary">{exp_summary}</p>
 <div class="exp-modern">{jobs}</div>
 <h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-code"></i> Skills</h2>
 <div class="sk-grid">{skills}</div>
 <h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-graduation-cap"></i> Education</h2>
 <div class="exp">{edu}</div>
 <h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-award"></i> Certifications &amp; training</h2>
-<ul class="certs">{certs}</ul>
+<div class="cert-grid">{certs}</div>
 <h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-circle-info"></i> Additional</h2>
-<div class="cards3">{extra}</div>
+<div class="extra-grid">{extra}</div>
 </div>
+{EXP_JS}
 <div class="panel" data-panel="work" hidden>
 <h2 class="sec-title">{ico("projects")} Selected work</h2>
 <div class="posts">{work}</div>
@@ -1859,6 +2979,279 @@ def projects():
                 "Projects", body, "projects")
 
 
+# ------------------------------------------------------------------ LIBRARY
+# Content lives in scripts/library_data.json (copied from nahian.bd/library as a starting point; edit that file, then rebuild).
+LIB = json.loads((Path(__file__).resolve().parent / "library_data.json").read_text(encoding="utf-8"))
+LIB_SUBS = [("skills", "AI Skills"), ("bookmarks", "Bookmarks"), ("music", "Music & Nasheeds"), ("voiceovers", "Voiceovers")]
+LIB_SUB_ICON = {"skills": LIB["skills"]["icon"], "bookmarks": LIB["bookmarks"]["icon"],
+                "music": LIB["music"]["icon"], "voiceovers": LIB["voiceovers"]["icon"]}
+NL_UI = {  # small UI glyphs not in the data file
+    "out": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M7 7h10v10"/>',
+    "right": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/>',
+    "copy": '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></g>',
+    "check": '<path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/>',
+    "play": '<path fill="currentColor" d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.9-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/>',
+    "prev": '<path fill="currentColor" d="M6 5h2v14H6zM20 6.2v11.6a1 1 0 0 1-1.55.83L10 13.2a1.4 1.4 0 0 1 0-2.4l8.45-5.43A1 1 0 0 1 20 6.2z"/>',
+    "next": '<path fill="currentColor" d="M16 5h2v14h-2zM4 6.2v11.6a1 1 0 0 0 1.55.83L14 13.2a1.4 1.4 0 0 0 0-2.4L5.55 5.37A1 1 0 0 0 4 6.2z"/>',
+    "yt": '<path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/>',
+    "fb": '<path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"/>',
+    "star": '<path fill="currentColor" d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z"/>',
+    "link": '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></g>',
+    "trophy": '<path fill="currentColor" d="M17 3H7v2H3v3a4 4 0 0 0 4 4h.3A5 5 0 0 0 11 14.9V18H8v3h8v-3h-3v-3.1A5 5 0 0 0 16.7 12h.3a4 4 0 0 0 4-4V5h-4zM5 8V7h2v3a2 2 0 0 1-2-2zm14 0a2 2 0 0 1-2 2V7h2z"/>',
+    "pen": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    "books": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/>',
+}
+
+
+def nl_icon(name, size=18):
+    if name in NL_UI:
+        return f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" aria-hidden="true">{NL_UI[name]}</svg>'
+    ic = LIB["icons"].get(name)
+    return f'<svg width="{size}" height="{size}" viewBox="{ic["vb"]}" aria-hidden="true">{ic["body"]}</svg>' if ic else ""
+
+
+def lib_counts():
+    return {"skills": sum(len(g["items"]) for g in LIB["skills"]["groups"]),
+            "bookmarks": next(f["count"] for f in LIB["bookmarks"]["filters"] if f["label"] == "All"),
+            "music": len(LIB["music"]["tracks"]), "voiceovers": len(LIB["voiceovers"]["episodes"])}
+
+
+def yt_thumb(vid, q="mqdefault"):
+    return f"https://i.ytimg.com/vi/{vid}/{q}.jpg"
+
+
+def nl_head(key, title, sub, more=None, h="h2"):
+    link = (f'<a class="nl-seeall" href="../library/{key}/">See all {more}{nl_icon("right", 15)}</a>' if more else "")
+    return (f'<div class="nl-head"><span class="nl-tile">{nl_icon(LIB_SUB_ICON[key], 20)}</span>'
+            f'<div class="nl-head-text"><{h}>{e(title)}</{h}><p>{e(sub)}</p></div>{link}</div>')
+
+
+def nl_more(key, label):
+    return f'<a class="nl-more" href="../library/{key}/">{e(label)}{nl_icon("right", 15)}</a>'
+
+
+def nl_tabs(cur):
+    c = lib_counts()
+    items = [("", "All", "books", sum(c.values()))] + [(k, l, LIB_SUB_ICON[k], c[k]) for k, l in LIB_SUBS]
+    lis = "".join(
+        f'<li><a href="../library/{k + "/" if k else ""}"{" class=\"is-active\" aria-current=\"page\"" if k == cur else ""}>'
+        f'{nl_icon(ic, 16)}<span>{e(l)}</span><b>{n}</b></a></li>' for k, l, ic, n in items)
+    return f'<div class="nl-tabs" role="navigation" aria-label="Library sections"><ul>{lis}</ul></div>'
+
+
+def nl_skill_card(it, group, show_by):
+    badge = f'<span class="nl-count"><i></i>{e(it["badge"])}</span>' if it.get("badge") else ""
+    by = (f'<div class="nl-by"><img src="{group["avatar"]}" alt="" width="20" height="20" loading="lazy"><span>by {e(group["author"])}</span></div>'
+          if show_by else "")
+    return (f'<article class="nl-card"><div class="nl-card-head"><span class="nl-tile">{nl_icon(it["icon"], 20)}</span>'
+            f'<div class="nl-card-title"><h3><a href="{it["url"]}" target="_blank" rel="noopener noreferrer"><code><span>/</span>{e(it["name"])}</code></a></h3>{by}</div>'
+            f'{badge}<a class="nl-open" href="{it["url"]}" target="_blank" rel="noopener noreferrer" aria-label="Open {e(it["name"])}">{nl_icon("out", 18)}</a></div>'
+            f'<p>{e(it["desc"])}</p>'
+            f'<div class="nl-cmd"><code><span>$ </span>{e(it["cmd"])}</code>'
+            f'<button type="button" class="nl-copy" data-copy="{e(it["cmd"])}" title="Copy" aria-label="Copy command">{nl_icon("copy", 16)}{nl_icon("check", 16)}</button></div></article>')
+
+
+def nl_bm_card(it, cat):
+    top = f'<span class="nl-top">{nl_icon("star", 12)}Top pick</span>' if it["top"] else ""
+    kind = f'<span>{e(it["kind"])}</span>' if it["kind"] else ""
+    return (f'<article class="nl-bm" data-cat="{e(cat)}"><a class="nl-bm-thumb" href="{it["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1">'
+            f'<img src="{it["img"]}" alt="" loading="lazy"><span class="nl-bm-badges">{kind}{top}</span></a>'
+            f'<div class="nl-bm-body"><h3><a href="{it["url"]}" target="_blank" rel="noopener noreferrer">{e(it["title"])}</a></h3><p>{e(it["desc"])}</p>'
+            f'<p class="nl-domain">{nl_icon("link", 14)}<span>{e(it["domain"])}</span>{nl_icon("out", 15)}</p></div></article>')
+
+
+def nl_feature(cat="Learn"):
+    f = LIB["bookmarks"]["feature"]
+    badges = "".join(f'<span class="nl-top">{nl_icon("star", 12)}{e(b)}</span>' if b == "Top pick" else f'<span>{e(b)}</span>' for b in f["badges"])
+    return (f'<div class="nl-feature" data-cat="{e(cat)}"><a class="nl-feature-img" href="{f["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1">'
+            f'<img src="{f["img"]}" alt="" loading="lazy"></a><div class="nl-feature-body"><p class="nl-badges">{badges}</p>'
+            f'<h3>{e(f["title"])}</h3><p class="nl-feature-by">{e(f["by"])}</p><p>{e(f["desc"])}</p>'
+            f'<a class="nl-cta" href="{f["url"]}" target="_blank" rel="noopener noreferrer">{e(f["cta"])}{nl_icon("out", 15)}</a></div></div>')
+
+
+def nl_player(first_index=0):
+    m = LIB["music"]
+    av = {a["slug"]: a["avatar"] for a in m["artists"]}
+    tracks = [dict(t, av=av.get(t["by"], "")) for t in m["tracks"]]
+    t = tracks[first_index]
+    return (f'<div class="nl-player" data-nl-player data-tracks="{e(json.dumps(tracks, ensure_ascii=False))}">'
+            f'<div class="nl-screen"><img class="nl-screen-thumb" src="{yt_thumb(t["id"], "hqdefault")}" alt="">'
+            f'<button type="button" class="nl-play" data-nl-play aria-label="Play">{nl_icon("play", 30)}</button><div class="nl-frame"></div></div>'
+            f'<div class="nl-player-bar"><img class="nl-player-av" src="{t["av"]}" alt="" width="48" height="48">'
+            f'<div class="nl-player-meta"><p class="nl-upnext"><span class="nl-eq"><i></i><i></i><i></i><i></i></span>Up next</p>'
+            f'<p class="nl-player-title">{e(t["title"])}</p><p class="nl-player-sub"><span>{e(t["sub"])}</span><span lang="ar" dir="rtl">{e(t.get("ar", ""))}</span></p></div>'
+            f'<div class="nl-player-ctrl"><button type="button" data-nl-prev aria-label="Previous">{nl_icon("prev", 16)}</button>'
+            f'<button type="button" data-nl-next aria-label="Next">{nl_icon("next", 16)}</button></div></div></div>')
+
+
+def nl_track(i, t):
+    ar = f'<span class="nl-ar" lang="ar" dir="rtl">{e(t["ar"])}</span>' if t.get("ar") else ""
+    return (f'<li><button type="button" data-track="{i}"{" class=\"is-current\"" if i == 0 else ""}><span class="nl-n">{i + 1}</span>'
+            f'<span class="nl-tthumb"><img src="{yt_thumb(t["id"])}" alt="" loading="lazy"><span>{nl_icon("play", 14)}</span></span>'
+            f'<span class="nl-tmeta"><span>{e(t["title"])}</span><span>{e(t["sub"])}</span></span>{ar}</button></li>')
+
+
+def nl_channel():
+    v = LIB["voiceovers"]
+    c = v["channel"]
+    banner = "".join(f'<img src="{yt_thumb(ep["yt"])}" alt="" loading="lazy">' for ep in v["episodes"])
+    return (f'<div class="nl-channel"><div class="nl-banner">{banner}<span class="nl-banner-count">{nl_icon("yt", 14)}{e(c["count_label"])}</span></div>'
+            f'<div class="nl-channel-body"><div class="nl-channel-top"><img class="nl-channel-logo" src="{c["logo"]}" alt="{e(c["name"])} logo" width="80" height="80">'
+            f'<a class="nl-sub" href="{c["subscribe_url"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 18)}Subscribe</a></div>'
+            f'<p class="nl-eyebrow">{e(c["label"])}</p><h3>{e(c["name"])}</h3><p class="nl-meta">{e(c["meta"])}</p>'
+            f'<div class="nl-fb"><span class="nl-fb-ico">{nl_icon("fb", 22)}</span><p>{e(c["note"])}</p>'
+            f'<a class="nl-ghost" href="{c["follow_url"]}" target="_blank" rel="noopener noreferrer">Follow{nl_icon("out", 14)}</a></div></div></div>')
+
+
+def nl_episode(ep, wide=None):
+    wide = ep["wide"] if wide is None else wide
+    badge = f'<span class="nl-ep-badge">{nl_icon("trophy", 13)}{e(ep["badge"])}</span>' if ep.get("badge") else ""
+    by = f'<p class="nl-ep-by">{nl_icon("pen", 14)}{e(ep["written_by"])}</p>' if ep.get("written_by") else ""
+    return (f'<article class="nl-ep{" is-wide" if wide else ""}"><div class="nl-ep-screen" data-yt="{ep["yt"]}">'
+            f'<img src="{yt_thumb(ep["yt"], "hqdefault")}" alt="" loading="lazy">'
+            f'<button type="button" class="nl-play" data-yt-play aria-label="Play: {e(ep["title"])}">{nl_icon("play", 26)}</button>{badge}</div>'
+            f'<div class="nl-ep-body"><h3 lang="bn">{e(ep["title"])}</h3>{by}</div></article>')
+
+
+def library():
+    c = lib_counts()
+    o = LIB["overview"]
+    secs = {s["title"]: s["sub"] for s in o["sections"]}
+    stats = "".join(
+        f'<a class="nl-stat" href="../library/{k}/"><span class="nl-stat-ico">{nl_icon(LIB_SUB_ICON[k], 20)}</span><b>{c[k]}</b><span>{e(l)}</span></a>'
+        for k, l in LIB_SUBS)
+    hero = (f'<div class="nl-hero"><span class="nl-pill"><i></i>{sum(c.values())} things I use, love and recommend</span>'
+            f'<h2 class="nl-hero-title">{e(o["title"])}</h2><p>{e(o["intro"])}</p><div class="nl-stats">{stats}</div></div>')
+    groups = LIB["skills"]["groups"]
+    by_name = {it["name"]: (it, g) for g in groups for it in g["items"]}
+    skills = "".join(nl_skill_card(*by_name[n], show_by=True) for n in o["skills"] if n in by_name)
+    bm_all = {it["title"]: (it, sec["title"]) for sec in LIB["bookmarks"]["sections"] for it in sec["items"]}
+    bms = "".join(nl_bm_card(*bm_all[n]) for n in o["bookmarks"] if n in bm_all)
+    tracks = LIB["music"]["tracks"]
+    tlist = "".join(nl_track(i, t) for i, t in enumerate(tracks[:6]))
+    eps = LIB["voiceovers"]["episodes"][:2]
+    body = (f'<div class="pad nl-page">{hero}'
+            f'<div class="nl-section">{nl_head("skills", "AI Skills", secs.get("AI Skills", ""), c["skills"])}'
+            f'<div class="nl-grid">{skills}</div>{nl_more("skills", f"See all {c["skills"]} skills")}</div>'
+            f'<div class="nl-section">{nl_head("bookmarks", "Bookmarks", secs.get("Bookmarks", ""), c["bookmarks"])}'
+            f'{nl_feature()}<div class="nl-grid">{bms}</div>{nl_more("bookmarks", f"See all {c["bookmarks"]} links")}</div>'
+            f'<div class="nl-section">{nl_head("music", "Music & Nasheeds", secs.get("Music & Nasheeds", ""), c["music"])}'
+            f'{nl_player()}<ol class="nl-tracks">{tlist}</ol>{nl_more("music", f"See all {c["music"]} tracks")}</div>'
+            f'<div class="nl-section">{nl_head("voiceovers", "Voiceovers", secs.get("Voiceovers", ""), c["voiceovers"])}'
+            f'<div class="nl-eps">{nl_channel()}{"".join(nl_episode(ep, wide=False) for ep in eps)}</div>'
+            f'{nl_more("voiceovers", f"See all {c["voiceovers"]} episodes")}</div>'
+            f'</div>{LIB_JS}')
+    return page("library", "Library", "AI skills, bookmarks, music and voiceovers I use, love and recommend.",
+                "Library", body, "library")
+
+
+def library_sub(key):
+    title = dict(LIB_SUBS)[key]
+    d = LIB[key]
+    head = nl_head(key, title, d["intro"], h="h2")
+    if key == "skills":
+        content = "".join(
+            f'<div class="nl-group"><div class="nl-group-head"><img src="{g["avatar"]}" alt="" width="48" height="48" loading="lazy">'
+            f'<div><h3>{e(g["author"])}</h3><p><a href="{g["handle_url"]}" target="_blank" rel="noopener noreferrer">{e(g["handle"])}</a><span> · </span>{e(g["count"])}</p></div>'
+            + (f'<a class="nl-seeall" href="{g["more_url"]}" target="_blank" rel="noopener noreferrer">{e(g["more_label"])}{nl_icon("out", 15)}</a>' if g.get("more_url") else "")
+            + f'</div><div class="nl-grid">{"".join(nl_skill_card(it, g, show_by=False) for it in g["items"])}</div></div>'
+            for g in d["groups"])
+    elif key == "bookmarks":
+        chips = "".join(
+            f'<button type="button" data-nl-filter="{e(f["label"])}"{" class=\"is-active\"" if f["label"] == "All" else ""}>'
+            f'{nl_icon(f["icon"], 15)}<span>{e(f["label"])}</span><b>{f["count"]}</b></button>' for f in d["filters"])
+        sections = "".join(
+            f'<div class="nl-bm-sec" data-cat="{e(sec["title"])}"><div class="nl-bm-sec-head"><h3>{nl_icon(sec["icon"], 18)}{e(sec["title"])}</h3><p>{e(sec["desc"])}</p></div>'
+            f'<div class="nl-grid">{"".join(nl_bm_card(it, sec["title"]) for it in sec["items"])}</div></div>'
+            for sec in d["sections"])
+        x = d["extensions"]
+        fx = x["featured"]
+        links = "".join(
+            f'<a class="{"nl-cta" if i == 0 else "nl-ghost"}" href="{l["url"]}" target="_blank" rel="noopener noreferrer">'
+            f'{"" if i == 0 else "<i class=\"fa-brands fa-github\"></i>"}{e(l["label"])}{nl_icon("out", 14) if i == 0 else ""}</a>'
+            for i, l in enumerate(fx["links"]))
+        ext_items = "".join(
+            f'<li><a href="{it["url"]}" target="_blank" rel="noopener noreferrer"><span class="nl-ext-ico"><img src="{it["img"]}" alt="" width="40" height="40" loading="lazy"></span>'
+            f'<span class="nl-ext-meta"><span>{e(it["name"])}</span><span>{e(it["desc"])}</span></span>{nl_icon("out", 16)}</a></li>' for it in x["items"])
+        ext = (f'<div class="nl-ext" data-cat="Extensions"><div class="nl-ext-head">{nl_icon(x["icon"], 18)}<h3>{e(x["title"])}</h3><span class="nl-tag">{e(x["tag"])}</span></div>'
+               f'<div class="nl-ext-feature"><div class="nl-ext-feature-body"><div class="nl-ext-id"><img src="{fx["icon_img"]}" alt="" width="48" height="48" loading="lazy">'
+               f'<div><h4>{e(fx["name"])}</h4><span class="nl-tag">{e(fx["status"])}</span></div></div><p>{e(fx["desc"])}</p><div class="nl-ext-links">{links}</div></div>'
+               f'<a class="nl-ext-shot" href="{fx["links"][0]["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1"><img src="{fx["shot"]}" alt="" loading="lazy"></a></div>'
+               f'<ul class="nl-ext-list">{ext_items}</ul></div>')
+        content = f'<div class="nl-chips" role="group" aria-label="Filter bookmarks">{chips}</div>{nl_feature()}{sections}{ext}'
+    elif key == "music":
+        tracks = d["tracks"]
+        groups = ""
+        for a in d["artists"]:
+            items = "".join(nl_track(i, t) for i, t in enumerate(tracks) if t["by"] == a["slug"])
+            ch = (f'<a href="{a["channel"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 16)}Channel</a>' if a.get("channel") else "")
+            groups += (f'<div class="nl-artist"><div class="nl-artist-head"><h3><img src="{a["avatar"]}" alt="" width="32" height="32" loading="lazy">'
+                       f'{e(a["name"])}<span>{e(a["count"])}</span></h3>{ch}</div><ol class="nl-tracks">{items}</ol></div>')
+        content = nl_player() + groups
+    else:
+        content = f'<div class="nl-eps">{nl_channel()}{"".join(nl_episode(ep) for ep in d["episodes"])}</div>'
+    body = f'<div class="pad nl-page">{nl_tabs(key)}<div class="nl-section">{head}{content}</div></div>{LIB_JS}'
+    html_out = page(f"library/{key}", f"{title} · Library", d["intro"], "Library", body, "library")
+    # the shell writes paths for pages one level deep; these live two levels deep
+    return re.sub(r'(["\'(])\.\./', r'\1../../', html_out)
+
+
+LIB_JS = """<script>
+(function () {
+  function iframe(id) {
+    return '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="YouTube video player" ' +
+           'allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  }
+  var player = document.querySelector("[data-nl-player]");
+  var tracks = player ? JSON.parse(player.getAttribute("data-tracks")) : [];
+  var cur = 0, playing = false;
+  function setTrack(i, play) {
+    if (!player) return;
+    cur = i; var t = tracks[i];
+    player.querySelector(".nl-player-title").textContent = t.title;
+    var sub = player.querySelectorAll(".nl-player-sub span");
+    sub[0].textContent = t.sub || ""; sub[1].textContent = t.ar || "";
+    if (t.av) player.querySelector(".nl-player-av").src = t.av;
+    player.querySelector(".nl-screen-thumb").src = "https://i.ytimg.com/vi/" + t.id + "/hqdefault.jpg";
+    document.querySelectorAll("[data-track]").forEach(function (b) { b.classList.toggle("is-current", +b.getAttribute("data-track") === i); });
+    if (play) {
+      playing = true;
+      player.querySelector(".nl-frame").innerHTML = iframe(t.id);
+      player.classList.add("is-playing");
+    }
+  }
+  document.addEventListener("click", function (ev) {
+    var t = ev.target;
+    if (!t || !t.closest) return;
+    var copy = t.closest(".nl-copy");
+    if (copy) {
+      var text = copy.getAttribute("data-copy");
+      var done = function () { copy.classList.add("is-copied"); setTimeout(function () { copy.classList.remove("is-copied"); }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done); }
+      else { var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); }
+      return;
+    }
+    var f = t.closest("[data-nl-filter]");
+    if (f) {
+      var cat = f.getAttribute("data-nl-filter");
+      document.querySelectorAll("[data-nl-filter]").forEach(function (b) { b.classList.toggle("is-active", b === f); });
+      document.querySelectorAll(".nl-page [data-cat]").forEach(function (el) {
+        el.hidden = !(cat === "All" || el.getAttribute("data-cat") === cat);
+      });
+      return;
+    }
+    var vp = t.closest("[data-yt-play]");
+    if (vp) { var scr = vp.closest("[data-yt]"); scr.innerHTML = iframe(scr.getAttribute("data-yt")); scr.classList.add("is-playing"); return; }
+    var tr = t.closest("[data-track]");
+    if (tr) { setTrack(+tr.getAttribute("data-track"), true); return; }
+    if (t.closest("[data-nl-play]")) { setTrack(cur, true); return; }
+    if (t.closest("[data-nl-prev]")) { setTrack((cur - 1 + tracks.length) % tracks.length, playing); return; }
+    if (t.closest("[data-nl-next]")) { setTrack((cur + 1) % tracks.length, playing); return; }
+  });
+})();
+</script>"""
+
+
 def writing():
     data = json.loads((DOCS / "ai-insights/data.json").read_text(encoding="utf-8"))
     posts = ""
@@ -1888,7 +3281,7 @@ def people():
     fl = f'<button class="fchip" data-filter="all" aria-pressed="true">All<em>{len(PEOPLE)}</em></button>' + "".join(
         f'<button class="fchip" data-filter="{k}" aria-pressed="false">{badge_svg(k)} {k}<em>{v}</em></button>' for k, v in counts.items())
     avs = "".join(f'<span class="av p-img" style="width:34px;height:34px;font-size:12px;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url({p[0]});background-size:cover;background-position:center;"></span>' for p in PEOPLE[:6])
-    hero = (f'<section class="people-hero"><div class="av-stack">{avs}</div><h2>People I learn from</h2>'
+    hero = (f'<section class="people-hero" data-halo>{nahian_aurora_html()}<div class="av-stack">{avs}</div><h2>People I learn from</h2>'
             f'<p>Builders, founders and teachers whose work keeps me sharp, plus the mentors who guided me. Filter by where I follow them.</p>'
             f'<span class="meta"><i class="fa-solid fa-user-group"></i> {len(PEOPLE)} people &middot; {len(counts)} platforms</span></section>')
     body = (f'<div class="pad">{hero}<div class="filters" role="group" aria-label="Filter by platform">{fl}</div>'
@@ -1908,11 +3301,11 @@ def contact():
                  f'<span class="l"><b>{t}</b><small>{h}</small></span><i class="fa-solid fa-arrow-up-right-from-square arr"></i></a>'
                  for i, t, h, u in reach)
     body = f'''<div class="pad">
-<section class="cta-hero"><h2>Let's build something</h2><p>Have a project, a role or just a question? Pick whatever's easiest and I'll get back to you.</p>
+<section class="cta-hero" data-halo>{nahian_aurora_html()}<h2>Let's build something</h2><p>Have a project, a role or just a question? Pick whatever's easiest and I'll get back to you.</p>
 <div class="cta-row"><span class="pill"><span class="dot"></span> Open to new conversations</span><span class="pill">{ico("pin","")} Dhaka, GMT+6 &middot; <span data-time></span></span></div></section>
 <h2 class="work-title">Work with me</h2>
 <div class="svc">
-<div class="svc-card wide"><span class="svc-ico"><i class="fa-solid fa-rocket"></i></span><div class="svc-body"><h3>Build something together</h3>
+<div class="svc-card wide" data-halo>{nahian_aurora_html()}<span class="svc-ico"><i class="fa-solid fa-rocket"></i></span><div class="svc-body"><h3>Build something together</h3>
 <p>Founders and teams with ambitious products: I take features from idea to production with agentic engineering, from backend architecture and event-driven services to polished UI and AI workflows.</p>
 <a class="btn btn-primary" href="mailto:{MAIL}?subject=Project%20inquiry">Let's talk <i class="fa-solid fa-arrow-right"></i></a></div></div>
 <div class="svc-card"><span class="svc-ico"><i class="fa-solid fa-briefcase"></i></span><h3>Full-time role</h3><p>Immediately available for a full-time software developer or AI automation role. Dhaka, open to on-site and hybrid.</p>
@@ -1936,10 +3329,18 @@ def contact():
                 "Contact", body, "contact", show_open=False)
 
 
+CSS_VER = "0"  # set in main() from the stylesheet content, so browsers never reuse a stale copy
+
+
 def main():
-    (DOCS / "nx" / "nx.scoped.css").write_text(scope_css((DOCS / "nx" / "nx.css").read_text(encoding="utf-8")) + SCOPED_FIX, encoding="utf-8")
-    for slug, fn in [("profile", profile), ("projects", projects), ("writing", writing), ("people", people),
-                     ("contact", contact)]:
+    global CSS_VER
+    css = scope_css((DOCS / "nx" / "nx.css").read_text(encoding="utf-8")) + SCOPED_FIX
+    (DOCS / "nx" / "nx.scoped.css").write_text(css, encoding="utf-8")
+    CSS_VER = hashlib.md5(css.encode("utf-8")).hexdigest()[:10]
+    pages = [("profile", profile), ("projects", projects), ("writing", writing), ("people", people),
+             ("contact", contact), ("library", library)]
+    pages += [(f"library/{k}", (lambda k=k: library_sub(k))) for k, _ in LIB_SUBS]
+    for slug, fn in pages:
         out = DOCS / slug / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(fn(), encoding="utf-8")

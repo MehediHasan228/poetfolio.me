@@ -1,0 +1,834 @@
+{
+  "skills": {
+    "title": "AI Skills",
+    "intro": "The agent skills I use every day in my agentic development workflow.",
+    "icon": "tabler:sparkles",
+    "groups": [
+      {
+        "author": "Matt Pocock",
+        "avatar": "https://nahian.bd/_astro/matt-pocock.Ccb0eRta_Z2e4aHU.webp",
+        "handle": "@mattpocock",
+        "handle_url": "https://github.com/mattpocock",
+        "count": "2 skills I use",
+        "more_label": "More at aihero.dev/skills",
+        "more_url": "https://www.aihero.dev/skills",
+        "items": [
+          {
+            "name": "grill-me",
+            "url": "https://www.skills.sh/mattpocock/skills/grill-me",
+            "icon": "tabler:flame",
+            "desc": "The agent interviews me relentlessly about a plan or design until every weak spot is out in the open.",
+            "cmd": "npx skills add mattpocock/skills --skill grill-me",
+            "badge": null
+          },
+          {
+            "name": "improve-codebase-architecture",
+            "url": "https://www.skills.sh/mattpocock/skills/improve-codebase-architecture",
+            "icon": "tabler:building-skyscraper",
+            "desc": "Scans a codebase for deepening opportunities, shows them as a visual report, then grills me through the one I pick.",
+            "cmd": "npx skills add mattpocock/skills --skill improve-codebase-architecture",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "author": "Julius Brussee",
+        "avatar": "https://nahian.bd/_astro/julius-brussee.CqsJdNY8_Z1654D8.webp",
+        "handle": "@JuliusBrussee",
+        "handle_url": "https://github.com/JuliusBrussee",
+        "count": "3 skills I use",
+        "more_label": null,
+        "more_url": null,
+        "items": [
+          {
+            "name": "caveman",
+            "url": "https://www.skills.sh/juliusbrussee/caveman/caveman",
+            "icon": "tabler:bone",
+            "desc": "Makes the agent talk like a caveman: answer first, fluff gone, every technical fact kept. Fewer tokens, faster reading.",
+            "cmd": "npx skills add JuliusBrussee/caveman --skill caveman",
+            "badge": null
+          },
+          {
+            "name": "caveman-review",
+            "url": "https://www.skills.sh/juliusbrussee/caveman/caveman-review",
+            "icon": "tabler:git-pull-request",
+            "desc": "Code review in one line per finding: where it is, what’s wrong, how to fix it.",
+            "cmd": "npx skills add JuliusBrussee/caveman --skill caveman-review",
+            "badge": null
+          },
+          {
+            "name": "caveman-commit",
+            "url": "https://www.skills.sh/juliusbrussee/caveman/caveman-commit",
+            "icon": "tabler:git-commit",
+            "desc": "Writes a Conventional Commits message cut down to the intent. I use it after every feature.",
+            "cmd": "npx skills add JuliusBrussee/caveman --skill caveman-commit",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "author": "Paul Bakaus",
+        "avatar": "https://nahian.bd/_astro/paul-bakaus.CkeJcQbT_joLQk.webp",
+        "handle": "@pbakaus",
+        "handle_url": "https://github.com/pbakaus",
+        "count": "2 skills I use",
+        "more_label": null,
+        "more_url": null,
+        "items": [
+          {
+            "name": "impeccable",
+            "url": "https://www.skills.sh/pbakaus/impeccable/impeccable",
+            "icon": "tabler:diamond",
+            "desc": "One skill to design, critique, audit and polish any interface: hierarchy, type, color, motion, accessibility.",
+            "cmd": "npx skills add pbakaus/impeccable --skill impeccable",
+            "badge": null
+          },
+          {
+            "name": "frontend-design",
+            "url": "https://www.skills.sh/pbakaus/impeccable/frontend-design",
+            "icon": "tabler:palette",
+            "desc": "Pushes the agent past generic AI-looking UI toward bold, intentional design choices.",
+            "cmd": "npx skills add pbakaus/impeccable --skill frontend-design",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "author": "Addy Osmani",
+        "avatar": "https://nahian.bd/_astro/addy-osmani.DcwppCiN_ZYJ6XT.webp",
+        "handle": "@addyosmani",
+        "handle_url": "https://github.com/addyosmani",
+        "count": "24 skills I use",
+        "more_label": null,
+        "more_url": null,
+        "items": [
+          {
+            "name": "agent-skills",
+            "url": "https://skills.addy.ie/",
+            "icon": "tabler:stack-2",
+            "desc": "Senior-engineer workflows and quality gates for the whole software lifecycle, for Claude Code, Codex, Cursor and more.",
+            "cmd": "npx skills add addyosmani/agent-skills",
+            "badge": "24 skills"
+          }
+        ]
+      }
+    ]
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "intro": "Courses, tools and sites worth your time, plus the browser extensions I can’t live without.",
+    "icon": "tabler:bookmarks",
+    "feature": {
+      "img": "https://nahian.bd/_astro/planetscale-com.8NrI6nec_Z1fawSu.webp",
+      "badges": [
+        "Top pick",
+        "Free course"
+      ],
+      "title": "MySQL for Developers",
+      "by": "by Aaron Francis",
+      "desc": "A complete, professional MySQL course that’s 100% free. Honestly, it should be premium.",
+      "cta": "Start the course",
+      "url": "https://planetscale.com/learn/courses/mysql-for-developers"
+    },
+    "filters": [
+      {
+        "label": "All",
+        "count": 25,
+        "icon": "tabler:bookmarks"
+      },
+      {
+        "label": "Learn",
+        "count": 4,
+        "icon": "tabler:school"
+      },
+      {
+        "label": "UI components",
+        "count": 4,
+        "icon": "tabler:components"
+      },
+      {
+        "label": "Backgrounds",
+        "count": 4,
+        "icon": "tabler:texture"
+      },
+      {
+        "label": "Tools",
+        "count": 8,
+        "icon": "tabler:tool"
+      },
+      {
+        "label": "Free stuff",
+        "count": 5,
+        "icon": "tabler:gift"
+      },
+      {
+        "label": "Extensions",
+        "count": 8,
+        "icon": "tabler:puzzle"
+      }
+    ],
+    "sections": [
+      {
+        "id": "bm-learn",
+        "title": "Learn",
+        "desc": "Courses and guides that are worth your evenings.",
+        "icon": "tabler:school",
+        "items": [
+          {
+            "title": "roadmap.sh",
+            "url": "https://roadmap.sh/",
+            "img": "https://nahian.bd/_astro/roadmap-sh.CtAkdEgX_ZgnbdP.webp",
+            "kind": "Guide",
+            "top": true,
+            "desc": "Step-by-step roadmaps for every developer role and skill.",
+            "domain": "roadmap.sh"
+          },
+          {
+            "title": "AI Engineering from Scratch",
+            "url": "https://aiengineeringfromscratch.com/index.html",
+            "img": "https://nahian.bd/_astro/aiengineeringfromscratch-com.C-60n__n_215tdM.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "Write backprop, a tokenizer, attention and an agent loop by hand before touching a framework.",
+            "domain": "aiengineeringfromscratch.com"
+          },
+          {
+            "title": "Go by Example",
+            "url": "https://gobyexample.com/",
+            "img": "https://nahian.bd/_astro/gobyexample-com.DLnA056L_Zy7Ny8.webp",
+            "kind": "Guide",
+            "top": false,
+            "desc": "Learn Go through short, annotated example programs.",
+            "domain": "gobyexample.com"
+          }
+        ]
+      },
+      {
+        "id": "bm-ui",
+        "title": "UI components",
+        "desc": "Copy-paste components and effects for the web.",
+        "icon": "tabler:components",
+        "items": [
+          {
+            "title": "React Bits",
+            "url": "https://reactbits.dev/",
+            "img": "https://nahian.bd/_astro/reactbits-dev.DWqbBzwS_1fzXAO.webp",
+            "kind": "Library",
+            "top": true,
+            "desc": "200+ animated React components and effects. My profile cover started here.",
+            "domain": "reactbits.dev"
+          },
+          {
+            "title": "Cult UI",
+            "url": "https://www.cult-ui.com/",
+            "img": "https://nahian.bd/_astro/cult-ui-com.CYAcFsMi_Z1Hasy1.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "Animated shadcn/ui components, blocks and templates.",
+            "domain": "cult-ui.com"
+          },
+          {
+            "title": "Uiverse",
+            "url": "https://uiverse.io/",
+            "img": "https://nahian.bd/_astro/uiverse-io.DNCcO_2b_Z29vtbL.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "The largest community library of free UI elements in CSS and Tailwind.",
+            "domain": "uiverse.io"
+          },
+          {
+            "title": "CSS Buttons",
+            "url": "https://cssbuttons.io/",
+            "img": "https://nahian.bd/_astro/cssbuttons-io.C83US26l_ZE1xUO.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "100+ button styles, ready to copy.",
+            "domain": "cssbuttons.io"
+          }
+        ]
+      },
+      {
+        "id": "bm-backgrounds",
+        "title": "Backgrounds",
+        "desc": "Patterns, gradients and shapes for hero sections.",
+        "icon": "tabler:texture",
+        "items": [
+          {
+            "title": "BG.IBELICK",
+            "url": "https://bg.ibelick.com/",
+            "img": "https://nahian.bd/_astro/bg-ibelick-com.D2Oj0Ejj_Z2scMvP.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "Modern background snippets in Tailwind and plain CSS.",
+            "domain": "bg.ibelick.com"
+          },
+          {
+            "title": "Pattern Craft",
+            "url": "https://patterncraft.fun/",
+            "img": "https://nahian.bd/_astro/patterncraft-fun.C6Mj9hpU_vuWVB.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "100+ handcrafted background patterns and gradients.",
+            "domain": "patterncraft.fun"
+          },
+          {
+            "title": "Codioful",
+            "url": "https://codioful.com/",
+            "img": "https://nahian.bd/_astro/codioful-com.BAPkVBYD_1PUpd3.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "Gradient backgrounds made purely in CSS. Copy the code or download HD images.",
+            "domain": "codioful.com"
+          },
+          {
+            "title": "Coolshapes",
+            "url": "https://coolshap.es/",
+            "img": "https://nahian.bd/_astro/coolshap-es.C2rQeOWY_QLnqR.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "100+ abstract shapes with a grainy gradient finish.",
+            "domain": "coolshap.es"
+          }
+        ]
+      },
+      {
+        "id": "bm-tools",
+        "title": "Tools",
+        "desc": "Small tools I keep coming back to.",
+        "icon": "tabler:tool",
+        "items": [
+          {
+            "title": "Shots",
+            "url": "https://shots.so/",
+            "img": "https://nahian.bd/_astro/shots-so.X7ITV1xZ_2sOdB8.webp",
+            "kind": "Generator",
+            "top": true,
+            "desc": "Turn plain screenshots into polished device mockups in seconds.",
+            "domain": "shots.so"
+          },
+          {
+            "title": "BrandBird",
+            "url": "https://www.brandbird.app/studio",
+            "img": "https://nahian.bd/_astro/brandbird-app.Dn2dHmR__21BLrF.webp",
+            "kind": "Generator",
+            "top": false,
+            "desc": "Screenshot mockups and social graphics with backgrounds, 3D tilt and device frames.",
+            "domain": "brandbird.app"
+          },
+          {
+            "title": "UI Tools",
+            "url": "https://tools.ui-layouts.com/",
+            "img": "https://nahian.bd/_astro/tools-ui-layouts-com.DCIgAbGb_ZGTVz1.webp",
+            "kind": "Generator",
+            "top": false,
+            "desc": "Shadow, clip-path, gradient and pattern generators in one place.",
+            "domain": "tools.ui-layouts.com"
+          },
+          {
+            "title": "Showcode",
+            "url": "https://showcode.app/",
+            "img": "https://nahian.bd/_astro/showcode-app.D-4y-VIJ_Z1aB9a.webp",
+            "kind": "Generator",
+            "top": false,
+            "desc": "Beautiful images of code, free and open source.",
+            "domain": "showcode.app"
+          },
+          {
+            "title": "ToolMateX",
+            "url": "https://toolmatex.com/",
+            "img": "https://nahian.bd/_astro/toolmatex-com.CrM-Rp26_2lFFwK.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Fast, free, in-browser tools for designers and developers.",
+            "domain": "toolmatex.com"
+          },
+          {
+            "title": "PFP Maker",
+            "url": "https://pfpmaker.com/",
+            "img": "https://nahian.bd/_astro/pfpmaker-com.6iXcYNbM_ZhWkuY.webp",
+            "kind": "Generator",
+            "top": false,
+            "desc": "A professional profile picture from any photo, in seconds.",
+            "domain": "pfpmaker.com"
+          },
+          {
+            "title": "Download Directory",
+            "url": "https://download-directory.github.io/",
+            "img": "https://nahian.bd/_astro/download-directory-github-io.CXhi_ZQk_Z1XhK0e.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Paste a GitHub folder link, get just that folder as a zip.",
+            "domain": "download-directory.github.io"
+          },
+          {
+            "title": "BBC Sound Effects",
+            "url": "https://sound-effects.bbcrewind.co.uk/",
+            "img": "https://nahian.bd/_astro/sound-effects-bbcrewind-co-uk.-nke7dTa_fLmUT.webp",
+            "kind": "Archive",
+            "top": false,
+            "desc": "The BBC’s archive of sound effects, free for personal use.",
+            "domain": "sound-effects.bbcrewind.co.uk"
+          }
+        ]
+      },
+      {
+        "id": "bm-free",
+        "title": "Free stuff",
+        "desc": "Free tiers, books, maps and everything else free.",
+        "icon": "tabler:gift",
+        "items": [
+          {
+            "title": "Free for Developers",
+            "url": "https://free-for.dev/",
+            "img": "https://nahian.bd/_astro/free-for-dev.DSRoBSTv_Z2rNJtO.webp",
+            "kind": "Directory",
+            "top": true,
+            "desc": "Every SaaS, PaaS and IaaS with a free tier, in one long list.",
+            "domain": "free-for.dev"
+          },
+          {
+            "title": "FMHY",
+            "url": "https://fmhy.net/",
+            "img": "https://nahian.bd/_astro/fmhy-net.BwHq-BtK_QVtfw.webp",
+            "kind": "Directory",
+            "top": false,
+            "desc": "The largest collection of free stuff on the internet.",
+            "domain": "fmhy.net"
+          },
+          {
+            "title": "NoSignups",
+            "url": "https://nosignups.net/",
+            "img": "https://nahian.bd/_astro/nosignups-net.C7bVfhXx_Z1wuMsU.webp",
+            "kind": "Directory",
+            "top": false,
+            "desc": "Open-source tools that work right in your browser, no account needed.",
+            "domain": "nosignups.net"
+          },
+          {
+            "title": "WeLib",
+            "url": "https://welib.org/",
+            "img": "https://nahian.bd/_astro/welib-org.D4z8KU8j_Ggq6j.webp",
+            "kind": "Archive",
+            "top": false,
+            "desc": "43 million books and 98 million papers, all free to read.",
+            "domain": "welib.org"
+          },
+          {
+            "title": "OldMapsOnline",
+            "url": "https://www.oldmapsonline.org/",
+            "img": "https://nahian.bd/_astro/oldmapsonline-org.WUgOhULU_2v65Ov.webp",
+            "kind": "Archive",
+            "top": false,
+            "desc": "Historical maps from libraries around the world, searchable by place.",
+            "domain": "oldmapsonline.org"
+          }
+        ]
+      }
+    ],
+    "extensions": {
+      "title": "Browser extensions",
+      "tag": "Always installed",
+      "icon": "tabler:puzzle",
+      "featured": {
+        "name": "Typpa",
+        "status": "Coming soon",
+        "icon_img": "https://nahian.bd/_astro/typpa.3YE2c_pd_16rdUF.webp",
+        "desc": "My first browser extension: select text on any page, press Alt+K, and type right over it, in the site’s own font. Any article becomes your typing tutor.",
+        "shot": "https://nahian.bd/_astro/typpa-pro-bd.B2wI_s3w_Z1ANt4j.webp",
+        "links": [
+          {
+            "label": "See Typpa",
+            "url": "https://typpa.pro.bd/"
+          },
+          {
+            "label": "Source",
+            "url": "https://github.com/alnahian2003/typpa"
+          }
+        ]
+      },
+      "items": [
+        {
+          "name": "Momentum",
+          "desc": "A calm new tab with focus and to-dos.",
+          "url": "https://chromewebstore.google.com/detail/laookkfknpbbblfpciffpaejjkokdgca",
+          "img": "https://nahian.bd/_astro/momentum.DKZnILr9_Z2cSiIe.webp"
+        },
+        {
+          "name": "AdGuard AdBlocker",
+          "desc": "Blocks ads and pop-ups everywhere.",
+          "url": "https://chromewebstore.google.com/detail/bgnkhhnnamicmpeenaelnjfhikgbkllg",
+          "img": "https://nahian.bd/_astro/adguard.ClkHr70M_1bUD6C.webp"
+        },
+        {
+          "name": "Dark Reader",
+          "desc": "Dark mode for every website.",
+          "url": "https://chromewebstore.google.com/detail/eimadpbcbfnmbkopoojfekhnkhdbieeh",
+          "img": "https://nahian.bd/_astro/dark-reader.BN4tV2lt_Z2prjA.webp"
+        },
+        {
+          "name": "Fake Filler",
+          "desc": "Fills any form with dummy data. A tester’s best friend.",
+          "url": "https://chromewebstore.google.com/detail/bnjjngeaknajbdcgpfkgnonkmififhfo",
+          "img": "https://nahian.bd/_astro/fake-filler.DsFHoP8w_2hfdV.webp"
+        },
+        {
+          "name": "FullPage Capture",
+          "desc": "Full-page screenshots with an annotation editor.",
+          "url": "https://chromewebstore.google.com/detail/ggacghlcchiiejclfdajbpkbjfgjhfol",
+          "img": "https://nahian.bd/_astro/fullpage-capture.CpBr86a4_1oMHu.webp"
+        },
+        {
+          "name": "SingleFile",
+          "desc": "Saves a whole page as one HTML file.",
+          "url": "https://chromewebstore.google.com/detail/mpiodijhokgodhhofbcjdecpffjipkle",
+          "img": "https://nahian.bd/_astro/singlefile.BiIk8Vaf_Uojbb.webp"
+        },
+        {
+          "name": "Volume Master",
+          "desc": "Boosts a tab’s volume up to 600%.",
+          "url": "https://chromewebstore.google.com/detail/jghecgabfgfdldnmbfkhmffcabddioke",
+          "img": "https://nahian.bd/_astro/volume-master.CR7wXtM0_Bws0f.webp"
+        }
+      ]
+    }
+  },
+  "music": {
+    "title": "Music & Nasheeds",
+    "intro": "The nasheeds on repeat, most loved first. All vocals only.",
+    "icon": "tabler:headphones",
+    "tracks": [
+      {
+        "id": "25wH52RSam8",
+        "title": "Ya Nabi Salam Alayka",
+        "sub": "Maher Zain",
+        "ar": "يا نبي سلام عليك",
+        "by": "maher-zain"
+      },
+      {
+        "id": "IxwdZLtMf7I",
+        "title": "Qalbi Fil Madinah",
+        "sub": "Maher Zain feat. Harris J",
+        "ar": "قلبي في المدينة",
+        "by": "maher-zain"
+      },
+      {
+        "id": "AIyAPGumseA",
+        "title": "Ramadan",
+        "sub": "Maher Zain",
+        "ar": "رمضان",
+        "by": "maher-zain"
+      },
+      {
+        "id": "nuYA88YJSC4",
+        "title": "Bika Moulhimi",
+        "sub": "Maher Zain feat. Mustafa Ceceli",
+        "ar": "",
+        "by": "maher-zain"
+      },
+      {
+        "id": "61C6FxprHuY",
+        "title": "Barak Allah Lakuma",
+        "sub": "Maher Zain",
+        "ar": "",
+        "by": "maher-zain"
+      },
+      {
+        "id": "9Jsb0Dy6wWA",
+        "title": "I’m Alive",
+        "sub": "Maher Zain feat. Atif Aslam",
+        "ar": "",
+        "by": "maher-zain"
+      },
+      {
+        "id": "LkAm79Edtlo",
+        "title": "Assalamu Alaika",
+        "sub": "Maher Zain",
+        "ar": "السلام عليك",
+        "by": "maher-zain"
+      },
+      {
+        "id": "pFMofSt2vVw",
+        "title": "Number One For Me",
+        "sub": "Maher Zain",
+        "ar": "",
+        "by": "maher-zain"
+      },
+      {
+        "id": "UW5K0OzOmVI",
+        "title": "Rahmatun Lil’Alameen",
+        "sub": "Maher Zain",
+        "ar": "رحمةٌ للعالمين",
+        "by": "maher-zain"
+      },
+      {
+        "id": "0a43eUZf5iQ",
+        "title": "La Tahzan",
+        "sub": "Maher Zain",
+        "ar": "لا تَحزَن",
+        "by": "maher-zain"
+      },
+      {
+        "id": "4VU4_NZuL24",
+        "title": "The Power",
+        "sub": "Maher Zain",
+        "ar": "",
+        "by": "maher-zain"
+      },
+      {
+        "id": "KTkdQ2q3jCA",
+        "title": "The Book of Allah Is My Constitution",
+        "sub": "Muhammad al Muqit",
+        "ar": "",
+        "by": "muhammad-al-muqit"
+      },
+      {
+        "id": "JqGv0EdJdJI",
+        "title": "I Rise",
+        "sub": "Muhammad al Muqit",
+        "ar": "أسمو",
+        "by": "muhammad-al-muqit"
+      },
+      {
+        "id": "NrsCej6SVxM",
+        "title": "The Beauty of Existence",
+        "sub": "Muhammad al Muqit",
+        "ar": "",
+        "by": "muhammad-al-muqit"
+      },
+      {
+        "id": "YiSQ_db-Dcw",
+        "title": "The Way of the Tears",
+        "sub": "Muhammad al Muqit",
+        "ar": "",
+        "by": "muhammad-al-muqit"
+      },
+      {
+        "id": "JaHtx79UhIM",
+        "title": "My Dream",
+        "sub": "Muhammad al Muqit",
+        "ar": "",
+        "by": "muhammad-al-muqit"
+      },
+      {
+        "id": "ZZEgiM8QMM4",
+        "title": "My Mother",
+        "sub": "Muhammad al Muqit",
+        "ar": "",
+        "by": "muhammad-al-muqit"
+      },
+      {
+        "id": "Ov0-CBnOW4w",
+        "title": "My Arabic Language",
+        "sub": "Muhammad al Muqit",
+        "ar": "",
+        "by": "muhammad-al-muqit"
+      },
+      {
+        "id": "VQSUCfRoZPM",
+        "title": "Kun Fayakoon",
+        "sub": "Othman Alibrahim",
+        "ar": "كن فيكون",
+        "by": "othman-alibrahim"
+      },
+      {
+        "id": "D7mg8zkmiy8",
+        "title": "Be Happy",
+        "sub": "Othman Alibrahim",
+        "ar": "",
+        "by": "othman-alibrahim"
+      },
+      {
+        "id": "mTTk1QX30t0",
+        "title": "Watheq",
+        "sub": "Othman Alibrahim",
+        "ar": "واثق",
+        "by": "othman-alibrahim"
+      }
+    ],
+    "artists": [
+      {
+        "name": "Maher Zain",
+        "count": "11 tracks",
+        "avatar": "https://nahian.bd/_astro/maher-zain.Dh2fsl1r_Zq3RvA.webp",
+        "channel": "https://www.youtube.com/@MaherZain",
+        "slug": "maher-zain"
+      },
+      {
+        "name": "Muhammad al Muqit",
+        "count": "7 tracks",
+        "avatar": "https://nahian.bd/_astro/muhammad-al-muqit.CRIvy160_Z1P8XvQ.webp",
+        "channel": "https://www.youtube.com/@MuhammadalMuqit",
+        "slug": "muhammad-al-muqit"
+      },
+      {
+        "name": "Othman Alibrahim",
+        "count": "3 tracks",
+        "avatar": "https://nahian.bd/_astro/othman-alibrahim.B3Pcs6sz_Z1sB9SJ.webp",
+        "channel": "https://www.youtube.com/@OthmanAlibrahim",
+        "slug": "othman-alibrahim"
+      }
+    ]
+  },
+  "voiceovers": {
+    "title": "Voiceovers",
+    "intro": "Bangla voiceovers I’ve recorded for my YouTube channel, Tafheem.",
+    "icon": "tabler:microphone-2",
+    "channel": {
+      "label": "My YouTube channel",
+      "name": "Tafheem",
+      "meta": "@TafheemOfficial · 5 voiceovers in Bangla",
+      "logo": "https://nahian.bd/_astro/tafheem.CHuypbgY_ZuLtek.webp",
+      "subscribe_url": "https://www.youtube.com/@TafheemOfficial?sub_confirmation=1",
+      "count_label": "5 voiceovers",
+      "note": "I always upload new voiceovers to my Facebook profile first. Follow me there so you don’t miss one.",
+      "follow_url": "https://www.facebook.com/alnahian2003"
+    },
+    "episodes": [
+      {
+        "yt": "qtdpiHGxd74",
+        "title": "'অবক্ষয়কাল' অডিওবুক কন্টেস্ট এর বিজয়ী সাবমিশন | Al Nahian | Obokkhoykal | Asif Adnan | Tafheem",
+        "written_by": "Written by Asif Adnan",
+        "badge": "Contest winner",
+        "wide": true
+      },
+      {
+        "yt": "-1f2JPicZ8I",
+        "title": "কেমন লাগবে রাসুল (সা.) এর মুখে নিজের নাম শুনতে? | Tafheem",
+        "written_by": null,
+        "badge": null,
+        "wide": false
+      },
+      {
+        "yt": "ggvlUGfMfmE",
+        "title": "কেমন হবে জান্নাতে প্রবেশের ঠিক পূর্বের অভিজ্ঞতা? | Tafheem",
+        "written_by": null,
+        "badge": null,
+        "wide": false
+      },
+      {
+        "yt": "iSqEjSvUWvc",
+        "title": "তথাকথিত পশ্চিমা সভ্য সমাজে পরিচয়ের বিকৃতি | 'অবক্ষয়কাল' বইয়ের ভূমিকা | Asif Adnan | Tafheem",
+        "written_by": "Written by Asif Adnan",
+        "badge": null,
+        "wide": false
+      },
+      {
+        "yt": "jE9soZCohhY",
+        "title": "অগোচরে: একটি অপ্রেমের উপাখ্যান | ভ্যালেন্টাইন্স ডে স্পেশাল | এনামুল হক ইবনে ইউসুফ | Tafheem",
+        "written_by": "Written by Enamul Haque Ibn Yusuf",
+        "badge": null,
+        "wide": false
+      }
+    ]
+  },
+  "overview": {
+    "pill": "59 things I use, love and recommend",
+    "title": "My library",
+    "intro": "The AI skills in my daily workflow, the sites I keep bookmarked, the nasheeds on repeat while I code, and the voiceovers I record.",
+    "sections": [
+      {
+        "title": "AI Skills",
+        "sub": "The agent skills I use every day in my agentic development workflow."
+      },
+      {
+        "title": "Bookmarks",
+        "sub": "Courses, tools and sites worth your time, plus the browser extensions I can’t live without."
+      },
+      {
+        "title": "Music & Nasheeds",
+        "sub": "The nasheeds on repeat, most loved first. All vocals only."
+      },
+      {
+        "title": "Voiceovers",
+        "sub": "Bangla voiceovers I’ve recorded for my YouTube channel, Tafheem."
+      }
+    ],
+    "skills": [
+      "grill-me",
+      "caveman",
+      "impeccable",
+      "agent-skills"
+    ],
+    "bookmarks": [
+      "roadmap.sh",
+      "React Bits",
+      "Shots",
+      "Free for Developers"
+    ]
+  },
+  "icons": {
+    "tabler:sparkles": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2m0-12a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2M9 18a6 6 0 0 1 6-6a6 6 0 0 1-6-6a6 6 0 0 1-6 6a6 6 0 0 1 6 6\"></path>"
+    },
+    "tabler:flame": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 10.941c2.333-3.308.167-7.823-1-8.941c0 3.395-2.235 5.299-3.667 6.706C5.903 10.114 5 12 5 14.294C5 17.998 8.134 21 12 21s7-3.002 7-6.706c0-1.712-1.232-4.403-2.333-5.588c-2.084 3.353-3.257 3.353-4.667 2.235\"></path>"
+    },
+    "tabler:building-skyscraper": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M3 21h18M5 21V7l8-4v18m6 0V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01\"></path>"
+    },
+    "tabler:bone": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 3a3 3 0 0 1 3 3a3 3 0 1 1-2.12 5.122l-4.758 4.758a3 3 0 1 1-5.117 2.297V18h-.176a3 3 0 1 1 2.298-5.115l4.758-4.758a3 3 0 0 1 2.12-5.122z\"></path>"
+    },
+    "tabler:git-pull-request": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M4 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0M4 6a2 2 0 1 0 4 0a2 2 0 1 0-4 0m12 12a2 2 0 1 0 4 0a2 2 0 1 0-4 0M6 8v8\"></path><path d=\"M11 6h5a2 2 0 0 1 2 2v8\"></path><path d=\"m14 9l-3-3l3-3\"></path></g>"
+    },
+    "tabler:git-commit": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0m3-9v6m0 6v6\"></path>"
+    },
+    "tabler:diamond": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M6 5h12l3 5l-8.5 9.5a.7.7 0 0 1-1 0L3 10z\"></path><path d=\"M10 12L8 9.8l.6-1\"></path></g>"
+    },
+    "tabler:palette": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M12 21a9 9 0 0 1 0-18c4.97 0 9 3.582 9 8c0 1.06-.474 2.078-1.318 2.828S17.693 15 16.5 15H14a2 2 0 0 0-1 3.75A1.3 1.3 0 0 1 12 21\"></path><path d=\"M7.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0-2 0m4-3a1 1 0 1 0 2 0a1 1 0 1 0-2 0m4 3a1 1 0 1 0 2 0a1 1 0 1 0-2 0\"></path></g>"
+    },
+    "tabler:stack-2": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 4L4 8l8 4l8-4zm-8 8l8 4l8-4M4 16l8 4l8-4\"></path>"
+    },
+    "tabler:bookmarks": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M15 10v11l-5-3l-5 3V10a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3\"></path><path d=\"M11 3h5a3 3 0 0 1 3 3v11\"></path></g>"
+    },
+    "tabler:school": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M22 9L12 5L2 9l10 4zv6\"></path><path d=\"M6 10.6V16a6 3 0 0 0 12 0v-5.4\"></path></g>"
+    },
+    "tabler:components": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"m3 12l3 3l3-3l-3-3zm12 0l3 3l3-3l-3-3zM9 6l3 3l3-3l-3-3zm0 12l3 3l3-3l-3-3z\"></path>"
+    },
+    "tabler:texture": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M6 3L3 6m18 12l-3 3M11 3l-8 8m13-8L3 16M21 3L3 21M21 8L8 21m13-8l-8 8\"></path>"
+    },
+    "tabler:tool": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M7 10h3V7L6.5 3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1-3 3l-6-6a6 6 0 0 1-8-8z\"></path>"
+    },
+    "tabler:gift": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M3 9a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zm9-1v13\"></path><path d=\"M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7m2.5-4a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5a2.5 2.5 0 0 1 0 5\"></path></g>"
+    },
+    "tabler:puzzle": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 7h3a1 1 0 0 0 1-1V5a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1a2 2 0 0 0-4 0v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a2 2 0 0 0 0-4H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1\"></path>"
+    },
+    "tabler:headphones": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M4 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm11 0a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2z\"></path><path d=\"M4 15v-3a8 8 0 0 1 16 0v3\"></path></g>"
+    },
+    "tabler:microphone-2": {
+      "vb": "0 0 24 24",
+      "body": "<path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12.9A5 5 0 1 0 11.098 9M15 12.9l-3.902-3.899l-7.513 8.584a2 2 0 1 0 2.827 2.83z\"></path>"
+    }
+  },
+  "_note": "Library content. Copied from nahian.bd/library as a starting point; replace with your own items. Rebuild with: python3 scripts/build_nx_pages.py"
+}

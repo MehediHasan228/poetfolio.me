@@ -3312,7 +3312,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 
     // Dynamic Live Sync with multi-layer cloud fallback (Local -> API -> GitHub Raw CDN)
-    const localDataUrl = window.location.pathname.includes('/projects/') ? '../data/arena_leaderboard.json' : './data/arena_leaderboard.json';
+    const pageDepth = window.location.pathname.replace(/[^/]*$/, '').split('/').filter(Boolean).length;
+    const localDataUrl = (pageDepth ? '../'.repeat(pageDepth) : './') + 'data/arena_leaderboard.json';
     const cloudApiUrl = '/api/arena';
     const githubCdnUrl = 'https://raw.githubusercontent.com/MehediHasan228/poetfolio.me/main/docs/data/arena_leaderboard.json';
 
