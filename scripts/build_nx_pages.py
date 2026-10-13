@@ -295,7 +295,7 @@ def rail(show_open=True, show_top=False):
         <span class="r-status-label">Available for work</span>
       </div>
       <h3 class="r-card-title">Open to new conversations</h3>
-      <p class="r-card-desc">AI automation engineer & full-stack builder. Always happy to talk products, collaborations and consultations.</p>
+      <p class="r-card-desc">AI-native software engineer. Always happy to talk products, collaborations and consultations.</p>
       <a class="r-cta-btn" href="../contact/">
         <span>Let's talk</span>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="r-btn-arrow"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>
