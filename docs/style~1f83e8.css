@@ -14377,3 +14377,90 @@ html body #ai-chat-widget.chat-collapsed.ai-dodge:not(#_ai) { opacity: 0 !import
     .svc2-send { justify-self: stretch; justify-content: center; }
     .svc2-form { padding: 16px; }
 }
+
+/* ==========================================================
+   CINEMATIC BACKGROUND — three large soft lights in the theme's colours
+   drifting very slowly, a darker centre in dark themes, and film grain;
+   fixed behind every page
+   ========================================================== */
+html { --leak-1: var(--accent-1-rgb, 0, 242, 254); --leak-2: var(--accent-2-rgb, 79, 172, 254); --leak-3: 129, 140, 248;
+       --leak-a: .40; --leak-b: .34; --leak-c: .28; --grain: .10; }
+html[data-theme="light"]     { --leak-3: 139, 92, 246;  --leak-a: .42; --leak-b: .34; --leak-c: .36; --grain: .07; }
+html[data-theme="mint"]      { --leak-3: 45, 212, 191;  --leak-a: .42; --leak-b: .32; --leak-c: .34; --grain: .07; }
+html[data-theme="cyberpunk"] { --leak-3: 168, 85, 247;  --leak-a: .26; --leak-b: .16; --leak-c: .22; }
+html[data-theme="god-mode"]  { --leak-3: 0, 180, 90;    --leak-a: .20; --leak-b: .14; --leak-c: .12; }
+html::before, html::after, body::after { content: ""; position: fixed; z-index: -1; pointer-events: none; }
+/* AURORA — two bands of light ribbons sway slowly across the top of every page */
+html::before, body::after {
+    left: -25%; right: -25%; top: -12vh; height: 78vh;
+    filter: blur(46px) saturate(1.25);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
+            mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
+    transform-origin: 50% 0;
+    will-change: transform;
+}
+html::before {
+    background: linear-gradient(100deg,
+        transparent 6%, rgba(var(--leak-1), var(--leak-a)) 20%, transparent 32%,
+        rgba(var(--leak-3), var(--leak-c)) 46%, transparent 58%,
+        rgba(var(--leak-2), var(--leak-b)) 71%, transparent 84%);
+    animation: auroraA 24s ease-in-out infinite alternate;
+}
+body::after {
+    top: -4vh; height: 64vh; opacity: .85;
+    background: linear-gradient(78deg,
+        transparent 12%, rgba(var(--leak-3), calc(var(--leak-c) * .9)) 26%, transparent 38%,
+        rgba(var(--leak-1), calc(var(--leak-a) * .8)) 55%, transparent 66%,
+        rgba(var(--leak-2), calc(var(--leak-b) * .9)) 80%, transparent 92%);
+    animation: auroraB 33s ease-in-out infinite alternate;
+}
+@keyframes auroraA {
+    0%   { transform: translate3d(-7%, 0, 0) skewX(-14deg) scaleY(1); }
+    50%  { transform: translate3d(3%, 2vh, 0) skewX(9deg) scaleY(1.18); }
+    100% { transform: translate3d(8%, -1vh, 0) skewX(-5deg) scaleY(.92); }
+}
+@keyframes auroraB {
+    0%   { transform: translate3d(6%, 1vh, 0) skewX(10deg) scaleY(.95); }
+    50%  { transform: translate3d(-4%, -1vh, 0) skewX(-12deg) scaleY(1.2); }
+    100% { transform: translate3d(-8%, 2vh, 0) skewX(6deg) scaleY(1); }
+}
+/* dark themes: the centre falls into shadow so text stays crisp and the edges glow */
+html:not([data-theme="light"]):not([data-theme="mint"]) body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(62% 64% at 50% 48%, rgba(0, 0, 0, .38) 0%, rgba(0, 0, 0, .14) 50%, transparent 80%);
+}
+html::after {
+    inset: 0; z-index: -1; opacity: var(--grain);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+}
+/* the inner pages painted their own solid background over it */
+html body .nx:not(#_bg) { background: transparent !important; }
+@media (prefers-reduced-motion: reduce) { html::before, body::after { animation: none; } }
+@media print { html::before, html::after, body::before, body::after { display: none; } }
+
+/* Hero name gradient follows every theme (the dark one used to leak into the others) */
+html[data-theme="cyberpunk"] .gradient-text {
+    background: linear-gradient(135deg, #f43f5e 0%, #fb7185 45%, #eab308 100%) !important;
+    -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;
+}
+html[data-theme="god-mode"] .gradient-text {
+    background: linear-gradient(135deg, #00ff00 0%, #4ade80 50%, #a3e635 100%) !important;
+    -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;
+}
+
+/* The particle network fades out behind the hero text so the lines never cross the words */
+.hero .hero-text-side { position: relative; isolation: isolate; }
+.hero .hero-text-side::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    inset: -60px -90px -50px -120px;
+    background: radial-gradient(closest-side, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 88%, transparent) 55%, transparent 100%);
+}
+.hero .hero-image-side { position: relative; isolation: isolate; }
+.hero .hero-image-side::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none; inset: -30px;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--bg-color) 70%, transparent) 60%, transparent 100%);
+}
+
+/* The highlights box shows exactly three lines */
+#terminal-ticker { height: auto !important; min-height: 0 !important; }

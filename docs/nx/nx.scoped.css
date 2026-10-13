@@ -963,10 +963,10 @@ body.nx-page #sys-monitor-dock {
   top: 98px;
   z-index: 40;
   width: 100%;
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 42%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
 .sub-header-shell {
   max-width: 1180px;
@@ -1050,10 +1050,11 @@ body.nx-page[data-page="profile"] .nx .rail {
   align-items: center;
   justify-content: flex-end;
   padding: 0 20px !important;
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 94%, transparent) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+  gap: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 42%, transparent) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 40 !important;
@@ -1500,7 +1501,7 @@ body.nx-page[data-page="profile"] .nx .rail {
 .nx .glow-tile .r-cta-btn:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent), 0 10px 28px -6px color-mix(in srgb, var(--brand) 60%, transparent) !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-title { color: #0f172a !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-desc { color: #334155 !important; }
-:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-label { color: #0f766e !important; }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-label { color: var(--link) !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-pill { background: color-mix(in srgb, var(--brand) 12%, #ffffff) !important; border-color: color-mix(in srgb, var(--brand) 35%, transparent) !important; }
 /* pointer glow: soft ellipse that fades in/out and eases toward the pointer */
 @property --glow { syntax: "<number>"; inherits: true; initial-value: 0; }
@@ -3123,4 +3124,72 @@ body.nx-page #leaderboard-widget {
           .nx .nx-hero .stack-row { gap: 6px; }
 }
 @media (prefers-reduced-motion: reduce) { .nx .nx-hero .stack-row.is-open .ask-chip.is-extra { animation: none; } }
+
+/* ===== Share button and panel (top bar) ===== */
+.nx .share-wrap { position: relative; }
+.nx .btn-share { width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--link);
+  background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .3); transition: transform .2s ease, box-shadow .2s ease; }
+.nx .btn-share:hover, .nx .btn-share[aria-expanded="true"] { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .6), 0 8px 18px -10px rgba(var(--brand-rgb), .8); }
+.nx .btn-share:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.share-panel { position: fixed; z-index: 100004; width: 300px; padding: 14px; border-radius: 18px;
+  background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: inset 0 0 0 1px var(--line), 0 24px 48px -20px rgba(0, 0, 0, .55); animation: shareIn .18s ease both; }
+.share-panel[hidden] { display: none; }
+@keyframes shareIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+body .share-title { margin: 0 0 10px; font-size: 13px; font-weight: 700; color: var(--ink); }
+body .share-link { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 10px; border-radius: 12px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+body .share-link span { flex: 1; min-width: 0; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body .share-copy { flex-shrink: 0; border: 0; border-radius: 9px; padding: 6px 10px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: #fff; background: var(--accent-1, #2563eb); }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) body .share-copy { color: #04121a; }
+body .share-copy.is-done { background: #10b981; }
+body .share-nets { margin-top: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+body .share-nets a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 12px; font-size: 11px; color: var(--ink-2); text-decoration: none; transition: background .2s ease, color .2s ease; }
+body .share-nets a i, body .share-nets a svg { font-size: 18px; color: var(--text-primary); }
+body .share-nets a:hover { background: var(--surface-2); color: var(--ink); }
+.nx .sub-header-right, .nx .rail-top { display: flex; align-items: center; gap: 10px; }
+
+/* status dot follows the theme in god-mode too */
+html[data-theme="god-mode"] .nx .live-dot-core { background: #00ff00 !important; box-shadow: 0 0 8px #00ff00 !important; }
+html[data-theme="god-mode"] .nx .live-dot-ping { background: #00ff00 !important; border-color: #00ff00 !important; }
+
+/* no stray divider beside the content column now that the page background shows through */
+html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !important; }
+
+/* ===== Profile WORK tab ===== */
+.nx .work2-summary { margin: -4px 0 12px; font-size: 14px; color: var(--ink-3); }
+.nx .work2-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.nx .work2-chip { border: 0; cursor: pointer; padding: 6px 14px; border-radius: 999px; font: inherit; font-size: 13.5px; font-weight: 600;
+  color: var(--ink-2); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, color .2s ease; }
+.nx .work2-chip:hover { color: var(--ink); }
+.nx .work2-chip[aria-pressed="true"] { color: #fff; background: var(--brand); box-shadow: none; }
+.nx .work2-list { display: flex; flex-direction: column; gap: 12px; }
+.nx .work2-row { display: flex; gap: 16px; padding: 14px; border-radius: 20px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+  transition: box-shadow .2s ease, transform .2s ease; }
+.nx .work2-row[hidden] { display: none; }
+.nx .work2-row:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .45), 0 14px 30px -20px rgba(var(--brand-rgb), .7); }
+.nx .work2-thumb { flex-shrink: 0; width: 132px; height: 88px; object-fit: cover; object-position: top; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface-2); }
+.nx .work2-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.nx .work2-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.nx .work2-top h3 { margin: 0; font-size: 16.5px; font-weight: 600; }
+.nx .work2-status { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  --s: var(--link); color: var(--s); background: color-mix(in srgb, var(--s) 12%, transparent); }
+.nx .work2-status i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.nx .work2-status.is-live { --s: #16a34a; }
+.nx .work2-status.is-dev { --s: #d97706; }
+.nx .work2-status.is-vol { --s: #db2777; }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-live { --s: #4ade80; }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-dev { --s: #fbbf24; }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-vol { --s: #f472b6; }
+.nx .work2-impact { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
+.nx .work2-foot { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.nx .work2-acts { display: flex; gap: 6px; }
+.nx .work2-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border: 0; border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 600;
+  text-decoration: none; color: var(--ink); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, color .2s ease; }
+.nx .work2-btn:hover { color: var(--link); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .5); }
+.nx .work2-btn.is-ai { color: var(--link); background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .3); }
+@media (max-width: 640px) {
+  .nx .work2-row { flex-direction: column; gap: 10px; }
+  .nx .work2-thumb { width: 100%; height: 140px; }
+  .nx .work2-top { flex-wrap: wrap; }
+}
 

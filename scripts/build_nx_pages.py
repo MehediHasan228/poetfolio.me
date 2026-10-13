@@ -329,7 +329,7 @@ def rail(show_open=True, show_top=False):
                       f'<span class="find-ico">{ico_svg}</span>'
                       f'<span class="find-info"><b>{label}</b><small>{handle}</small></span>{arr_svg}</a>')
 
-    rail_top_html = (f'<div class="rail-top"><a class="btn-rail-top" href="{GH}" target="_blank" rel="noopener noreferrer">'
+    rail_top_html = (f'<div class="rail-top">{SHARE_BTN}<a class="btn-rail-top" href="{GH}" target="_blank" rel="noopener noreferrer">'
                      f'<span class="git-icon-wrap"><i class="fa-brands fa-github"></i></span>'
                      f'<span>Follow on GitHub</span>'
                      f'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="git-arr"><path d="M7 17L17 7M7 7h10v10"/></svg>'
@@ -523,10 +523,10 @@ body.nx-page #sys-monitor-dock {
   top: 98px;
   z-index: 40;
   width: 100%;
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 42%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
 .sub-header-shell {
   max-width: 1180px;
@@ -610,10 +610,11 @@ body.nx-page[data-page="profile"] .nx .rail {
   align-items: center;
   justify-content: flex-end;
   padding: 0 20px !important;
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 94%, transparent) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+  gap: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 42%, transparent) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 40 !important;
@@ -1060,7 +1061,7 @@ body.nx-page[data-page="profile"] .nx .rail {
 .nx .glow-tile .r-cta-btn:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent), 0 10px 28px -6px color-mix(in srgb, var(--brand) 60%, transparent) !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-title { color: #0f172a !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-desc { color: #334155 !important; }
-:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-label { color: #0f766e !important; }
+:is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-label { color: var(--link) !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-pill { background: color-mix(in srgb, var(--brand) 12%, #ffffff) !important; border-color: color-mix(in srgb, var(--brand) 35%, transparent) !important; }
 /* pointer glow: soft ellipse that fades in/out and eases toward the pointer */
 @property --glow { syntax: "<number>"; inherits: true; initial-value: 0; }
@@ -2684,6 +2685,74 @@ body.nx-page #leaderboard-widget {
 }
 @media (prefers-reduced-motion: reduce) { .nx .nx-hero .stack-row.is-open .ask-chip.is-extra { animation: none; } }
 
+/* ===== Share button and panel (top bar) ===== */
+.nx .share-wrap { position: relative; }
+.nx .btn-share { width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--link);
+  background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .3); transition: transform .2s ease, box-shadow .2s ease; }
+.nx .btn-share:hover, .nx .btn-share[aria-expanded="true"] { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .6), 0 8px 18px -10px rgba(var(--brand-rgb), .8); }
+.nx .btn-share:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.share-panel { position: fixed; z-index: 100004; width: 300px; padding: 14px; border-radius: 18px;
+  background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: inset 0 0 0 1px var(--line), 0 24px 48px -20px rgba(0, 0, 0, .55); animation: shareIn .18s ease both; }
+.share-panel[hidden] { display: none; }
+@keyframes shareIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+body .share-title { margin: 0 0 10px; font-size: 13px; font-weight: 700; color: var(--ink); }
+body .share-link { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 10px; border-radius: 12px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+body .share-link span { flex: 1; min-width: 0; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body .share-copy { flex-shrink: 0; border: 0; border-radius: 9px; padding: 6px 10px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: #fff; background: var(--accent-1, #2563eb); }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) body .share-copy { color: #04121a; }
+body .share-copy.is-done { background: #10b981; }
+body .share-nets { margin-top: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+body .share-nets a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 12px; font-size: 11px; color: var(--ink-2); text-decoration: none; transition: background .2s ease, color .2s ease; }
+body .share-nets a i, body .share-nets a svg { font-size: 18px; color: var(--text-primary); }
+body .share-nets a:hover { background: var(--surface-2); color: var(--ink); }
+.nx .sub-header-right, .nx .rail-top { display: flex; align-items: center; gap: 10px; }
+
+/* status dot follows the theme in god-mode too */
+html[data-theme="god-mode"] .nx .live-dot-core { background: #00ff00 !important; box-shadow: 0 0 8px #00ff00 !important; }
+html[data-theme="god-mode"] .nx .live-dot-ping { background: #00ff00 !important; border-color: #00ff00 !important; }
+
+/* no stray divider beside the content column now that the page background shows through */
+html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !important; }
+
+/* ===== Profile WORK tab ===== */
+.nx .work2-summary { margin: -4px 0 12px; font-size: 14px; color: var(--ink-3); }
+.nx .work2-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.nx .work2-chip { border: 0; cursor: pointer; padding: 6px 14px; border-radius: 999px; font: inherit; font-size: 13.5px; font-weight: 600;
+  color: var(--ink-2); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, color .2s ease; }
+.nx .work2-chip:hover { color: var(--ink); }
+.nx .work2-chip[aria-pressed="true"] { color: #fff; background: var(--brand); box-shadow: none; }
+.nx .work2-list { display: flex; flex-direction: column; gap: 12px; }
+.nx .work2-row { display: flex; gap: 16px; padding: 14px; border-radius: 20px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+  transition: box-shadow .2s ease, transform .2s ease; }
+.nx .work2-row[hidden] { display: none; }
+.nx .work2-row:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .45), 0 14px 30px -20px rgba(var(--brand-rgb), .7); }
+.nx .work2-thumb { flex-shrink: 0; width: 132px; height: 88px; object-fit: cover; object-position: top; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface-2); }
+.nx .work2-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.nx .work2-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.nx .work2-top h3 { margin: 0; font-size: 16.5px; font-weight: 600; }
+.nx .work2-status { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  --s: var(--link); color: var(--s); background: color-mix(in srgb, var(--s) 12%, transparent); }
+.nx .work2-status i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.nx .work2-status.is-live { --s: #16a34a; }
+.nx .work2-status.is-dev { --s: #d97706; }
+.nx .work2-status.is-vol { --s: #db2777; }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-live { --s: #4ade80; }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-dev { --s: #fbbf24; }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-vol { --s: #f472b6; }
+.nx .work2-impact { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
+.nx .work2-foot { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.nx .work2-acts { display: flex; gap: 6px; }
+.nx .work2-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border: 0; border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 600;
+  text-decoration: none; color: var(--ink); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, color .2s ease; }
+.nx .work2-btn:hover { color: var(--link); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .5); }
+.nx .work2-btn.is-ai { color: var(--link); background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .3); }
+@media (max-width: 640px) {
+  .nx .work2-row { flex-direction: column; gap: 10px; }
+  .nx .work2-thumb { width: 100%; height: 140px; }
+  .nx .work2-top { flex-wrap: wrap; }
+}
+
 """
 
 
@@ -2770,6 +2839,24 @@ def shell(slug, title, desc, cur):
     return build_pages.rewrite(head, "../"), build_pages.rewrite(opening, "../"), build_pages.rewrite(_tail, "../")
 
 
+SHARE_BTN = '''      <div class="share-wrap">
+        <button type="button" class="btn-share" data-share aria-haspopup="dialog" aria-expanded="false" aria-label="Share this page" title="Share this page">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+        </button>
+        <div class="share-panel" role="dialog" aria-label="Share this page" hidden>
+          <p class="share-title">Share this page</p>
+          <div class="share-link"><span data-share-url></span><button type="button" class="share-copy" data-share-copy>Copy link</button></div>
+          <div class="share-nets">
+            <a data-net="linkedin" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i><span>LinkedIn</span></a>
+            <a data-net="x" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.9-6.4L6.3 22H3.2l7.3-8.3L1 2h6.3l4.4 5.9L18.9 2Zm-1.1 18.1h1.7L6.3 3.8H4.5l13.3 16.3Z"/></svg><span>X</span></a>
+            <a data-net="facebook" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i><span>Facebook</span></a>
+            <a data-net="whatsapp" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
+            <a data-net="email"><i class="fa-solid fa-envelope"></i><span>Email</span></a>
+          </div>
+        </div>
+      </div>'''
+
+
 def sub_header(slug, title):
     if not title or slug == "profile":
         return ""
@@ -2779,6 +2866,7 @@ def sub_header(slug, title):
       <h1 class="sub-header-title">{e(title)}</h1>
     </div>
     <div class="sub-header-right">
+{SHARE_BTN}
       <a class="btn-rail-top" href="{GH}" target="_blank" rel="noopener noreferrer">
         <span class="git-icon-wrap"><i class="fa-brands fa-github"></i></span>
         <span>Follow on GitHub</span>
@@ -2807,7 +2895,54 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True):
 <script src="../nx/nx.js?v=8"></script>
 <script type="module" src="../nx/slats-cover.js?v=8"></script>
 <script src="../nx/proj-dots.js?v=5"></script>
+{SHARE_JS if (sub_bar or is_profile) else ""}
 {tail}'''
+
+
+# phones get their own share sheet; elsewhere a small panel with copy and the usual networks
+SHARE_JS = """<script>
+(function () {
+  var btn = document.querySelector('[data-share]');
+  if (!btn) return;
+  var panel = btn.parentNode.querySelector('.share-panel');
+  var url = location.href.split('#')[0], title = document.title;
+  var desc = (document.querySelector('meta[name="description"]') || {}).content || '';
+  var enc = encodeURIComponent;
+  var NETS = {
+    linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + enc(url),
+    x: 'https://x.com/intent/post?url=' + enc(url) + '&text=' + enc(title),
+    facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + enc(url),
+    whatsapp: 'https://wa.me/?text=' + enc(title + ' ' + url),
+    email: 'mailto:?subject=' + enc(title) + '&body=' + enc(desc + '\\n\\n' + url)
+  };
+  panel.querySelectorAll('[data-net]').forEach(function (a) { a.href = NETS[a.dataset.net]; });
+  panel.querySelector('[data-share-url]').textContent = url.replace(/^https?:\\/\\//, '');
+  document.body.appendChild(panel);
+  function place() {
+    var r = btn.getBoundingClientRect();
+    panel.style.top = (r.bottom + 10) + 'px';
+    panel.style.right = Math.max(8, innerWidth - r.right) + 'px';
+  }
+  function open(on) { if (on) place(); panel.hidden = !on; btn.setAttribute('aria-expanded', String(on)); }
+  addEventListener('resize', function () { if (!panel.hidden) place(); });
+  addEventListener('scroll', function () { if (!panel.hidden) open(false); }, { passive: true });
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+      navigator.share({ title: title, text: desc, url: url }).catch(function () {});
+      return;
+    }
+    open(panel.hidden);
+  });
+  panel.querySelector('[data-share-copy]').addEventListener('click', function () {
+    var b = this;
+    var done = function () { b.textContent = 'Copied \\u2713'; b.classList.add('is-done'); setTimeout(function () { b.textContent = 'Copy link'; b.classList.remove('is-done'); }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
+  });
+  document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) open(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { open(false); btn.focus(); } });
+})();
+</script>"""
 
 
 def icon_src(name):
@@ -3192,6 +3327,76 @@ def extra_card(title, text):
             f'<h4>{e(title)}</h4><p>{e(text)}</p><div class="extra-tags">{tag_html}</div></article>')
 
 
+# WORK tab: one line of impact, a status and categories per project
+WORK_META = {
+    "AI-Native NGO ERP": ("85+ modules planned for humanitarian operations", "In development", ["AI", "ERP", "Non-profit"]),
+    "Karbar ERP": ("NBR VAT (Mushak), payroll and TDS for Bangladeshi businesses", None, ["ERP"]),
+    "SAWAB Bangladesh Platform": ("Live NGO portal for education, health, WASH and donations", None, ["Web", "Non-profit"]),
+    "SAWAB Foundation Portal": ("Zakat calculator, relief tracking and instant donations", None, ["Web", "Non-profit"]),
+    "AI Video Making Engine": ("Long videos into 9:16 shorts with Whisper and Bengali NLP", None, ["AI"]),
+    "AI Chat Web App": ("Streaming LLM chat over WebSockets", "In development", ["AI", "Web"]),
+    "HR & Payroll System": ("Payroll, tax deductions, attendance and compliance", None, ["ERP"]),
+    "Savora: AI Hostel Management": ("AI meal planning and pantry tracking on web and mobile", None, ["AI", "Web"]),
+    "Tafseerul Quran Foundation": ("A fast, secure site for a national non-profit", "Volunteer", ["Web", "Non-profit"]),
+    "HBIZZ Corporate Website": ("Corporate site for a freight and logistics company", None, ["Web"]),
+}
+WORK_CATS = ["AI", "ERP", "Web", "Non-profit"]
+
+WORK_JS = """<script>
+(function () {
+  var root = document.querySelector('.work2');
+  if (!root) return;
+  var rows = [].slice.call(root.querySelectorAll('.work2-row'));
+  root.addEventListener('click', function (e) {
+    var chip = e.target.closest('.work2-chip');
+    if (chip) {
+      root.querySelectorAll('.work2-chip').forEach(function (c) { c.setAttribute('aria-pressed', String(c === chip)); });
+      var cat = chip.dataset.cat;
+      rows.forEach(function (r) { r.hidden = cat !== 'all' && r.dataset.cats.split(',').indexOf(cat) === -1; });
+      return;
+    }
+    var ask = e.target.closest('[data-ask-project]');
+    if (ask) {
+      var w = document.getElementById('ai-chat-widget'), h = document.getElementById('chat-header');
+      if (!w || !window.MehediChat) { location.href = '../projects/'; return; }
+      if (!w.classList.contains('chat-expanded') && h) h.click();
+      setTimeout(function () { window.MehediChat.ask('Tell me the story behind ' + ask.dataset.askProject + '. What was the hardest part?'); }, 320);
+    }
+  });
+})();
+</script>"""
+
+
+def work_tab():
+    rows, live, ai, npo = [], 0, 0, 0
+    for t, d, tags, icon, badge, links, img in PROJECTS:
+        impact, status, cats = WORK_META.get(t, (d, None, ["Web"]))
+        site = next((u for k, u in links if k == "link"), None)
+        code = next((u for k, u in links if k == "github"), None)
+        if not status:
+            status = "Live" if site else None
+        live += status == "Live"; ai += "AI" in cats; npo += "Non-profit" in cats
+        st_cls = {"Live": "is-live", "In development": "is-dev", "Volunteer": "is-vol"}.get(status, "")
+        st = f'<span class="work2-status {st_cls}"><i></i>{e(status)}</span>' if status else ""
+        acts = ""
+        if site: acts += f'<a class="work2-btn" href="{site}" target="_blank" rel="noopener noreferrer">Live <span aria-hidden="true">&#8599;</span></a>'
+        if code and code != GH: acts += f'<a class="work2-btn" href="{code}" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">&#8599;</span></a>'
+        acts += f'<button type="button" class="work2-btn is-ai" data-ask-project="{e(t)}"><span aria-hidden="true">&#10022;</span> Ask AI</button>'
+        chips = "".join(f'<span class="tag">{e(x)}</span>' for x in tags[:4])
+        rows.append(f'<article class="work2-row" data-cats="{",".join(cats)}">'
+                    f'<img class="work2-thumb" src="{img}" alt="" width="132" height="88" loading="lazy">'
+                    f'<div class="work2-body"><div class="work2-top"><h3>{e(t)}</h3>{st}</div>'
+                    f'<p class="work2-impact">{e(impact)}</p>'
+                    f'<div class="work2-foot"><div class="tag-row">{chips}</div><div class="work2-acts">{acts}</div></div></div></article>')
+    chips = '<button type="button" class="work2-chip" data-cat="all" aria-pressed="true">All</button>' + "".join(
+        f'<button type="button" class="work2-chip" data-cat="{c}" aria-pressed="false">{e(c)}</button>' for c in WORK_CATS)
+    summary = f"{len(PROJECTS)} projects &middot; {live} live &middot; {ai} with AI &middot; {npo} non-profit"
+    return (f'<div class="work2"><p class="work2-summary">{summary}</p>'
+            f'<div class="work2-chips" role="group" aria-label="Filter projects">{chips}</div>'
+            f'<div class="work2-list">{"".join(rows)}</div>'
+            f'<p style="margin-top:18px"><a class="btn btn-secondary" href="../projects/">See all projects</a></p></div>{WORK_JS}')
+
+
 def profile():
     ai = "".join(pill_img(l, i, c) for l, i, c in AI_TOOLS)
     st = "".join(pill_img(l, i) for l, i in STACK)
@@ -3254,47 +3459,48 @@ def profile():
 {HERO_JS}
 <div class="panel" data-panel="work" hidden>
 <h2 class="sec-title">{ico("projects")} Selected work</h2>
-<div class="posts">{work}</div>
-<p style="margin-top:18px"><a class="btn btn-secondary" href="../projects/">See all projects</a></p>
+{work_tab()}
 </div>
 </div>'''
     return page("profile", f"{NAME} · Profile", f"{NAME}: {TAGLINE}. {ROLE_NOW}. Laravel, NestJS, Kafka and agentic AI systems.", "", body, "profile")
 
 
+def proj_card(t, d, tags, icon, badge, links, img):
+    b = f'<span class="badge"><i class="fa-solid fa-arrow-trend-up"></i> {badge}</span>' if badge else ""
+    lk = "".join(
+        f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="{t} {k}"><i class="fa-brands fa-github"></i></a>' if k == "github"
+        else f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="Open {t}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>'
+        for k, u in links)
+    tg = "".join(f'<span class="tag">{x}</span>' for x in tags)
+    prim = links[0][1] if links else None
+    cov_open = '<div class="proj-cover">'
+    cov_close = '</div>'
+    if prim:
+        btn_label = "Live Preview" if badge == "Live" else ("View Code" if (links and links[0][0] == "github") else "View Project")
+        btn_ico = '<i class="fa-solid fa-arrow-up-right-from-square"></i>'
+        center_btn = (f'<a href="{prim}" target="_blank" rel="noopener noreferrer" class="proj-center-btn" aria-label="{btn_label} for {e(t)}">'
+                      f'<span class="btn-ico">{btn_ico}</span>'
+                      f'<span class="btn-text">{btn_label}</span>'
+                      f'</a>')
+    else:
+        center_btn = ('<span class="proj-center-btn in-dev">'
+                      '<span class="btn-ico"><i class="fa-solid fa-code"></i></span>'
+                      '<span class="btn-text">In Development</span>'
+                      '</span>')
+    return (f'<article class="proj">'
+              f'{cov_open}'
+              f'<img src="{img}" alt="{e(t)}" class="proj-img" loading="lazy">'
+              f'<div class="proj-overlay"></div>'
+              f'<canvas class="proj-dots-canvas"></canvas>'
+              f'{b}'
+              f'{center_btn}'
+              f'{cov_close}'
+              f'<div class="proj-body"><h3>{e(t)}</h3><p>{e(d)}</p>'
+              f'<div class="proj-foot"><div class="tag-row">{tg}</div><div class="proj-links">{lk}</div></div></div></article>')
+
+
 def projects():
-    cards = ""
-    for t, d, tags, icon, badge, links, img in PROJECTS:
-        b = f'<span class="badge"><i class="fa-solid fa-arrow-trend-up"></i> {badge}</span>' if badge else ""
-        lk = "".join(
-            f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="{t} {k}"><i class="fa-brands fa-github"></i></a>' if k == "github"
-            else f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="Open {t}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>'
-            for k, u in links)
-        tg = "".join(f'<span class="tag">{x}</span>' for x in tags)
-        prim = links[0][1] if links else None
-        cov_open = '<div class="proj-cover">'
-        cov_close = '</div>'
-        if prim:
-            btn_label = "Live Preview" if badge == "Live" else ("View Code" if (links and links[0][0] == "github") else "View Project")
-            btn_ico = '<i class="fa-solid fa-arrow-up-right-from-square"></i>'
-            center_btn = (f'<a href="{prim}" target="_blank" rel="noopener noreferrer" class="proj-center-btn" aria-label="{btn_label} for {e(t)}">'
-                          f'<span class="btn-ico">{btn_ico}</span>'
-                          f'<span class="btn-text">{btn_label}</span>'
-                          f'</a>')
-        else:
-            center_btn = ('<span class="proj-center-btn in-dev">'
-                          '<span class="btn-ico"><i class="fa-solid fa-code"></i></span>'
-                          '<span class="btn-text">In Development</span>'
-                          '</span>')
-        cards += (f'<article class="proj">'
-                  f'{cov_open}'
-                  f'<img src="{img}" alt="{e(t)}" class="proj-img" loading="lazy">'
-                  f'<div class="proj-overlay"></div>'
-                  f'<canvas class="proj-dots-canvas"></canvas>'
-                  f'{b}'
-                  f'{center_btn}'
-                  f'{cov_close}'
-                  f'<div class="proj-body"><h3>{e(t)}</h3><p>{e(d)}</p>'
-                  f'<div class="proj-foot"><div class="tag-row">{tg}</div><div class="proj-links">{lk}</div></div></div></article>')
+    cards = "".join(proj_card(*x) for x in PROJECTS)
     body = (f'<div class="pad"><p class="lead">Products I\'ve designed, built and shipped: NGO and ERP platforms, AI automation and web projects.</p>'
             f'<div class="grid2">{cards}</div></div>')
     return page("projects", "Projects", "Products and systems built by Mehedi Hasan: NGO ERP, Karbar ERP, SAWAB platforms, AI video engine and more.",

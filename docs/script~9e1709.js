@@ -4138,8 +4138,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 p.style.transform = 'translateY(0)';
             });
 
-            // Keep max 5 lines
-            while (terminalTicker.children.length > 5) {
+            // Keep exactly the three lines the box shows
+            while (terminalTicker.children.length > 3) {
                 terminalTicker.removeChild(terminalTicker.lastChild);
             }
         }, 4500);
