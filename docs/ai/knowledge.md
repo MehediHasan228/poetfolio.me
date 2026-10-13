@@ -442,10 +442,10 @@ Email mehedihasan228.cse@gmail.com WhatsApp +880 1799-447594 LinkedIn in/mehedi-
 ## Send a message
 
 # Library (/library/)
-99 things I use, love and recommend
+100 things I use, love and recommend
 ## My library
 The AI skills in my daily workflow, the sites I keep bookmarked and the nasheeds on repeat while I code.
-11 AI Skills 44 Bookmarks 44 Watch & Listen
+11 AI Skills 44 Bookmarks 45 Watch & Listen
 ## AI Skills
 The agent skills I use every day in my agentic development workflow.
 See all 11
@@ -492,6 +492,7 @@ Draw database schemas from simple code. Handy for planning ERP tables.
 See all 44 links
 ## Watch & Listen
 Quran on repeat while I code, and the channels I learn from: ideas, growth, faith and tech.
+See all 45
 Up next
 Surah Ar-Rahman
 Omar Hisham Al Arabi سورة الرحمن
@@ -523,7 +524,7 @@ Open Watch & Listen
 - music > featured > The Muslim Minds: Rise and Fall of Civilisation · Asif Adnan, Imam Al-Ghazali's Intellectual Journey, Why Are Our Acts of Worship Fading Away?, Marriage, Family, Career and Life's Mission, Ibn Khaldun: Fiqh and Ilm al-Umran, তুরাস: ইসলামের বুদ্ধিবৃত্তিক ঐতিহ্য
 - music > featured > 2 Cents Podcast: Leadership নিয়ে যদি একটা পডকাস্ট দেখতে হয়, How to think like a CEO, Negotiation Expert: মানুষকে 'হ্যাঁ' বলাবেন কীভাবে, Freelancer থেকে ৪টা ব্যবসার মালিক, এই এপিসোড আপনাকে আরও Productive বানাবে, Khalid Farhan: AI দিয়ে ২০২৬-এ ইনকাম
 - music > featured > Towards Eternity – বাংলা: জীবনের অর্থ কী? ইসলামের ১০টি অপরিহার্য শিক্ষা, এক সুইডিশ নাস্তিকের ইসলাম গ্রহণের গল্প, এক ক্যাথলিক খ্রিস্টানের ইসলাম গ্রহণ, বুদ্ধ থেকে আল্লাহর পথে: এক চীনা বৌদ্ধের যাত্রা, আসহাবে কাহফের অবিশ্বাস্য ঘটনা, ইসরা ও মিরাজের সফর · ইয়া রাসূলুল্লাহ ﷺ
-- music > channels: Tafseerul Quran, Sheikh Ahmadullah, Dr. Khandaker Abdullah Jahangir, Al-Itisam TV, Ali Dawah, Sabeel Ahmed, One Islam Productions, As-Sunnah Foundation, Rahabar Multimedia, Mishary Alafasy, Yasser Al-Dosari, Ahmad Alnufais, Abdulrahman Al-Ossi, Saud Al-Shuraim, MercifulServant, Y Combinator, Cal Newport, Ali Abdaal, Simon Sinek, Khalid Farhan, Ayman Sadiq, Anthropic, LangChain, Dave Ebbelaar, Matt Pocock, Fireship, Learn with Sumit
+- music > channels: Tafseerul Quran, Sheikh Ahmadullah, Dr. Khandaker Abdullah Jahangir, Al-Itisam TV, Ali Dawah, Sabeel Ahmed, One Islam Productions, As-Sunnah Foundation, Rahabar Multimedia, Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Saud Al-Shuraim, Ahmad Alnufais, Abdulrahman Al-Ossi, MercifulServant, Y Combinator, Cal Newport, Ali Abdaal, Simon Sinek, Khalid Farhan, Ayman Sadiq, Anthropic, LangChain, Dave Ebbelaar, Matt Pocock, Fireship, Learn with Sumit
 - music > learning: Andrej Karpathy, freeCodeCamp, ByteByteGo, Hussein Nasser, Stack Learner
 - music > learning > Andrej Karpathy: Let's build GPT: from scratch, in code, Deep Dive into LLMs like ChatGPT, Intro to Large Language Models, How I use LLMs, Neural networks and backpropagation: micrograd, Let's build the GPT Tokenizer
 - music > learning > freeCodeCamp: LangGraph Complete Course: AI Agents with Python, Learn RAG From Scratch, Intro to MCP Servers with Python, Learn NestJS – Complete Course, Learn PostgreSQL – Full Course, Learn Docker – Full DevOps Course

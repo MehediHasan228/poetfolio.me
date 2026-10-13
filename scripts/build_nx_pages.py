@@ -2227,21 +2227,21 @@ body.nx-page #leaderboard-widget {
 :root[data-theme="mint"] {
   --color-brand-300: #34d399;
   --color-brand-400: #10b981;
-  --cover-base-1: #03140d;
-  --cover-base-2: #04120f;
-  --cover-1: #059669;
-  --cover-2: #0d9488;
-  --cover-3: #047857;
-  --cover-4: #0f766e;
-  --cover-5: #065f46;
-  --cover-6: #10b981;
-  --aurora-frost: rgba(3, 20, 13, 0.52);
-  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.24), color-mix(in srgb, #10b981 45%, transparent) 30%, transparent 55%, color-mix(in srgb, #0f766e 50%, transparent));
-  --aurora-title: #ffffff;
-  --aurora-label: #a7f3d0;
-  --aurora-ico: #34d399;
-  --aurora-tz: #94a3b8;
-  --aurora-daypart: #cbd5e1;
+  --cover-base-1: #ecfdf5;
+  --cover-base-2: #f0fdfa;
+  --cover-1: #10b981;
+  --cover-2: #34d399;
+  --cover-3: #059669;
+  --cover-4: #6ee7b7;
+  --cover-5: #99f6e4;
+  --cover-6: #047857;
+  --aurora-frost: rgba(255, 255, 255, 0.65);
+  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.85), color-mix(in srgb, #10b981 45%, transparent) 30%, transparent 55%, color-mix(in srgb, #2dd4bf 45%, transparent));
+  --aurora-title: #0f172a;
+  --aurora-label: #047857;
+  --aurora-ico: #059669;
+  --aurora-tz: #475569;
+  --aurora-daypart: #334155;
 }
 
 /* --- 5. GOD-MODE THEME (Matrix Phosphor Green & Pure Cyber Black) --- */
@@ -2752,6 +2752,27 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
   .nx .work2-thumb { width: 100%; height: 140px; }
   .nx .work2-top { flex-wrap: wrap; }
 }
+
+/* ===== Library cards: pointer glow and lift, matching the other cards ===== */
+.nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch) { position: relative; isolation: isolate; overflow: hidden;
+  transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease; }
+.nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit; opacity: 0; transition: opacity .35s ease;
+  background: radial-gradient(400px circle at var(--gx, 50%) var(--gy, 50%), color-mix(in srgb, var(--brand) 14%, transparent), transparent 65%);
+}
+/* a ring of light that slides along the border with the pointer */
+.nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::before {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: inherit; padding: 1.5px; opacity: 0; transition: opacity .35s ease;
+  background: radial-gradient(260px circle at var(--gx, 50%) var(--gy, 50%), color-mix(in srgb, var(--brand) 85%, transparent), color-mix(in srgb, var(--brand) 25%, transparent) 45%, transparent 75%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover::before { opacity: 1; }
+.nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover::after { opacity: 1; }
+.nx :is(.nl-hero, .nl-feature):hover { border-color: color-mix(in srgb, var(--brand) 55%, transparent) !important;
+  box-shadow: 0 22px 46px -18px color-mix(in srgb, var(--brand) 55%, transparent) !important; }
+.nx :is(.nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover { box-shadow: 0 16px 34px -16px color-mix(in srgb, var(--brand) 55%, transparent) !important; }
+@media (hover: none) { .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::after, .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::before { display: none; } }
 
 """
 
@@ -3745,6 +3766,33 @@ def library_sub(key):
 
 
 LIB_JS = """<script>
+(function () {
+  // cards glow where the pointer is, like the cards elsewhere on the site
+  var SEL = '.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch';
+  // the light eases after the pointer instead of jumping, so the movement reads clearly
+  function follow(c) {
+    if (c._raf) return;
+    (function step() {
+      c._x += (c._tx - c._x) * 0.18; c._y += (c._ty - c._y) * 0.18;
+      c.style.setProperty('--gx', c._x.toFixed(1) + 'px'); c.style.setProperty('--gy', c._y.toFixed(1) + 'px');
+      c._raf = (Math.abs(c._tx - c._x) > 0.4 || Math.abs(c._ty - c._y) > 0.4) ? requestAnimationFrame(step) : null;
+    })();
+  }
+  document.addEventListener('pointermove', function (ev) {
+    var c = ev.target.closest && ev.target.closest(SEL);
+    if (!c) return;
+    var r = c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (c._x === undefined || !c.matches(':hover')) { c._x = x; c._y = y; }
+    c._tx = x; c._ty = y; follow(c);
+  }, { passive: true });
+  document.addEventListener('pointerover', function (ev) {
+    var c = ev.target.closest && ev.target.closest(SEL);
+    if (!c || c.contains(ev.relatedTarget)) return;
+    var r = c.getBoundingClientRect();
+    c._x = c._tx = ev.clientX - r.left; c._y = c._ty = ev.clientY - r.top; follow(c);
+  }, { passive: true });
+})();
+
 (function () {
   function iframe(id) {
     return '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="YouTube video player" ' +

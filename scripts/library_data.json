@@ -1076,6 +1076,22 @@
         "why": "Official channel of the imam of Masjid al-Haram."
       },
       {
+        "name": "Maher Al-Muaiqly",
+        "handle": "@MaherAlMuaiqly",
+        "url": "https://www.youtube.com/@MaherAlMuaiqly",
+        "avatar": "../uploads/library/channels/maheralmuaiqly.jpg",
+        "cat": "Quran",
+        "why": "Imam of Masjid al-Haram, known worldwide for his clear, moving recitation."
+      },
+      {
+        "name": "Saud Al-Shuraim",
+        "handle": "@shuraym1414",
+        "url": "https://www.youtube.com/@shuraym1414",
+        "avatar": "../uploads/library/channels/shuraym1414.jpg",
+        "cat": "Quran",
+        "why": "Recitations and legacy of the former imam of Masjid al-Haram."
+      },
+      {
         "name": "Ahmad Alnufais",
         "handle": "@Ahmad_Alnufais",
         "url": "https://www.youtube.com/@Ahmad_Alnufais",
@@ -1090,14 +1106,6 @@
         "avatar": "../uploads/library/channels/aaloosi.jpg",
         "cat": "Quran",
         "why": "Official channel: calm, heartfelt Quran recitation."
-      },
-      {
-        "name": "Saud Al-Shuraim",
-        "handle": "@shuraym1414",
-        "url": "https://www.youtube.com/@shuraym1414",
-        "avatar": "../uploads/library/channels/shuraym1414.jpg",
-        "cat": "Quran",
-        "why": "Recitations and legacy of the former imam of Masjid al-Haram."
       },
       {
         "name": "MercifulServant",
