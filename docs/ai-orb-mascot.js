@@ -442,13 +442,47 @@
             const last = num(ls.get('greet:last'));
             if (last) ss.set('greet:away', String(Math.floor((Date.now() - last) / DAY)));
             ls.set('greet:last', String(Date.now()));
+            try {
+                const ref = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, '') : '';
+                const NAMES = { 'linkedin.com': 'LinkedIn', 'lnkd.in': 'LinkedIn', 'github.com': 'GitHub', 'facebook.com': 'Facebook', 'm.facebook.com': 'Facebook', 'l.facebook.com': 'Facebook',
+                    'x.com': 'X', 't.co': 'X', 'twitter.com': 'X', 'google.com': 'Google', 'bing.com': 'Bing', 'youtube.com': 'YouTube', 'reddit.com': 'Reddit', 'dev.to': 'DEV', 'medium.com': 'Medium' };
+                if (ref && ref !== location.hostname.replace(/^www\./, '')) {
+                    const key = Object.keys(NAMES).find((k) => ref === k || ref.endsWith('.' + k));
+                    ss.set('greet:from', key ? NAMES[key] : ref);
+                }
+            } catch (e) {}
         }
         ss.set('greet:pages', String(num(ss.get('greet:pages')) + 1));
         let attention = num(ss.get('greet:active'));
+
+        /* the project card in view the longest (projects page), remembered for this visit */
+        const focusTime = new Map(), inView = new Set();
+        const cards = [...document.querySelectorAll('.proj-body h3')].map((h) => ({ title: h.textContent.trim(), node: h.closest('[class*="proj-card"], article, li') || h.parentElement.parentElement }));
+        if (cards.length && 'IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+                const c = cards.find((x) => x.node === e.target);
+                if (c) { if (e.isIntersecting) inView.add(c.title); else inView.delete(c.title); }
+            }), { threshold: 0.6 });
+            cards.forEach((c) => io.observe(c.node));
+            // the card under the pointer counts first; otherwise the only card on screen (phones show one at a time)
+            let hovered = null;
+            document.addEventListener('pointerover', (e) => { const c = cards.find((x) => x.node.contains(e.target)); hovered = c ? c.title : null; }, { passive: true });
+            setInterval(() => {
+                if (document.visibilityState !== 'visible' || Date.now() - lastActive > 20000) return;
+                const t = hovered && inView.has(hovered) ? hovered : (inView.size === 1 ? [...inView][0] : null);
+                if (!t) return;
+                const secs = (focusTime.get(t) || 0) + 1;
+                focusTime.set(t, secs);
+                const best = JSON.parse(ss.get('greet:focus') || 'null');
+                if (secs >= 6 && (!best || secs > best.s || best.t === t)) ss.set('greet:focus', JSON.stringify({ t, s: secs }));
+            }, 1000);
+        }
+        const focusItem = () => { try { const f = JSON.parse(ss.get('greet:focus') || 'null'); return f && f.t; } catch (e) { return null; } };
         let depth = 0, lastActive = Date.now(), lastMove = Date.now();
 
         /* ---- what to say ---- */
         const pick = (a) => a[Math.floor(Math.random() * a.length)];
+        const sound = (t) => { if (typeof window.siteSound === 'function') window.siteSound(t); };
         function clockIn(tz) { try { return new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', timeZone: tz }); } catch (e) { return ''; } }
         function hoursApart() {
             try {
@@ -464,38 +498,66 @@
                 if (away === 1) return 'Welcome back! Good to see you again.';
                 return `Welcome back! It's been ${away} days, good to see you again.`;
             }
-            if (apart === 0) return pick(['Assalamu alaikum!', 'Hi! Looks like we share a time zone.']);
+            if (apart === 0) return pick(['Assalamu alaikum!', 'Hi there!']);
             if (h < 5) return `It's ${clockIn()} where you are. Thanks for spending part of your night here.`;
             if (apart >= 3) return pick([`Hello from ${CITY}, where it's ${clockIn(TZ)} right now.`, `Hi! It's ${clockIn(TZ)} here in ${CITY}.`]);
             if (h < 12) return pick(['Good morning!', "Morning! Hope your day's off to a good start."]);
             if (h >= 18) return pick(['Good evening!', "Hi! Hope your evening's going well."]);
             return pick(['Hi there!', 'Hello!']);
         }
+        function observation() {
+            const focus = focusItem(), from = ss.get('greet:from'), pages = num(ss.get('greet:pages')), minutes = Math.round(attention / 60000);
+            if (focus) return `You spent a while on ${focus}.`;
+            if (from) return pick([`Thanks for coming over from ${from}!`, `So glad you found me through ${from}.`]);
+            if (depth > 0.9) return 'You read all the way through. That really means a lot.';
+            if (pages >= 3) return `You've looked through ${pages} pages already. Thanks for taking a proper look.`;
+            if (minutes >= 2) return `You've spent ${minutes} minutes here. Thank you for that.`;
+            return null;
+        }
         const CHAT = { cta: 'Ask my AI', action: 'chat' };
         const TALK = { cta: "Let's talk", href: rootHref + 'contact/' };
+        const OPEN = ['Let me open the chat and tell you properly.', 'Opening the chat for that, one sec.', 'Good question. Let me answer it properly in the chat.'];
         const FLOWS = {
-            home: { ask: ['Curious what I build?', 'Want a quick look at my work?'], replies: [
-                { label: 'Show me projects', answers: [['Here are the ones I am proudest of.'], ['The NGO ERP is the big one: 85+ modules on events and agents.']], then: { cta: 'Open projects', href: rootHref + 'projects/' } },
-                { label: 'I have a question', answers: [['Sure! My AI assistant knows my work and stack well.']], then: CHAT },
-                { label: 'Just browsing', answers: [['No problem at all. Enjoy looking around!']], then: 'bye' } ] },
-            profile: { ask: ['Hiring, or just looking around?', 'Looking for someone for a project?'], replies: [
-                { label: 'Hiring', hearts: true, answers: [['That is great to hear!', 'I would love to hear about the role.']], then: TALK },
-                { label: 'A freelance project', answers: [['Nice. AI automation, ERP and web platforms are my sweet spot.']], then: TALK },
-                { label: 'Just looking', answers: [['No worries. Feel free to look around.']], then: 'bye' } ] },
-            projects: { ask: ['Are you working on something of your own?', 'Do you have a project in mind?'], replies: [
-                { label: 'Yes, I have an idea', hearts: true, answers: [['Love that!', 'Tell my AI assistant about it, and it can point you to similar work.']], then: CHAT },
-                { label: 'Not right now', answers: [['That is alright!', 'If you ever need a hand later, you know where to find me.']], then: 'bye' } ] },
-            library: { ask: ['Looking for a tool or a course?', 'Exploring my stack?'], replies: [
-                { label: 'Yes, help me pick', answers: [['Happy to help.', 'Ask my AI which tool fits your stack.']], then: CHAT },
-                { label: 'Just browsing', answers: [['Enjoy! Everything here is something I actually use.']], then: 'bye' } ] },
-            people: { ask: ['Know any of these people?'], replies: [
-                { label: 'A few of them', hearts: true, answers: [['Then you are in good company!']], then: 'bye' },
-                { label: 'Not yet', answers: [['Each of them shaped how I work. Worth following!']], then: 'bye' } ] }
+            home: () => ({ ask: ['What brings you here today?', 'So, what brings you here?'], replies: [
+                { label: 'Hiring', hearts: true, ai: 'Give me the 30-second pitch: why should I hire you?' },
+                { label: 'I have a project', project: true },
+                { label: 'Just curious', answers: [['Curiosity is always welcome here.', 'Here is the 30-second version of me.']], ai: 'Introduce yourself in 30 seconds' } ] }),
+            profile: () => ({ ask: ['Hiring, or exploring a collaboration?', 'Looking for someone to build with?'], replies: [
+                { label: 'Hiring', hearts: true, ai: 'Give me the 30-second pitch: why should I hire you?' },
+                { label: 'A project', project: true },
+                { label: 'Just looking', answers: [['No worries. Make yourself at home.']], then: 'bye' } ] }),
+            projects: () => {
+                const f = focusItem();
+                if (f) return { ask: [`Want the story behind ${f}?`, `Curious how I built ${f}?`], replies: [
+                    { label: 'Yes, tell me', hearts: true, ai: `Tell me the story behind ${f}. What was the hardest part?` },
+                    { label: 'I have a similar idea', project: true },
+                    { label: 'Just looking', answers: [['Of course, take your time!']], then: 'bye' } ] };
+                return { ask: ['What kind of work are you looking for?', 'Building something of your own?'], replies: [
+                    { label: 'AI & agents', ai: 'What AI and agent systems have you built?' },
+                    { label: 'ERP & business apps', ai: 'Tell me about your ERP and business systems work' },
+                    { label: 'I have a project', hearts: true, project: true } ] };
+            },
+            stack: () => ({ ask: ['Curious why I pick the tools I do?'], replies: [
+                { label: 'Why NestJS + Kafka?', ai: 'Why do you use NestJS with Kafka?' },
+                { label: 'Your AI stack', ai: 'Walk me through your AI stack' },
+                { label: 'Just browsing', answers: [['Enjoy! Everything here is something I use in production.']], then: 'bye' } ] }),
+            architecture: () => ({ ask: ['Want me to walk you through one of these systems?'], replies: [
+                { label: 'The NGO ERP', ai: 'Walk me through the NGO ERP architecture' },
+                { label: 'How you design', ai: 'How do you approach system design?' },
+                { label: 'Just browsing', answers: [['Sure. Take your time with the diagrams.']], then: 'bye' } ] }),
+            library: () => ({ ask: ['Looking for something to learn next?', 'Want a recommendation from my library?'], replies: [
+                { label: 'Recommend me one', hearts: true, ai: 'Recommend one thing from your library I should learn next' },
+                { label: 'Your daily AI tools', ai: 'Which AI tools do you use every day?' },
+                { label: 'Just browsing', answers: [['Enjoy! Everything here is something I actually use.']], then: 'bye' } ] }),
+            people: () => ({ ask: ['Know any of them already?'], replies: [
+                { label: 'A few of them', hearts: true, answers: [['Then you are in good company!']], ai: 'Who on this list influenced you the most, and why?' },
+                { label: 'Not yet', answers: [['Then you are in for a treat.', 'Start with the first one, you will not regret it.']], then: 'bye' } ] })
         };
         const late = new Date().getHours() < 5;
-        const flow = late ? { ask: ['Working late tonight?'], replies: [
+        const pickFlow = () => (late ? { ask: ['Working late tonight?'], replies: [
             { label: 'Yes, deadline mode', answers: [['I know that feeling.', 'Hope it goes well. Take a short break too!']], then: 'bye' },
-            { label: 'Just exploring', answers: [['Night owls find the best stuff. Enjoy!']], then: 'bye' } ] } : (FLOWS[page] || FLOWS.home);
+            { label: 'Just exploring', answers: [['Night owls find the best stuff. Enjoy!']], then: 'bye' } ] } : (FLOWS[page] || FLOWS.home)());
+        let flow = null;
 
         /* ---- mascot moods: every orb on the page reacts together ---- */
         const orbs = () => document.querySelectorAll('ai-orb-mascot');
@@ -532,6 +594,8 @@
             markUnread(!!leaveDot);
         }
         function openChat() {
+            const lines = el ? [...el.querySelectorAll('.dm-msg')].map((m) => ({ mine: m.classList.contains('dm-mine'), text: m.textContent })) : [];
+            if (lines.length && window.MehediChat && typeof window.MehediChat.importGreeting === 'function') window.MehediChat.importGreeting(lines);
             close(false); markUnread(false);
             const w = widget(); if (!w || isChatOpen()) return;
             const header = document.getElementById('chat-header');
@@ -548,7 +612,7 @@
             dots.hidden = false; mood('responding');
             await wait(typeTime(text));
             if (id !== run || !el) { mood('idle'); return false; }
-            dots.hidden = true; line(text, false); mood('idle'); return true;
+            dots.hidden = true; line(text, false); sound('message'); mood('idle'); return true;
         }
         function burst(btn) {
             if (still.matches) return;
@@ -571,12 +635,20 @@
             const id = run;
             clearTimeout(closeTimer); flashTitle(false);
             if (choice.hearts) { burst(btn); mood('excited', 1800); }
+            sound(choice.hearts ? 'love' : 'pop');
             el.querySelector('.dm-chips').hidden = true;
             line(choice.label, true);
             await wait(rand(600, 1100));
-            const group = pick(choice.answers);
+            const group = choice.answers ? pick(choice.answers) : [pick(OPEN)];
             for (const [i, t] of group.entries()) { if (i) await wait(rand(300, 650)); if (!(await say(t, id))) return; }
             if (!choice.hearts) mood('happy', 1400);
+            if ((choice.ai || choice.project) && window.MehediChat) {
+                await wait(650);
+                if (id !== run) return;
+                openChat();
+                setTimeout(() => { if (choice.project) window.MehediChat.discuss(); else window.MehediChat.ask(choice.ai); }, 350);
+                return;
+            }
             if (choice.then === 'bye') { setTimeout(() => { if (id === run) close(false); }, 5000); return; }
             ctaRow(choice.then); armClose();
         }
@@ -617,7 +689,9 @@
             if (!silent) await wait(650);              /* a beat of surprise before it starts typing */
             if (id !== run) return;
 
-            const lines = [greeting(), pick(flow.ask)];
+            flow = pickFlow();
+            const seen = observation();
+            const lines = [(!seen || Math.random() < 0.6) ? greeting() : null, seen, pick(flow.ask)].filter(Boolean);
             for (const [i, t] of lines.entries()) {
                 if (i && !silent) await wait(rand(350, 750));
                 if (id !== run) return;

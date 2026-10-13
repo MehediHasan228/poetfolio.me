@@ -87,7 +87,7 @@ from icons import BOTTOM_NAV, ico, bottom_nav
 PERSON_LD = """<script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Mehedi Hasan","url":"https://mehedi.pro.bd/",
 "image":"https://mehedi.pro.bd/uploads/hero_profile_1771668518.webp",
-"jobTitle":"Full-Stack Web Developer & AI Automation Engineer",
+"jobTitle":"AI-Native Software Engineer",
 "sameAs":["https://github.com/MehediHasan228"],"email":"mehedihasan228.cse@gmail.com",
 "address":{"@type":"PostalAddress","addressLocality":"Dhaka","addressCountry":"BD"}}
 </script>
@@ -146,6 +146,8 @@ def main() -> None:
 
     # ---- home: unchanged full page, only the top nav is swapped ----
     home = swap_nav(src, "./")
+    # the sandbox has its own page; the home page links to it instead of repeating it
+    home = re.sub(r'\s*<section id="archives".*?</section>', '', home, count=1, flags=re.S)
     tail_idx = home.index('<div style="text-align: center; padding-bottom: 2rem;">')
     home = home[:tail_idx] + bottom_nav(None, prefix="./") + "\n" + home[tail_idx:]
     (DOCS / "index.html").write_text(home, encoding="utf-8")

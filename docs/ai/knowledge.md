@@ -89,17 +89,6 @@ order_service.nest.ts
 EXPLORER
 main*
 TypeScript
-### Distributed Mesh
-LIVE TOPOLOGY
-Cloud Edge 12ms Anycast
-NestJS Gateway gRPC • Active
-Kafka Stream 50K msg/s
-AI Agent Swarm 4x CoT Boost
-DB & Cache 99.4% Hit
-Cloud Edge (Global Anycast CDN)
-DDoS Protected Latency: 12ms 99.999% SLA
-### >_ AI Requirements Parser
-Drag & drop a project requirements .txt file here to auto-generate a system architecture map.
 ## Production Deployments
 In Active Dev Blueprint
 VIEW BLUEPRINT
@@ -146,40 +135,15 @@ LAUNCH PLATFORM
 Live Deployment GitHub
 AI-powered hostel mess and meal management platform featuring intelligent meal planning, pantry inventory tracking, automated recipe suggestions, and grocery optimization.
 React 19 Vite AI Rules Capacitor Firebase
-## Deep Tech & Creative Sandbox
-Neural Logic
-#### Local LLM Clusters
-Deployment: Ollama, DeepSeek & Llama 3 quantized pipelines
-Hardware Telemetry
-#### Edge Hardware Inference
-Throughput: High-bandwidth Apple Silicon & GPU acceleration
-Systems Logic
-#### Autonomous Swarms
-Orchestration: n8n, LangGraph & event-driven state machines
-Computational Art
-#### Sacred Geometry
-Synthesis: Procedural symmetry & Islamic geometric patterns
-Visual Media
-#### Cinematic Storytelling
-Pipeline: FFmpeg automation, video grading & 9:16 virality AI
-Knowledge Engine
-#### Synthesized Wisdom
-Archive: Classical epistemology bridged with modern CS systems
-## Service Terminal
-* MEHEDI.DEV SERVICES *
-TID: 8945-260305
-- Awaiting item selection...
-EST. TOTAL: $ 0
-### >_ DIRECT_MESSAGE_OVERRIDE
+## Work With Me
+Pick what you need (optional), tell me a little about it, and I'll reply by email.
 
 # Profile: experience, education, skills (/profile/)
 ## Mehedi Hasan
-Full-Stack Web Developer & AI Automation Engineer
-Open to new conversations
-- Software Developer at SAWAB Bangladesh · 4+ years
-- Dhaka, Bangladesh ·
-Claude OpenAI Ollama Antigravity OpenCode
-LangGraph NestJS TypeScript Next.js React Python FastAPI PostgreSQL Redis Kafka Docker Kubernetes n8n Tailwind CSS
+AI-Native Software Engineer
+Open to freelance & full-time
+- Software Developer at SAWAB Bangladesh · 4+ yrs
+- Dhaka ·
 ## About
 Full-Stack Software Engineer with 4+ years of hands-on experience architecting high-performance web applications and scalable APIs. Core expertise spans modern TypeScript, React, and Next.js on the frontend, paired with robust NestJS, Python (FastAPI), and event-driven distributed architectures. Also familiar and extensively experienced with PHP / Laravel backend microservices, custom web platforms, and WordPress / WooCommerce solutions.
 An AI-native engineer who leverages state-of-the-art LLM workflows (Claude, OpenAI, Antigravity, OpenCode, Ollama) to accelerate engineering velocity without sacrificing code hygiene. Actively building multi-agent automation systems using LangGraph, MCP, and retrieval-augmented workflows (PGVector), backed by Kafka event streaming, Docker containerisation, and Kubernetes.
@@ -342,15 +306,6 @@ order_service.nest.ts
 EXPLORER
 main*
 TypeScript
-### Distributed Mesh
-LIVE TOPOLOGY
-Cloud Edge 12ms Anycast
-NestJS Gateway gRPC • Active
-Kafka Stream 50K msg/s
-AI Agent Swarm 4x CoT Boost
-DB & Cache 99.4% Hit
-Cloud Edge (Global Anycast CDN)
-DDoS Protected Latency: 12ms 99.999% SLA
 
 # Architecture (/architecture/)
 ### Autonomous AI & Agents

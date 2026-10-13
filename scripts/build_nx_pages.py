@@ -26,7 +26,7 @@ WA = "https://wa.me/8801799447594"
 NAME = "Mehedi Hasan"
 
 # ------------------------------------------------------------------ DATA
-TAGLINE = "Full-Stack Web Developer & AI Automation Engineer"
+TAGLINE = "AI-Native Software Engineer"
 ROLE_NOW = "Software Developer at SAWAB Bangladesh"
 ABOUT = [
     "Full-Stack Software Engineer with 4+ years of hands-on experience architecting high-performance web applications "
@@ -46,6 +46,28 @@ STACK = [("LangGraph", "langgraph"), ("NestJS", "nestjs"), ("TypeScript", "types
          ("React", "react"), ("Python", "python"), ("FastAPI", "fastapi"), ("PostgreSQL", "postgresql"),
          ("Redis", "redis"), ("Kafka", "apachekafka"), ("Docker", "docker"), ("Kubernetes", "kubernetes"),
          ("n8n", "n8n"), ("Tailwind CSS", "tailwind")]
+# (row label, [(label, icon, brand colour or None, where I use it)], how many show before "+N")
+HERO_STACK = [
+    ("AI", [("Claude", "claude", "#d97757", "LLM behind HR reports and appraisal drafts at Jibika"),
+            ("OpenAI", "openai", "#10a37f", "LLM APIs in Jibika's Reports, Appraisal and Leave modules"),
+            ("LangGraph", "langgraph", None, "Multi-agent workflows in the NGO ERP"),
+            ("Ollama", "ollama", "#475569", "Local LLMs for private, on-device AI"),
+            ("Antigravity", "antigravity", "#3b82f6", "AI coding agent in my daily workflow"),
+            ("OpenCode", "opencode", "#64748b", "Terminal coding agent I use every day")], 4),
+    ("Build", [("NestJS", "nestjs", None, "Microservices in the NGO ERP"),
+               ("TypeScript", "typescript", None, "My default across frontend and backend"),
+               ("Python", "python", None, "AI pipelines and automation"),
+               ("FastAPI", "fastapi", None, "Backend of the AI Video Making Engine"),
+               ("Next.js", "nextjs", None, "Frontend of the AI Video Making Engine"),
+               ("React", "react", None, "SAWAB platform and Foundation portal"),
+               ("Tailwind CSS", "tailwind", None, "Styling for the SAWAB Foundation portal")], 4),
+    ("Data & Ops", [("PostgreSQL", "postgresql", None, "Data layer of the SAWAB platform and NGO ERP"),
+                    ("Redis", "redis", None, "Caching and distributed locks in the NGO ERP"),
+                    ("Kafka", "apachekafka", None, "Event streaming in the 85-module NGO ERP"),
+                    ("Docker", "docker", None, "Containerised deploys for the SAWAB platform"),
+                    ("Kubernetes", "kubernetes", None, "Orchestration for distributed services"),
+                    ("n8n", "n8n", None, "Workflow automations")], 4),
+]
 # (title, company, place, period, kind: Full-time|Volunteer, [bullets], [chips])
 JOBS = [
     ("Software Developer", "SAWAB Bangladesh", "Dhaka, Bangladesh", "Jul 2026 - Present", "Full-time",
@@ -2606,6 +2628,62 @@ body.nx-page #leaderboard-widget {
   color: #ffffff !important;
   border-color: #2563eb !important;
 }
+/* ===== Profile hero: name, role, status, two actions, one row of tools ===== */
+.nx .nx-hero .pill-status { margin-top: 14px; }
+.nx .nx-hero .facts { margin-top: 12px; font-size: 15px; }
+.nx .nx-hero .stack-rows { margin: 22px auto 0; max-width: 680px; }
+.nx .nx-hero .stack-row { margin: 0; justify-content: center; gap: 8px; }
+.nx .nx-hero button.pill { border: 0; font: inherit; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; position: relative;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+.nx .nx-hero button.pill:hover { transform: translateY(-1px); }
+.nx .nx-hero button.pill:not(.ai):hover { box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .5); }
+.nx .nx-hero button.pill:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.nx .nx-hero .ask-chip.is-extra { display: none; }
+.nx .nx-hero .stack-row.is-open .ask-chip.is-extra { display: inline-flex; animation: chipIn .3s ease both; }
+@keyframes chipIn { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } }
+/* "Ultra" chips: the soft brand-tinted pill, with a streak of brand light running round its edge */
+@property --ultra-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.nx .nx-hero .ask-chip.ultra {
+  --soft: color-mix(in srgb, var(--c) 22%, transparent);
+  color: var(--ink); font-weight: 600;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(color-mix(in srgb, var(--c) 10%, var(--bg, #fff)), color-mix(in srgb, var(--c) 10%, var(--bg, #fff))) padding-box,
+    conic-gradient(from var(--ultra-a), var(--soft) 0deg, var(--soft) 200deg, var(--c) 270deg, color-mix(in srgb, var(--c) 55%, #fff) 300deg, var(--soft) 360deg) border-box;
+  box-shadow: 0 2px 10px -4px color-mix(in srgb, var(--c) 55%, transparent);
+  animation: ultraTurn 4.5s linear infinite;
+}
+.nx .nx-hero .ask-chip.ultra:nth-child(2) { animation-delay: -1.1s; }
+.nx .nx-hero .ask-chip.ultra:nth-child(3) { animation-delay: -2.2s; }
+.nx .nx-hero .ask-chip.ultra:nth-child(4) { animation-delay: -3.3s; }
+.nx .nx-hero .ask-chip.ultra:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--c) 75%, transparent), 0 0 0 3px color-mix(in srgb, var(--c) 12%, transparent);
+  animation-duration: 1.6s;
+}
+@keyframes ultraTurn { to { --ultra-a: 360deg; } }
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .nx-hero .ask-chip.ultra {
+  background:
+    linear-gradient(color-mix(in srgb, var(--c) 16%, #0b1120), color-mix(in srgb, var(--c) 16%, #0b1120)) padding-box,
+    conic-gradient(from var(--ultra-a), var(--soft) 0deg, var(--soft) 200deg, var(--c) 270deg, color-mix(in srgb, var(--c) 45%, #fff) 300deg, var(--soft) 360deg) border-box;
+}
+:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .nx-hero .ask-chip.ultra img[src*="ollama"] { filter: invert(1); }
+@media (prefers-reduced-motion: reduce) { .nx .nx-hero .ask-chip.ultra { animation: none; } }
+.nx .nx-hero .pill-more { color: var(--link) !important; font-weight: 600 !important; background: transparent !important; box-shadow: inset 0 0 0 1px var(--line) !important; }
+/* where I use it: one floating tip shared by all chips (pointer devices) */
+.hero-tip { position: fixed; z-index: 100000; max-width: 240px; padding: 7px 10px; border-radius: 10px; pointer-events: none;
+  font: 500 12px/1.4 var(--font, inherit); text-align: center; color: var(--bg, #fff); background: var(--ink, #0f172a);
+  box-shadow: 0 10px 24px -10px rgba(0,0,0,.45); opacity: 0; transform: translateY(4px); transition: opacity .16s ease, transform .16s ease; }
+.hero-tip.is-on { opacity: 1; transform: none; }
+.hero-tip-cue { display: block; margin-top: 3px; font-size: 11px; font-weight: 600; opacity: .7; }
+@media (max-width: 640px) {
+  .nx .nx-hero .facts { font-size: 13.5px; gap: 4px 12px; }
+  .nx .nx-hero .facts li { text-align: center; }
+  .nx .nx-hero .facts li:first-child svg { display: none; }
+          .nx .nx-hero .stack-row { gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .nx .nx-hero .stack-row.is-open .ask-chip.is-extra { animation: none; } }
+
 """
 
 
@@ -2734,6 +2812,31 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True):
 
 def icon_src(name):
     return f"../uploads/brand-icons/{name}.svg" if (DOCS / "uploads/brand-icons" / f"{name}.svg").exists() else None
+
+
+def ask_chip(label, icon, color, note, extra=False):
+    """A stack chip that explains where I use the tool, and asks my AI about it when clicked."""
+    src = icon_src(icon)
+    im = f'<img src="{src}" alt="" width="14" height="14">' if src else ""
+    ultra = label in HERO_ULTRA
+    cls = "pill ask-chip" + (" ultra" if ultra else (" ai" if color else "")) + (" is-extra" if extra else "")
+    st = f' style="--c:{color}"' if color else ""
+    return (f'<button type="button" class="{cls}"{st} data-ask="{e(label)}" data-tip="{e(note)}" '
+            f'aria-label="{e(label)}: {e(note)}. Ask my AI about it">{im}<span>{e(label)}</span></button>')
+
+
+HERO_FIRST = ["Claude", "OpenAI", "Antigravity", "Ollama", "LangGraph", "NestJS", "TypeScript", "Python", "PostgreSQL", "Kafka"]
+# the AI tools I use every day get the glowing "Ultra" chip
+HERO_ULTRA = {"Claude", "OpenAI", "Antigravity", "Ollama"}
+
+
+def hero_stack():
+    tools = {l: (l, i, c, n) for _, group, _ in HERO_STACK for (l, i, c, n) in group}
+    first = [tools[l] for l in HERO_FIRST]
+    rest = [t for l, t in tools.items() if l not in HERO_FIRST]
+    chips = "".join(ask_chip(*t) for t in first) + "".join(ask_chip(*t, extra=True) for t in rest)
+    more = f'<button type="button" class="pill pill-more" aria-label="Show {len(rest)} more tools">+{len(rest)}</button>' if rest else ""
+    return f'<div class="pills stack-row">{chips}{more}</div>'
 
 
 def pill_img(label, icon, color=None):
@@ -2926,6 +3029,52 @@ ICON_RULES = [
     (re.compile(r"support|training|documentation|SOP|guide|UAT|SRS|configur|onboard|social media|end-user|users?\b", re.I), "book"),
 ]
 CHEVRON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
+HERO_JS = """<script>
+(function () {
+  var hero = document.querySelector('.nx-hero');
+  if (!hero) return;
+  // open the AI chat, then run fn once it is ready; without the chat, fall back to the contact page
+  function withChat(fn) {
+    var w = document.getElementById('ai-chat-widget'), h = document.getElementById('chat-header');
+    if (!w || !window.MehediChat) { location.href = '../contact/'; return; }
+    if (!w.classList.contains('chat-expanded') && h) h.click();
+    setTimeout(fn, 320);
+  }
+  hero.addEventListener('click', function (e) {
+    var chip = e.target.closest('[data-ask]');
+    if (chip) { withChat(function () { window.MehediChat.ask('How have you used ' + chip.dataset.ask + ' in real projects?'); }); return; }
+    var more = e.target.closest('.pill-more');
+    if (more) { more.closest('.stack-row').classList.add('is-open'); more.remove(); }
+  });
+  // where I use each tool, in a small tip above the chip (mouse and keyboard only; taps go straight to the AI)
+  if (matchMedia('(hover: hover)').matches) {
+    var tip = document.createElement('div'), timer;
+    tip.className = 'hero-tip'; tip.setAttribute('role', 'tooltip');
+    document.querySelector('.nx').appendChild(tip);
+    var show = function (chip) {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        tip.innerHTML = '';
+        tip.appendChild(document.createTextNode(chip.dataset.tip));
+        var cue = document.createElement('span'); cue.className = 'hero-tip-cue'; cue.textContent = 'Click to ask my AI \u2197';
+        tip.appendChild(cue);
+        var r = chip.getBoundingClientRect();
+        tip.style.left = '0px'; tip.style.top = '0px'; tip.classList.add('is-on');
+        var w = tip.offsetWidth, h = tip.offsetHeight;
+        tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width / 2 - w / 2)) + 'px';
+        tip.style.top = (r.top - h - 8) + 'px';
+      }, 220);
+    };
+    var hide = function () { clearTimeout(timer); tip.classList.remove('is-on'); };
+    hero.addEventListener('pointerover', function (e) { var c = e.target.closest('[data-tip]'); if (c) show(c); });
+    hero.addEventListener('pointerout', function (e) { if (e.target.closest('[data-tip]') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('[data-tip]') === e.target.closest('[data-tip]'))) hide(); });
+    hero.addEventListener('focusin', function (e) { var c = e.target.closest('[data-tip]'); if (c) show(c); });
+    hero.addEventListener('focusout', hide);
+    addEventListener('scroll', hide, { passive: true });
+  }
+})();
+</script>"""
+
 EXP_JS = """<script>
 /* eases the glow toward the pointer; shared by every card with class exp-stat-card or glow-tile */
 function glowTrack(card, x, y) {
@@ -3068,13 +3217,12 @@ def profile():
 <img class="avatar" src="../uploads/Mehedi.pro-480.webp" alt="{NAME}" width="240" height="240" fetchpriority="high">
 <h1 class="nx-name">{NAME} <span class="verified-badge" title="Verified Profile" aria-label="Verified">{ico("badge","verified")}</span></h1>
 <p class="tagline">{TAGLINE}</p>
-<a class="pill-status" href="../contact/"><span class="dot"></span>Open to new conversations</a>
+<a class="pill-status" href="../contact/"><span class="dot"></span>Open to freelance &amp; full-time</a>
 <ul class="facts">
-<li>{ico("case")} {ROLE_NOW} &middot; 4+ years</li>
-<li>{ico("pin")} Dhaka, Bangladesh <span class="t">&middot; <span data-time></span></span></li>
+<li>{ico("case")} {ROLE_NOW} &middot; 4+ yrs</li>
+<li>{ico("pin")} Dhaka <span class="t">&middot; <span data-time></span></span></li>
 </ul>
-<div class="pills" aria-label="AI tools">{ai}</div>
-<div class="pills" aria-label="Tech stack" style="margin-top:10px">{st}</div>
+<div class="stack-rows" aria-label="Tools I use. Select one to ask my AI how I used it">{hero_stack()}</div>
 <div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-tab="resume">RESUME</button><button class="tab" role="tab" aria-selected="false" data-tab="work">WORK</button></div>
 </section>
 <div class="pad">
@@ -3103,6 +3251,7 @@ def profile():
 <div class="extra-grid">{extra}</div>
 </div>
 {EXP_JS}
+{HERO_JS}
 <div class="panel" data-panel="work" hidden>
 <h2 class="sec-title">{ico("projects")} Selected work</h2>
 <div class="posts">{work}</div>

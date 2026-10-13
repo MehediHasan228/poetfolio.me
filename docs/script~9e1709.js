@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    window.siteSound = (type) => { try { playSound(type); } catch (e) {} };
     function playSound(type) {
         if (isMuted) return;
         if (!audioCtx) audioCtx = new AudioContext();
@@ -79,6 +80,32 @@ document.addEventListener('DOMContentLoaded', () => {
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
             osc.start();
             osc.stop(audioCtx.currentTime + 0.05);
+        } else if (type === 'message') {
+            // two soft rising notes, like a DM arriving
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(660, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08);
+            gainNode.gain.setValueAtTime(0.035, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.22);
+        } else if (type === 'pop') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(780, audioCtx.currentTime + 0.06);
+            gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        } else if (type === 'love') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(700, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(940, audioCtx.currentTime + 0.07);
+            osc.frequency.setValueAtTime(1180, audioCtx.currentTime + 0.14);
+            gainNode.gain.setValueAtTime(0.035, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
         } else if (type === 'click' || type === 'type') {
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(400, audioCtx.currentTime);
@@ -1507,10 +1534,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // e.g. 'https://mehedi-chat.<your-subdomain>.workers.dev'
     const CHAT_API_URL = 'https://mehedi-chat.rajnieem.workers.dev';
 
-    const CHAT_PROFILE = "You are Mehedi Hasan's AI assistant on his portfolio site (mehedi.pro.bd). Answer in the visitor's language, warmly and to the point: 1-3 short sentences, or a short bullet list when listing. Never invent facts, prices or dates. " +
+    const CHAT_PROFILE = "You are Mehedi Hasan, replying in the first person to a visitor on your portfolio site (mehedi.pro.bd); you are an AI version of him, so say so if asked. Answer in the visitor's language, warmly and briefly: 1-3 short sentences. Never invent facts, prices or dates, and never commit to work or deadlines. " +
         "Facts: Mehedi is an AI-native software engineer in Bangladesh with 4+ years in production. Backend and systems: NestJS, Laravel, Node.js, PostgreSQL, Redis, Kafka, RabbitMQ, Docker, Kubernetes, AWS, CI/CD. Frontend: React, TypeScript, Flutter. AI: LangGraph, MCP, RAG with PGVector, local LLMs via Ollama, Claude, Gemini, n8n automations. " +
         "Work: an AI-native NGO ERP (85+ microservices), HR and payroll systems with AI modules, Karbar ERP (VAT and payroll for Bangladesh), the SAWAB Bangladesh platform, and autonomous AI agent swarms. Open to freelance and contract work. " +
-        "Contact: WhatsApp +880 1799-447594, email mehedihasan228.cse@gmail.com, GitHub github.com/MehediHasan228. If unsure, suggest messaging him on WhatsApp.";
+        "Contact: WhatsApp +880 1799-447594, email mehedihasan228.cse@gmail.com, GitHub github.com/MehediHasan228. If unsure, invite them to message you on WhatsApp.";
 
     const DEFAULT_RESPONSE = "Query complete. Try asking about Mehedi's skills, enterprise ERPs, cloud architectures, AI services, or how to reach him directly.";
 
@@ -1727,7 +1754,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function setBusy(on) { chatWidget.classList.toggle('is-busy', on); }
-        function syncComposer() { chatWidget.classList.toggle('has-text', !!chatInput.value.trim()); }
+        function syncComposer() {
+            chatWidget.classList.toggle('has-text', !!chatInput.value.trim());
+            // the box grows with the text, up to four lines
+            if (chatInput.tagName === 'TEXTAREA') { chatInput.style.height = ''; if (chatInput.value) chatInput.style.height = Math.min(chatInput.scrollHeight, 112) + 'px'; }
+        }
         chatInput.addEventListener('input', syncComposer);
 
         // Animated inline icons for the quick-action chips (colour = currentColor)
@@ -1749,31 +1780,110 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 about: {
                     q: 'Who is Mehedi?',
-                    a: `<strong>Mehedi Hasan</strong> — AI-Native Software Engineer.<br>He designs distributed systems (NestJS, Kafka, PostgreSQL) and autonomous AI agents (LangGraph, MCP, local LLMs) with 4+ years in production.<div class="chat-actions">${act(cvHref, 'Download CV')}${act(projectsHref, 'See his work')}</div>`
+                    a: `I'm <strong>Mehedi Hasan</strong>, an AI-native software engineer.<br>I design distributed systems (NestJS, Kafka, PostgreSQL) and AI agents (LangGraph, MCP, local LLMs), with 4+ years in production.<div class="chat-actions">${act(cvHref, 'Download my CV')}</div>`
                 },
                 projects: {
                     q: 'View Projects',
-                    a: `Featured systems:<br>• <strong>AI-Native NGO ERP</strong> — 85+ microservices<br>• <strong>HR &amp; Payroll</strong> — BD compliance suite<br>• <strong>Karbar ERP</strong> — VAT &amp; payroll<br>• <strong>Autonomous AI swarms</strong> — local LLM sandbox<div class="chat-actions">${act(projectsHref, 'Open Projects')}</div>`
+                    a: `A few things I've built:<br>• <strong>AI-Native NGO ERP</strong> — 85+ microservices<br>• <strong>HR &amp; Payroll</strong> — BD compliance suite<br>• <strong>Karbar ERP</strong> — VAT &amp; payroll<br>• <strong>Autonomous AI swarms</strong> — local LLM sandbox<div class="chat-actions">${act(projectsHref, 'See my projects')}</div>`
                 },
                 hire: {
                     q: 'Hire / Collaborate',
-                    a: `Open to <strong>freelance &amp; contract</strong> work: AI agents, ERP/enterprise systems, cloud &amp; automation.<br>The fastest way to start is a short brief — scope, timeline, budget.<div class="chat-actions">${act('#contact', 'Send a brief')}${act(wa('Hi Mehedi, I would like to discuss a project.'), 'WhatsApp', true)}</div>`
+                    a: `I'm open to <strong>freelance &amp; contract</strong> work: AI agents, ERP and enterprise systems, cloud and automation.<br>The quickest start is a short brief: scope, timeline and budget.<div class="chat-actions">${act(wa('Hi Mehedi, I would like to discuss a project.'), 'Message me on WhatsApp', true)}</div>`
                 },
                 call: {
                     q: 'Book a Call',
-                    a: `Happy to talk. Message on WhatsApp to pick a time that suits you.<div class="chat-actions">${act(wa('Hi Mehedi, I would like to book a call.'), 'Book on WhatsApp', true)}</div>`
+                    a: `Happy to talk! Message me on WhatsApp and we'll pick a time that suits you.<div class="chat-actions">${act(wa('Hi Mehedi, I would like to book a call.'), 'Book a call on WhatsApp', true)}</div>`
                 }
             };
         }
 
-        const STARTERS = [
-            { key: 'about', text: 'Who is Mehedi?', hint: 'Background & focus', icon: CHIP_ICONS.user },
-            { key: 'projects', text: 'View Projects', hint: 'ERPs, AI agents, systems', icon: CHIP_ICONS.layers },
-            { key: 'hire', text: 'Hire / Collaborate', hint: 'Freelance & contract', icon: CHIP_ICONS.briefcase },
-            { key: 'call', text: 'Book a Call', hint: 'Pick a time on WhatsApp', icon: CHIP_ICONS.phone }
+        // Instant, hand-written answers (no network) for the two action intents
+        const QUICK = [
+            { key: 'hire', text: 'Hire / Collaborate', bn: 'কাজের প্রস্তাব', icon: CHIP_ICONS.briefcase },
+            { key: 'call', text: 'Book a Call', bn: 'কল বুক করুন', icon: CHIP_ICONS.phone }
         ];
+        const SPARK = '<svg class="chip-ico ci-spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M7.5 1.8c.4 2.9 1.3 3.8 4.2 4.2-2.9.4-3.8 1.3-4.2 4.2-.4-2.9-1.3-3.8-4.2-4.2 2.9-.4 3.8-1.3 4.2-4.2z"/><path d="M12.6 9.6c.2 1.2.6 1.6 1.8 1.8-1.2.2-1.6.6-1.8 1.8-.2-1.2-.6-1.6-1.8-1.8 1.2-.2 1.6-.6 1.8-1.8z"/></svg>';
+        const TARGET = '<svg class="chip-ico ci-target" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2"/><circle class="ci-ring" cx="8" cy="8" r="3.4"/><circle class="ci-dot" cx="8" cy="8" r="0.9"/></svg>';
 
-        // The conversation has started: the intro shrinks and the starter cards step aside
+        // Questions that suit the page the visitor is on; these go to the real AI
+        const PAGE_PROMPTS = {
+            home: { en: ['Introduce yourself in 30 seconds', 'What makes you different?', 'What are you building right now?'],
+                    bn: ['৩০ সেকেন্ডে নিজের পরিচয় দিন', 'আপনাকে অন্যদের থেকে আলাদা করে কী?', 'এখন কী নিয়ে কাজ করছেন?'] },
+            profile: { en: ['Summarize your experience', 'What are your strongest skills?', 'How have you used AI at work?'],
+                       bn: ['আপনার অভিজ্ঞতার সারসংক্ষেপ দিন', 'আপনার সবচেয়ে শক্তিশালী দক্ষতা কী?', 'কাজে AI কীভাবে ব্যবহার করেছেন?'] },
+            projects: { en: ['Which project was the hardest?', 'How did you build Karbar ERP?', 'Which of your projects use AI?'],
+                        bn: ['সবচেয়ে কঠিন প্রজেক্ট কোনটা ছিল?', 'Karbar ERP কীভাবে বানিয়েছেন?', 'কোন প্রজেক্টে AI আছে?'] },
+            stack: { en: ['Why NestJS with Kafka?', 'How deep is your AI stack?', 'What do you use for DevOps?'],
+                     bn: ['NestJS আর Kafka কেন?', 'আপনার AI স্ট্যাক কতটা গভীর?', 'DevOps-এ কী ব্যবহার করেন?'] },
+            architecture: { en: ['How do you approach system design?', 'How do you keep systems reliable?', 'Walk me through the NGO ERP'],
+                            bn: ['সিস্টেম ডিজাইন কীভাবে করেন?', 'সিস্টেম নির্ভরযোগ্য রাখেন কীভাবে?', 'NGO ERP-টা বুঝিয়ে বলুন'] },
+            library: { en: ['What are you learning right now?', 'Which AI tools do you use daily?', 'Recommend a channel from your list'],
+                       bn: ['এখন কী শিখছেন?', 'প্রতিদিন কোন AI টুল ব্যবহার করেন?', 'আপনার তালিকা থেকে একটা চ্যানেল সাজেস্ট করুন'] },
+            contact: { en: ["What's the best way to reach you?", 'Are you open to freelance work?', 'Do you work remotely?'],
+                       bn: ['যোগাযোগের সবচেয়ে ভালো উপায় কী?', 'ফ্রিল্যান্স কাজ করেন?', 'রিমোটে কাজ করেন?'] }
+        };
+        const pageKey = () => {
+            const p = location.pathname;
+            const hit = ['profile', 'projects', 'stack', 'architecture', 'library', 'contact'].find((k) => p.indexOf('/' + k + '/') !== -1);
+            return hit || 'home';
+        };
+        const EXAMPLES = {
+            en: ['Have you used Kafka in production?', 'Can you build a RAG system?', 'Do you work remotely?', 'What did you build at Jibika?', 'Which LLMs have you shipped with?'],
+            bn: ['প্রোডাকশনে Kafka ব্যবহার করেছেন?', 'RAG সিস্টেম বানাতে পারেন?', 'রিমোটে কাজ করেন?', 'Jibika-তে কী বানিয়েছেন?', 'কোন কোন LLM নিয়ে কাজ করেছেন?']
+        };
+        const T = {
+            en: { sub: 'Ask me anything about my work.', fitT: 'Discuss your project', fitS: "Tell me what you're building, I'll be honest if I can help", mode: 'Project discussion', end: 'End',
+                  label: 'Suggested here', swap: 'বাংলায়', back: 'Welcome back', ask: 'Ask: ', fitAsk: "Tell me what you want to build. I'll compare it with my real projects and tell you honestly whether I can do it.", steps: ['Describe your idea', 'Get an honest fit check', 'Send me the brief'], exLabel: 'Or start from an example',
+                  fitPh: 'e.g. An HR app with AI reports, React + NestJS, 3 months', fitOff: "I can't review projects here right now, but I read every brief myself. Send it to me directly:" },
+            bn: { sub: 'আমার কাজ নিয়ে যা খুশি জিজ্ঞেস করুন।', fitT: 'আপনার প্রজেক্ট নিয়ে আলোচনা', fitS: 'কী বানাতে চান বলুন, পারব কিনা সৎভাবে জানাব', mode: 'প্রজেক্ট আলোচনা', end: 'শেষ করুন',
+                  label: 'এই পাতার জন্য', swap: 'English', back: 'আবার স্বাগতম', ask: 'জিজ্ঞেস করুন: ', fitAsk: 'কী বানাতে চান লিখুন। আমার আসল প্রজেক্টের সাথে মিলিয়ে সৎভাবে জানাব আমি এটা করতে পারব কিনা।', steps: ['আইডিয়া লিখুন', 'সৎ মূল্যায়ন পান', 'আমাকে ব্রিফ পাঠান'], exLabel: 'অথবা একটা উদাহরণ দিয়ে শুরু করুন',
+                  fitPh: 'যেমন: AI রিপোর্টসহ একটা HR অ্যাপ, React + NestJS, ৩ মাস', fitOff: 'এই মুহূর্তে এখানে প্রজেক্ট রিভিউ করা যাচ্ছে না, তবে প্রতিটা ব্রিফ আমি নিজে পড়ি। সরাসরি পাঠান:' }
+        };
+        const EX_ICONS = {
+            store: '<svg class="chip-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 2.5h2l1.6 7.2h7.4l1.5-5.2H4.2"/><circle cx="6.5" cy="12.8" r="1"/><circle cx="11.5" cy="12.8" r="1"/></svg>',
+            bot: '<svg class="chip-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3h11v7.5h-6l-3 2.5v-2.5h-2z"/><path d="M8 5.2v2.6M6.7 6.5h2.6"/></svg>',
+            team: '<svg class="chip-ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6" cy="5.5" r="2.2"/><path d="M2 13c.4-2.4 2-3.7 4-3.7s3.6 1.3 4 3.7"/><path d="M10.6 3.5a2 2 0 0 1 0 4M12 9.5c1.3.4 2.2 1.6 2.5 3.5"/></svg>',
+            pin: '<svg class="chip-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14.2s-4.6-4.3-4.6-7.7a4.6 4.6 0 0 1 9.2 0c0 3.4-4.6 7.7-4.6 7.7z"/><circle cx="8" cy="6.5" r="1.6"/></svg>'
+        };
+        const PROJECT_EXAMPLES = {
+            en: [
+                { i: 'store', label: 'Online store', text: 'An online store for my clothing brand with bKash and Nagad payments, inventory and an admin panel. Around 500 products.' },
+                { i: 'bot', label: 'AI chatbot', text: 'An AI chatbot on our website that answers customer questions from our company documents and policies.' },
+                { i: 'team', label: 'HR & payroll', text: 'An HR and payroll system for 150 employees with attendance, leave, salary sheets and tax deductions.' },
+                { i: 'pin', label: 'Delivery app', text: 'A mobile app for 30 delivery riders with live GPS tracking, order status and an admin dashboard.' }
+            ],
+            bn: [
+                { i: 'store', label: 'অনলাইন স্টোর', text: 'আমার পোশাকের ব্র্যান্ডের জন্য একটা অনলাইন স্টোর, bKash ও Nagad পেমেন্ট, স্টক ম্যানেজমেন্ট আর অ্যাডমিন প্যানেলসহ। প্রায় ৫০০টা পণ্য।' },
+                { i: 'bot', label: 'AI চ্যাটবট', text: 'আমাদের ওয়েবসাইটে একটা AI চ্যাটবট, যেটা কোম্পানির ডকুমেন্ট আর নীতিমালা থেকে কাস্টমারের প্রশ্নের উত্তর দেবে।' },
+                { i: 'team', label: 'HR ও পেরোল', text: '১৫০ জন কর্মীর জন্য HR ও পেরোল সিস্টেম: হাজিরা, ছুটি, বেতন শিট আর ট্যাক্স কাটা।' },
+                { i: 'pin', label: 'ডেলিভারি অ্যাপ', text: '৩০ জন ডেলিভারি রাইডারের জন্য মোবাইল অ্যাপ: লাইভ GPS ট্র্যাকিং, অর্ডার স্ট্যাটাস আর অ্যাডমিন ড্যাশবোর্ড।' }
+            ]
+        };
+        const prefs = {
+            get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+            set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+        };
+        const lang = () => (prefs.get('chat:lang') === 'bn' ? 'bn' : 'en');
+        // Project discussion stays on for the whole conversation (and across pages) until ended
+        let fitMode = !!store.get('chat:project', false);
+        const brief = () => String(store.get('chat:brief', '') || '');
+        const modeBar = document.createElement('div');
+        modeBar.className = 'chat-mode-bar';
+        modeBar.hidden = true;
+        const inputArea = chatWidget.querySelector('.chat-input-area');
+        if (inputArea) inputArea.before(modeBar);
+        function setProject(on) {
+            fitMode = on; store.set('chat:project', on);
+            if (!on) store.set('chat:brief', '');
+            chatWidget.classList.toggle('is-fit', on);
+            const t = T[lang()];
+            modeBar.hidden = !on;
+            modeBar.innerHTML = `<span>${TARGET}${t.mode}</span><button type="button">${t.end}</button>`;
+            modeBar.querySelector('button').onclick = () => { setProject(false); followUps(); chatInput.focus({ preventScroll: true }); };
+            if (on) chatInput.placeholder = t.fitPh; else rotatePlaceholder(true);
+        }
+
+        // The conversation has started: the intro shrinks and the starters step aside
         function beginThread() {
             const hero = chatBody.querySelector('.chat-hero');
             if (hero) hero.classList.add('is-compact');
@@ -1782,8 +1892,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function askStarter(key) {
             if (chatWidget.classList.contains('is-busy')) return;
-            const s = STARTERS.find((x) => x.key === key), reply = chipReplies()[key];
-            if (!s || !reply) return;
+            const reply = chipReplies()[key];
+            if (!reply) return;
             beginThread(); markUsed(key); setBusy(true);
             if (typeof playSound === 'function') playSound('type');
             appendMsg(esc(reply.q), 'user', true); remember('user', esc(reply.q), reply.q);
@@ -1800,35 +1910,94 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 650);
         }
 
-        function createSmartButtons() {
-            const container = document.createElement('div');
-            container.className = 'chat-starters';
-            STARTERS.forEach((btn, i) => {
-                const b = document.createElement('button');
-                b.className = 'chat-starter';
-                b.type = 'button';
-                b.style.setProperty('--i', i);
-                b.innerHTML = `<span class="cs-ico">${btn.icon}</span><span class="cs-text"><b>${btn.text}</b><small>${btn.hint}</small></span>`;
-                b.onclick = () => askStarter(btn.key);
-                container.appendChild(b);
-            });
-            return container;
+        // A suggested question goes to the AI exactly as if the visitor typed it
+        function askAI(q) {
+            if (chatWidget.classList.contains('is-busy')) return;
+            if (typeof playSound === 'function') playSound('pop');
+            markUsed(q);
+            chatInput.value = q; syncComposer();
+            sendChat();
         }
 
-        // After an answer, offer the starters that haven't been asked yet
-        function followUps() {
+        // Fit check: ask for the brief, then the next message is assessed against his real work
+        function startFit() {
+            if (chatWidget.classList.contains('is-busy')) return;
+            const t = T[lang()];
+            if (fitMode) { chatInput.focus({ preventScroll: true }); return; }
+            beginThread(); markUsed('fit');
+            setProject(true);
+            const msg = appendMsg(`<p class="chat-fit-ask">${TARGET}<span>${esc(t.fitAsk)}</span></p><ol class="chat-steps">${t.steps.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`, 'bot', true);
+            settle(msg); remember('bot', msg.innerHTML, t.fitAsk);
+            followUps();
+            chatInput.focus({ preventScroll: true });
+            const mascot = getMascot();
+            if (mascot) mascot.triggerReaction('happy', 1200);
+        }
+
+        function createSmartButtons() {
+            const t = T[lang()], L = lang();
+            const box = document.createElement('div');
+            box.className = 'chat-starters';
+            const fit = document.createElement('button');
+            fit.type = 'button'; fit.className = 'chat-fit-card'; fit.style.setProperty('--i', 0);
+            fit.innerHTML = `<span class="cs-ico">${TARGET}</span><span class="cs-text"><b>${t.fitT}</b><small>${t.fitS}</small></span><span class="cs-go" aria-hidden="true">\u2192</span>`;
+            fit.onclick = startFit;
+            box.appendChild(fit);
+            PAGE_PROMPTS[pageKey()][L].forEach((q, i) => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'chat-prompt'; b.style.setProperty('--i', i + 1);
+                b.innerHTML = `${SPARK}<span>${esc(q)}</span>`;
+                b.onclick = () => askAI(q);
+                box.appendChild(b);
+            });
+            return box;
+        }
+
+        function projectExamples() {
+            const t = T[lang()];
+            const box = document.createElement('div');
+            box.className = 'chat-followups chat-examples';
+            box.setAttribute('role', 'group'); box.setAttribute('aria-label', t.exLabel);
+            box.innerHTML = `<p class="chat-examples-label">${esc(t.exLabel)}</p>`;
+            PROJECT_EXAMPLES[lang()].forEach((x) => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'chat-example';
+                b.style.setProperty('--i', PROJECT_EXAMPLES[lang()].indexOf(x));
+                b.innerHTML = `<span class="ex-ico">${EX_ICONS[x.i]}</span><span>${esc(x.label)}</span>`;
+                b.onclick = () => {
+                    chatInput.value = x.text; syncComposer();
+                    chatInput.focus({ preventScroll: true });
+                    chatInput.setSelectionRange(x.text.length, x.text.length);
+                    if (inputArea) { inputArea.classList.remove('is-prefilled'); void inputArea.offsetWidth; inputArea.classList.add('is-prefilled'); }
+                };
+                box.appendChild(b);
+            });
+            chatBody.appendChild(box);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function followUps(nexts) {
             chatBody.querySelectorAll('.chat-followups').forEach((n) => n.remove());
+            if (fitMode && !(nexts && nexts.length) && !brief()) { projectExamples(); return; }
             const used = store.get(USED_KEY, []);
-            const left = STARTERS.filter((x) => !used.includes(x.key));
-            if (!left.length) return;
+            const items = [];
+            (nexts || []).forEach((q) => items.push({ html: `${SPARK}<span>${esc(q)}</span>`, go: () => askAI(q), ai: true }));
+            if (!items.length && !fitMode) {
+                PAGE_PROMPTS[pageKey()][lang()].filter((q) => !used.includes(q)).slice(0, 2)
+                    .forEach((q) => items.push({ html: `${SPARK}<span>${esc(q)}</span>`, go: () => askAI(q), ai: true }));
+                if (!used.includes('fit') && !fitMode) items.push({ html: `${TARGET}<span>${esc(T[lang()].fitT)}</span>`, go: startFit });
+                QUICK.filter((x) => !used.includes(x.key))
+                    .forEach((x) => items.push({ html: `${x.icon}<span>${lang() === 'bn' ? x.bn : x.text}</span>`, go: () => askStarter(x.key) }));
+            }
+            if (!items.length) return;
             const row = document.createElement('div');
             row.className = 'chat-followups';
             row.setAttribute('role', 'group'); row.setAttribute('aria-label', 'Suggested questions');
-            left.forEach((x) => {
+            items.slice(0, 3).forEach((x) => {
                 const b = document.createElement('button');
-                b.type = 'button'; b.className = 'chat-followup';
-                b.innerHTML = `${x.icon}<span>${x.text}</span>`;
-                b.onclick = () => askStarter(x.key);
+                b.type = 'button'; b.className = 'chat-followup' + (x.ai ? ' is-ai' : '');
+                b.innerHTML = x.html;
+                b.onclick = x.go;
                 row.appendChild(b);
             });
             chatBody.appendChild(row);
@@ -1836,28 +2005,87 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function hello() {
+            if (lang() === 'bn') return 'আসসালামু আলাইকুম';
             const h = new Date().getHours();
             return h < 5 ? 'Up late?' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
         }
+        // The opening line reads the visit like the greeting does: returning, referrer, pages, page, hour
+        function heroText() {
+            const bn = lang() === 'bn';
+            const num = (v) => Number(v) || 0;
+            const ssGet = (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+            const visits = num(prefs.get('greet:visits')), awayRaw = ssGet('greet:away'), away = awayRaw === null ? null : num(awayRaw);
+            const pages = num(ssGet('greet:pages')), from = ssGet('greet:from'), page = pageKey(), h = new Date().getHours();
+            const ask = bn ? 'আমার কাজ নিয়ে যা খুশি জিজ্ঞেস করুন।' : 'Ask me anything about my work.';
+            if (visits > 1 && away !== null) {
+                if (away > 1) return { title: bn ? 'আবার স্বাগতম!' : 'Welcome back!', sub: bn ? `${away} দিন পর দেখা হলো। কী জানতে চান?` : `It's been ${away} days. What would you like to know?` };
+                return { title: bn ? 'আবার স্বাগতম!' : 'Welcome back!', sub: bn ? 'আবার দেখা হয়ে ভালো লাগলো। ' + ask : 'Good to see you again. ' + ask };
+            }
+            if (from) return { title: hello(), sub: bn ? `${from} থেকে আসার জন্য ধন্যবাদ। ` + ask : `Thanks for coming over from ${from}. ` + ask };
+            if (page === 'projects') return { title: hello(), sub: bn ? 'আমার প্রজেক্ট দেখছেন? যেকোনোটার পেছনের গল্প জিজ্ঞেস করুন।' : 'Looking at my projects? Ask me the story behind one.' };
+            if (pages >= 3) return { title: hello(), sub: bn ? `${pages}টা পাতা ঘুরে দেখেছেন। কী খুঁজছেন, বলুন?` : `You've explored ${pages} pages. What can I help you find?` };
+            if (h < 5) return { title: bn ? 'এত রাতে জেগে?' : 'Up late?', sub: ask };
+            return { title: hello(), sub: ask };
+        }
 
         function renderHome() {
+            const ht = heroText();
             chatBody.innerHTML = '';
             const hero = document.createElement('div');
             hero.className = 'chat-hero';
-            hero.innerHTML = `<span class="chat-hero-orb" aria-hidden="true"><ai-orb-mascot expression="happy" size="60"></ai-orb-mascot></span><h3 class="chat-hero-title">${hello()} <span class="chat-wave" aria-hidden="true">\u{1F44B}</span></h3><p class="chat-hero-sub">I'm Mehedi's AI. Ask about his work, his stack, or how to team up.</p>`;
+            hero.innerHTML = `<span class="chat-hero-orb" aria-hidden="true"><ai-orb-mascot expression="happy" size="52"></ai-orb-mascot></span>`
+                + `<h3 class="chat-hero-title">${esc(ht.title)} <span class="chat-wave" aria-hidden="true">\u{1F44B}</span></h3>`
+                + `<p class="chat-hero-sub">${esc(ht.sub)}</p>`;
             chatBody.appendChild(hero);
+            syncLangBtn();
             const log = store.get(LOG_KEY, []);
             if (!log.length) { chatBody.appendChild(createSmartButtons()); return; }
             hero.classList.add('is-compact');
-            log.forEach((m) => appendMsg(m.h, m.r, true));
+            log.forEach((m) => (Array.isArray(m.h) ? m.h : [m.h]).forEach((h) => appendMsg(h, m.r, true)));
             followUps();
         }
+
+        // The placeholder cycles through real example questions while the box is empty
+        let phIndex = 0, phTimer = null;
+        function rotatePlaceholder(now) {
+            clearTimeout(phTimer);
+            const tick = () => {
+                if (chatWidget.classList.contains('chat-expanded') && !fitMode && !chatInput.value && document.visibilityState === 'visible') {
+                    const list = EXAMPLES[lang()];
+                    chatInput.placeholder = T[lang()].ask + list[phIndex++ % list.length];
+                }
+                phTimer = setTimeout(tick, 3400);
+            };
+            if (now) tick(); else phTimer = setTimeout(tick, 3400);
+        }
+        rotatePlaceholder(true);
+        if (fitMode) setProject(true);
+        chatHeader.addEventListener('click', () => { if (chatWidget.classList.contains('chat-expanded')) { prefs.set('chat:seen', String(Date.now())); rotatePlaceholder(true); } });
+
+        const langBtn = document.getElementById('chat-lang');
+        function syncLangBtn() {
+            if (!langBtn) return;
+            const bn = lang() === 'bn';
+            langBtn.textContent = bn ? 'EN' : 'বাং';
+            langBtn.title = bn ? 'Switch to English' : 'বাংলায় দেখুন';
+            langBtn.setAttribute('aria-label', langBtn.title);
+            langBtn.setAttribute('lang', bn ? 'en' : 'bn');
+        }
+        if (langBtn) langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prefs.set('chat:lang', lang() === 'bn' ? 'en' : 'bn');
+            const log = store.get(LOG_KEY, []);
+            if (log.length) { const sub = chatBody.querySelector('.chat-hero-sub'); if (sub) sub.textContent = T[lang()].sub; followUps(); syncLangBtn(); }
+            else renderHome();
+            if (fitMode) setProject(true); else rotatePlaceholder(true);
+        });
 
         const resetBtn = document.getElementById('chat-reset');
         if (resetBtn) resetBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (chatWidget.classList.contains('is-busy')) return;
             store.set(LOG_KEY, []); store.set(USED_KEY, []);
+            setProject(false);
             renderHome();
             const mascot = getMascot();
             if (mascot) mascot.triggerReaction('happy', 1200);
@@ -1871,14 +2099,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ── CHAT WORKER (streaming) ───────────────────────────────────────────────
         const chatApi = () => String(window.MEHEDI_CHAT_API || CHAT_API_URL || '').replace(/\/+$/, '');
-        const TAG_RE = /\[\[(src|act):([^\]]{1,60})\]\]/g;
+        const TAG_RE = /\[\[(src|act|next|fit):([^\]]{1,120})\]\]/g;
         // the model ends with [[src:/page/]] [[act:cv]] tags: never show them, not even half-streamed
-        const visible = (raw) => raw.replace(TAG_RE, '').replace(/\[\[[^\]]*$/, '').trim();
+        const visible = (raw) => raw.replace(TAG_RE, '').replace(/\[\[?[^\]]*$/, '').trim();
         const SITE_PAGES = { '/': 'Home', '/profile/': 'Profile', '/projects/': 'Projects', '/stack/': 'Stack', '/architecture/': 'Architecture', '/people/': 'People', '/contact/': 'Contact', '/library/': 'Library' };
         const siteRoot = () => {
             const l = document.querySelector('a.logo-link');
             return l ? new URL(l.getAttribute('href'), location.href).href.replace(/index\.html$/, '').replace(/#.*$/, '') : location.origin + '/';
         };
+        const waHref = (msg) => 'https://wa.me/8801799447594?text=' + encodeURIComponent(msg);
+        const FIT_LABEL = {
+            en: { strong: 'Strong fit', good: 'Good fit', partial: 'Partial fit', low: 'Low fit' },
+            bn: { strong: 'খুব উপযুক্ত', good: 'উপযুক্ত', partial: 'আংশিক উপযুক্ত', low: 'কম উপযুক্ত' }
+        };
+        const FIT_LEVEL = { strong: 4, good: 3, partial: 2, low: 1 };
         function actionLinks() {
             const root = siteRoot();
             const cvEl = document.getElementById('hero-link-cv');
@@ -1891,26 +2125,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 contact: act(root + 'contact/', 'Contact')
             };
         }
-        function addExtras(el, raw) {
+        function addExtras(first, last, raw, opts = {}) {
             const tags = [...raw.matchAll(TAG_RE)].map((m) => [m[1], m[2].trim()]);
             const links = actionLinks();
-            const acts = [...new Set(tags.filter((t) => t[0] === 'act').map((t) => t[1]))].filter((k) => links[k]).slice(0, 2);
+            if (opts.brief) {
+                links.whatsapp = `<a class="chat-action" href="${waHref('Hi Mehedi, I discussed my project with your portfolio AI. My project: ' + opts.brief.slice(0, 600))}" target="_blank" rel="noopener">${opts.bn ? 'আমাকে ব্রিফ পাঠান' : 'Send me this brief'}</a>`;
+            }
+            const fit = (tags.find((t) => t[0] === 'fit') || [])[1];
+            let acts = [...new Set(tags.filter((t) => t[0] === 'act').map((t) => t[1]))].filter((k) => links[k]);
+            if (opts.brief && fit) acts = ['whatsapp'];
+            if (!acts.length && /whats\s?app|হোয়াটসঅ্যাপ/i.test(visible(raw))) acts = ['whatsapp'];
+            acts = acts.slice(0, 1);
             const srcs = [...new Set(tags.filter((t) => t[0] === 'src').map((t) => t[1]))].filter((p) => SITE_PAGES[p]).slice(0, 2);
-            if (acts.length) {
-                const d = document.createElement('div');
-                d.className = 'chat-actions';
-                d.innerHTML = acts.map((k) => links[k]).join('');
-                el.appendChild(d);
+            if (fit && FIT_LEVEL[fit.toLowerCase()]) {
+                const k = fit.toLowerCase(), v = document.createElement('div');
+                v.className = 'chat-fit-verdict is-' + k;
+                v.style.setProperty('--lvl', FIT_LEVEL[k]);
+                v.innerHTML = `<span class="fv-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>${FIT_LABEL[opts.bn ? 'bn' : 'en'][k]}</b>`;
+                first.prepend(v);
             }
-            if (srcs.length) {
-                const d = document.createElement('div');
-                d.className = 'chat-sources';
-                d.innerHTML = '<span>From</span>' + srcs.map((p) => `<a href="${siteRoot() + p.replace(/^\//, '')}">${SITE_PAGES[p]}</a>`).join('');
-                el.appendChild(d);
+            if (acts.length || srcs.length) {
+                const row = document.createElement('div');
+                row.className = 'chat-meta';
+                row.innerHTML = (acts.length ? `<div class="chat-actions">${links[acts[0]]}</div>` : '<span></span>')
+                    + (srcs.length ? `<span class="chat-src"><button type="button" class="chat-src-btn" aria-expanded="false" title="${opts.bn ? 'সূত্র' : 'Sources'}" aria-label="${opts.bn ? 'সূত্র দেখুন' : 'Show sources'}">i</button>`
+                        + `<span class="chat-src-list" hidden>${srcs.map((p) => `<a href="${siteRoot() + p.replace(/^\//, '')}">${SITE_PAGES[p]}</a>`).join('')}</span></span>` : '');
+                last.appendChild(row);
             }
+            return [...new Set(tags.filter((t) => t[0] === 'next').map((t) => t[1]))].filter((q) => q.length > 3).slice(0, 2);
         }
+        chatBody.addEventListener('click', (e) => {
+            const b = e.target.closest('.chat-src-btn');
+            if (!b) return;
+            const list = b.nextElementSibling, open = b.getAttribute('aria-expanded') !== 'true';
+            b.setAttribute('aria-expanded', String(open)); if (list) list.hidden = !open;
+        });
 
-        async function streamFromWorker(txt, history, el, mascot) {
+        async function streamFromWorker(txt, history, el, mascot, mode) {
             const ctrl = new AbortController();
             let timer = setTimeout(() => ctrl.abort(), 20000);
             const res = await fetch(chatApi() + '/chat', {
@@ -1919,6 +2170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 signal: ctrl.signal,
                 body: JSON.stringify({
                     page: location.pathname,
+                    mode: mode || undefined,
                     messages: [...history.map((m) => ({ role: m.r === 'user' ? 'user' : 'assistant', content: m.t })), { role: 'user', content: txt }]
                 })
             });
@@ -1926,7 +2178,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const reader = res.body.getReader(), dec = new TextDecoder();
             let buf = '', raw = '', started = false, frame = 0;
-            const paint = () => { frame = 0; el.innerHTML = formatReply(visible(raw)); chatBody.scrollTop = chatBody.scrollHeight; };
+            // each blank-line paragraph becomes its own bubble, like a person sending a few short messages
+            const bubbles = [el];
+            const parts = () => {
+                const v = visible(raw).split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
+                return v.length > 3 ? [v[0], v[1], v.slice(2).join('\n')] : v;
+            };
+            const paint = () => {
+                frame = 0;
+                parts().forEach((seg, i) => {
+                    let b = bubbles[i];
+                    if (!b) {
+                        bubbles[i - 1].classList.remove('is-streaming');
+                        b = appendMsg('', 'bot', true); b.classList.add('is-streaming', 'is-new');
+                        bubbles.push(b);
+                        if (typeof playSound === 'function') playSound('message');
+                    }
+                    b.innerHTML = formatReply(seg);
+                });
+                chatBody.scrollTop = chatBody.scrollHeight;
+            };
             try {
                 for (;;) {
                     const { done, value } = await reader.read();
@@ -1949,6 +2220,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         started = true;
                         el.classList.remove('typing-indicator'); el.classList.add('is-streaming');
                         if (mascot) mascot.setExpression('responding');
+                        if (typeof playSound === 'function') playSound('message');
                     }
                     if (started && !frame) frame = requestAnimationFrame(paint);
                 }
@@ -1960,10 +2232,48 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!visible(raw)) throw new Error('Empty reply');
             if (frame) cancelAnimationFrame(frame);
             paint();
-            el.classList.remove('is-streaming');
-            addExtras(el, raw);
-            return visible(raw);
+            while (bubbles.length > Math.max(1, parts().length)) bubbles.pop().remove();
+            bubbles.forEach((b) => b.classList.remove('is-streaming'));
+            const bn = /[\u0980-\u09FF]/.test(txt);
+            const nexts = addExtras(bubbles[0], bubbles[bubbles.length - 1], raw, { brief: mode === 'fit' ? brief() : '', bn });
+            return { text: visible(raw), nexts, html: bubbles.map((b) => b.innerHTML) };
         }
+
+        const BYE_RE = /^(thanks?( a lot| so much)?|thank you( so much)?|thx|ty|bye|good ?bye|see you|ok(ay)?,? thanks?|cheers|ধন্যবাদ|অনেক ধন্যবাদ|থ্যাংক ?(স|ইউ)|বাই|আল্লাহ ?হাফেজ|আচ্ছা,? ধন্যবাদ)[\s!.।]*$/i;
+        function goodbye(txt) {
+            const bn = /[\u0980-\u09FF]/.test(txt);
+            const lines = bn ? ['আপনাকেও ধন্যবাদ! যেকোনো সময় আবার আসবেন 👋', 'খুশি হলাম সাহায্য করতে পেরে। ভালো থাকবেন!']
+                             : ["You're welcome! Come back anytime 👋", 'Glad I could help. Take care!', 'Anytime! Good luck with what you are building 👋'];
+            beginThread(); setBusy(true);
+            appendMsg(txt, 'user'); remember('user', esc(txt), txt);
+            const dots = appendMsg('<span class="chat-dots" aria-label="Typing"><i></i><i></i><i></i></span>', 'bot', true);
+            dots.classList.add('typing-indicator');
+            setTimeout(() => {
+                const line = lines[Math.floor(Math.random() * lines.length)];
+                dots.classList.remove('typing-indicator'); dots.innerHTML = `<p>${esc(line)}</p>`; settle(dots);
+                remember('bot', dots.innerHTML, line);
+                setBusy(false);
+                if (typeof playSound === 'function') playSound('message');
+                const mascot = getMascot();
+                if (mascot) mascot.triggerReaction('happy', 1800);
+                // tuck the panel away unless the visitor is still busy with it
+                setTimeout(() => {
+                    if (chatWidget.classList.contains('chat-expanded') && !chatInput.value && !chatWidget.matches(':hover')) toggleChat();
+                }, 4500);
+            }, 750);
+        }
+
+        // The greeting bubble hands its conversation over when the visitor opens the chat from it
+        window.MehediChat = {
+            importGreeting(lines) {
+                if (!Array.isArray(lines) || !lines.length) return;
+                lines.forEach((l) => remember(l.mine ? 'user' : 'bot', `<p>${esc(l.text)}</p>`, l.text));
+                renderHome();
+            },
+            // the greeting's replies continue here with a real AI answer or the project discussion
+            ask(q) { if (q) askAI(q); },
+            discuss() { startFit(); }
+        };
 
         async function sendChat() {
             const txt = chatInput.value.trim();
@@ -1972,6 +2282,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof playSound === 'function') playSound('type');
             chatInput.value = '';
             syncComposer();
+            if (BYE_RE.test(txt)) { goodbye(txt); return; }
+            const mode = fitMode ? 'fit' : '';
+            if (fitMode && brief().length < 600) store.set('chat:brief', (brief() ? brief() + ' | ' : '') + txt);
+            let nexts = [];
 
             // the last few turns give the model context for follow-up questions
             const history = store.get(LOG_KEY, []).filter((m) => m.t).slice(-6);
@@ -1992,18 +2306,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let isSuccess = false;
             let isError = false;
-            let streamed = false, answerText = '';
+            let streamed = false, answerText = '', streamedHtml = null;
 
             try {
                 // Primary: the chat Worker (Gemini / OmniRoute grounded in the site's knowledge base), streamed
                 if (!chatApi()) throw new Error('Chat API not configured');
-                answerText = await streamFromWorker(txt, history, typingEl, mascot);
+                const r = await streamFromWorker(txt, history, typingEl, mascot, mode);
+                answerText = r.text; nexts = r.nexts; streamedHtml = r.html;
                 streamed = true;
                 isSuccess = true;
             } catch (primaryError) {
                 console.warn("[AI_CHAT] Chat worker unavailable, using the free fallback.", primaryError && primaryError.message);
-                
+
                 try {
+                    // a fit check needs his real record: without the Worker, hand the brief straight to Mehedi
+                    if (mode === 'fit') {
+                        const bn = /[\u0980-\u09FF]/.test(txt);
+                        typingEl.innerHTML = `<p>${esc(T[bn ? 'bn' : 'en'].fitOff)}</p><div class="chat-actions"><a class="chat-action" href="${waHref('Hi Mehedi, I would like to discuss a project: ' + brief().slice(0, 600))}" target="_blank" rel="noopener">WhatsApp</a></div>`;
+                        isSuccess = true;
+                        throw 'handled';
+                    }
                     // Secondary: Free Public AI Fallback (Direct Text Endpoint)
                     const past = history.slice(-4).map((m) => (m.r === 'user' ? 'User: ' : 'Assistant: ') + m.t.slice(0, 180)).join('\n');
                     const encodedPrompt = encodeURIComponent(CHAT_PROFILE + '\n\n' + (past ? past + '\n' : '') + 'User: ' + txt + '\nAssistant:');
@@ -2027,6 +2349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                 } catch (secondaryError) {
+                    if (secondaryError === 'handled') return;
                     // Tertiary: Hardcoded Rule-Based Fallback
                     console.warn("[AI_CHAT] All APIs Offline. Reverting to Offline Rule-Based Protocol.");
                     typingEl.innerHTML = formatReply(getBotResponse(txt));
@@ -2035,8 +2358,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 typingEl.classList.remove('typing-indicator');
                 if (!streamed) settle(typingEl);
-                remember('bot', typingEl.innerHTML, answerText || typingEl.textContent);
-                setBusy(false); followUps();
+                remember('bot', streamedHtml || typingEl.innerHTML, answerText || typingEl.textContent);
+                setBusy(false); followUps(nexts);
                 chatBody.scrollTop = chatBody.scrollHeight;
                 if (typeof playSound === 'function') playSound('type');
 
@@ -2056,7 +2379,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         chatSend.addEventListener('click', sendChat);
-        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChat(); });
+        // Enter sends, Shift+Enter breaks the line; never send in the middle of IME composition (Bangla keyboards)
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); sendChat(); }
+        });
 
         // Mobile Virtual Keyboard & Viewport Auto-Adjustment
         if (window.visualViewport) {
@@ -2095,6 +2421,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* ==========================================
+       9.4 WORK WITH ME: SERVICE CARDS FEED THE ONE CONTACT FORM
+    ========================================== */
+    (function () {
+        const cards = [...document.querySelectorAll('.svc2-card')];
+        const field = document.getElementById('svc2-services');
+        const picked = document.getElementById('svc2-picked');
+        if (!cards.length || !field) return;
+        const sync = () => {
+            const chosen = cards.filter((c) => c.getAttribute('aria-pressed') === 'true').map((c) => c.dataset.service);
+            field.value = chosen.join(', ');
+            if (picked) picked.textContent = chosen.length ? 'You picked: ' + chosen.join(', ') + '.' : 'Not sure what you need? Just describe it below.';
+            if (picked) picked.classList.toggle('has-pick', chosen.length > 0);
+        };
+        cards.forEach((c) => c.addEventListener('click', () => {
+            c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+            if (typeof playSound === 'function') playSound('pop');
+            sync();
+        }));
+    })();
+
+    /* ==========================================
        9.5 FORMSPREE AJAX SUBMISSION (REPLACING REACT LOGIC)
     ========================================== */
     const fpForms = document.querySelectorAll('form[action^="https://formspree.io/f/"]');
@@ -2107,7 +2454,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Disable button & visual feedback
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.7';
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> TRANSMITTING...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            const oldNote = form.querySelector('.form-note'); if (oldNote) oldNote.remove();
+            const note = (text) => { const n = document.createElement('p'); n.className = 'form-note is-error'; n.setAttribute('role', 'alert'); n.textContent = text; submitBtn.insertAdjacentElement('afterend', n); };
 
             try {
                 const response = await fetch(form.action, {
@@ -2119,11 +2468,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     // Success logic (mimics React snippet's state.succeeded)
                     form.innerHTML = `
-                        <div style="text-align:center; padding: 2.5rem; color: var(--accent-1); font-family: 'Fira Code', monospace; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px dashed var(--accent-1);">
-                            <i class="fa-solid fa-check-double" style="font-size: 3.5rem; margin-bottom: 1.5rem; display: block;"></i>
-                            <h3 style="margin-bottom: 0.5rem; letter-spacing: 2px;">SUCCESS: DATA_SYNC_COMPLETE</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Thanks for joining! Your payload has been successfully integrated into the system.</p>
-                            <button onclick="window.location.reload()" class="btn secondary-btn" style="margin-top: 1.5rem; padding: 0.5rem 1rem; font-size: 0.7rem; border-color: rgba(255,255,255,0.1);">[ RETURN_TO_TERMINAL ]</button>
+                        <div class="form-done" role="status">
+                            <span class="form-done-ico" aria-hidden="true"><i class="fa-solid fa-check"></i></span>
+                            <h3>Thanks, your message is on its way.</h3>
+                            <p>I read every message myself and will reply by email soon. For anything urgent, <a href="https://wa.me/8801799447594" target="_blank" rel="noopener">message me on WhatsApp</a>.</p>
                         </div>
                     `;
                     if (typeof playSound === 'function') playSound('success');
@@ -2131,18 +2479,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     form.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
                     const data = await response.json();
-                    if (data.errors) {
-                        alert("UPLINK_ERROR: " + data.errors.map(error => error.message).join(", "));
-                    } else {
-                        alert("ERROR: UPLINK_FAILURE. Status: " + response.status);
-                    }
+                    note(data.errors ? data.errors.map(error => error.message).join(', ') : "Sorry, that didn't go through. Please try again, or email me directly.");
                     submitBtn.disabled = false;
                     submitBtn.style.opacity = '1';
                     submitBtn.innerHTML = originalBtnText;
                     if (typeof playSound === 'function') playSound('error');
                 }
             } catch (error) {
-                alert("CRITICAL_ERROR: CONNECTION_TIMEOUT. Check your uplink protocol.");
+                note("Couldn't reach the server. Check your connection and try again, or message me on WhatsApp.");
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 submitBtn.innerHTML = originalBtnText;
@@ -3732,33 +4076,46 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
 
     // ==========================================
+    // 24b. PHONES: THE CHAT ORB STEPS ASIDE WHILE IT WOULD COVER THE HERO BUTTONS
+    // ==========================================
+    (function () {
+        const orb = document.getElementById('ai-chat-widget');
+        const targets = [...document.querySelectorAll('.hero-cta-v2 a, .hero-cta-v2 button')];
+        if (!orb || !targets.length) return;
+        const phone = window.matchMedia('(max-width: 767px)');
+        let raf = 0;
+        const check = () => {
+            raf = 0;
+            if (!phone.matches || !orb.classList.contains('chat-collapsed')) { orb.classList.remove('ai-dodge'); return; }
+            orb.classList.remove('ai-dodge');
+            const o = orb.getBoundingClientRect();
+            const hit = targets.some((t) => { const r = t.getBoundingClientRect(); return !(o.left > r.right || o.right < r.left || o.top > r.bottom || o.bottom < r.top); });
+            orb.classList.toggle('ai-dodge', hit);
+        };
+        const queue = () => { if (!raf) raf = requestAnimationFrame(check); };
+        addEventListener('scroll', queue, { passive: true });
+        addEventListener('resize', queue);
+        setTimeout(check, 400);
+    })();
+
+    // ==========================================
     // 25. SMART SCI-FI SRE LIVE TELEMETRY TICKER
     // ==========================================
     const terminalTicker = document.getElementById('terminal-ticker');
     if (terminalTicker) {
         const telemetryPool = [
-            { tag: 'SAWAB ERP', tagClass: 'tag-rag', msg: 'Auto-reconciled <b class="metric-hl">1,420</b> multi-currency transactions • 0 audit error' },
-            { tag: 'FINTECH', tagClass: 'tag-stream', msg: 'Payment gateway webhook idempotent lock verified • p99 latency <b class="metric-hl">&lt;14ms</b>' },
-            { tag: 'AGENTIC AI', tagClass: 'tag-ai', msg: 'Autonomous Claude &amp; Gemini swarm loop verified via <b class="metric-hl">MCP protocol</b>' },
-            { tag: 'PGVECTOR', tagClass: 'tag-sota', msg: 'HNSW semantic index synced: vector similarity match in <b class="metric-hl">11.2ms</b>' },
-            { tag: 'DISTRIBUTED', tagClass: 'tag-sre', msg: 'High-concurrency checkout throughput: <b class="metric-hl">12.5k req/s</b> • zero pool drop' },
-            { tag: 'KAFKA', tagClass: 'tag-stream', msg: 'Zero-loss event bus throughput: <b class="metric-hl">42.8k msg/sec</b> • 0 packet drops' },
-            { tag: 'REDIS', tagClass: 'tag-stream', msg: 'Distributed cluster cache hit ratio: <b class="metric-hl">99.4%</b> • eviction count: 0' },
-            { tag: 'K8S / SRE', tagClass: 'tag-sre', msg: 'Multi-zone ingress pods 48/48 online • <b class="metric-hl">99.99%</b> uptime SLA verified' }
+            { tag: 'SAWAB', tagClass: 'tag-rag', msg: 'Building an AI-native NGO ERP: NestJS, Kafka, LangGraph • <b class="metric-hl">85+ modules</b> planned' },
+            { tag: 'JIBIKA', tagClass: 'tag-ai', msg: 'AI in HR &amp; payroll software used by <b class="metric-hl">300+ companies</b> • ~50% less manual work' },
+            { tag: 'KARBAR', tagClass: 'tag-stream', msg: 'ERP for Bangladesh: NBR VAT (Mushak 6.3, 6.5, 9.1), payroll &amp; TDS' },
+            { tag: 'FLUTTER', tagClass: 'tag-sre', msg: 'Mobile app with NID OCR onboarding and GPS duty tracking' },
+            { tag: 'AI VIDEO', tagClass: 'tag-sota', msg: 'FastAPI + Whisper pipeline that turns long videos into <b class="metric-hl">9:16</b> clips' },
+            { tag: 'DAILY', tagClass: 'tag-ai', msg: 'Claude, OpenAI, Ollama, LangGraph and MCP in my everyday workflow' },
+            { tag: 'TQF', tagClass: 'tag-rag', msg: 'Volunteer: keeping tqfbd.org fast and secure for a national non-profit' }
         ];
 
         let poolIndex = 0;
-        const formatTime = () => {
-            const now = new Date();
-            return `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
-        };
-
-        // Update existing timestamps to current time initially
-        const existingTimes = terminalTicker.querySelectorAll('.log-time');
-        existingTimes.forEach((el, idx) => {
-            const past = new Date(Date.now() - idx * 6000);
-            el.textContent = `[${String(past.getHours()).padStart(2, '0')}:${String(past.getMinutes()).padStart(2, '0')}:${String(past.getSeconds()).padStart(2, '0')}]`;
-        });
+        const formatTime = () => '$';
+        poolIndex = terminalTicker.children.length;   // the first highlights are already on the page
 
         // Periodic live stream insertion
         setInterval(() => {
