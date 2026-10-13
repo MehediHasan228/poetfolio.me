@@ -104,7 +104,11 @@ function cleanMessages(list) {
 async function loadKnowledge(env, ctx) {
   if (kbCache.text && Date.now() - kbCache.at < KB_TTL_MS) return kbCache.text;
   try {
-    const res = await fetch(env.KNOWLEDGE_URL, { cf: { cacheTtlByStatus: { '200-299': 600, '400-599': 0 }, cacheEverything: true } });
+    // the window number in the URL means a stale cached copy (even an old 404) never outlives 10 minutes
+    const url = new URL(env.KNOWLEDGE_URL);
+    url.searchParams.set('w', String(Math.floor(Date.now() / KB_TTL_MS)));
+    const res = await fetch(url, { cf: { cacheTtlByStatus: { '200-299': 600, '400-599': 0 }, cacheEverything: true } });
+    if (!res.ok) console.log('knowledge fetch status', res.status);
     if (res.ok) {
       const text = (await res.text()).slice(0, 120000);
       if (text.trim()) {
