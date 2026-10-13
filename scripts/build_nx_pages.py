@@ -333,9 +333,9 @@ def rail(show_open=True, show_top=False):
                       f'<span class="find-ico">{ico_svg}</span>'
                       f'<span class="find-info"><b>{label}</b><small>{handle}</small></span>{arr_svg}</a>')
 
-    rail_top_html = (f'<div class="rail-top">{SHARE_BTN}<a class="btn-rail-top" href="{GH}" target="_blank" rel="noopener noreferrer">'
+    rail_top_html = (f'<div class="rail-top">{SHARE_BTN}<a class="btn-rail-top" href="{GH}" target="_blank" rel="noopener noreferrer" title="Follow on GitHub" aria-label="Follow Mehedi on GitHub">'
                      f'<span class="git-icon-wrap"><i class="fa-brands fa-github"></i></span>'
-                     f'<span>Follow on GitHub</span>'
+                     f'<span>Follow</span>'
                      f'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="git-arr"><path d="M7 17L17 7M7 7h10v10"/></svg>'
                      f'</a></div>') if show_top else ''
 
@@ -2843,6 +2843,24 @@ html body.nx-page .nx .cover-banner-wrap [data-slats-canvas] { transition: opaci
 .nx .nx-hero .stack-row.is-open .ask-chip.ultra.is-extra { animation: chipIn .3s ease both, ultraTurn 4.5s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .nx .nx-hero .stack-row.is-open .ask-chip.ultra.is-extra { animation: none; } }
 
+/* phones: the page title and the two buttons always stay on one line */
+@media (max-width: 767px) {
+  .nx .sub-header-shell { gap: 10px; }
+  .nx .sub-header-left { min-width: 0; flex: 1 1 auto; }
+  .nx .sub-header-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(16px, 5vw, 20px) !important; line-height: 1.2; }
+  .nx .sub-header-right { flex: 0 0 auto; gap: 8px; margin-right: 0 !important; }
+  .nx .sub-header-right .btn-share { width: 36px; height: 36px; }
+  .nx .sub-header-right .btn-rail-top { white-space: nowrap; padding: 0 12px !important; height: 36px; gap: 7px; }
+  .nx .sub-header-right .btn-rail-top .git-arr { display: none; }
+}
+
+/* phones: just enough space at the bottom to clear the tab bar (the footer is empty here) */
+@media (max-width: 767px) {
+  html body.nx-page .nx:not(#_pb) { padding-bottom: calc(64px + 20px + env(safe-area-inset-bottom)) !important; }
+  html body.nx-page .nx .main:not(#_pb) { padding-bottom: 0 !important; }
+  html body.nx-page footer:not(#_pb) { display: none !important; }
+}
+
 """
 
 
@@ -2957,9 +2975,9 @@ def sub_header(slug, title):
     </div>
     <div class="sub-header-right">
 {SHARE_BTN}
-      <a class="btn-rail-top" href="{GH}" target="_blank" rel="noopener noreferrer">
+      <a class="btn-rail-top" href="{GH}" target="_blank" rel="noopener noreferrer" title="Follow on GitHub" aria-label="Follow Mehedi on GitHub">
         <span class="git-icon-wrap"><i class="fa-brands fa-github"></i></span>
-        <span>Follow on GitHub</span>
+        <span>Follow</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="git-arr"><path d="M7 17L17 7M7 7h10v10"/></svg>
       </a>
     </div>
