@@ -48,24 +48,25 @@ def rewrite(html: str, prefix: str) -> str:
     """Point anchors/asset paths at the right place for a page `prefix` levels deep."""
     for anchor, slug in NAV_TARGETS.items():
         html = html.replace(f'href="#{anchor}"', f'href="{prefix}{slug}/"')
-    html = html.replace('href="./ai-insights/index.html"', f'href="{prefix}ai-insights/"')
     if prefix == "../":
         html = html.replace('href="./index.html" class="logo-link', 'href="../" class="logo-link')
         html = re.sub(r'(src|href|srcset|content)="\./', r'\1="../', html)
     return html
 
 
-NAV_ITEMS = [("profile", "Profile"), ("projects", "Projects"), ("writing", "Writing"),
-             ("people", "People"), ("contact", "Contact")]
+NAV_ITEMS = [("profile", "Profile"), ("projects", "Projects"), ("people", "People"), ("contact", "Contact")]
 
 
 def swap_nav(html: str, prefix: str) -> str:
-    """Top nav = Profile, Projects, Writing, People, Contact, AI Insights (+ terminal toggle)."""
+    """Top nav = Profile, Projects, People, Contact, Library (+ terminal toggle)."""
     m = re.search(r'<ul class="nav-links">(.*?)</ul>', html, re.S)
     cli = re.search(r'<li><a href="[^"]*" id="cli-toggle".*?</li>', m.group(1), re.S).group(0)
     cls = 'class="magnetic-element hover-sound nav-link-item"'
     items = "".join(f'<li><a href="{prefix}{k}/" {cls}>{ico(k)} <span>{l}</span></a></li>\n            ' for k, l in NAV_ITEMS)
-    items += f'<li><a href="{prefix}ai-insights/index.html" {cls}>{ico("library")} <span>AI Insights</span></a></li>\n            '
+    # Library sits in its own group below a divider (shown in the mobile drawer)
+    items += '<li class="nav-sep" aria-hidden="true"></li>\n            '
+    items += f'<li><a href="{prefix}library/" {cls}>{ico("books")} <span>Library</span></a></li>\n            '
+
     nav_inner = "\n            " + items + cli + "\n        "
     return dedupe_cli(re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S))
 

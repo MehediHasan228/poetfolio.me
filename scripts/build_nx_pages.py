@@ -200,8 +200,7 @@ PLATFORM_ICON = {"X": "fa-brands fa-twitter", "Website": "fa-solid fa-globe", "G
                  "Mentor": "fa-solid fa-graduation-cap", "Facebook": "fa-brands fa-facebook", "YouTube": "fa-brands fa-youtube"}
 
 from icons import P, ico, BOTTOM_NAV, bottom_nav
-NAV = [("profile", "Profile"), ("projects", "Projects"), ("writing", "Writing"), ("people", "People"),
-       ("library", "Library"), ("contact", "Contact")]
+NAV = [("profile", "Profile"), ("projects", "Projects"), ("people", "People"), ("contact", "Contact")]
 e = html.escape
 
 
@@ -1120,7 +1119,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-stat > span:last-child { font-size: 13.5px; line-height: 1.35; color: var(--ink-2); }
 
 /* tabs on the section pages */
-.nl-tabs ul { display: flex; gap: 8px; margin: 0; padding: 0 0 4px; list-style: none; overflow-x: auto; scrollbar-width: none; }
+.nl-tabs ul { position: relative; display: flex; gap: 8px; margin: 0; padding: 0 0 4px; list-style: none; overflow-x: auto; scrollbar-width: none; scroll-behavior: smooth; }
 .nl-tabs ul::-webkit-scrollbar { display: none; }
 .nl-tabs a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; white-space: nowrap; text-decoration: none;
   font-size: 14px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); transition: all 0.2s ease; }
@@ -1170,7 +1169,10 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-group-head p a:hover { color: var(--brand); }
 
 /* bookmarks */
-.nl-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 20px; scrollbar-width: none; }
+.nl-chips { position: relative; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 20px; scrollbar-width: none; scroll-behavior: smooth; }
+.nl-chips.fade-r, .nl-tabs ul.fade-r { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }
+.nl-chips.fade-l, .nl-tabs ul.fade-l { -webkit-mask-image: linear-gradient(to right, transparent, #000 56px); mask-image: linear-gradient(to right, transparent, #000 56px); }
+.nl-chips.fade-l.fade-r, .nl-tabs ul.fade-l.fade-r { -webkit-mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent); }
 .nl-chips::-webkit-scrollbar { display: none; }
 .nl-chips button { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; white-space: nowrap; cursor: pointer;
   font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); transition: all 0.2s ease; }
@@ -1282,6 +1284,85 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-tracks button.is-current .nl-tmeta span:first-child { color: var(--brand); }
 .nl-ar { flex-shrink: 0; font-size: 13.5px; color: var(--ink-3); }
 .nl-artist { margin-top: 26px; }
+.nl-block { margin-top: 8px; }
+.nl-block + .nl-block { margin-top: 26px; }
+.nl-block-title { margin: 0 0 12px; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink-2); }
+.nl-gap { margin-top: 36px; }
+.nl-block .nl-artist-head { margin-bottom: 12px; }
+.nl-feat { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 16px; align-items: start; padding: 14px; margin-bottom: 14px;
+  border-radius: 24px; background: var(--surface); border: 1px solid var(--line); }
+.nl-vids { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.nl-vid p { margin: 8px 2px 0; font-size: 13px; font-weight: 600; line-height: 1.4; color: var(--ink);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.nl-vid-screen { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 14px; background: #000; }
+.nl-vid-screen img, .nl-vid-screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0; }
+.nl-page .nl-play.nl-play-sm { width: 44px; height: 44px; }
+.nl-ch { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; text-decoration: none; color: var(--ink-3);
+  background: var(--surface); border: 1px solid var(--line); transition: border-color 0.2s ease, transform 0.2s ease; }
+a.nl-ch:hover { border-color: color-mix(in srgb, var(--brand) 50%, transparent); transform: translateY(-2px); }
+.nl-ch img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.nl-ch-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.nl-ch-meta b { font-size: 14.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nl-ch-meta small { font-size: 12px; color: var(--ink-3); }
+.nl-ch-meta span { font-size: 12.5px; line-height: 1.4; color: var(--ink-2); }
+.nl-ch-big { flex-direction: column; align-items: flex-start; height: 100%; padding: 6px; border: 0; background: transparent; }
+a.nl-ch-big:hover { transform: none; }
+.nl-ch-big img { width: 56px; height: 56px; }
+.nl-ch-big .nl-ch-meta b { font-size: 17px; white-space: normal; }
+.nl-ch-big .nl-ch-meta span { font-size: 13.5px; margin-top: 6px; }
+.nl-ch-visit { margin-top: auto; font-size: 13px; padding: 7px 12px; }
+.nl-ch-visit svg { color: #ef233c; }
+.nl-learn { margin-top: 44px !important; }
+.nl-more-head { margin-top: 48px; margin-bottom: 6px; }
+.nl-learn-head.nl-more-head h3 { margin: 0; font-size: 19px; font-weight: 700; color: var(--ink); }
+.nl-learn-head.nl-more-head p { margin: 3px 0 0; font-size: 13.5px; color: var(--ink-3); }
+.nl-block.nl-cat { margin-top: 22px; }
+.nl-cat-label { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink-2); }
+.nl-cat-label b { font-size: 11.5px; font-weight: 700; letter-spacing: 0; padding: 1px 8px; border-radius: 999px; color: var(--ink-3);
+  background: var(--surface-2); border: 1px solid var(--line); }
+.nl-cat-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.nl-learn-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.nl-learn-head h3 { margin: 0; font-size: 19px; font-weight: 700; color: var(--ink); }
+.nl-learn-head p { margin: 3px 0 0; font-size: 13.5px; color: var(--ink-3); }
+.nl-shelf { padding: 16px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+.nl-shelf + .nl-shelf { margin-top: 14px; }
+.nl-shelf-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.nl-shelf-head img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.nl-shelf-id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.nl-shelf-id b { font-size: 15.5px; font-weight: 700; color: var(--ink); }
+.nl-shelf-id span { font-size: 13px; line-height: 1.45; color: var(--ink-3); }
+.nl-shelf-visit { flex-shrink: 0; margin-left: auto; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 12px;
+  font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; background: var(--surface-2); border: 1px solid var(--line); transition: border-color 0.2s ease, color 0.2s ease; }
+.nl-shelf-visit svg { color: #ef233c; }
+.nl-shelf-visit:hover { color: var(--brand); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+.nl-shelf-row { position: relative; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; scroll-behavior: smooth; }
+.nl-shelf-row::-webkit-scrollbar { display: none; }
+.nl-shelf-row .nl-vid { flex: 0 0 190px; scroll-snap-align: start; }
+.nl-shelf-row .nl-vid p { font-size: 12.5px; }
+.nl-shelf-row.fade-r { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent); }
+.nl-shelf-row.fade-l { -webkit-mask-image: linear-gradient(to right, transparent, #000 48px); mask-image: linear-gradient(to right, transparent, #000 48px); }
+.nl-shelf-row.fade-l.fade-r { -webkit-mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent); }
+@media (max-width: 767px) {
+  .nl-shelf { padding: 14px; }
+  .nl-shelf-id span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .nl-shelf-visit { padding: 7px 9px; }
+  .nl-shelf-visit span { display: none; }
+  .nl-shelf-row .nl-vid { flex-basis: 62%; }
+}
+.nl-ch-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.nl-ch-strip { margin-top: 16px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.nl-ch-strip .nl-ch-meta span { display: none; }
+@media (max-width: 767px) {
+  .nl-feat { grid-template-columns: 1fr; }
+  .nl-ch-big { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .nl-ch-big .nl-ch-meta { flex-basis: calc(100% - 70px); }
+  .nl-ch-visit { margin-top: 4px; }
+  .nl-vids { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .nl-vids::-webkit-scrollbar { display: none; }
+  .nl-vid { flex: 0 0 78%; scroll-snap-align: start; }
+  .nl-ch-grid { grid-template-columns: 1fr; }
+}
 .nl-artist-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 8px; }
 .nl-artist-head h3 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 16px; font-weight: 700; color: var(--ink); }
 .nl-artist-head h3 img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
@@ -1301,6 +1382,94 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
   .nl-head { flex-wrap: wrap; }
   .nl-head-text { flex: 1; min-width: 0; }
   .nl-ar { display: none; }
+}
+/* ================= button system: one primary and one secondary style, theme-aware ================= */
+html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important;
+  padding: 10px 20px !important; border-radius: 999px !important; border: 1px solid transparent !important;
+  font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.01em !important; text-transform: none !important; text-decoration: none !important;
+  color: var(--accent-active-color, #0b1120) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0) 55%), var(--gradient-accent, var(--accent-1)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 18px -6px var(--accent-glow, rgba(0,0,0,0.35)) !important;
+  transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, filter .2s ease !important;
+}
+html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
+  transform: translateY(-2px) !important; filter: brightness(1.06) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 12px 26px -8px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+}
+html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) * { color: inherit !important; }
+html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) svg { stroke: currentColor !important; }
+html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important;
+  border-radius: 999px !important; border: 1px solid transparent !important;
+  font-weight: 600 !important; text-transform: none !important; letter-spacing: 0.01em !important; text-decoration: none !important;
+  color: var(--text-primary, inherit) !important;
+  background:
+    linear-gradient(color-mix(in srgb, var(--bg-color, #0b1120) 82%, transparent), color-mix(in srgb, var(--bg-color, #0b1120) 82%, transparent)) padding-box,
+    linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 75%, transparent), color-mix(in srgb, var(--accent-1) 12%, transparent) 55%, color-mix(in srgb, var(--accent-2, var(--accent-1)) 55%, transparent)) border-box !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, color .2s ease !important;
+}
+html body :is(.btn.btn-secondary, .btn.secondary-btn, .nl-more):not(#_btn) { padding: 10px 20px !important; font-size: 14px !important; }
+html body :is(.btn-rail-top, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) { padding: 7px 14px !important; font-size: 13px !important; }
+html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
+  transform: translateY(-1px) !important; color: var(--accent-1) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 3px color-mix(in srgb, var(--accent-1) 14%, transparent), 0 8px 20px -10px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+}
+html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .lib-cta, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):active { transform: scale(0.97) !important; }
+html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):focus-visible {
+  outline: 2px solid var(--accent-1) !important; outline-offset: 3px !important;
+}
+/* ================= bottom tab bar: 64px glass bar, sliding pill, muted inactive tabs ================= */
+@media (max-width: 1023px) {
+  html body .bottom-nav:not(#_bn) {
+    height: calc(64px + env(safe-area-inset-bottom)) !important; padding: 0 6px env(safe-area-inset-bottom) !important; box-sizing: border-box !important;
+    align-items: center !important; border-radius: 0 !important;
+    background: color-mix(in srgb, var(--bg-color, #0b1120) 80%, transparent) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%) !important; backdrop-filter: blur(18px) saturate(160%) !important;
+    border-top: 1px solid color-mix(in srgb, var(--text-primary, #fff) 9%, transparent) !important; box-shadow: none !important;
+  }
+  html body .bottom-nav:not(#_bn) a {
+    position: relative; z-index: 1; height: 56px !important; min-width: 44px; gap: 4px !important; padding: 0 !important; background: transparent !important;
+    font-size: 11px !important; font-weight: 500 !important; letter-spacing: 0.01em;
+    color: color-mix(in srgb, var(--text-primary, #fff) 72%, transparent) !important; transition: color .2s ease, transform .15s ease !important;
+  }
+  html body .bottom-nav:not(#_bn) a svg { width: 24px !important; height: 24px !important; padding: 0 !important; background: none !important; box-sizing: content-box !important; }
+  html body .bottom-nav:not(#_bn) a.is-pending { color: var(--accent-1) !important; }
+  html body .bottom-nav:not(#_bn) a[aria-current="page"] { color: var(--accent-1) !important; font-weight: 700 !important; background: transparent !important; }
+  html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { background: none !important; }
+  html body .bottom-nav:not(#_bn) a:active { transform: scale(0.92) !important; }
+  .bottom-nav .bn-pill { position: absolute; left: 0; top: 0; width: 56px; height: 32px; border-radius: 999px; pointer-events: none; opacity: 0;
+    background: color-mix(in srgb, var(--accent-1) 18%, transparent); transition: transform .35s cubic-bezier(.16,1,.3,1), opacity .2s ease; }
+  /* mint: the brand green is too light for text on the pale bar */
+  [data-theme="mint"] body .bottom-nav:not(#_bn) a:is([aria-current="page"], .is-pending) { color: #047857 !important; }
+}
+/* tablets (768-1023px): same tab bar as phones, fixed to the bottom, with room reserved below the content */
+/* (portrait-height only: phones held sideways already show the desktop menu) */
+@media (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+  html body .bottom-nav:not(#_bn) { display: flex !important; position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+    z-index: 9990 !important; justify-content: space-around !important; }
+  html body .bottom-nav:not(#_bn) a { flex: 0 1 120px !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; }
+  html body:not(#_bn) { padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important; }
+  html body.drawer-open .bottom-nav:not(#_bn):not(#_bn2) { display: none !important; }
+}
+/* tab press feedback: no grey browser flash; ripple and a small icon squeeze, like a native tab bar */
+@media (max-width: 1023px) {
+  html body .bottom-nav:not(#_bn) a { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none; user-select: none; }
+  html body .bottom-nav:not(#_bn) a:active { transform: none !important; }
+  .bottom-nav .bn-ico { position: relative; display: grid; place-items: center; width: 56px; height: 32px; border-radius: 999px; overflow: hidden; isolation: isolate;
+    transition: transform .18s cubic-bezier(.2,.8,.2,1); }
+  .bottom-nav a.is-pressed .bn-ico { transform: scale(.88); }
+  .bottom-nav .bn-ico svg { position: relative; z-index: 1; }
+  .bottom-nav .bn-ripple { position: absolute; z-index: 0; border-radius: 50%; pointer-events: none;
+    background: color-mix(in srgb, var(--accent-1) 30%, transparent); transform: scale(0); opacity: 1;
+    animation: bn-ripple .5s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes bn-ripple { to { transform: scale(1); opacity: 0; } }
+  .bottom-nav .bn-label { line-height: 1.1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav .bn-ico, .bottom-nav a.is-pressed .bn-ico { transition: none; transform: none; }
 }
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
@@ -2463,10 +2632,9 @@ _tail = _tail.replace('<div style="text-align: center; padding-bottom: 2rem;">',
 
 
 def global_top_nav(cur):
-    links = [("profile", "Profile"), ("projects", "Projects"), ("writing", "Writing"),
-             ("people", "People"), ("library", "Library"), ("contact", "Contact")]
+    links = [("profile", "Profile"), ("projects", "Projects"), ("people", "People"),
+             ("library", "Library"), ("contact", "Contact")]
     links_html = "".join([f'<a href="../{k}/" class="{"active" if k==cur else ""}">{l}</a>' for k, l in links])
-    links_html += f'<a href="../ai-insights/index.html">AI Insights</a>'
     return (f'<header class="nx-global-nav"><div class="nx-nav-container">'
             f'<a href="../" class="nx-logo" style="text-decoration: none;"><span style="font-weight: 900; font-size: 24px; letter-spacing: -1.5px; background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MH</span></a>'
             f'<div class="nx-nav-right"><nav class="nx-nav-links">{links_html}</nav>'
@@ -2482,7 +2650,12 @@ def swap_nav_active(html: str, prefix: str, cur: str) -> str:
         cls = 'class="active magnetic-element hover-sound nav-link-item"' if is_cur else 'class="magnetic-element hover-sound nav-link-item"'
         cur_attr = ' aria-current="page"' if is_cur else ''
         items += f'<li><a href="{prefix}{k}/" {cls}{cur_attr}>{ico(k)} <span>{l}</span></a></li>\n            '
-    items += f'<li><a href="{prefix}ai-insights/index.html" class="magnetic-element hover-sound nav-link-item">{ico("library")} <span>AI Insights</span></a></li>\n            '
+    # Library sits in its own group below a divider (shown in the mobile drawer)
+    lib_cur = cur == "library"
+    items += '<li class="nav-sep" aria-hidden="true"></li>\n            '
+    lib_attrs = ' class="active magnetic-element hover-sound nav-link-item" aria-current="page"' if lib_cur \
+        else ' class="magnetic-element hover-sound nav-link-item"'
+    items += f'<li><a href="{prefix}library/"{lib_attrs}>{ico("books")} <span>Library</span></a></li>\n            '
     nav_inner = "\n            " + items + cli + "\n        "
     return build_pages.dedupe_cli(re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S))
 
@@ -2957,7 +3130,7 @@ def projects():
 # ------------------------------------------------------------------ LIBRARY
 # Content lives in scripts/library_data.json (copied from nahian.bd/library as a starting point; edit that file, then rebuild).
 LIB = json.loads((Path(__file__).resolve().parent / "library_data.json").read_text(encoding="utf-8"))
-LIB_SUBS = [("skills", "AI Skills"), ("bookmarks", "Bookmarks"), ("music", "Music & Nasheeds")]
+LIB_SUBS = [("skills", "AI Skills"), ("bookmarks", "Bookmarks"), ("music", "Watch & Listen")]
 LIB_SUB_ICON = {"skills": LIB["skills"]["icon"], "bookmarks": LIB["bookmarks"]["icon"],
                 "music": LIB["music"]["icon"]}
 NL_UI = {  # small UI glyphs not in the data file
@@ -2988,7 +3161,8 @@ def nl_icon(name, size=18):
 def lib_counts():
     return {"skills": sum(len(g["items"]) for g in LIB["skills"]["groups"]),
             "bookmarks": next(f["count"] for f in LIB["bookmarks"]["filters"] if f["label"] == "All"),
-            "music": len(LIB["music"]["tracks"])}
+            "music": len(LIB["music"]["tracks"]) + len(LIB["music"]["featured"]) + len(LIB["music"].get("learning", []))
+                     + len(LIB["music"]["channels"])}
 
 
 def yt_thumb(vid, q="mqdefault"):
@@ -3066,6 +3240,33 @@ def nl_track(i, t):
             f'<span class="nl-tmeta"><span>{e(t["title"])}</span><span>{e(t["sub"])}</span></span>{ar}</button></li>')
 
 
+def nl_video(v):
+    return (f'<div class="nl-vid"><div class="nl-vid-screen" data-yt="{v["id"]}"><img src="{yt_thumb(v["id"], "hqdefault")}" alt="" loading="lazy">'
+            f'<button type="button" class="nl-play nl-play-sm" data-yt-play aria-label="Play: {e(v["title"])}">{nl_icon("play", 20)}</button></div>'
+            f'<p>{e(v["title"])}</p></div>')
+
+
+def nl_channel_card(c, big=False):
+    return (f'<a class="nl-ch{" nl-ch-big" if big else ""}" href="{c["url"]}" target="_blank" rel="noopener noreferrer">'
+            f'<img src="{c["avatar"]}" alt="" width="56" height="56" loading="lazy">'
+            f'<span class="nl-ch-meta"><b>{e(c["name"])}</b><small>{e(c["handle"])}</small><span>{e(c["why"])}</span></span>'
+            f'{"<span class=\"nl-ghost nl-ch-visit\">" + nl_icon("yt", 15) + "Visit channel</span>" if big else nl_icon("out", 16)}</a>')
+
+
+def nl_featured(c):
+    return (f'<div class="nl-feat" data-cat="{e(c["cat"])}">{nl_channel_card(c, big=True)}'
+            f'<div class="nl-vids">{"".join(nl_video(v) for v in c["videos"])}</div></div>')
+
+
+def nl_shelf(c):
+    """Compact course shelf: one slim header line, then a sideways-scrolling row of small videos."""
+    return (f'<div class="nl-shelf" data-cat="{e(c["cat"])}"><div class="nl-shelf-head">'
+            f'<img src="{c["avatar"]}" alt="" width="32" height="32" loading="lazy">'
+            f'<div class="nl-shelf-id"><b>{e(c["name"])}</b><span>{e(c["why"])}</span></div>'
+            f'<a class="nl-shelf-visit" href="{c["url"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 14)}<span>Visit</span></a></div>'
+            f'<div class="nl-shelf-row">{"".join(nl_video(v) for v in c["videos"])}</div></div>')
+
+
 def library():
     c = lib_counts()
     o = LIB["overview"]
@@ -3087,8 +3288,10 @@ def library():
             f'<div class="nl-grid">{skills}</div>{nl_more("skills", f"See all {c["skills"]} skills")}</div>'
             f'<div class="nl-section">{nl_head("bookmarks", "Bookmarks", secs.get("Bookmarks", ""), c["bookmarks"])}'
             f'{nl_feature()}<div class="nl-grid">{bms}</div>{nl_more("bookmarks", f"See all {c["bookmarks"]} links")}</div>'
-            f'<div class="nl-section">{nl_head("music", "Music & Nasheeds", secs.get("Music & Nasheeds", ""), c["music"])}'
-            f'{nl_player()}<ol class="nl-tracks">{tlist}</ol>{nl_more("music", f"See all {c["music"]} tracks")}</div>'
+            f'<div class="nl-section">{nl_head("music", "Watch & Listen", secs.get("Watch & Listen", ""), c["music"])}'
+            f'{nl_player()}<ol class="nl-tracks">{tlist}</ol>'
+            f'<div class="nl-ch-grid nl-ch-strip">{"".join(nl_channel_card(x) for x in LIB["music"]["featured"])}</div>'
+            f'{nl_more("music", "Open Watch & Listen")}</div>'
             f'</div>{LIB_JS}')
     return page("library", "Library", "AI skills, bookmarks and music I use, love and recommend.",
                 "Library", body, "library")
@@ -3114,33 +3317,51 @@ def library_sub(key):
             f'<div class="nl-grid">{"".join(nl_bm_card(it, sec["title"]) for it in sec["items"])}</div></div>'
             for sec in d["sections"])
         x = d["extensions"]
-        fx = x["featured"]
-        links = "".join(
-            f'<a class="{"nl-cta" if i == 0 else "nl-ghost"}" href="{l["url"]}" target="_blank" rel="noopener noreferrer">'
-            f'{"" if i == 0 else "<i class=\"fa-brands fa-github\"></i>"}{e(l["label"])}{nl_icon("out", 14) if i == 0 else ""}</a>'
-            for i, l in enumerate(fx["links"]))
+        fx = x.get("featured")  # optional: a highlighted extension above the list
+        feat = ""
+        if fx:
+            links = "".join(
+                f'<a class="{"nl-cta" if i == 0 else "nl-ghost"}" href="{l["url"]}" target="_blank" rel="noopener noreferrer">'
+                f'{"" if i == 0 else "<i class=\"fa-brands fa-github\"></i>"}{e(l["label"])}{nl_icon("out", 14) if i == 0 else ""}</a>'
+                for i, l in enumerate(fx["links"]))
+            feat = (f'<div class="nl-ext-feature"><div class="nl-ext-feature-body"><div class="nl-ext-id"><img src="{fx["icon_img"]}" alt="" width="48" height="48" loading="lazy">'
+                    f'<div><h4>{e(fx["name"])}</h4><span class="nl-tag">{e(fx["status"])}</span></div></div><p>{e(fx["desc"])}</p><div class="nl-ext-links">{links}</div></div>'
+                    f'<a class="nl-ext-shot" href="{fx["links"][0]["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1"><img src="{fx["shot"]}" alt="" loading="lazy"></a></div>')
         ext_items = "".join(
             f'<li><a href="{it["url"]}" target="_blank" rel="noopener noreferrer"><span class="nl-ext-ico"><img src="{it["img"]}" alt="" width="40" height="40" loading="lazy"></span>'
             f'<span class="nl-ext-meta"><span>{e(it["name"])}</span><span>{e(it["desc"])}</span></span>{nl_icon("out", 16)}</a></li>' for it in x["items"])
         ext = (f'<div class="nl-ext" data-cat="Extensions"><div class="nl-ext-head">{nl_icon(x["icon"], 18)}<h3>{e(x["title"])}</h3><span class="nl-tag">{e(x["tag"])}</span></div>'
-               f'<div class="nl-ext-feature"><div class="nl-ext-feature-body"><div class="nl-ext-id"><img src="{fx["icon_img"]}" alt="" width="48" height="48" loading="lazy">'
-               f'<div><h4>{e(fx["name"])}</h4><span class="nl-tag">{e(fx["status"])}</span></div></div><p>{e(fx["desc"])}</p><div class="nl-ext-links">{links}</div></div>'
-               f'<a class="nl-ext-shot" href="{fx["links"][0]["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1"><img src="{fx["shot"]}" alt="" loading="lazy"></a></div>'
-               f'<ul class="nl-ext-list">{ext_items}</ul></div>')
+               f'{feat}<ul class="nl-ext-list">{ext_items}</ul></div>')
         content = f'<div class="nl-chips" role="group" aria-label="Filter bookmarks">{chips}</div>{nl_feature()}{sections}{ext}'
     elif key == "music":
-        tracks = d["tracks"]
-        groups = ""
-        for a in d["artists"]:
-            items = "".join(nl_track(i, t) for i, t in enumerate(tracks) if t["by"] == a["slug"])
-            ch = (f'<a href="{a["channel"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 16)}Channel</a>' if a.get("channel") else "")
-            groups += (f'<div class="nl-artist"><div class="nl-artist-head"><h3><img src="{a["avatar"]}" alt="" width="32" height="32" loading="lazy">'
-                       f'{e(a["name"])}<span>{e(a["count"])}</span></h3>{ch}</div><ol class="nl-tracks">{items}</ol></div>')
-        content = nl_player() + groups
+        cats = d["categories"]
+        count = {k: 0 for k in cats}
+        count["Quran"] += 1  # the recitation player
+        for x in d["featured"] + d.get("learning", []) + d["channels"]:
+            count[x["cat"]] += 1
+        chips = (f'<button type="button" data-nl-filter="All" class="is-active">{nl_icon("books", 15)}<span>All</span><b>{sum(count.values())}</b></button>'
+                 + "".join(f'<button type="button" data-nl-filter="{e(k)}"><span>{e(k)}</span><b>{count[k]}</b></button>' for k in cats))
+        a = d["artists"][0]
+        quran = (f'<div class="nl-block" data-cat="Quran"><div class="nl-artist-head"><h3><img src="{a["avatar"]}" alt="" width="32" height="32" loading="lazy">'
+                 f'{e(a["name"])}<span>{e(a["count"])}</span></h3><a href="{a["channel"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 16)}Channel</a></div>'
+                 f'{nl_player()}<ol class="nl-tracks">{"".join(nl_track(i, t) for i, t in enumerate(d["tracks"]))}</ol></div>')
+        feats = "".join(nl_featured(x) for x in d["featured"])
+        learning = (f'<div class="nl-block nl-learn" data-cat="Learning"><div class="nl-learn-head"><span class="nl-tile">{nl_icon("tabler:school", 20)}</span>'
+                    f'<div><h3>Learning</h3><p>Courses and lectures that match my stack: LLMs, agents, backend and system design.</p></div></div>'
+                    f'{"".join(nl_shelf(x) for x in d.get("learning", []))}</div>' if d.get("learning") else "")
+        groups = "".join(
+            f'<div class="nl-block nl-cat" data-cat="{e(k)}"><h4 class="nl-cat-label">{e(k)}<b>{sum(1 for x in d["channels"] if x["cat"] == k)}</b></h4>'
+            f'<div class="nl-ch-grid">{"".join(nl_channel_card(x) for x in d["channels"] if x["cat"] == k)}</div></div>'
+            for k in cats if any(x["cat"] == k for x in d["channels"]))
+        content = (f'<div class="nl-chips" role="group" aria-label="Filter channels">{chips}</div>{quran}'
+                   f'<h3 class="nl-block-title nl-gap" data-cat="All-only">My top channels</h3>{feats}{learning}'
+                   f'<div class="nl-learn-head nl-more-head" data-cat="All-only"><span class="nl-tile">{nl_icon("tabler:headphones", 20)}</span>'
+                   f'<div><h3>More channels I follow</h3><p>Grouped by topic. Tap any channel to open it on YouTube.</p></div></div>{groups}')
     body = f'<div class="pad nl-page">{nl_tabs(key)}<div class="nl-section">{head}{content}</div></div>{LIB_JS}'
     html_out = page(f"library/{key}", f"{title} · Library", d["intro"], "Library", body, "library")
     # the shell writes paths for pages one level deep; these live two levels deep
-    return re.sub(r'(["\'(])\.\./', r'\1../../', html_out)
+    # also paths inside JSON data attributes, which arrive HTML-escaped as &quot;../
+    return re.sub(r'(["\'(]|&quot;)\.\./', r'\1../../', html_out)
 
 
 LIB_JS = """<script>
@@ -3167,6 +3388,33 @@ LIB_JS = """<script>
       player.classList.add("is-playing");
     }
   }
+  /* horizontal chip rows (tabs + bookmark filters) */
+  var rows = document.querySelectorAll(".nl-chips, .nl-tabs ul, .nl-shelf-row");
+  function fade(row) {
+    row.classList.toggle("fade-l", row.scrollLeft > 4);
+    row.classList.toggle("fade-r", row.scrollLeft + row.clientWidth < row.scrollWidth - 4);
+  }
+  function center(el, smooth) {
+    var row = el.closest(".nl-chips, .nl-tabs ul");
+    if (!row) return;
+    var left = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2;
+    row.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
+  }
+  rows.forEach(function (row) {
+    row.addEventListener("scroll", function () { fade(row); }, { passive: true });
+    row.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      var max = row.scrollWidth - row.clientWidth;
+      if (max <= 0 || (e.deltaY < 0 && row.scrollLeft <= 0) || (e.deltaY > 0 && row.scrollLeft >= max - 1)) return;
+      e.preventDefault();
+      row.scrollLeft += e.deltaY;
+    }, { passive: false });
+    var active = row.querySelector(".is-active");
+    if (active) center(active, false);
+    fade(row);
+  });
+  window.addEventListener("resize", function () { rows.forEach(fade); });
+
   document.addEventListener("click", function (ev) {
     var t = ev.target;
     if (!t || !t.closest) return;
@@ -3182,6 +3430,7 @@ LIB_JS = """<script>
     if (f) {
       var cat = f.getAttribute("data-nl-filter");
       document.querySelectorAll("[data-nl-filter]").forEach(function (b) { b.classList.toggle("is-active", b === f); });
+      center(f, true);
       document.querySelectorAll(".nl-page [data-cat]").forEach(function (el) {
         el.hidden = !(cat === "All" || el.getAttribute("data-cat") === cat);
       });
@@ -3197,21 +3446,6 @@ LIB_JS = """<script>
   });
 })();
 </script>"""
-
-
-def writing():
-    data = json.loads((DOCS / "ai-insights/data.json").read_text(encoding="utf-8"))
-    posts = ""
-    for it in data[:6]:
-        posts += (f'<a class="post" href="{e(it["url"])}" target="_blank" rel="noopener noreferrer"><h3>{e(it["title"])}</h3>'
-                  f'<small>{e(it["source_name"])} &middot; {it["published_at"][:10]}</small></a>')
-    body = (f'<div class="pad"><section class="empty"><span class="empty-ico">{ico("writing")}</span>'
-            f'<h2>Articles and notes are coming</h2>'
-            f'<p>Long-form posts on AI agents, event-driven systems and ERP engineering will live here.</p>'
-            f'<a class="btn btn-secondary" href="../ai-insights/index.html">Open AI Insights</a></section>'
-            f'<h2 class="work-title" style="margin-top:8px">What I\'m reading on AI</h2>'
-            f'<div class="posts">{posts}</div></div>')
-    return page("writing", "Writing", "Notes and AI reading list from Mehedi Hasan.", "Writing", body, "writing")
 
 
 def people():
@@ -3284,7 +3518,7 @@ def main():
     css = scope_css((DOCS / "nx" / "nx.css").read_text(encoding="utf-8")) + SCOPED_FIX
     (DOCS / "nx" / "nx.scoped.css").write_text(css, encoding="utf-8")
     CSS_VER = hashlib.md5(css.encode("utf-8")).hexdigest()[:10]
-    pages = [("profile", profile), ("projects", projects), ("writing", writing), ("people", people),
+    pages = [("profile", profile), ("projects", projects), ("people", people),
              ("contact", contact), ("library", library)]
     pages += [(f"library/{k}", (lambda k=k: library_sub(k))) for k, _ in LIB_SUBS]
     for slug, fn in pages:

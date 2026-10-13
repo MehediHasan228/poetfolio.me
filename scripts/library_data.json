@@ -111,6 +111,63 @@
             "badge": "24 skills"
           }
         ]
+      },
+      {
+        "author": "morluto",
+        "avatar": "https://github.com/morluto.png",
+        "handle": "@morluto",
+        "handle_url": "https://github.com/morluto",
+        "count": "1 skill I use",
+        "more_label": "More at rea.tools",
+        "more_url": "https://rea.tools/",
+        "items": [
+          {
+            "name": "reverse-engineer-anything",
+            "url": "https://skills.sh/morluto/rea/reverse-engineer-anything",
+            "icon": "custom:search-code",
+            "desc": "Reverse engineers apps, binaries and websites without their source, explains how a feature works with evidence, then helps build it.",
+            "cmd": "npx skills add morluto/rea --skill reverse-engineer-anything",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "author": "Graphify Labs",
+        "avatar": "https://github.com/Graphify-Labs.png",
+        "handle": "@Graphify-Labs",
+        "handle_url": "https://github.com/Graphify-Labs",
+        "count": "1 skill I use",
+        "more_label": "More at graphify.com",
+        "more_url": "https://graphify.com",
+        "items": [
+          {
+            "name": "graphify",
+            "url": "https://github.com/Graphify-Labs/graphify",
+            "icon": "custom:graph",
+            "desc": "Maps a whole project (code, docs, PDFs, images) into a knowledge graph the agent can query instead of grepping through files.",
+            "cmd": "uv tool install graphifyy && graphify install",
+            "badge": null
+          }
+        ]
+      },
+      {
+        "author": "Anthropic",
+        "avatar": "https://github.com/anthropics.png",
+        "handle": "@anthropics",
+        "handle_url": "https://github.com/anthropics",
+        "count": "1 skill I use",
+        "more_label": "More plugins",
+        "more_url": "https://github.com/anthropics/claude-plugins-official",
+        "items": [
+          {
+            "name": "claude-code-setup",
+            "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-code-setup",
+            "icon": "tabler:tool",
+            "desc": "Scans a codebase and recommends tailored Claude Code automations: hooks, skills, MCP servers, subagents and slash commands.",
+            "cmd": "/plugin install claude-code-setup@claude-plugins-official",
+            "badge": null
+          }
+        ]
       }
     ]
   },
@@ -119,51 +176,61 @@
     "intro": "Courses, tools and sites worth your time, plus the browser extensions I can’t live without.",
     "icon": "tabler:bookmarks",
     "feature": {
-      "img": "https://nahian.bd/_astro/planetscale-com.8NrI6nec_Z1fawSu.webp",
+      "img": "../uploads/library/thumbs/intro-to-langgraph.webp",
       "badges": [
         "Top pick",
         "Free course"
       ],
-      "title": "MySQL for Developers",
-      "by": "by Aaron Francis",
-      "desc": "A complete, professional MySQL course that’s 100% free. Honestly, it should be premium.",
+      "title": "Introduction to LangGraph",
+      "by": "by LangChain Academy",
+      "url": "https://academy.langchain.com/courses/intro-to-langgraph",
       "cta": "Start the course",
-      "url": "https://planetscale.com/learn/courses/mysql-for-developers"
+      "desc": "The official free course on LangGraph: state, memory, human-in-the-loop and multi-agent systems, from the team that builds it."
     },
     "filters": [
       {
         "label": "All",
-        "count": 25,
+        "count": 44,
         "icon": "tabler:bookmarks"
       },
       {
         "label": "Learn",
-        "count": 4,
+        "count": 14,
         "icon": "tabler:school"
       },
       {
+        "label": "AI tools",
+        "count": 5,
+        "icon": "tabler:sparkles"
+      },
+      {
+        "label": "Dev tools",
+        "count": 10,
+        "icon": "tabler:tool"
+      },
+      {
         "label": "UI components",
-        "count": 4,
+        "count": 7,
         "icon": "tabler:components"
       },
       {
         "label": "Backgrounds",
-        "count": 4,
+        "count": 2,
         "icon": "tabler:texture"
       },
       {
-        "label": "Tools",
-        "count": 8,
+        "label": "Design tools",
+        "count": 3,
         "icon": "tabler:tool"
       },
       {
         "label": "Free stuff",
-        "count": 5,
+        "count": 3,
         "icon": "tabler:gift"
       },
       {
         "label": "Extensions",
-        "count": 8,
+        "count": 9,
         "icon": "tabler:puzzle"
       }
     ],
@@ -193,13 +260,254 @@
             "domain": "aiengineeringfromscratch.com"
           },
           {
-            "title": "Go by Example",
-            "url": "https://gobyexample.com/",
-            "img": "https://nahian.bd/_astro/gobyexample-com.DLnA056L_Zy7Ny8.webp",
+            "title": "Claude Code in Action",
+            "url": "https://anthropic.skilljar.com/claude-code-in-action",
+            "img": "../uploads/library/thumbs/claude-code-in-action.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "Anthropic’s free course on working with Claude Code: context, tools, hooks and MCP. Comes with a certificate.",
+            "domain": "anthropic.skilljar.com"
+          },
+          {
+            "title": "Introduction to MCP",
+            "url": "https://anthropic.skilljar.com/introduction-to-model-context-protocol",
+            "img": "../uploads/library/thumbs/intro-to-mcp.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "Anthropic’s free course on building MCP servers and clients that give models tools and data.",
+            "domain": "anthropic.skilljar.com"
+          },
+          {
+            "title": "AI Agents in LangGraph",
+            "url": "https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/",
+            "img": "../uploads/library/thumbs/dlai-langgraph.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "A short DeepLearning.AI course that builds an agent from scratch, then rebuilds it with LangGraph.",
+            "domain": "deeplearning.ai"
+          },
+          {
+            "title": "Hugging Face Agents Course",
+            "url": "https://huggingface.co/learn/agents-course",
+            "img": "../uploads/library/thumbs/hf-agents-course.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "Free, hands-on course on how agents work and how to build them with popular frameworks.",
+            "domain": "huggingface.co"
+          },
+          {
+            "title": "Hugging Face MCP Course",
+            "url": "https://huggingface.co/learn/mcp-course",
+            "img": "../uploads/library/thumbs/hf-mcp-course.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "Free course on the Model Context Protocol, from the concepts to working servers.",
+            "domain": "huggingface.co"
+          },
+          {
+            "title": "Prompt Engineering Guide",
+            "url": "https://www.promptingguide.ai/",
+            "img": "../uploads/library/thumbs/prompting-guide.webp",
             "kind": "Guide",
             "top": false,
-            "desc": "Learn Go through short, annotated example programs.",
-            "domain": "gobyexample.com"
+            "desc": "Techniques, papers and examples for prompting LLMs and building with them.",
+            "domain": "promptingguide.ai"
+          },
+          {
+            "title": "FastAPI Tutorial",
+            "url": "https://fastapi.tiangolo.com/tutorial/",
+            "img": "../uploads/library/thumbs/fastapi-tutorial.webp",
+            "kind": "Docs",
+            "top": false,
+            "desc": "The official step-by-step guide to building APIs with FastAPI.",
+            "domain": "fastapi.tiangolo.com"
+          },
+          {
+            "title": "NestJS Docs",
+            "url": "https://docs.nestjs.com/",
+            "img": "../uploads/library/thumbs/nestjs-docs.webp",
+            "kind": "Docs",
+            "top": false,
+            "desc": "Official NestJS docs: modules, providers, guards, microservices and more.",
+            "domain": "docs.nestjs.com"
+          },
+          {
+            "title": "Total TypeScript",
+            "url": "https://www.totaltypescript.com/",
+            "img": "../uploads/library/thumbs/total-typescript.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "Matt Pocock’s TypeScript tutorials, from the basics to advanced type patterns.",
+            "domain": "totaltypescript.com"
+          },
+          {
+            "title": "Confluent Developer",
+            "url": "https://developer.confluent.io/courses/",
+            "img": "../uploads/library/thumbs/confluent-courses.webp",
+            "kind": "Course",
+            "top": false,
+            "desc": "Free courses on Apache Kafka, event streaming and stream processing.",
+            "domain": "developer.confluent.io"
+          },
+          {
+            "title": "System Design Primer",
+            "url": "https://github.com/donnemartin/system-design-primer",
+            "img": "../uploads/library/thumbs/system-design-primer.webp",
+            "kind": "Guide",
+            "top": false,
+            "desc": "How to design large-scale systems, with exercises, trade-offs and diagrams.",
+            "domain": "github.com/donnemartin/system-design-primer"
+          }
+        ]
+      },
+      {
+        "id": "bm-ai",
+        "title": "AI tools",
+        "desc": "Gateways, observability and storage for LLM apps.",
+        "icon": "tabler:sparkles",
+        "items": [
+          {
+            "title": "OmniRoute",
+            "url": "https://github.com/diegosouzapw/OmniRoute",
+            "img": "../uploads/library/thumbs/omniroute.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Free, open-source AI gateway: one OpenAI-compatible endpoint across hundreds of providers, with automatic fallback.",
+            "domain": "github.com/diegosouzapw/OmniRoute"
+          },
+          {
+            "title": "Headroom",
+            "url": "https://github.com/headroomlabs-ai/headroom",
+            "img": "../uploads/library/thumbs/headroom.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Compresses what an AI agent reads (tool output, logs, files, history) before it reaches the model. Runs locally as a library, proxy or MCP server.",
+            "domain": "github.com/headroomlabs-ai/headroom"
+          },
+          {
+            "title": "Langfuse",
+            "url": "https://langfuse.com/",
+            "img": "../uploads/library/thumbs/langfuse.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Open-source LLM observability: traces, evals, prompt management and costs.",
+            "domain": "langfuse.com"
+          },
+          {
+            "title": "OpenRouter",
+            "url": "https://openrouter.ai/",
+            "img": "../uploads/library/thumbs/openrouter.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "One API and key for hundreds of LLMs, with price comparison and fallbacks.",
+            "domain": "openrouter.ai"
+          },
+          {
+            "title": "pgvector",
+            "url": "https://github.com/pgvector/pgvector",
+            "img": "../uploads/library/thumbs/pgvector.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "Vector similarity search inside PostgreSQL, for RAG and embeddings.",
+            "domain": "github.com/pgvector/pgvector"
+          }
+        ]
+      },
+      {
+        "id": "bm-dev",
+        "title": "Dev tools",
+        "desc": "Diagrams, API testing, deployment and everyday helpers.",
+        "icon": "tabler:tool",
+        "items": [
+          {
+            "title": "dbdiagram.io",
+            "url": "https://dbdiagram.io/",
+            "img": "../uploads/library/thumbs/dbdiagram.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Draw database schemas from simple code. Handy for planning ERP tables.",
+            "domain": "dbdiagram.io"
+          },
+          {
+            "title": "Excalidraw",
+            "url": "https://excalidraw.com/",
+            "img": "../uploads/library/thumbs/excalidraw.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Hand-drawn style whiteboard for quick architecture sketches.",
+            "domain": "excalidraw.com"
+          },
+          {
+            "title": "Mermaid Live",
+            "url": "https://mermaid.live/",
+            "img": "../uploads/library/thumbs/mermaid-live.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Write diagrams as text and export them as SVG or PNG.",
+            "domain": "mermaid.live"
+          },
+          {
+            "title": "Hoppscotch",
+            "url": "https://hoppscotch.io/",
+            "img": "../uploads/library/thumbs/hoppscotch.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Fast, open-source API client for REST, GraphQL and WebSocket.",
+            "domain": "hoppscotch.io"
+          },
+          {
+            "title": "Coolify",
+            "url": "https://coolify.io/",
+            "img": "../uploads/library/thumbs/coolify.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Self-hosted alternative to Heroku and Vercel, built on Docker.",
+            "domain": "coolify.io"
+          },
+          {
+            "title": "Regex101",
+            "url": "https://regex101.com/",
+            "img": "../uploads/library/thumbs/regex101.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Build, test and debug regular expressions with explanations.",
+            "domain": "regex101.com"
+          },
+          {
+            "title": "crontab.guru",
+            "url": "https://crontab.guru/",
+            "img": "../uploads/library/thumbs/crontab-guru.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Turns cron schedule expressions into plain English.",
+            "domain": "crontab.guru"
+          },
+          {
+            "title": "JSON Crack",
+            "url": "https://jsoncrack.com/",
+            "img": "../uploads/library/thumbs/json-crack.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Turns JSON into an interactive graph for exploring large payloads.",
+            "domain": "jsoncrack.com"
+          },
+          {
+            "title": "transform.tools",
+            "url": "https://transform.tools/",
+            "img": "../uploads/library/thumbs/transform-tools.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Converts JSON to TypeScript types, Zod schemas, GraphQL and more.",
+            "domain": "transform.tools"
+          },
+          {
+            "title": "Download Directory",
+            "url": "https://download-directory.github.io/",
+            "img": "https://nahian.bd/_astro/download-directory-github-io.CXhi_ZQk_Z1XhK0e.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Paste a GitHub folder link, get just that folder as a zip.",
+            "domain": "download-directory.github.io"
           }
         ]
       },
@@ -215,7 +523,7 @@
             "img": "https://nahian.bd/_astro/reactbits-dev.DWqbBzwS_1fzXAO.webp",
             "kind": "Library",
             "top": true,
-            "desc": "200+ animated React components and effects. My profile cover started here.",
+            "desc": "200+ animated React components and backgrounds, ready to copy.",
             "domain": "reactbits.dev"
           },
           {
@@ -237,13 +545,40 @@
             "domain": "uiverse.io"
           },
           {
-            "title": "CSS Buttons",
-            "url": "https://cssbuttons.io/",
-            "img": "https://nahian.bd/_astro/cssbuttons-io.C83US26l_ZE1xUO.webp",
+            "title": "shadcn/ui",
+            "url": "https://ui.shadcn.com/",
+            "img": "../uploads/library/thumbs/shadcn-ui.webp",
             "kind": "Library",
             "top": false,
-            "desc": "100+ button styles, ready to copy.",
-            "domain": "cssbuttons.io"
+            "desc": "Accessible React components you copy into your project and own.",
+            "domain": "ui.shadcn.com"
+          },
+          {
+            "title": "Magic UI",
+            "url": "https://magicui.design/",
+            "img": "../uploads/library/thumbs/magic-ui.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "Animated components and effects built for shadcn/ui and Tailwind.",
+            "domain": "magicui.design"
+          },
+          {
+            "title": "Aceternity UI",
+            "url": "https://ui.aceternity.com/",
+            "img": "../uploads/library/thumbs/aceternity-ui.webp",
+            "kind": "Library",
+            "top": false,
+            "desc": "Polished Tailwind and Motion components for landing pages.",
+            "domain": "ui.aceternity.com"
+          },
+          {
+            "title": "tweakcn",
+            "url": "https://tweakcn.com/",
+            "img": "../uploads/library/thumbs/tweakcn.webp",
+            "kind": "Tool",
+            "top": false,
+            "desc": "Visual theme editor for shadcn/ui: tune colors, radius and fonts, then copy the CSS.",
+            "domain": "tweakcn.com"
           }
         ]
       },
@@ -270,31 +605,13 @@
             "top": false,
             "desc": "100+ handcrafted background patterns and gradients.",
             "domain": "patterncraft.fun"
-          },
-          {
-            "title": "Codioful",
-            "url": "https://codioful.com/",
-            "img": "https://nahian.bd/_astro/codioful-com.BAPkVBYD_1PUpd3.webp",
-            "kind": "Library",
-            "top": false,
-            "desc": "Gradient backgrounds made purely in CSS. Copy the code or download HD images.",
-            "domain": "codioful.com"
-          },
-          {
-            "title": "Coolshapes",
-            "url": "https://coolshap.es/",
-            "img": "https://nahian.bd/_astro/coolshap-es.C2rQeOWY_QLnqR.webp",
-            "kind": "Library",
-            "top": false,
-            "desc": "100+ abstract shapes with a grainy gradient finish.",
-            "domain": "coolshap.es"
           }
         ]
       },
       {
         "id": "bm-tools",
-        "title": "Tools",
-        "desc": "Small tools I keep coming back to.",
+        "title": "Design tools",
+        "desc": "Mockups, code images and CSS generators.",
         "icon": "tabler:tool",
         "items": [
           {
@@ -305,15 +622,6 @@
             "top": true,
             "desc": "Turn plain screenshots into polished device mockups in seconds.",
             "domain": "shots.so"
-          },
-          {
-            "title": "BrandBird",
-            "url": "https://www.brandbird.app/studio",
-            "img": "https://nahian.bd/_astro/brandbird-app.Dn2dHmR__21BLrF.webp",
-            "kind": "Generator",
-            "top": false,
-            "desc": "Screenshot mockups and social graphics with backgrounds, 3D tilt and device frames.",
-            "domain": "brandbird.app"
           },
           {
             "title": "UI Tools",
@@ -332,49 +640,13 @@
             "top": false,
             "desc": "Beautiful images of code, free and open source.",
             "domain": "showcode.app"
-          },
-          {
-            "title": "ToolMateX",
-            "url": "https://toolmatex.com/",
-            "img": "https://nahian.bd/_astro/toolmatex-com.CrM-Rp26_2lFFwK.webp",
-            "kind": "Tool",
-            "top": false,
-            "desc": "Fast, free, in-browser tools for designers and developers.",
-            "domain": "toolmatex.com"
-          },
-          {
-            "title": "PFP Maker",
-            "url": "https://pfpmaker.com/",
-            "img": "https://nahian.bd/_astro/pfpmaker-com.6iXcYNbM_ZhWkuY.webp",
-            "kind": "Generator",
-            "top": false,
-            "desc": "A professional profile picture from any photo, in seconds.",
-            "domain": "pfpmaker.com"
-          },
-          {
-            "title": "Download Directory",
-            "url": "https://download-directory.github.io/",
-            "img": "https://nahian.bd/_astro/download-directory-github-io.CXhi_ZQk_Z1XhK0e.webp",
-            "kind": "Tool",
-            "top": false,
-            "desc": "Paste a GitHub folder link, get just that folder as a zip.",
-            "domain": "download-directory.github.io"
-          },
-          {
-            "title": "BBC Sound Effects",
-            "url": "https://sound-effects.bbcrewind.co.uk/",
-            "img": "https://nahian.bd/_astro/sound-effects-bbcrewind-co-uk.-nke7dTa_fLmUT.webp",
-            "kind": "Archive",
-            "top": false,
-            "desc": "The BBC’s archive of sound effects, free for personal use.",
-            "domain": "sound-effects.bbcrewind.co.uk"
           }
         ]
       },
       {
         "id": "bm-free",
         "title": "Free stuff",
-        "desc": "Free tiers, books, maps and everything else free.",
+        "desc": "Free tiers, free APIs and tools that need no sign-up.",
         "icon": "tabler:gift",
         "items": [
           {
@@ -387,15 +659,6 @@
             "domain": "free-for.dev"
           },
           {
-            "title": "FMHY",
-            "url": "https://fmhy.net/",
-            "img": "https://nahian.bd/_astro/fmhy-net.BwHq-BtK_QVtfw.webp",
-            "kind": "Directory",
-            "top": false,
-            "desc": "The largest collection of free stuff on the internet.",
-            "domain": "fmhy.net"
-          },
-          {
             "title": "NoSignups",
             "url": "https://nosignups.net/",
             "img": "https://nahian.bd/_astro/nosignups-net.C7bVfhXx_Z1wuMsU.webp",
@@ -405,22 +668,13 @@
             "domain": "nosignups.net"
           },
           {
-            "title": "WeLib",
-            "url": "https://welib.org/",
-            "img": "https://nahian.bd/_astro/welib-org.D4z8KU8j_Ggq6j.webp",
-            "kind": "Archive",
+            "title": "Public APIs",
+            "url": "https://github.com/public-apis/public-apis",
+            "img": "../uploads/library/thumbs/public-apis.webp",
+            "kind": "Directory",
             "top": false,
-            "desc": "43 million books and 98 million papers, all free to read.",
-            "domain": "welib.org"
-          },
-          {
-            "title": "OldMapsOnline",
-            "url": "https://www.oldmapsonline.org/",
-            "img": "https://nahian.bd/_astro/oldmapsonline-org.WUgOhULU_2v65Ov.webp",
-            "kind": "Archive",
-            "top": false,
-            "desc": "Historical maps from libraries around the world, searchable by place.",
-            "domain": "oldmapsonline.org"
+            "desc": "A collective list of free APIs for side projects and prototypes.",
+            "domain": "github.com/public-apis/public-apis"
           }
         ]
       }
@@ -429,30 +683,7 @@
       "title": "Browser extensions",
       "tag": "Always installed",
       "icon": "tabler:puzzle",
-      "featured": {
-        "name": "Typpa",
-        "status": "Coming soon",
-        "icon_img": "https://nahian.bd/_astro/typpa.3YE2c_pd_16rdUF.webp",
-        "desc": "My first browser extension: select text on any page, press Alt+K, and type right over it, in the site’s own font. Any article becomes your typing tutor.",
-        "shot": "https://nahian.bd/_astro/typpa-pro-bd.B2wI_s3w_Z1ANt4j.webp",
-        "links": [
-          {
-            "label": "See Typpa",
-            "url": "https://typpa.pro.bd/"
-          },
-          {
-            "label": "Source",
-            "url": "https://github.com/alnahian2003/typpa"
-          }
-        ]
-      },
       "items": [
-        {
-          "name": "Momentum",
-          "desc": "A calm new tab with focus and to-dos.",
-          "url": "https://chromewebstore.google.com/detail/laookkfknpbbblfpciffpaejjkokdgca",
-          "img": "https://nahian.bd/_astro/momentum.DKZnILr9_Z2cSiIe.webp"
-        },
         {
           "name": "AdGuard AdBlocker",
           "desc": "Blocks ads and pop-ups everywhere.",
@@ -484,188 +715,673 @@
           "img": "https://nahian.bd/_astro/singlefile.BiIk8Vaf_Uojbb.webp"
         },
         {
-          "name": "Volume Master",
-          "desc": "Boosts a tab’s volume up to 600%.",
-          "url": "https://chromewebstore.google.com/detail/jghecgabfgfdldnmbfkhmffcabddioke",
-          "img": "https://nahian.bd/_astro/volume-master.CR7wXtM0_Bws0f.webp"
+          "name": "React Developer Tools",
+          "desc": "Inspect React components, props and state.",
+          "url": "https://chromewebstore.google.com/detail/fmkadmapgofadopljbjfkapdkoienihi",
+          "img": "../uploads/library/ext/react-devtools.png"
+        },
+        {
+          "name": "Wappalyzer",
+          "desc": "See which technologies any website is built with.",
+          "url": "https://chromewebstore.google.com/detail/gppongmhjkpfnbhagpmjfkannfbllamg",
+          "img": "../uploads/library/ext/wappalyzer.png"
+        },
+        {
+          "name": "Refined GitHub",
+          "desc": "Dozens of small improvements to GitHub’s interface.",
+          "url": "https://chromewebstore.google.com/detail/hlepfoohegkhhmjieoechaddaejaokhf",
+          "img": "../uploads/library/ext/refined-github.png"
+        },
+        {
+          "name": "JSON Formatter",
+          "desc": "Pretty-prints raw JSON responses in the browser.",
+          "url": "https://chromewebstore.google.com/detail/bcjindcccaagfpapjjmafapmmgkkhgoa",
+          "img": "../uploads/library/ext/json-formatter.png"
         }
       ]
     }
   },
   "music": {
-    "title": "Music & Nasheeds",
-    "intro": "The nasheeds on repeat, most loved first. All vocals only.",
+    "title": "Watch & Listen",
     "icon": "tabler:headphones",
+    "intro": "Quran on repeat while I code, and the channels I learn from: ideas, growth, faith and tech.",
     "tracks": [
       {
-        "id": "25wH52RSam8",
-        "title": "Ya Nabi Salam Alayka",
-        "sub": "Maher Zain",
-        "ar": "يا نبي سلام عليك",
-        "by": "maher-zain"
+        "id": "bVQ2V7y3plc",
+        "title": "Surah Ar-Rahman",
+        "sub": "Omar Hisham Al Arabi",
+        "ar": "سورة الرحمن",
+        "by": "an-nafee"
       },
       {
-        "id": "IxwdZLtMf7I",
-        "title": "Qalbi Fil Madinah",
-        "sub": "Maher Zain feat. Harris J",
-        "ar": "قلبي في المدينة",
-        "by": "maher-zain"
+        "id": "VLyktW15HXI",
+        "title": "Surah Yaseen",
+        "sub": "Ismail An Nouri",
+        "ar": "سورة يس",
+        "by": "an-nafee"
       },
       {
-        "id": "AIyAPGumseA",
-        "title": "Ramadan",
-        "sub": "Maher Zain",
-        "ar": "رمضان",
-        "by": "maher-zain"
+        "id": "bh5dGdbHCVc",
+        "title": "Surah Al-Mulk",
+        "sub": "Ismail Al Nouri",
+        "ar": "سورة الملك",
+        "by": "an-nafee"
       },
       {
-        "id": "nuYA88YJSC4",
-        "title": "Bika Moulhimi",
-        "sub": "Maher Zain feat. Mustafa Ceceli",
-        "ar": "",
-        "by": "maher-zain"
+        "id": "eIrRj6vDddU",
+        "title": "Ayatul Kursi",
+        "sub": "Omar Hisham Al Arabi",
+        "ar": "آية الكرسي",
+        "by": "an-nafee"
       },
       {
-        "id": "61C6FxprHuY",
-        "title": "Barak Allah Lakuma",
-        "sub": "Maher Zain",
-        "ar": "",
-        "by": "maher-zain"
+        "id": "6mttwIBcig0",
+        "title": "Surah Al-Waqi'ah",
+        "sub": "Zain Abu Kautsar",
+        "ar": "سورة الواقعة",
+        "by": "an-nafee"
       },
       {
-        "id": "9Jsb0Dy6wWA",
-        "title": "I’m Alive",
-        "sub": "Maher Zain feat. Atif Aslam",
-        "ar": "",
-        "by": "maher-zain"
+        "id": "gwqBN3b3wwc",
+        "title": "Surah Al-Baqarah",
+        "sub": "Abdul Rahman Al Rashoud",
+        "ar": "سورة البقرة",
+        "by": "an-nafee"
       },
       {
-        "id": "LkAm79Edtlo",
-        "title": "Assalamu Alaika",
-        "sub": "Maher Zain",
-        "ar": "السلام عليك",
-        "by": "maher-zain"
-      },
-      {
-        "id": "pFMofSt2vVw",
-        "title": "Number One For Me",
-        "sub": "Maher Zain",
-        "ar": "",
-        "by": "maher-zain"
-      },
-      {
-        "id": "UW5K0OzOmVI",
-        "title": "Rahmatun Lil’Alameen",
-        "sub": "Maher Zain",
-        "ar": "رحمةٌ للعالمين",
-        "by": "maher-zain"
-      },
-      {
-        "id": "0a43eUZf5iQ",
-        "title": "La Tahzan",
-        "sub": "Maher Zain",
-        "ar": "لا تَحزَن",
-        "by": "maher-zain"
-      },
-      {
-        "id": "4VU4_NZuL24",
-        "title": "The Power",
-        "sub": "Maher Zain",
-        "ar": "",
-        "by": "maher-zain"
-      },
-      {
-        "id": "KTkdQ2q3jCA",
-        "title": "The Book of Allah Is My Constitution",
-        "sub": "Muhammad al Muqit",
-        "ar": "",
-        "by": "muhammad-al-muqit"
-      },
-      {
-        "id": "JqGv0EdJdJI",
-        "title": "I Rise",
-        "sub": "Muhammad al Muqit",
-        "ar": "أسمو",
-        "by": "muhammad-al-muqit"
-      },
-      {
-        "id": "NrsCej6SVxM",
-        "title": "The Beauty of Existence",
-        "sub": "Muhammad al Muqit",
-        "ar": "",
-        "by": "muhammad-al-muqit"
-      },
-      {
-        "id": "YiSQ_db-Dcw",
-        "title": "The Way of the Tears",
-        "sub": "Muhammad al Muqit",
-        "ar": "",
-        "by": "muhammad-al-muqit"
-      },
-      {
-        "id": "JaHtx79UhIM",
-        "title": "My Dream",
-        "sub": "Muhammad al Muqit",
-        "ar": "",
-        "by": "muhammad-al-muqit"
-      },
-      {
-        "id": "ZZEgiM8QMM4",
-        "title": "My Mother",
-        "sub": "Muhammad al Muqit",
-        "ar": "",
-        "by": "muhammad-al-muqit"
-      },
-      {
-        "id": "Ov0-CBnOW4w",
-        "title": "My Arabic Language",
-        "sub": "Muhammad al Muqit",
-        "ar": "",
-        "by": "muhammad-al-muqit"
-      },
-      {
-        "id": "VQSUCfRoZPM",
-        "title": "Kun Fayakoon",
-        "sub": "Othman Alibrahim",
-        "ar": "كن فيكون",
-        "by": "othman-alibrahim"
-      },
-      {
-        "id": "D7mg8zkmiy8",
-        "title": "Be Happy",
-        "sub": "Othman Alibrahim",
-        "ar": "",
-        "by": "othman-alibrahim"
-      },
-      {
-        "id": "mTTk1QX30t0",
-        "title": "Watheq",
-        "sub": "Othman Alibrahim",
-        "ar": "واثق",
-        "by": "othman-alibrahim"
+        "id": "5R06LRdUCSE",
+        "title": "Surah Al-Kahf",
+        "sub": "Ismail Al Nouri",
+        "ar": "سورة الكهف",
+        "by": "an-nafee"
       }
     ],
     "artists": [
       {
-        "name": "Maher Zain",
-        "count": "11 tracks",
-        "avatar": "https://nahian.bd/_astro/maher-zain.Dh2fsl1r_Zq3RvA.webp",
-        "channel": "https://www.youtube.com/@MaherZain",
-        "slug": "maher-zain"
+        "name": "An Nafee",
+        "slug": "an-nafee",
+        "avatar": "../uploads/library/channels/annafee_official.jpg",
+        "count": "7 recitations",
+        "channel": "https://www.youtube.com/@AnNafee_Official"
+      }
+    ],
+    "categories": [
+      "Quran",
+      "Ideas",
+      "Growth",
+      "Faith",
+      "Tech & AI",
+      "Learning",
+      "Islamic lectures"
+    ],
+    "featured": [
+      {
+        "name": "Fahim Abdullah",
+        "handle": "@FahimAbdullah24",
+        "url": "https://www.youtube.com/@FahimAbdullah24",
+        "avatar": "../uploads/library/channels/fahimabdullah24.jpg",
+        "cat": "Growth",
+        "why": "Psychology for everyday life: self-control, focus and consistency.",
+        "videos": [
+          {
+            "id": "l_IpVHZv0CA",
+            "title": "নিজের সাথে যুদ্ধে জেতা যায় কীভাবে?"
+          },
+          {
+            "id": "Ggx2vgsdE54",
+            "title": "নিজেকে নিয়ন্ত্রণের উপায়"
+          },
+          {
+            "id": "AXqyJvXAGug",
+            "title": "কন্সিস্টেন্সি কি ট্যালেন্টকেও হারিয়ে দেয়?"
+          },
+          {
+            "id": "pwbbQZ_ecfI",
+            "title": "ফোকাস আর এনার্জি ফিরে পাওয়ার সুন্নাহ"
+          },
+          {
+            "id": "E4JEK4-qaAA",
+            "title": "যা পড়েন সব ভুলে যান?"
+          },
+          {
+            "id": "i1mIXahUmLU",
+            "title": "ইতালিয়ান টাইম ম্যানেজমেন্ট টুল"
+          }
+        ]
       },
       {
-        "name": "Muhammad al Muqit",
-        "count": "7 tracks",
-        "avatar": "https://nahian.bd/_astro/muhammad-al-muqit.CRIvy160_Z1P8XvQ.webp",
-        "channel": "https://www.youtube.com/@MuhammadalMuqit",
-        "slug": "muhammad-al-muqit"
+        "name": "Somrat",
+        "handle": "@somrat101",
+        "url": "https://www.youtube.com/@somrat101",
+        "avatar": "../uploads/library/channels/somrat101.jpg",
+        "cat": "Ideas",
+        "why": "Philosophy and faith side by side: Ghazali, epistemology, and the big questions.",
+        "videos": [
+          {
+            "id": "e1QLod3L2R4",
+            "title": "সৃষ্টিকর্তা কি আছেন? নিউটন বনাম হকিং"
+          },
+          {
+            "id": "ZVrtBs6Cib8",
+            "title": "আল্লাহকে কে সৃষ্টি করেছে? The Unmoved Mover"
+          },
+          {
+            "id": "GXPjGqDA-vE",
+            "title": "জীবনের মানে কী? রুমির মসনবী"
+          },
+          {
+            "id": "H8hM0lwqyEU",
+            "title": "হেদায়েত এবং হ্যাপিনেস · ইমাম গাজ্জালী"
+          },
+          {
+            "id": "uJHBi6C0BjM",
+            "title": "১৫টি কুযুক্তি · Logical Fallacies"
+          },
+          {
+            "id": "0BiXngjENGI",
+            "title": "মার্কাস অরেলিয়াসের ফিলোসফি · Stoicism"
+          }
+        ]
       },
       {
-        "name": "Othman Alibrahim",
-        "count": "3 tracks",
-        "avatar": "https://nahian.bd/_astro/othman-alibrahim.B3Pcs6sz_Z1sB9SJ.webp",
-        "channel": "https://www.youtube.com/@OthmanAlibrahim",
-        "slug": "othman-alibrahim"
+        "name": "The Muslim Minds",
+        "handle": "@themuslimmindsbd",
+        "url": "https://www.youtube.com/@themuslimmindsbd",
+        "avatar": "../uploads/library/channels/themuslimmindsbd.jpg",
+        "cat": "Ideas",
+        "why": "Long-form conversations on civilisation, thought and worship.",
+        "videos": [
+          {
+            "id": "x-_BtKPygtA",
+            "title": "Rise and Fall of Civilisation · Asif Adnan"
+          },
+          {
+            "id": "2GVMelUTdWw",
+            "title": "Imam Al-Ghazali's Intellectual Journey"
+          },
+          {
+            "id": "NNTrJH9vHXQ",
+            "title": "Why Are Our Acts of Worship Fading Away?"
+          },
+          {
+            "id": "EPoaXrDlMvg",
+            "title": "Marriage, Family, Career and Life's Mission"
+          },
+          {
+            "id": "pNtQgJM4Qfo",
+            "title": "Ibn Khaldun: Fiqh and Ilm al-Umran"
+          },
+          {
+            "id": "F71eXo7xYXE",
+            "title": "তুরাস: ইসলামের বুদ্ধিবৃত্তিক ঐতিহ্য"
+          }
+        ]
+      },
+      {
+        "name": "2 Cents Podcast",
+        "handle": "@2centspodcastofficial",
+        "url": "https://www.youtube.com/@2centspodcastofficial",
+        "avatar": "../uploads/library/channels/2centspodcastofficial.jpg",
+        "cat": "Growth",
+        "why": "Bangladesh's business podcast: leadership, careers and building things.",
+        "videos": [
+          {
+            "id": "lViEZaXGhLk",
+            "title": "Leadership নিয়ে যদি একটা পডকাস্ট দেখতে হয়"
+          },
+          {
+            "id": "WiiX9YmrXos",
+            "title": "How to think like a CEO"
+          },
+          {
+            "id": "ULJglu2KYn0",
+            "title": "Negotiation Expert: মানুষকে 'হ্যাঁ' বলাবেন কীভাবে"
+          },
+          {
+            "id": "p1_EvlYOVbE",
+            "title": "Freelancer থেকে ৪টা ব্যবসার মালিক"
+          },
+          {
+            "id": "Zh0t6SyjlS0",
+            "title": "এই এপিসোড আপনাকে আরও Productive বানাবে"
+          },
+          {
+            "id": "m14lMRea23k",
+            "title": "Khalid Farhan: AI দিয়ে ২০২৬-এ ইনকাম"
+          }
+        ]
+      },
+      {
+        "name": "Towards Eternity – বাংলা",
+        "handle": "@TEBangla",
+        "url": "https://www.youtube.com/@TEBangla",
+        "avatar": "../uploads/library/channels/tebangla.jpg",
+        "cat": "Faith",
+        "why": "Stories of people finding Islam, and clear answers to common questions.",
+        "videos": [
+          {
+            "id": "63km3jjTI4M",
+            "title": "জীবনের অর্থ কী? ইসলামের ১০টি অপরিহার্য শিক্ষা"
+          },
+          {
+            "id": "d8FtezVaobM",
+            "title": "এক সুইডিশ নাস্তিকের ইসলাম গ্রহণের গল্প"
+          },
+          {
+            "id": "eX8lEvtaS7g",
+            "title": "এক ক্যাথলিক খ্রিস্টানের ইসলাম গ্রহণ"
+          },
+          {
+            "id": "HvMX_4DL-NI",
+            "title": "বুদ্ধ থেকে আল্লাহর পথে: এক চীনা বৌদ্ধের যাত্রা"
+          },
+          {
+            "id": "sIkKokmfAJE",
+            "title": "আসহাবে কাহফের অবিশ্বাস্য ঘটনা"
+          },
+          {
+            "id": "Nu1O7fMgOd8",
+            "title": "ইসরা ও মিরাজের সফর · ইয়া রাসূলুল্লাহ ﷺ"
+          }
+        ]
+      }
+    ],
+    "channels": [
+      {
+        "name": "Tafseerul Quran",
+        "handle": "@TafseerulQuranTablig",
+        "url": "https://www.youtube.com/@TafseerulQuranTablig",
+        "avatar": "../uploads/library/channels/tafseerulqurantablig.jpg",
+        "cat": "Islamic lectures",
+        "why": "Tafsir of the Quran in Bangla."
+      },
+      {
+        "name": "Sheikh Ahmadullah",
+        "handle": "@sheikhahmadullahofficial",
+        "url": "https://www.youtube.com/@sheikhahmadullahofficial",
+        "avatar": "../uploads/library/channels/sheikhahmadullahofficial.jpg",
+        "cat": "Islamic lectures",
+        "why": "Quran, hadith and everyday questions answered."
+      },
+      {
+        "name": "Dr. Khandaker Abdullah Jahangir",
+        "handle": "@SunnahTrust",
+        "url": "https://www.youtube.com/@SunnahTrust",
+        "avatar": "../uploads/library/channels/sunnahtrust.jpg",
+        "cat": "Islamic lectures",
+        "why": "Scholarly lectures on the Sunnah."
+      },
+      {
+        "name": "Professor Mokhter Ahmad",
+        "handle": "@mokhterahmad",
+        "url": "https://www.youtube.com/@mokhterahmad",
+        "avatar": "../uploads/library/channels/mokhterahmad.jpg",
+        "cat": "Islamic lectures",
+        "why": "Tarbiyah and self-development through Islam."
+      },
+      {
+        "name": "Ali Dawah",
+        "handle": "@AliDawah",
+        "url": "https://www.youtube.com/@AliDawah",
+        "avatar": "../uploads/library/channels/alidawah.jpg",
+        "cat": "Islamic lectures",
+        "why": "Dawah, discussions and reminders, in English."
+      },
+      {
+        "name": "Sabeel Ahmed",
+        "handle": "@sabeelIslam",
+        "url": "https://www.youtube.com/@sabeelIslam",
+        "avatar": "../uploads/library/channels/sabeelislam.jpg",
+        "cat": "Islamic lectures",
+        "why": "Explaining Islam clearly to people of every background."
+      },
+      {
+        "name": "One Islam Productions",
+        "handle": "@OneIslamProductions",
+        "url": "https://www.youtube.com/@OneIslamProductions",
+        "avatar": "../uploads/library/channels/oneislamproductions.jpg",
+        "cat": "Islamic lectures",
+        "why": "Short, beneficial reminders and lectures."
+      },
+      {
+        "name": "As-Sunnah Foundation",
+        "handle": "@As-SunnahFoundationbd",
+        "url": "https://www.youtube.com/@As-SunnahFoundationbd",
+        "avatar": "../uploads/library/channels/as-sunnahfoundationbd.jpg",
+        "cat": "Islamic lectures",
+        "why": "Education, dawah and welfare in Bangladesh."
+      },
+      {
+        "name": "Rahabar Multimedia",
+        "handle": "@RahabarMultimedia",
+        "url": "https://www.youtube.com/@RahabarMultimedia",
+        "avatar": "../uploads/library/channels/rahabarmultimedia.jpg",
+        "cat": "Islamic lectures",
+        "why": "Seerah and Islamic history."
+      },
+      {
+        "name": "Mishary Alafasy",
+        "handle": "@alafasy",
+        "url": "https://www.youtube.com/@alafasy",
+        "avatar": "../uploads/library/channels/alafasy.jpg",
+        "cat": "Quran",
+        "why": "Kuwaiti imam and reciter, one of the most loved voices of the Quran."
+      },
+      {
+        "name": "Yasser Al-Dosari",
+        "handle": "@Yasseraldosry",
+        "url": "https://www.youtube.com/@Yasseraldosry",
+        "avatar": "../uploads/library/channels/yasseraldosry.jpg",
+        "cat": "Quran",
+        "why": "Official channel of the imam of Masjid al-Haram."
+      },
+      {
+        "name": "Ahmad Alnufais",
+        "handle": "@Ahmad_Alnufais",
+        "url": "https://www.youtube.com/@Ahmad_Alnufais",
+        "avatar": "../uploads/library/channels/ahmad_alnufais.jpg",
+        "cat": "Quran",
+        "why": "Calm, beautiful Quran recitation."
+      },
+      {
+        "name": "Abdulrahman Al-Ossi",
+        "handle": "@aaloosi",
+        "url": "https://www.youtube.com/@aaloosi",
+        "avatar": "../uploads/library/channels/aaloosi.jpg",
+        "cat": "Quran",
+        "why": "Official channel: calm, heartfelt Quran recitation."
+      },
+      {
+        "name": "Saud Al-Shuraim",
+        "handle": "@shuraym1414",
+        "url": "https://www.youtube.com/@shuraym1414",
+        "avatar": "../uploads/library/channels/shuraym1414.jpg",
+        "cat": "Quran",
+        "why": "Recitations and legacy of the former imam of Masjid al-Haram."
+      },
+      {
+        "name": "Enayet Chowdhury",
+        "handle": "@EnayetChowdhuryOfficial",
+        "url": "https://www.youtube.com/@EnayetChowdhuryOfficial",
+        "avatar": "../uploads/library/channels/enayetchowdhuryofficial.jpg",
+        "cat": "Faith",
+        "why": "Self-improvement through an Islamic lens."
+      },
+      {
+        "name": "MercifulServant",
+        "handle": "@TheMercifulServant",
+        "url": "https://www.youtube.com/@TheMercifulServant",
+        "avatar": "../uploads/library/channels/themercifulservant.jpg",
+        "cat": "Islamic lectures",
+        "why": "Powerful short reminders on Allah, the hereafter and the unseen."
+      },
+      {
+        "name": "Y Combinator",
+        "handle": "@ycombinator",
+        "url": "https://www.youtube.com/@ycombinator",
+        "avatar": "../uploads/library/channels/ycombinator.jpg",
+        "cat": "Growth",
+        "why": "How great startups and products get built."
+      },
+      {
+        "name": "Cal Newport",
+        "handle": "@CalNewportMedia",
+        "url": "https://www.youtube.com/@CalNewportMedia",
+        "avatar": "../uploads/library/channels/calnewportmedia.jpg",
+        "cat": "Growth",
+        "why": "Deep work, focus and a calmer relationship with technology."
+      },
+      {
+        "name": "Ali Abdaal",
+        "handle": "@aliabdaal",
+        "url": "https://www.youtube.com/@aliabdaal",
+        "avatar": "../uploads/library/channels/aliabdaal.jpg",
+        "cat": "Growth",
+        "why": "Productivity and building a meaningful career."
+      },
+      {
+        "name": "Simon Sinek",
+        "handle": "@SimonSinek",
+        "url": "https://www.youtube.com/@SimonSinek",
+        "avatar": "../uploads/library/channels/simonsinek.jpg",
+        "cat": "Growth",
+        "why": "Leadership, purpose and starting with why."
+      },
+      {
+        "name": "Khalid Farhan",
+        "handle": "@iamkhalidfarhan",
+        "url": "https://www.youtube.com/@iamkhalidfarhan",
+        "avatar": "../uploads/library/channels/iamkhalidfarhan.jpg",
+        "cat": "Growth",
+        "why": "Productivity, digital marketing and working with AI, in Bangla."
+      },
+      {
+        "name": "Ayman Sadiq",
+        "handle": "@AymanSadiq",
+        "url": "https://www.youtube.com/@AymanSadiq",
+        "avatar": "../uploads/library/channels/aymansadiq.jpg",
+        "cat": "Growth",
+        "why": "Careers, entrepreneurship and education in Bangladesh."
+      },
+      {
+        "name": "Anthropic",
+        "handle": "@anthropic-ai",
+        "url": "https://www.youtube.com/@anthropic-ai",
+        "avatar": "../uploads/library/channels/anthropic-ai.jpg",
+        "cat": "Tech & AI",
+        "why": "Official channel of the makers of Claude and Claude Code."
+      },
+      {
+        "name": "LangChain",
+        "handle": "@LangChain",
+        "url": "https://www.youtube.com/@LangChain",
+        "avatar": "../uploads/library/channels/langchain.jpg",
+        "cat": "Tech & AI",
+        "why": "Official LangChain and LangGraph tutorials and agent patterns."
+      },
+      {
+        "name": "Dave Ebbelaar",
+        "handle": "@daveebbelaar",
+        "url": "https://www.youtube.com/@daveebbelaar",
+        "avatar": "../uploads/library/channels/daveebbelaar.jpg",
+        "cat": "Tech & AI",
+        "why": "Building real AI systems for clients, step by step."
+      },
+      {
+        "name": "Matt Pocock",
+        "handle": "@mattpocockuk",
+        "url": "https://www.youtube.com/@mattpocockuk",
+        "avatar": "../uploads/library/channels/mattpocockuk.jpg",
+        "cat": "Tech & AI",
+        "why": "TypeScript and AI-assisted coding, done properly."
+      },
+      {
+        "name": "Fireship",
+        "handle": "@Fireship",
+        "url": "https://www.youtube.com/@Fireship",
+        "avatar": "../uploads/library/channels/fireship.jpg",
+        "cat": "Tech & AI",
+        "why": "Fast, sharp explainers on new tech and tools."
+      },
+      {
+        "name": "Learn with Sumit",
+        "handle": "@LearnwithSumit",
+        "url": "https://www.youtube.com/@LearnwithSumit",
+        "avatar": "../uploads/library/channels/learnwithsumit.jpg",
+        "cat": "Tech & AI",
+        "why": "Bangla web development: JavaScript, React and Next.js."
+      }
+    ],
+    "learning": [
+      {
+        "name": "Andrej Karpathy",
+        "handle": "@AndrejKarpathy",
+        "url": "https://www.youtube.com/@AndrejKarpathy",
+        "avatar": "../uploads/library/channels/andrejkarpathy.jpg",
+        "cat": "Learning",
+        "why": "How LLMs really work, built from scratch by one of the people who built them.",
+        "videos": [
+          {
+            "id": "kCc8FmEb1nY",
+            "title": "Let's build GPT: from scratch, in code"
+          },
+          {
+            "id": "7xTGNNLPyMI",
+            "title": "Deep Dive into LLMs like ChatGPT"
+          },
+          {
+            "id": "zjkBMFhNj_g",
+            "title": "Intro to Large Language Models"
+          },
+          {
+            "id": "EWvNQjAaOHw",
+            "title": "How I use LLMs"
+          },
+          {
+            "id": "VMj-3S1tku0",
+            "title": "Neural networks and backpropagation: micrograd"
+          },
+          {
+            "id": "zduSFxRajkE",
+            "title": "Let's build the GPT Tokenizer"
+          }
+        ]
+      },
+      {
+        "name": "freeCodeCamp",
+        "handle": "@freecodecamp",
+        "url": "https://www.youtube.com/@freecodecamp",
+        "avatar": "../uploads/library/channels/freecodecamp.jpg",
+        "cat": "Learning",
+        "why": "Free full-length courses: LangGraph, RAG, MCP, NestJS, PostgreSQL and Docker.",
+        "videos": [
+          {
+            "id": "jGg_1h0qzaM",
+            "title": "LangGraph Complete Course: AI Agents with Python"
+          },
+          {
+            "id": "sVcwVQRHIc8",
+            "title": "Learn RAG From Scratch"
+          },
+          {
+            "id": "DosHnyq78xY",
+            "title": "Intro to MCP Servers with Python"
+          },
+          {
+            "id": "sFnAHC9lLaw",
+            "title": "Learn NestJS – Complete Course"
+          },
+          {
+            "id": "qw--VYLpxG4",
+            "title": "Learn PostgreSQL – Full Course"
+          },
+          {
+            "id": "rjjES5IsPdg",
+            "title": "Learn Docker – Full DevOps Course"
+          }
+        ]
+      },
+      {
+        "name": "ByteByteGo",
+        "handle": "@ByteByteGo",
+        "url": "https://www.youtube.com/@ByteByteGo",
+        "avatar": "../uploads/library/channels/bytebytego.jpg",
+        "cat": "Learning",
+        "why": "System design made visual: scaling, caching, Kafka and microservices.",
+        "videos": [
+          {
+            "id": "i7twT3x5yv8",
+            "title": "System Design Interview: A Step-By-Step Guide"
+          },
+          {
+            "id": "lTAcCNbJ7KE",
+            "title": "What Are Microservices Really About?"
+          },
+          {
+            "id": "-RDyEFvnTXI",
+            "title": "Apache Kafka Fundamentals You Should Know"
+          },
+          {
+            "id": "dGAgxozNWFE",
+            "title": "Cache Systems Every Developer Should Know"
+          },
+          {
+            "id": "_1IKwnbscQU",
+            "title": "7 Must-know Strategies to Scale Your Database"
+          },
+          {
+            "id": "6ULyxuHKxg8",
+            "title": "What is API Gateway?"
+          }
+        ]
+      },
+      {
+        "name": "Hussein Nasser",
+        "handle": "@hnasr",
+        "url": "https://www.youtube.com/@hnasr",
+        "avatar": "../uploads/library/channels/hnasr.jpg",
+        "cat": "Learning",
+        "why": "Backend engineering in depth: Postgres, Kafka, Redis and connection pooling.",
+        "videos": [
+          {
+            "id": "q9jixKv4h2I",
+            "title": "How Postgres works"
+          },
+          {
+            "id": "LN_HcJVbySw",
+            "title": "What is Kafka and how does it work?"
+          },
+          {
+            "id": "V7FPk4J10KI",
+            "title": "Redis In-Memory Database Crash Course"
+          },
+          {
+            "id": "GTeCtIoV2Tw",
+            "title": "Connection Pooling in PostgreSQL with Node.js"
+          },
+          {
+            "id": "Jemuod4wKWo",
+            "title": "What is a database index?"
+          },
+          {
+            "id": "x9iHwoAbwiA",
+            "title": "Socket Management in Backend System Design"
+          }
+        ]
+      },
+      {
+        "name": "Stack Learner",
+        "handle": "@StackLearner",
+        "url": "https://www.youtube.com/@StackLearner",
+        "avatar": "../uploads/library/channels/stacklearner.jpg",
+        "cat": "Learning",
+        "why": "Bangla courses on system design, microservices, Docker and Node.js.",
+        "videos": [
+          {
+            "id": "Z3HgBkyU-Ts",
+            "title": "System Design and Application Architecture"
+          },
+          {
+            "id": "rmW6T72_RAU",
+            "title": "Building Microservices with TypeScript"
+          },
+          {
+            "id": "3GNBZvr3O_E",
+            "title": "Hands-on Docker for Microservices"
+          },
+          {
+            "id": "YichBo__Lzc",
+            "title": "Express 101: Node.js in Bangla"
+          },
+          {
+            "id": "Ky1_8cdIQBw",
+            "title": "JavaScript for Absolute Beginners"
+          },
+          {
+            "id": "QKOPKrH_m3g",
+            "title": "SQL vs NoSQL in Bangla"
+          }
+        ]
       }
     ]
   },
@@ -683,8 +1399,8 @@
         "sub": "Courses, tools and sites worth your time, plus the browser extensions I can’t live without."
       },
       {
-        "title": "Music & Nasheeds",
-        "sub": "The nasheeds on repeat, most loved first. All vocals only."
+        "title": "Watch & Listen",
+        "sub": "Quran on repeat while I code, and the channels I learn from: ideas, growth, faith and tech."
       }
     ],
     "skills": [
@@ -694,10 +1410,10 @@
       "agent-skills"
     ],
     "bookmarks": [
-      "roadmap.sh",
-      "React Bits",
-      "Shots",
-      "Free for Developers"
+      "Claude Code in Action",
+      "shadcn/ui",
+      "Langfuse",
+      "dbdiagram.io"
     ]
   },
   "icons": {
@@ -768,6 +1484,14 @@
     "tabler:headphones": {
       "vb": "0 0 24 24",
       "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"><path d=\"M4 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm11 0a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2z\"></path><path d=\"M4 15v-3a8 8 0 0 1 16 0v3\"></path></g>"
+    },
+    "custom:search-code": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/><path d=\"m9.5 9-1.5 2 1.5 2\"/><path d=\"m12.5 9 1.5 2-1.5 2\"/></g>"
+    },
+    "custom:graph": {
+      "vb": "0 0 24 24",
+      "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"5\" cy=\"6\" r=\"2.5\"/><circle cx=\"19\" cy=\"6\" r=\"2.5\"/><circle cx=\"12\" cy=\"18\" r=\"2.5\"/><path d=\"M7.3 7.2 10.7 16M16.7 7.2 13.3 16M7.5 6h9\"/></g>"
     }
   },
   "_note": "Library content. Copied from nahian.bd/library as a starting point; replace with your own items. Rebuild with: python3 scripts/build_nx_pages.py"

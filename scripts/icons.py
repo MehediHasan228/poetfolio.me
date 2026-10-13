@@ -18,6 +18,7 @@ P = {
     "case": '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm5-2V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m-4 5v.01"/><path d="M3 13a20 20 0 0 0 18 0"/></g>',
     "user": '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0m-2 14v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></g>',
     "userplus": '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0M16 19h6m-3-3v6M6 21v-2a4 4 0 0 1 4-4h4"/></g>',
+    "books": '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/>',
     "library": '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>'
 }
 
@@ -26,10 +27,11 @@ def ico(name, cls=""):
     cls_attr = f' class="{cls}"' if cls else ''
     return f'<svg viewBox="0 0 24 24" aria-hidden="true"{cls_attr}>{svg}</svg>'
 
-BOTTOM_NAV = [("", "Home"), ("profile", "Profile"), ("projects", "Projects"), ("writing", "Writing"), ("people", "People")]
+BOTTOM_NAV = [("", "Home"), ("profile", "Profile"), ("projects", "Projects"), ("people", "People"), ("library", "Library")]
+BOTTOM_NAV_ICON = {"library": "books"}  # bookshelf icon; "library" in P is an open book
 
 def bottom_nav(cur, prefix="../"):
-    html_out = '<div class="bottom-nav" role="navigation" aria-label="Main">'
+    html_out = '<div class="bottom-nav" role="navigation" aria-label="Quick navigation"><span class="bn-pill" aria-hidden="true"></span>'
     for k, l in BOTTOM_NAV:
         href = f'{prefix}{k}/' if k else prefix
         if not k and prefix == "./":
@@ -38,6 +40,6 @@ def bottom_nav(cur, prefix="../"):
             href = "../"
         
         is_cur = (k == cur) if cur else (not k and prefix == "./")
-        html_out += f'<a href="{href}"' + (' aria-current="page"' if is_cur else "") + f'>{ico(k or "home")}<span>{l}</span></a>'
+        html_out += f'<a href="{href}"' + (' aria-current="page"' if is_cur else "") + f'><span class="bn-ico">{ico(BOTTOM_NAV_ICON.get(k, k or "home"))}</span><span class="bn-label">{l}</span></a>'
     html_out += "</div>"
     return html_out
