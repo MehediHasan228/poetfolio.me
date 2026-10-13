@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
     <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
@@ -43,7 +44,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=238">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=240">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -204,7 +205,21 @@
             if (a.getAttribute('aria-current') === 'page') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
             /* visual feedback only; aria-current stays with the page that is actually shown */
             a.classList.add('is-pending'); place(a, true);
+            showSkeleton();
         });
+        /* while the next page loads, the content area shows placeholder cards; the header and tab bar stay put */
+        function showSkeleton() {
+            if (document.getElementById('page-skeleton')) return;
+            var sk = document.createElement('div');
+            sk.id = 'page-skeleton'; sk.setAttribute('aria-hidden', 'true');
+            sk.innerHTML = '<div class="sk-hero"><i class="sk-av"></i><i class="sk-l w60"></i><i class="sk-l w40"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w80"></i><i class="sk-l w95"></i><i class="sk-l w70"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w60"></i><i class="sk-l w90"></i><i class="sk-l w50"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w75"></i><i class="sk-l w85"></i></div>';
+            document.body.appendChild(sk);
+            requestAnimationFrame(function () { sk.classList.add('is-on'); });
+        }
+        window.addEventListener('pageshow', function () { var s = document.getElementById('page-skeleton'); if (s) s.remove(); });
     });
     /* once per release: re-fetch the main pages so the browser drops any old copies it kept
        (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
