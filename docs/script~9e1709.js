@@ -4084,18 +4084,26 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (!orb || !targets.length) return;
         const phone = window.matchMedia('(max-width: 767px)');
         let raf = 0;
+        // instead of hiding, the orb lifts just above the hero buttons while they would sit under it
         const check = () => {
             raf = 0;
-            if (!phone.matches || !orb.classList.contains('chat-collapsed')) { orb.classList.remove('ai-dodge'); return; }
             orb.classList.remove('ai-dodge');
+            if (!phone.matches || !orb.classList.contains('chat-collapsed')) { orb.style.removeProperty('--ai-lift'); return; }
+            orb.style.removeProperty('--ai-lift');
             const o = orb.getBoundingClientRect();
-            const hit = targets.some((t) => { const r = t.getBoundingClientRect(); return !(o.left > r.right || o.right < r.left || o.top > r.bottom || o.bottom < r.top); });
-            orb.classList.toggle('ai-dodge', hit);
+            let lift = 0;
+            targets.forEach((t) => {
+                const r = t.getBoundingClientRect();
+                if (!(o.left > r.right || o.right < r.left || o.top > r.bottom || o.bottom < r.top)) lift = Math.max(lift, o.bottom - r.top + 10);
+            });
+            if (lift) orb.style.setProperty('--ai-lift', Math.min(lift, 140) + 'px');
         };
         const queue = () => { if (!raf) raf = requestAnimationFrame(check); };
         addEventListener('scroll', queue, { passive: true });
         addEventListener('resize', queue);
         setTimeout(check, 400);
+        // the greeting bubble points at the orb, so the orb comes back while it is open and re-checks when it closes
+        new MutationObserver(queue).observe(document.body, { childList: true });
     })();
 
     // ==========================================

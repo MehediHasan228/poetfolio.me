@@ -14470,3 +14470,13 @@ html body nav a.nav-link-item.active::after,
 html body nav a.nav-link-item[aria-current="page"]::after {
     background: linear-gradient(90deg, var(--accent-1), var(--accent-2, var(--accent-1))) !important;
 }
+
+/* Phones: a larger portrait, and the highlights box shows two full lines instead of a clipped third */
+@media (max-width: 767px) {
+    html body .hero-image-wrapper:not(#_h) { max-width: 214px !important; width: 58vw !important; }
+    html body #terminal-ticker .log-line:nth-child(n+3) { display: none !important; }
+}
+/* phones: the orb lifts above the hero buttons instead of disappearing */
+@media (max-width: 767px) {
+    html body #ai-chat-widget.chat-collapsed:not(#_ai) { translate: 0 calc(var(--ai-lift, 0px) * -1); transition: translate .3s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1), opacity .25s ease !important; }
+}

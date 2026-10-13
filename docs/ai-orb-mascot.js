@@ -452,7 +452,12 @@
                 }
             } catch (e) {}
         }
-        ss.set('greet:pages', String(num(ss.get('greet:pages')) + 1));
+        try {
+            const seenPaths = JSON.parse(ss.get('greet:paths') || '[]');
+            if (!seenPaths.includes(location.pathname)) seenPaths.push(location.pathname);
+            ss.set('greet:paths', JSON.stringify(seenPaths.slice(-50)));
+            ss.set('greet:pages', String(seenPaths.length));
+        } catch (e) {}
         let attention = num(ss.get('greet:active'));
 
         /* the project card in view the longest (projects page), remembered for this visit */
@@ -683,6 +688,7 @@
             el.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
             el.addEventListener('touchend', (e) => { const t = e.changedTouches[0]; if (t.clientX - sx > 60 || t.clientY - sy > 50) close(true); }, { passive: true });
             document.body.appendChild(el);
+            { const w = widget(); if (w) w.classList.remove('ai-dodge', 'ai-tucked'); }
             requestAnimationFrame(() => el && el.classList.add('is-in'));
             mood('surprised');
             flashTitle(true);

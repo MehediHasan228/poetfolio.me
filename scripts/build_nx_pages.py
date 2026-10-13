@@ -53,7 +53,7 @@ HERO_STACK = [
             ("LangGraph", "langgraph", None, "Multi-agent workflows in the NGO ERP"),
             ("Ollama", "ollama", "#475569", "Local LLMs for private, on-device AI"),
             ("Antigravity", "antigravity", "#3b82f6", "AI coding agent in my daily workflow"),
-            ("OpenCode", "opencode", "#64748b", "Terminal coding agent I use every day")], 4),
+            ("OpenCode", "opencode", None, "Terminal coding agent I use every day")], 4),
     ("Build", [("NestJS", "nestjs", None, "Microservices in the NGO ERP"),
                ("TypeScript", "typescript", None, "My default across frontend and backend"),
                ("Python", "python", None, "AI pipelines and automation"),
@@ -2820,6 +2820,28 @@ html body.nx-page .nx .cover-banner-wrap [data-slats-canvas] { transition: opaci
   -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
           mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
 }
+
+/* phones: tools sit in an even grid, at least three across, scaling with the screen */
+@media (max-width: 640px) {
+  .nx .nx-hero .stack-rows { width: 100%; max-width: 100%; box-sizing: border-box; padding: 0; }
+  .nx .nx-hero .stack-row { display: flex !important; flex-wrap: wrap; justify-content: center; width: 100%; gap: 5px !important; --cols: 3; }
+  .nx .nx-hero .stack-row > .pill { flex: 0 0 calc((100% - (var(--cols) - 1) * 5px) / var(--cols)); box-sizing: border-box; }
+  .nx .nx-hero .stack-row .pill { justify-content: center; min-width: 0; padding: 5px 4px !important; font-size: clamp(10px, 3.15vw, 13px) !important; gap: 3px !important; letter-spacing: -.01em; }
+  .nx .nx-hero .stack-row .pill > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .nx .nx-hero .stack-row .pill img { width: 12px; height: 12px; flex-shrink: 0; }
+}
+
+@media (min-width: 480px) and (max-width: 640px) { .nx .nx-hero .stack-row { --cols: 4; } }
+
+@media (max-width: 339px) {
+  .nx .nx-hero .stack-rows { width: calc(100% + 16px); max-width: none; margin-left: -8px; margin-right: -8px; }
+  .nx .nx-hero .stack-row .pill img { display: none; }
+  .nx .nx-hero .stack-row .pill { padding: 5px 3px !important; font-size: 10px !important; letter-spacing: -.02em; }
+}
+
+/* an AI chip revealed by "+N" keeps its turning light after the reveal animation */
+.nx .nx-hero .stack-row.is-open .ask-chip.ultra.is-extra { animation: chipIn .3s ease both, ultraTurn 4.5s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .nx .nx-hero .stack-row.is-open .ask-chip.ultra.is-extra { animation: none; } }
 
 """
 
