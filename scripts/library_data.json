@@ -1012,12 +1012,12 @@
         "why": "Scholarly lectures on the Sunnah."
       },
       {
-        "name": "Professor Mokhter Ahmad",
-        "handle": "@mokhterahmad",
-        "url": "https://www.youtube.com/@mokhterahmad",
-        "avatar": "../uploads/library/channels/mokhterahmad.jpg",
+        "name": "Al-Itisam TV",
+        "handle": "@alitisamtv",
+        "url": "https://www.youtube.com/@alitisamtv",
+        "avatar": "../uploads/library/channels/alitisamtv.jpg",
         "cat": "Islamic lectures",
-        "why": "Tarbiyah and self-development through Islam."
+        "why": "Jumu'ah khutbahs and Quran tafsir by Shaikh Abdur Razzak bin Yousuf."
       },
       {
         "name": "Ali Dawah",
@@ -1098,14 +1098,6 @@
         "avatar": "../uploads/library/channels/shuraym1414.jpg",
         "cat": "Quran",
         "why": "Recitations and legacy of the former imam of Masjid al-Haram."
-      },
-      {
-        "name": "Enayet Chowdhury",
-        "handle": "@EnayetChowdhuryOfficial",
-        "url": "https://www.youtube.com/@EnayetChowdhuryOfficial",
-        "avatar": "../uploads/library/channels/enayetchowdhuryofficial.jpg",
-        "cat": "Faith",
-        "why": "Self-improvement through an Islamic lens."
       },
       {
         "name": "MercifulServant",

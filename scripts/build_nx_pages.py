@@ -1321,7 +1321,7 @@ a.nl-ch-big:hover { transform: none; }
   text-transform: uppercase; color: var(--ink-2); }
 .nl-cat-label b { font-size: 11.5px; font-weight: 700; letter-spacing: 0; padding: 1px 8px; border-radius: 999px; color: var(--ink-3);
   background: var(--surface-2); border: 1px solid var(--line); }
-.nl-cat-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
 .nl-learn-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
 .nl-learn-head h3 { margin: 0; font-size: 19px; font-weight: 700; color: var(--ink); }
 .nl-learn-head p { margin: 3px 0 0; font-size: 13.5px; color: var(--ink-3); }
@@ -1470,6 +1470,31 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 }
 @media (prefers-reduced-motion: reduce) {
   .bottom-nav .bn-ico, .bottom-nav a.is-pressed .bn-ico { transition: none; transform: none; }
+}
+/* phones: featured channels as compact shelves (one-row header, swipeable videos with dots) */
+.nl-dots { display: none; }
+@media (max-width: 767px) {
+  .nl-feat { display: block; padding: 14px; }
+  .nl-feat .nl-ch-big { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; grid-template-areas: "img name visit" "img handle visit" "desc desc desc";
+    column-gap: 12px; row-gap: 0; align-items: center; padding: 0 0 12px; height: auto; }
+  .nl-feat .nl-ch-big img { grid-area: img; width: 40px; height: 40px; }
+  .nl-feat .nl-ch-big .nl-ch-meta { display: contents; }
+  .nl-feat .nl-ch-big .nl-ch-meta b { grid-area: name; font-size: 15.5px; align-self: end; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nl-feat .nl-ch-big .nl-ch-meta small { grid-area: handle; align-self: start; }
+  .nl-feat .nl-ch-big .nl-ch-meta span { grid-area: desc; margin-top: 8px; font-size: 13px; line-height: 1.45;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  html body .nl-feat .nl-ch-visit:not(#_btn) { grid-area: visit; margin: 0 !important; padding: 6px 11px !important; font-size: 0 !important; gap: 0 !important; }
+  .nl-feat .nl-ch-visit svg { width: 15px; height: 15px; }
+  .nl-feat .nl-ch-visit::after { content: "Visit"; font-size: 12.5px; font-weight: 600; margin-left: 5px; }
+  .nl-feat .nl-vids { gap: 12px; scroll-snap-type: x mandatory; }
+  .nl-feat .nl-vid { flex: 0 0 75%; }
+  .nl-vids.fade-r { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }
+  .nl-vids.fade-l { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px); mask-image: linear-gradient(to right, transparent, #000 40px); }
+  .nl-vids.fade-l.fade-r { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
+  .nl-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+  .nl-dots button { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 999px; cursor: pointer;
+    background: color-mix(in srgb, var(--ink) 22%, transparent); transition: width .25s ease, background .25s ease; }
+  .nl-dots button.is-on { width: 18px; background: var(--brand); }
 }
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
@@ -3350,7 +3375,7 @@ def library_sub(key):
                     f'<div><h3>Learning</h3><p>Courses and lectures that match my stack: LLMs, agents, backend and system design.</p></div></div>'
                     f'{"".join(nl_shelf(x) for x in d.get("learning", []))}</div>' if d.get("learning") else "")
         groups = "".join(
-            f'<div class="nl-block nl-cat" data-cat="{e(k)}"><h4 class="nl-cat-label">{e(k)}<b>{sum(1 for x in d["channels"] if x["cat"] == k)}</b></h4>'
+            f'<div class="nl-block nl-cat" data-cat="{e(k)}"><h4 class="nl-cat-label">{e(k)}</h4>'
             f'<div class="nl-ch-grid">{"".join(nl_channel_card(x) for x in d["channels"] if x["cat"] == k)}</div></div>'
             for k in cats if any(x["cat"] == k for x in d["channels"]))
         content = (f'<div class="nl-chips" role="group" aria-label="Filter channels">{chips}</div>{quran}'
@@ -3389,7 +3414,7 @@ LIB_JS = """<script>
     }
   }
   /* horizontal chip rows (tabs + bookmark filters) */
-  var rows = document.querySelectorAll(".nl-chips, .nl-tabs ul, .nl-shelf-row");
+  var rows = document.querySelectorAll(".nl-chips, .nl-tabs ul, .nl-shelf-row, .nl-vids");
   function fade(row) {
     row.classList.toggle("fade-l", row.scrollLeft > 4);
     row.classList.toggle("fade-r", row.scrollLeft + row.clientWidth < row.scrollWidth - 4);
@@ -3414,6 +3439,25 @@ LIB_JS = """<script>
     fade(row);
   });
   window.addEventListener("resize", function () { rows.forEach(fade); });
+
+  /* position dots under sideways video rows (shown on phones only, via CSS) */
+  document.querySelectorAll(".nl-vids, .nl-shelf-row").forEach(function (row) {
+    var cards = row.children; if (cards.length < 2) return;
+    var dots = document.createElement("div"); dots.className = "nl-dots"; dots.setAttribute("aria-hidden", "true");
+    for (var i = 0; i < cards.length; i++) {
+      var b = document.createElement("button"); b.type = "button"; b.tabIndex = -1;
+      (function (n) { b.addEventListener("click", function () { row.scrollTo({ left: cards[n].offsetLeft - cards[0].offsetLeft, behavior: "smooth" }); }); })(i);
+      dots.appendChild(b);
+    }
+    row.insertAdjacentElement("afterend", dots);
+    function sync() {
+      var step = cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
+      var max = row.scrollWidth - row.clientWidth;
+      var n = row.scrollLeft >= max - 4 ? cards.length - 1 : Math.round(row.scrollLeft / step);
+      [].forEach.call(dots.children, function (d, k) { d.classList.toggle("is-on", k === n); });
+    }
+    row.addEventListener("scroll", sync, { passive: true }); sync();
+  });
 
   document.addEventListener("click", function (ev) {
     var t = ev.target;
