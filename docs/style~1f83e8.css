@@ -14480,3 +14480,36 @@ html body nav a.nav-link-item[aria-current="page"]::after {
 @media (max-width: 767px) {
     html body #ai-chat-widget.chat-collapsed:not(#_ai) { translate: 0 calc(var(--ai-lift, 0px) * -1); transition: translate .3s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1), opacity .25s ease !important; }
 }
+
+/* Open chat panel: a solid surface in dark themes, so the page behind no longer shows through and muddies the colours */
+html:is([data-theme="dark"], [data-theme="god-mode"]):is(*, [data-theme]) body #ai-chat-widget.chat-expanded:not(#_ai),
+html:not([data-theme]) body #ai-chat-widget.chat-expanded:not(#_ai) {
+    background: linear-gradient(180deg, rgba(var(--accent-1-rgb), .06), transparent 30%), #0d1526 !important;
+    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+html[data-theme="god-mode"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(0,255,0,.05), transparent 30%), #030803 !important; }
+html[data-theme="cyberpunk"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(244,63,94,.07), transparent 30%), #12040a !important; backdrop-filter: none !important; }
+/* the user's own bubble stays fully visible at the top edge instead of fading into the header */
+html #ai-chat-widget.chat-expanded .chat-body { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; }
+
+/* Bottom tab bar: no shade or ripple on tap; the selection pill simply glides to the tapped tab */
+html body .bottom-nav:not(#_bn) a,
+html body .bottom-nav:not(#_bn) a:active,
+html body .bottom-nav:not(#_bn) a:focus { background: transparent !important; transform: none !important; outline: none; -webkit-tap-highlight-color: transparent !important; }
+html body .bottom-nav:not(#_bn) a:focus-visible { outline: 2px solid var(--accent-1); outline-offset: -4px; border-radius: 12px; }
+html body .bottom-nav:not(#_bn) .bn-ripple { display: none !important; }
+html body .bottom-nav:not(#_bn) a:not([aria-current="page"]) svg { background: transparent !important; }
+/* no pill on pages without a tab of their own (e.g. Projects) */
+html body .bottom-nav:not(:has(a[aria-current="page"])) .bn-pill:not(#_bn) { opacity: 0 !important; }
+
+/* Bottom tab bar: the active tab is shown only by a brighter colour; no pill, no icon background */
+html body .bottom-nav:not(#_bn) .bn-pill { display: none !important; }
+html body .bottom-nav:not(#_bn) a svg,
+html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { background: transparent !important; box-shadow: none !important; }
+html body .bottom-nav:not(#_bn) a { opacity: .62; transition: opacity .2s ease, color .2s ease; }
+html body .bottom-nav:not(#_bn) a[aria-current="page"],
+html body .bottom-nav:not(#_bn) a.is-pending { opacity: 1; color: var(--accent-1) !important; }
+html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { filter: drop-shadow(0 0 6px rgba(var(--accent-1-rgb), .55)); }
+[data-theme="mint"] body .bottom-nav:not(#_bn) a:is([aria-current="page"], .is-pending) { color: #047857 !important; }
+/* the tapped tab lights up instantly */
+html body .bottom-nav:not(#_bn) a { transition: none !important; }

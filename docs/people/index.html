@@ -43,7 +43,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=233">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=238">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -177,25 +177,20 @@
         window.addEventListener('resize', reset);
         window.addEventListener('orientationchange', reset);
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(reset);
+        window.addEventListener('load', reset);
+        /* any later change in the bar's size or the tabs' layout re-centres the pill under the active icon */
+        if ('ResizeObserver' in window) {
+            var rt = 0;
+            var ro = new ResizeObserver(function () { cancelAnimationFrame(rt); rt = requestAnimationFrame(function () { if (!bar.querySelector('a.is-pending')) place(current(), false); }); });
+            ro.observe(bar);
+            bar.querySelectorAll('a').forEach(function (x) { ro.observe(x); });
+        }
         /* the page may come back from the back/forward cache with the tapped tab still pending */
         window.addEventListener('pageshow', function (ev) { if (ev.persisted) reset(); });
-        /* press feedback like a native tab bar: a ripple from the touch point inside the icon pill, plus a light haptic tick */
-        var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+        /* press feedback: only a light haptic tick, no ripple or shading */
         bar.addEventListener('pointerdown', function (e) {
-            var a = e.target.closest('a'); if (!a) return;
-            a.classList.add('is-pressed');
+            if (!e.target.closest('a')) return;
             if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
-            if (still.matches) return;
-            var host = a.querySelector('.bn-ico'); if (!host) return;
-            var r = host.getBoundingClientRect(), size = Math.max(r.width, r.height) * 2.2;
-            var dot = document.createElement('span'); dot.className = 'bn-ripple';
-            var x = Math.min(Math.max(e.clientX - r.left, 0), r.width), y = Math.min(Math.max(e.clientY - r.top, 0), r.height);
-            dot.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (x - size / 2) + 'px;top:' + (y - size / 2) + 'px';
-            host.appendChild(dot);
-            dot.addEventListener('animationend', function () { dot.remove(); });
-        });
-        ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (t) {
-            bar.addEventListener(t, function () { bar.querySelectorAll('a.is-pressed').forEach(function (x) { x.classList.remove('is-pressed'); }); });
         });
         bar.addEventListener('click', function (e) {
             var a = e.target.closest('a'); if (!a) return;
@@ -208,13 +203,22 @@
        (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
     window.addEventListener('load', function () {
         var RELEASE = '2026-10-13b';
-        try { if (localStorage.getItem('pages_refreshed') === RELEASE) return; } catch (e) { return; }
+        try {
+            if (localStorage.getItem('pages_refreshed') === RELEASE) return;
+            /* first-time visitors have nothing stale to clear: mark it done and spend no bandwidth */
+            if (!localStorage.getItem('pages_refreshed') && !localStorage.getItem('greet:last') && !localStorage.getItem('mehedi_theme')) { localStorage.setItem('pages_refreshed', RELEASE); return; }
+        } catch (e) { return; }
         var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
         var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
         var pages = ['', 'index.html', 'profile/', 'projects/', 'people/', 'contact/', 'library/',
                      'library/skills/', 'library/bookmarks/', 'library/music/'];
-        Promise.all(pages.map(function (p) { return fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}); }))
-            .then(function () { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} });
+        var i = 0;
+        (function next() {
+            if (i >= pages.length) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }
+            var p = pages[i++];
+            var run = function () { fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}).then(next); };
+            if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 4000 }); else setTimeout(run, 400);
+        })();
     });
     /* phones: hide the header while scrolling down, bring it back when scrolling up */
     (function () {
@@ -324,7 +328,7 @@ document.addEventListener("pointermove", function (ev) {
 });
 </script><div class="r-card"><div class="r-card-head"><div class="r-head-title"><span class="r-head-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Who to follow</span></div></div><div class="follow-list"><div class="f-row"><span class="av p-img" style="background-image:url(../uploads/people/ahmed-shamim-hassan-shaon.webp)"><span class="plat"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span></span><div class="p-id" title="Software architect and Laravel contributor; clear thinking on building and leading teams."><b title="Software architect and Laravel contributor; clear thinking on building and leading teams.">Ahmed Shamim Hassan Shaon</b><small>CEO of Megaminds Learning, software architect and Laravel contributor</small></div><a class="f-btn" href="https://x.com/me_shaon" target="_blank" rel="noopener noreferrer">Follow</a></div><div class="f-row"><span class="av p-img" style="background-image:url(../uploads/people/mohammad-emran-hasan.webp)"><span class="plat"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span></span><div class="p-id" title="Decades of real-world experience in building and shipping SaaS products."><b title="Decades of real-world experience in building and shipping SaaS products.">Mohammad Emran Hasan</b><small>Building SaaS at klasio.com and helping teams ship Laravel products at figlab.io</small></div><a class="f-btn" href="https://x.com/phpfour" target="_blank" rel="noopener noreferrer">Follow</a></div><div class="f-row"><span class="av p-img" style="background-image:url(../uploads/people/hm-nayem.webp)"><span class="plat"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span></span><div class="p-id" title="Founder of Stack Learner, full-stack developer and trainer"><b title="Founder of Stack Learner, full-stack developer and trainer">HM Nayem</b><small>Founder of Stack Learner, full-stack developer and trainer</small></div><a class="f-btn" href="https://github.com/mrhm-dev" target="_blank" rel="noopener noreferrer">Follow</a></div></div><a class="see-all-people" href="../people/"><span class="see-all-label">See all 11 people <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></span><span class="see-all-avs"><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(../uploads/people/sumit-saha.jpg);background-size:cover;background-position:center;display:inline-block;"></span><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(../uploads/people/jhankar-mahbub.jpg);background-size:cover;background-position:center;display:inline-block;"></span><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(../uploads/people/karpathy.jpg);background-size:cover;background-position:center;display:inline-block;"></span><span class="av-more" style="width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px var(--surface);border:1px solid var(--line);margin-left:-8px;">+5</span></span></a></div><div class="r-card"><div class="r-card-head"><div class="r-head-title"><span class="r-head-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><span>Find me on</span></div></div><div class="find-list"><a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span><span class="find-info"><b>GitHub</b><small>@MehediHasan228</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></span><span class="find-info"><b>LinkedIn</b><small>in/mehedi-hasan-2859383b4</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></span><span class="find-info"><b>WhatsApp</b><small>+880 1799-447594</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="mailto:mehedihasan228.cse@gmail.com" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="find-info"><b>Email</b><small>mehedihasan228.cse@gmail.com</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://mehedi.pro.bd" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><span class="find-info"><b>Portfolio</b><small>mehedi.pro.bd</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a></div><div class="find-foot"><a class="see-all-profiles" href="../contact/"><span>See all contact channels</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a></div></div></aside>
 </div>
-<div class="bottom-nav" role="navigation" aria-label="Quick navigation"><span class="bn-pill" aria-hidden="true"></span><a href="../"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="bn-label">Home</span></a><a href="../profile/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg></span><span class="bn-label">Profile</span></a><a href="../projects/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg></span><span class="bn-label">Projects</span></a><a href="../people/" aria-current="page"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span><span class="bn-label">People</span></a><a href="../library/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg></span><span class="bn-label">Library</span></a></div>
+<div class="bottom-nav" role="navigation" aria-label="Quick navigation"><span class="bn-pill" aria-hidden="true"></span><a href="../"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="bn-label">Home</span></a><a href="../profile/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg></span><span class="bn-label">Profile</span></a><a href="../people/" aria-current="page"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span><span class="bn-label">People</span></a><a href="../library/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg></span><span class="bn-label">Library</span></a></div>
 </div>
 <script src="../nx/nx.js?v=8"></script>
 <link rel="modulepreload" href="../nx/micro-slats.js">
@@ -522,6 +526,36 @@ document.addEventListener("pointermove", function (ev) {
     <script src="../ai-orb-mascot.js?v=13" defer></script>
     <script src="../script~9e1709.js?v=211" defer></script>
 
+    <!-- Instant page changes: the main pages are prerendered in the background (Chrome, Edge),
+         and any other browser prefetches a link the moment it is touched or hovered -->
+    <script type="speculationrules">
+    {"prerender": [{"source": "list", "urls": ["/", "/profile/", "/people/", "/library/"], "eagerness": "eager"},
+                   {"where": {"href_matches": "/*"}, "eagerness": "moderate"}],
+     "prefetch": [{"source": "list", "urls": ["/projects/", "/contact/"], "eagerness": "eager"}]}
+    </script>
+    <script>
+    (function () {
+        var done = {};
+        function fetchIn(href) {
+            if (done[href] || href === location.href.split('#')[0]) return;
+            done[href] = 1;
+            var l = document.createElement('link'); l.rel = 'prefetch'; l.href = href; document.head.appendChild(l);
+        }
+        /* once the page is idle, quietly fetch the tab pages so a tap opens them from cache */
+        window.addEventListener('load', function () {
+            var go = function () { document.querySelectorAll('.bottom-nav a[href]').forEach(function (a) { fetchIn(a.href.split('#')[0]); }); };
+            if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+        });
+        function warm(e) {
+            var a = e.target.closest && e.target.closest('a[href]');
+            if (!a || a.target === '_blank' || a.origin !== location.origin) return;
+            fetchIn(a.href.split('#')[0]);
+        }
+        document.addEventListener('touchstart', warm, { passive: true });
+        document.addEventListener('pointerover', warm, { passive: true });
+        document.addEventListener('focusin', warm);
+    })();
+    </script>
 </body>
 
 </html>

@@ -27,7 +27,7 @@ def ico(name, cls=""):
     cls_attr = f' class="{cls}"' if cls else ''
     return f'<svg viewBox="0 0 24 24" aria-hidden="true"{cls_attr}>{svg}</svg>'
 
-BOTTOM_NAV = [("", "Home"), ("profile", "Profile"), ("projects", "Projects"), ("people", "People"), ("library", "Library")]
+BOTTOM_NAV = [("", "Home"), ("profile", "Profile"), ("people", "People"), ("library", "Library")]
 BOTTOM_NAV_ICON = {"library": "books"}  # bookshelf icon; "library" in P is an open book
 
 def bottom_nav(cur, prefix="../"):

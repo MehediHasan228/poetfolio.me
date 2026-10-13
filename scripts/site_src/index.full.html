@@ -43,7 +43,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=233">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=238">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -198,25 +198,20 @@
         window.addEventListener('resize', reset);
         window.addEventListener('orientationchange', reset);
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(reset);
+        window.addEventListener('load', reset);
+        /* any later change in the bar's size or the tabs' layout re-centres the pill under the active icon */
+        if ('ResizeObserver' in window) {
+            var rt = 0;
+            var ro = new ResizeObserver(function () { cancelAnimationFrame(rt); rt = requestAnimationFrame(function () { if (!bar.querySelector('a.is-pending')) place(current(), false); }); });
+            ro.observe(bar);
+            bar.querySelectorAll('a').forEach(function (x) { ro.observe(x); });
+        }
         /* the page may come back from the back/forward cache with the tapped tab still pending */
         window.addEventListener('pageshow', function (ev) { if (ev.persisted) reset(); });
-        /* press feedback like a native tab bar: a ripple from the touch point inside the icon pill, plus a light haptic tick */
-        var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+        /* press feedback: only a light haptic tick, no ripple or shading */
         bar.addEventListener('pointerdown', function (e) {
-            var a = e.target.closest('a'); if (!a) return;
-            a.classList.add('is-pressed');
+            if (!e.target.closest('a')) return;
             if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
-            if (still.matches) return;
-            var host = a.querySelector('.bn-ico'); if (!host) return;
-            var r = host.getBoundingClientRect(), size = Math.max(r.width, r.height) * 2.2;
-            var dot = document.createElement('span'); dot.className = 'bn-ripple';
-            var x = Math.min(Math.max(e.clientX - r.left, 0), r.width), y = Math.min(Math.max(e.clientY - r.top, 0), r.height);
-            dot.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (x - size / 2) + 'px;top:' + (y - size / 2) + 'px';
-            host.appendChild(dot);
-            dot.addEventListener('animationend', function () { dot.remove(); });
-        });
-        ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (t) {
-            bar.addEventListener(t, function () { bar.querySelectorAll('a.is-pressed').forEach(function (x) { x.classList.remove('is-pressed'); }); });
         });
         bar.addEventListener('click', function (e) {
             var a = e.target.closest('a'); if (!a) return;
@@ -229,13 +224,22 @@
        (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
     window.addEventListener('load', function () {
         var RELEASE = '2026-10-13b';
-        try { if (localStorage.getItem('pages_refreshed') === RELEASE) return; } catch (e) { return; }
+        try {
+            if (localStorage.getItem('pages_refreshed') === RELEASE) return;
+            /* first-time visitors have nothing stale to clear: mark it done and spend no bandwidth */
+            if (!localStorage.getItem('pages_refreshed') && !localStorage.getItem('greet:last') && !localStorage.getItem('mehedi_theme')) { localStorage.setItem('pages_refreshed', RELEASE); return; }
+        } catch (e) { return; }
         var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
         var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
         var pages = ['', 'index.html', 'profile/', 'projects/', 'people/', 'contact/', 'library/',
                      'library/skills/', 'library/bookmarks/', 'library/music/'];
-        Promise.all(pages.map(function (p) { return fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}); }))
-            .then(function () { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} });
+        var i = 0;
+        (function next() {
+            if (i >= pages.length) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }
+            var p = pages[i++];
+            var run = function () { fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}).then(next); };
+            if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 4000 }); else setTimeout(run, 400);
+        })();
     });
     /* phones: hide the header while scrolling down, bring it back when scrolling up */
     (function () {
@@ -1821,6 +1825,36 @@
     <script src="./ai-orb-mascot.js?v=13" defer></script>
     <script src="./script~9e1709.js?v=211" defer></script>
 
+    <!-- Instant page changes: the main pages are prerendered in the background (Chrome, Edge),
+         and any other browser prefetches a link the moment it is touched or hovered -->
+    <script type="speculationrules">
+    {"prerender": [{"source": "list", "urls": ["/", "/profile/", "/people/", "/library/"], "eagerness": "eager"},
+                   {"where": {"href_matches": "/*"}, "eagerness": "moderate"}],
+     "prefetch": [{"source": "list", "urls": ["/projects/", "/contact/"], "eagerness": "eager"}]}
+    </script>
+    <script>
+    (function () {
+        var done = {};
+        function fetchIn(href) {
+            if (done[href] || href === location.href.split('#')[0]) return;
+            done[href] = 1;
+            var l = document.createElement('link'); l.rel = 'prefetch'; l.href = href; document.head.appendChild(l);
+        }
+        /* once the page is idle, quietly fetch the tab pages so a tap opens them from cache */
+        window.addEventListener('load', function () {
+            var go = function () { document.querySelectorAll('.bottom-nav a[href]').forEach(function (a) { fetchIn(a.href.split('#')[0]); }); };
+            if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+        });
+        function warm(e) {
+            var a = e.target.closest && e.target.closest('a[href]');
+            if (!a || a.target === '_blank' || a.origin !== location.origin) return;
+            fetchIn(a.href.split('#')[0]);
+        }
+        document.addEventListener('touchstart', warm, { passive: true });
+        document.addEventListener('pointerover', warm, { passive: true });
+        document.addEventListener('focusin', warm);
+    })();
+    </script>
 </body>
 
 </html>
