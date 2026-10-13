@@ -14464,3 +14464,9 @@ html[data-theme="god-mode"] .gradient-text {
 
 /* The highlights box shows exactly three lines */
 #terminal-ticker { height: auto !important; min-height: 0 !important; }
+
+/* Active nav underline follows the theme (it was a fixed cyan-to-blue gradient everywhere) */
+html body nav a.nav-link-item.active::after,
+html body nav a.nav-link-item[aria-current="page"]::after {
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2, var(--accent-1))) !important;
+}

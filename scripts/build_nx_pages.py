@@ -207,17 +207,21 @@ PROJECTS = [
 ]
 # (initials, name, handle, platform, url, bio, why, tags)
 PEOPLE = [
-    ("https://nahian.bd/_astro/ahmed-shamim-hassan-shaon.BIgVFP6s_Z1hpCVE.webp", "Ahmed Shamim Hassan Shaon", "@me_shaon", "X", "https://x.com/me_shaon", "CEO of Megaminds Learning, software architect and Laravel contributor", "My mentor and the senior brother everyone wants by their side. I admire him the most.", ["Tech"]),
-    ("https://nahian.bd/_astro/mohammad-emran-hasan.B3Wat4fb_2rMcEN.webp", "Mohammad Emran Hasan", "@phpfour", "X", "https://x.com/phpfour", "Building SaaS at klasio.com and helping teams ship Laravel products at figlab.io", "The guru of gurus, with extensive experience behind every tip.", ["Tech"]),
-    ("https://nahian.bd/_astro/hm-nayem.Ds5mCNNA_Z8zyPc.webp", "HM Nayem", "@mrhm-dev", "GitHub", "https://github.com/mrhm-dev", "Founder of Stack Learner, full-stack developer and trainer", "Founder of Stack Learner, full-stack developer and trainer", ["Tech"]),
-    ("https://nahian.bd/_astro/muntaser-muttaqi.kNFzAuiZ_ZVBNB4.webp", "Muntaser Muttaqi", "@iammuttaqi", "GitHub", "https://github.com/iammuttaqi", "Software engineer at GymScanner and Laravel enthusiast", "A great person to follow", ["Tech"]),
-    ("https://nahian.bd/_astro/mehbub-rashid-rabu.M5BbTgk6_1L2swT.webp", "Mehbub Rashid Rabu", "/mehbub.rashid.2025", "Facebook", "https://www.facebook.com/mehbub.rashid.2025", "Web developer focused on Node.js, React, WordPress, chatbots and automations", "A great person to follow", ["Tech"]),
-    ("https://nahian.bd/_astro/jeffrey-way.DplsT5Lt_1zBnpr.webp", "Jeffrey Way", "@jeffrey_way", "X", "https://x.com/jeffrey_way", "Founder of Laracasts", "A great person to follow", ["Tech"]),
-    ("https://nahian.bd/_astro/povilas-korop.B8T32WAI_Z1P9Xzs.webp", "Povilas Korop", "@LaravelDaily", "YouTube", "https://www.youtube.com/@LaravelDaily", "Laravel Daily: practical Laravel tips every day", "A great person to follow", ["Tech"]),
-    ("https://nahian.bd/_astro/taylor-otwell.DsnKVGqJ_Z1ssXEe.webp", "Taylor Otwell", "@taylorotwell", "X", "https://x.com/taylorotwell", "Creator of Laravel", "A great person to follow", ["Tech"]),
-    ("https://nahian.bd/_astro/caleb-porzio.DgSGKaNa_21RW5D.webp", "Caleb Porzio", "@calebporzio", "X", "https://x.com/calebporzio", "Creator of Livewire and Alpine.js", "A great person to follow", ["Tech"]),
-    ("https://avatars.githubusercontent.com/u/5457236?v=4", "Nuno Maduro", "@enunomaduro", "X", "https://x.com/enunomaduro", "Laravel core team, creator of Pest", "A great person to follow", ["Tech"]),
+    ('../uploads/people/ahmed-shamim-hassan-shaon.webp', 'Ahmed Shamim Hassan Shaon', '@me_shaon', 'X', 'https://x.com/me_shaon', 'CEO of Megaminds Learning, software architect and Laravel contributor', 'Software architect and Laravel contributor; clear thinking on building and leading teams.', ['Tech']),
+    ('../uploads/people/mohammad-emran-hasan.webp', 'Mohammad Emran Hasan', '@phpfour', 'X', 'https://x.com/phpfour', 'Building SaaS at klasio.com and helping teams ship Laravel products at figlab.io', 'Decades of real-world experience in building and shipping SaaS products.', ['Tech']),
+    ('../uploads/people/hm-nayem.webp', 'HM Nayem', '@mrhm-dev', 'GitHub', 'https://github.com/mrhm-dev', 'Founder of Stack Learner, full-stack developer and trainer', 'Founder of Stack Learner, full-stack developer and trainer', ['Tech']),
+    ('../uploads/people/sumit-saha.jpg', 'Sumit Saha', '/sumit.analyzen', 'Facebook', 'https://www.facebook.com/sumit.analyzen', 'Founder of Learn with Sumit: JavaScript, React and Node.js in Bangla', 'Clear, practical Bangla lessons on the JavaScript stack I use every day.', ['Tech']),
+    ('../uploads/people/jhankar-mahbub.jpg', 'Jhankar Mahbub', '/JhankarMahbub', 'Facebook', 'https://www.facebook.com/JhankarMahbub', 'Founder of Programming Hero', 'Made programming approachable for a whole generation of Bangladeshi developers.', ['Tech']),
+    ('../uploads/people/karpathy.jpg', 'Andrej Karpathy', '@karpathy', 'X', 'https://x.com/karpathy', 'AI researcher, founding member of OpenAI, former head of AI at Tesla', 'The clearest teacher of how LLMs actually work.', ['Tech']),
+    ('../uploads/people/harrison-chase.jpg', 'Harrison Chase', '@hwchase17', 'X', 'https://x.com/hwchase17', 'Co-founder and CEO of LangChain', 'Creator of LangChain and LangGraph, the agent tools at the heart of my AI work.', ['Tech']),
+    ('../uploads/people/kamil-mysliwiec.jpg', 'Kamil Mysliwiec', '@kammysliwiec', 'X', 'https://x.com/kammysliwiec', 'Creator of NestJS, co-founder of Trilon', 'NestJS is the backbone of my microservices.', ['Tech']),
+    ('../uploads/people/jeffrey-way.webp', 'Jeffrey Way', '@jeffrey_way', 'X', 'https://x.com/jeffrey_way', 'Founder of Laracasts', 'A great person to follow', ['Tech']),
+    ('../uploads/people/povilas-korop.webp', 'Povilas Korop', '@PovilasKorop', 'X', 'https://x.com/PovilasKorop', 'Founder of Laravel Daily: practical Laravel tips every day', 'A great person to follow', ['Tech']),
+    ('../uploads/people/taylor-otwell.webp', 'Taylor Otwell', '@taylorotwell', 'X', 'https://x.com/taylorotwell', 'Creator of Laravel', 'A great person to follow', ['Tech']),
 ]
+
+
+
 PLATFORM_ICON = {"X": "fa-brands fa-twitter", "Website": "fa-solid fa-globe", "GitHub": "fa-brands fa-github",
                  "Mentor": "fa-solid fa-graduation-cap", "Facebook": "fa-brands fa-facebook", "YouTube": "fa-brands fa-youtube"}
 
@@ -370,7 +374,7 @@ def cover_banner():
             '<span class="cover-blob" style="--blob: var(--cover-5); top: -30%; left: 76%; --dur: 31s; --delay: -6s;"></span>'
             '<span class="cover-blob" style="--blob: var(--cover-6); top: 45%; left: 38%; --dur: 33s; --delay: -16s; width: 45%;"></span>'
             '</div>'
-            '<div class="absolute inset-0" data-slats-canvas style="position:absolute;inset:0;opacity:0;transition:opacity .7s;"></div>'
+            '<div class="absolute inset-0" data-slats-canvas style="position:absolute;inset:0;opacity:0;transition:opacity .25s;"></div>'
             '<div class="cover-gradient-vignette" aria-hidden="true"></div>'
             '</div>')
 
@@ -855,7 +859,7 @@ body.nx-page[data-page="profile"] .nx .rail {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.7s ease;
+  transition: opacity 0.25s ease;
   pointer-events: auto;
 }
 [data-slats-canvas] canvas {
@@ -1521,10 +1525,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 }
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
-/* Floating Controls (Theme, Sound, WhatsApp) & AI Widget */
-body.nx-page #leaderboard-widget {
-  display: none !important;
-}
+/* Floating Controls (Theme, Sound, WhatsApp) & AI Widget: the AI leaderboard tab shows on every page */
 
 @media (max-width: 767px) {
   .nx .filters {
@@ -2774,6 +2775,52 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
 .nx :is(.nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover { box-shadow: 0 16px 34px -16px color-mix(in srgb, var(--brand) 55%, transparent) !important; }
 @media (hover: none) { .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::after, .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::before { display: none; } }
 
+/* the slat pattern is painted at once, so the cover is never empty while the animation loads */
+.nx .cover-banner-wrap {
+  background-color: var(--slats-bg, var(--bg)) !important;
+  background-image:
+    linear-gradient(180deg, transparent 0 20px, var(--slats-bg, var(--bg)) 20px 23px),
+    linear-gradient(90deg, color-mix(in srgb, var(--slats-color, var(--brand)) 26%, transparent) 0 8px, transparent 8px 11px) !important;
+  background-size: 11px 23px, 11px 23px !important;
+}
+.nx [data-slats-canvas] { transition: opacity .2s ease !important; }
+
+/* the bar above the right column: no slab of its own, just the two buttons resting on the page */
+body.nx-page[data-page="profile"] .nx .rail-top {
+  background: transparent !important; border-bottom: 0 !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  height: auto !important; padding: 12px 20px 6px !important; position: static !important;
+}
+
+/* profile cover: one simple layer — the slat animation on its own theme colour, no fade, no blending */
+html body.nx-page[data-page="profile"] .nx .cover-banner-wrap { background: var(--bg) !important; }
+html[data-theme="light"] body.nx-page .nx .cover-banner-wrap { background: #f8fafc !important; }
+html[data-theme="mint"] body.nx-page .nx .cover-banner-wrap { background: #f4faf7 !important; }
+html[data-theme="cyberpunk"] body.nx-page .nx .cover-banner-wrap { background: #09090b !important; }
+html[data-theme="god-mode"] body.nx-page .nx .cover-banner-wrap { background: #000 !important; }
+html body.nx-page[data-page="profile"] .nx .cover-banner-wrap .cover,
+html body.nx-page[data-page="profile"] .nx .cover-banner-wrap .cover-gradient-vignette { display: none !important; }
+
+/* Follow on GitHub lines up with the right-column cards on every page */
+@media (min-width: 1024px) { .nx .sub-header-right { margin-right: -12px; } }
+
+/* before the slat animation loads, the cover already shows a gradient in the theme's colours; the animation then fades in over it */
+html body.nx-page .nx .cover-banner-wrap:not(#_cv) {
+  background:
+    radial-gradient(60% 120% at 18% 30%, color-mix(in srgb, var(--accent-1, var(--brand)) 55%, transparent), transparent 70%),
+    radial-gradient(55% 120% at 82% 70%, color-mix(in srgb, var(--accent-2, var(--brand)) 50%, transparent), transparent 70%),
+    radial-gradient(45% 100% at 50% 10%, rgba(var(--leak-3, 129, 140, 248), .35), transparent 70%),
+    var(--bg) !important;
+}
+html body.nx-page .nx .cover-banner-wrap [data-slats-canvas] { transition: opacity .6s ease !important; }
+
+/* About: fade the text itself instead of laying a block of page colour over it, so no shade shows on the aurora background */
+.nx .about-prose::after { display: none !important; }
+.nx .about-bio-wrap:not(.is-expanded) .about-prose {
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+}
+
 """
 
 
@@ -2914,6 +2961,7 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True):
 {bottom_nav(cur, prefix="../")}
 </div>
 <script src="../nx/nx.js?v=8"></script>
+<link rel="modulepreload" href="../nx/micro-slats.js">
 <script type="module" src="../nx/slats-cover.js?v=8"></script>
 <script src="../nx/proj-dots.js?v=5"></script>
 {SHARE_JS if (sub_bar or is_profile) else ""}
@@ -3440,7 +3488,7 @@ def profile():
         f'<a class="post" href="../projects/"><h3>{e(p[0])}</h3><small>{e(p[1])}</small></a>' for p in PROJECTS[:6])
     body = f'''{cover_banner()}
 <section class="nx-hero">
-<img class="avatar" src="../uploads/Mehedi.pro-480.webp" alt="{NAME}" width="240" height="240" fetchpriority="high">
+<img class="avatar" src="../uploads/mehedi-avatar.jpg?v=1" alt="{NAME}" width="320" height="320" fetchpriority="high">
 <h1 class="nx-name">{NAME} <span class="verified-badge" title="Verified Profile" aria-label="Verified">{ico("badge","verified")}</span></h1>
 <p class="tagline">{TAGLINE}</p>
 <a class="pill-status" href="../contact/"><span class="dot"></span>Open to freelance &amp; full-time</a>

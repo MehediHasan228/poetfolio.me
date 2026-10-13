@@ -393,32 +393,39 @@ v0 Lovable Bolt Google Stitch
 # People (/people/)
 ## People I learn from
 Builders, founders and teachers whose work keeps me sharp, plus the mentors who guided me. Filter by where I follow them.
-10 people · 4 platforms
+11 people · 3 platforms
 Ahmed Shamim Hassan Shaon @me_shaon · X
 Follow
 CEO of Megaminds Learning, software architect and Laravel contributor
-My mentor and the senior brother everyone wants by their side. I admire him the most.
+Software architect and Laravel contributor; clear thinking on building and leading teams.
 Tech
 Mohammad Emran Hasan @phpfour · X
 Building SaaS at klasio.com and helping teams ship Laravel products at figlab.io
-The guru of gurus, with extensive experience behind every tip.
+Decades of real-world experience in building and shipping SaaS products.
 HM Nayem @mrhm-dev · GitHub
 Founder of Stack Learner, full-stack developer and trainer
-Muntaser Muttaqi @iammuttaqi · GitHub
-Software engineer at GymScanner and Laravel enthusiast
-A great person to follow
-Mehbub Rashid Rabu /mehbub.rashid.2025 · Facebook
-Web developer focused on Node.js, React, WordPress, chatbots and automations
+Sumit Saha /sumit.analyzen · Facebook
+Founder of Learn with Sumit: JavaScript, React and Node.js in Bangla
+Clear, practical Bangla lessons on the JavaScript stack I use every day.
+Jhankar Mahbub /JhankarMahbub · Facebook
+Founder of Programming Hero
+Made programming approachable for a whole generation of Bangladeshi developers.
+Andrej Karpathy @karpathy · X
+AI researcher, founding member of OpenAI, former head of AI at Tesla
+The clearest teacher of how LLMs actually work.
+Harrison Chase @hwchase17 · X
+Co-founder and CEO of LangChain
+Creator of LangChain and LangGraph, the agent tools at the heart of my AI work.
+Kamil Mysliwiec @kammysliwiec · X
+Creator of NestJS, co-founder of Trilon
+NestJS is the backbone of my microservices.
 Jeffrey Way @jeffrey_way · X
 Founder of Laracasts
-Povilas Korop @LaravelDaily · YouTube
-Laravel Daily: practical Laravel tips every day
+A great person to follow
+Povilas Korop @PovilasKorop · X
+Founder of Laravel Daily: practical Laravel tips every day
 Taylor Otwell @taylorotwell · X
 Creator of Laravel
-Caleb Porzio @calebporzio · X
-Creator of Livewire and Alpine.js
-Nuno Maduro @enunomaduro · X
-Laravel core team, creator of Pest
 
 # Contact (/contact/)
 ## Let's build something

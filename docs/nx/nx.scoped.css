@@ -1295,7 +1295,7 @@ body.nx-page[data-page="profile"] .nx .rail {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.7s ease;
+  transition: opacity 0.25s ease;
   pointer-events: auto;
 }
 [data-slats-canvas] canvas {
@@ -1961,10 +1961,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 }
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
-/* Floating Controls (Theme, Sound, WhatsApp) & AI Widget */
-body.nx-page #leaderboard-widget {
-  display: none !important;
-}
+/* Floating Controls (Theme, Sound, WhatsApp) & AI Widget: the AI leaderboard tab shows on every page */
 
 @media (max-width: 767px) {
   .nx .filters {
@@ -3213,4 +3210,50 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
   box-shadow: 0 22px 46px -18px color-mix(in srgb, var(--brand) 55%, transparent) !important; }
 .nx :is(.nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover { box-shadow: 0 16px 34px -16px color-mix(in srgb, var(--brand) 55%, transparent) !important; }
 @media (hover: none) { .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::after, .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::before { display: none; } }
+
+/* the slat pattern is painted at once, so the cover is never empty while the animation loads */
+.nx .cover-banner-wrap {
+  background-color: var(--slats-bg, var(--bg)) !important;
+  background-image:
+    linear-gradient(180deg, transparent 0 20px, var(--slats-bg, var(--bg)) 20px 23px),
+    linear-gradient(90deg, color-mix(in srgb, var(--slats-color, var(--brand)) 26%, transparent) 0 8px, transparent 8px 11px) !important;
+  background-size: 11px 23px, 11px 23px !important;
+}
+.nx [data-slats-canvas] { transition: opacity .2s ease !important; }
+
+/* the bar above the right column: no slab of its own, just the two buttons resting on the page */
+body.nx-page[data-page="profile"] .nx .rail-top {
+  background: transparent !important; border-bottom: 0 !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  height: auto !important; padding: 12px 20px 6px !important; position: static !important;
+}
+
+/* profile cover: one simple layer — the slat animation on its own theme colour, no fade, no blending */
+html body.nx-page[data-page="profile"] .nx .cover-banner-wrap { background: var(--bg) !important; }
+html[data-theme="light"] body.nx-page .nx .cover-banner-wrap { background: #f8fafc !important; }
+html[data-theme="mint"] body.nx-page .nx .cover-banner-wrap { background: #f4faf7 !important; }
+html[data-theme="cyberpunk"] body.nx-page .nx .cover-banner-wrap { background: #09090b !important; }
+html[data-theme="god-mode"] body.nx-page .nx .cover-banner-wrap { background: #000 !important; }
+html body.nx-page[data-page="profile"] .nx .cover-banner-wrap .cover,
+html body.nx-page[data-page="profile"] .nx .cover-banner-wrap .cover-gradient-vignette { display: none !important; }
+
+/* Follow on GitHub lines up with the right-column cards on every page */
+@media (min-width: 1024px) { .nx .sub-header-right { margin-right: -12px; } }
+
+/* before the slat animation loads, the cover already shows a gradient in the theme's colours; the animation then fades in over it */
+html body.nx-page .nx .cover-banner-wrap:not(#_cv) {
+  background:
+    radial-gradient(60% 120% at 18% 30%, color-mix(in srgb, var(--accent-1, var(--brand)) 55%, transparent), transparent 70%),
+    radial-gradient(55% 120% at 82% 70%, color-mix(in srgb, var(--accent-2, var(--brand)) 50%, transparent), transparent 70%),
+    radial-gradient(45% 100% at 50% 10%, rgba(var(--leak-3, 129, 140, 248), .35), transparent 70%),
+    var(--bg) !important;
+}
+html body.nx-page .nx .cover-banner-wrap [data-slats-canvas] { transition: opacity .6s ease !important; }
+
+/* About: fade the text itself instead of laying a block of page colour over it, so no shade shows on the aurora background */
+.nx .about-prose::after { display: none !important; }
+.nx .about-bio-wrap:not(.is-expanded) .about-prose {
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+}
 
