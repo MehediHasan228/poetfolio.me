@@ -1503,6 +1503,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Chat Worker URL (chat-worker/). Empty = use the free fallback. After `wrangler deploy`, paste the URL here,
+    // e.g. 'https://mehedi-chat.<your-subdomain>.workers.dev'
+    const CHAT_API_URL = 'https://mehedi-chat.rajnieem.workers.dev';
+
+    const CHAT_PROFILE = "You are Mehedi Hasan's AI assistant on his portfolio site (mehedi.pro.bd). Answer in the visitor's language, warmly and to the point: 1-3 short sentences, or a short bullet list when listing. Never invent facts, prices or dates. " +
+        "Facts: Mehedi is an AI-native software engineer in Bangladesh with 4+ years in production. Backend and systems: NestJS, Laravel, Node.js, PostgreSQL, Redis, Kafka, RabbitMQ, Docker, Kubernetes, AWS, CI/CD. Frontend: React, TypeScript, Flutter. AI: LangGraph, MCP, RAG with PGVector, local LLMs via Ollama, Claude, Gemini, n8n automations. " +
+        "Work: an AI-native NGO ERP (85+ microservices), HR and payroll systems with AI modules, Karbar ERP (VAT and payroll for Bangladesh), the SAWAB Bangladesh platform, and autonomous AI agent swarms. Open to freelance and contract work. " +
+        "Contact: WhatsApp +880 1799-447594, email mehedihasan228.cse@gmail.com, GitHub github.com/MehediHasan228. If unsure, suggest messaging him on WhatsApp.";
+
     const DEFAULT_RESPONSE = "Query complete. Try asking about Mehedi's skills, enterprise ERPs, cloud architectures, AI services, or how to reach him directly.";
 
     // ── CHAT FUNCTIONS ─────────────────────────────────────────────────────────
@@ -1519,9 +1528,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // AI Orb Mascot Reference
         const getMascot = () => document.getElementById('chat-mascot') || chatWidget.querySelector('ai-orb-mascot');
 
-        chatHeader.addEventListener('click', () => {
-            console.log("[AI_CHAT] Toggle Initiated via Header Click");
+        chatHeader.addEventListener('click', (e) => {
+            if (e.target.closest('.chat-head-btn')) return;
             toggleChat();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && chatWidget.classList.contains('chat-expanded') && !document.getElementById('ai-orb-speech-bubble')) toggleChat();
         });
 
         // Interactive AI Orb Mascot touch & hover feedback
@@ -1588,6 +1600,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
                     }, 100);
+                    if (window.matchMedia('(pointer: fine)').matches) setTimeout(() => chatInput.focus({ preventScroll: true }), 260);
                 } else {
                     icon.classList.remove('fa-chevron-down');
                     icon.classList.add('fa-chevron-up');
@@ -1639,6 +1652,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (speechText) {
                     chatInput.value = speechText;
+                    syncComposer();
                     chatInput.focus();
                 }
             };
@@ -1647,7 +1661,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('[VOICE] Error:', e.error);
                 isListening = false;
                 voiceBtn.classList.remove('mic-active');
-                chatInput.placeholder = "Type a query...";
+                chatInput.placeholder = "Ask about projects, stack, hiring…";
                 const mascot = getMascot();
                 if (mascot) mascot.triggerReaction('error', 1800);
                 if (typeof playSound === 'function') playSound('error');
@@ -1656,7 +1670,7 @@ document.addEventListener('DOMContentLoaded', () => {
             recognition.onend = () => {
                 isListening = false;
                 voiceBtn.classList.remove('mic-active');
-                chatInput.placeholder = "Type a query...";
+                chatInput.placeholder = "Ask about projects, stack, hiring…";
                 chatInput.focus();
                 const mascot = getMascot();
                 if (mascot && mascot.expression === 'surprised') {
@@ -1675,10 +1689,46 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 div.textContent = text;
             }
+            chatBody.querySelectorAll('.chat-followups').forEach((n) => n.remove());
             chatBody.appendChild(div);
             chatBody.scrollTop = chatBody.scrollHeight;
             return div;
         }
+
+        // The conversation survives page changes for this visit
+        const LOG_KEY = 'chat:log', USED_KEY = 'chat:used';
+        const store = {
+            get: (k, d) => { try { return JSON.parse(sessionStorage.getItem(k)) || d; } catch (e) { return d; } },
+            set: (k, v) => { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+        };
+        const remember = (role, html, text) => { const log = store.get(LOG_KEY, []); log.push({ r: role, h: html, t: text || '' }); store.set(LOG_KEY, log.slice(-30)); };
+        const markUsed = (key) => { const u = store.get(USED_KEY, []); if (!u.includes(key)) { u.push(key); store.set(USED_KEY, u); } };
+        const esc = (str) => String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        // Plain model text -> tidy HTML: paragraphs, bullet lists, **bold**, `code`, links
+        function formatReply(raw) {
+            let html = '', list = false;
+            esc(String(raw).trim()).split(/\n+/).forEach((ln) => {
+                const m = ln.match(/^\s*(?:[-*\u2022]|\d+[.)])\s+(.*)$/);
+                if (m) { if (!list) { html += '<ul>'; list = true; } html += '<li>' + m[1] + '</li>'; }
+                else if (ln.trim() && !/^\s*(?:[-*\u2022]|\d+[.)])\s*$/.test(ln)) { if (list) { html += '</ul>'; list = false; } html += '<p>' + ln + '</p>'; }
+            });
+            if (list) html += '</ul>';
+            return html
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+        }
+
+        // Lines of a fresh reply rise in one after another
+        function settle(el) {
+            [...el.children].forEach((c, i) => c.style.setProperty('--i', i));
+            el.classList.add('is-new');
+        }
+
+        function setBusy(on) { chatWidget.classList.toggle('is-busy', on); }
+        function syncComposer() { chatWidget.classList.toggle('has-text', !!chatInput.value.trim()); }
+        chatInput.addEventListener('input', syncComposer);
 
         // Animated inline icons for the quick-action chips (colour = currentColor)
         const CHIP_ICONS = {
@@ -1716,60 +1766,219 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
+        const STARTERS = [
+            { key: 'about', text: 'Who is Mehedi?', hint: 'Background & focus', icon: CHIP_ICONS.user },
+            { key: 'projects', text: 'View Projects', hint: 'ERPs, AI agents, systems', icon: CHIP_ICONS.layers },
+            { key: 'hire', text: 'Hire / Collaborate', hint: 'Freelance & contract', icon: CHIP_ICONS.briefcase },
+            { key: 'call', text: 'Book a Call', hint: 'Pick a time on WhatsApp', icon: CHIP_ICONS.phone }
+        ];
+
+        // The conversation has started: the intro shrinks and the starter cards step aside
+        function beginThread() {
+            const hero = chatBody.querySelector('.chat-hero');
+            if (hero) hero.classList.add('is-compact');
+            chatBody.querySelectorAll('.chat-starters').forEach((n) => n.remove());
+        }
+
+        function askStarter(key) {
+            if (chatWidget.classList.contains('is-busy')) return;
+            const s = STARTERS.find((x) => x.key === key), reply = chipReplies()[key];
+            if (!s || !reply) return;
+            beginThread(); markUsed(key); setBusy(true);
+            if (typeof playSound === 'function') playSound('type');
+            appendMsg(esc(reply.q), 'user', true); remember('user', esc(reply.q), reply.q);
+            const mascot = getMascot();
+            if (mascot) mascot.setExpression('thinking');
+            const typingEl = appendMsg('<span class="chat-dots" aria-label="Typing"><i></i><i></i><i></i></span>', 'bot', true);
+            typingEl.classList.add('typing-indicator');
+            setTimeout(() => {
+                typingEl.classList.remove('typing-indicator');
+                typingEl.innerHTML = reply.a; settle(typingEl);
+                remember('bot', reply.a, typingEl.textContent);
+                setBusy(false); followUps();
+                if (mascot) mascot.triggerReaction('excited', 1600);
+            }, 650);
+        }
+
         function createSmartButtons() {
             const container = document.createElement('div');
-            container.className = 'smart-btn-container';
-            const buttons = [
-                { key: 'about', text: 'Who is Mehedi?', icon: CHIP_ICONS.user },
-                { key: 'projects', text: 'View Projects', icon: CHIP_ICONS.layers },
-                { key: 'hire', text: 'Hire / Collaborate', icon: CHIP_ICONS.briefcase },
-                { key: 'call', text: 'Book a Call', icon: CHIP_ICONS.phone }
-            ];
-
-            buttons.forEach(btn => {
+            container.className = 'chat-starters';
+            STARTERS.forEach((btn, i) => {
                 const b = document.createElement('button');
-                b.className = 'smart-btn';
-                b.setAttribute('type', 'button');
-                b.innerHTML = `${btn.icon}<span>${btn.text}</span>`;
-                b.onclick = () => {
-                    b.classList.add('is-used');
-                    const reply = chipReplies()[btn.key];
-                    if (typeof playSound === 'function') playSound('type');
-                    appendMsg(reply.q, 'user');
-                    const mascot = getMascot();
-                    if (mascot) mascot.setExpression('thinking');
-                    const typingEl = appendMsg('<span class="chat-dots" aria-label="Typing"><i></i><i></i><i></i></span>', 'bot', true);
-                    typingEl.classList.add('typing-indicator');
-                    setTimeout(() => {
-                        typingEl.classList.remove('typing-indicator');
-                        typingEl.innerHTML = reply.a;
-                        chatBody.scrollTop = chatBody.scrollHeight;
-                        if (mascot) mascot.triggerReaction('excited', 1600);
-                    }, 650);
-                };
+                b.className = 'chat-starter';
+                b.type = 'button';
+                b.style.setProperty('--i', i);
+                b.innerHTML = `<span class="cs-ico">${btn.icon}</span><span class="cs-text"><b>${btn.text}</b><small>${btn.hint}</small></span>`;
+                b.onclick = () => askStarter(btn.key);
                 container.appendChild(b);
             });
             return container;
         }
 
+        // After an answer, offer the starters that haven't been asked yet
+        function followUps() {
+            chatBody.querySelectorAll('.chat-followups').forEach((n) => n.remove());
+            const used = store.get(USED_KEY, []);
+            const left = STARTERS.filter((x) => !used.includes(x.key));
+            if (!left.length) return;
+            const row = document.createElement('div');
+            row.className = 'chat-followups';
+            row.setAttribute('role', 'group'); row.setAttribute('aria-label', 'Suggested questions');
+            left.forEach((x) => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'chat-followup';
+                b.innerHTML = `${x.icon}<span>${x.text}</span>`;
+                b.onclick = () => askStarter(x.key);
+                row.appendChild(b);
+            });
+            chatBody.appendChild(row);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function hello() {
+            const h = new Date().getHours();
+            return h < 5 ? 'Up late?' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+        }
+
+        function renderHome() {
+            chatBody.innerHTML = '';
+            const hero = document.createElement('div');
+            hero.className = 'chat-hero';
+            hero.innerHTML = `<span class="chat-hero-orb" aria-hidden="true"><ai-orb-mascot expression="happy" size="60"></ai-orb-mascot></span><h3 class="chat-hero-title">${hello()} <span class="chat-wave" aria-hidden="true">\u{1F44B}</span></h3><p class="chat-hero-sub">I'm Mehedi's AI. Ask about his work, his stack, or how to team up.</p>`;
+            chatBody.appendChild(hero);
+            const log = store.get(LOG_KEY, []);
+            if (!log.length) { chatBody.appendChild(createSmartButtons()); return; }
+            hero.classList.add('is-compact');
+            log.forEach((m) => appendMsg(m.h, m.r, true));
+            followUps();
+        }
+
+        const resetBtn = document.getElementById('chat-reset');
+        if (resetBtn) resetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (chatWidget.classList.contains('is-busy')) return;
+            store.set(LOG_KEY, []); store.set(USED_KEY, []);
+            renderHome();
+            const mascot = getMascot();
+            if (mascot) mascot.triggerReaction('happy', 1200);
+            if (window.matchMedia('(pointer: fine)').matches) chatInput.focus({ preventScroll: true });
+        });
+
         // Initial Clean Chat Greeting
         setTimeout(() => {
-            if (chatBody) {
-                chatBody.innerHTML = '';
-                const welcomeMsg = appendMsg("<strong class=\"chat-welcome-title\"><svg class=\"orb-ico orb-ico-sparkle\" viewBox=\"0 0 20 20\" width=\"15\" height=\"15\" aria-hidden=\"true\"><path class=\"sp-big\" d=\"M9 2 C9.6 6.2 10.8 7.4 15 8 C10.8 8.6 9.6 9.8 9 14 C8.4 9.8 7.2 8.6 3 8 C7.2 7.4 8.4 6.2 9 2 Z\"/><path class=\"sp-small\" d=\"M15.5 12 C15.8 13.6 16.4 14.2 18 14.5 C16.4 14.8 15.8 15.4 15.5 17 C15.2 15.4 14.6 14.8 13 14.5 C14.6 14.2 15.2 13.6 15.5 12 Z\"/></svg>Hi, I'm Mehedi's AI assistant.</strong><span class=\"chat-welcome-sub\">Ask about his work, stack, or how to collaborate.</span><span class=\"chat-welcome-sub\" style=\"display:block;opacity:.6;font-size:.72em;margin-top:4px;\">Replies are generated by a third-party AI service (Pollinations). Please don't share personal information.</span>", 'bot', true);
-                welcomeMsg.appendChild(createSmartButtons());
-            }
+            if (chatBody) renderHome();
         }, 150);
+
+        // ── CHAT WORKER (streaming) ───────────────────────────────────────────────
+        const chatApi = () => String(window.MEHEDI_CHAT_API || CHAT_API_URL || '').replace(/\/+$/, '');
+        const TAG_RE = /\[\[(src|act):([^\]]{1,60})\]\]/g;
+        // the model ends with [[src:/page/]] [[act:cv]] tags: never show them, not even half-streamed
+        const visible = (raw) => raw.replace(TAG_RE, '').replace(/\[\[[^\]]*$/, '').trim();
+        const SITE_PAGES = { '/': 'Home', '/profile/': 'Profile', '/projects/': 'Projects', '/stack/': 'Stack', '/architecture/': 'Architecture', '/people/': 'People', '/contact/': 'Contact', '/library/': 'Library' };
+        const siteRoot = () => {
+            const l = document.querySelector('a.logo-link');
+            return l ? new URL(l.getAttribute('href'), location.href).href.replace(/index\.html$/, '').replace(/#.*$/, '') : location.origin + '/';
+        };
+        function actionLinks() {
+            const root = siteRoot();
+            const cvEl = document.getElementById('hero-link-cv');
+            const act = (href, label, ext) => `<a class="chat-action" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`;
+            return {
+                cv: act(cvEl ? cvEl.getAttribute('href') : root + 'uploads/Mehedi_Hasan_CV.pdf?v=2', 'Download CV'),
+                whatsapp: act('https://wa.me/8801799447594?text=' + encodeURIComponent('Hi Mehedi, I found you through your portfolio.'), 'WhatsApp', true),
+                email: act('mailto:mehedihasan228.cse@gmail.com', 'Email'),
+                projects: act(root + 'projects/', 'See projects'),
+                contact: act(root + 'contact/', 'Contact')
+            };
+        }
+        function addExtras(el, raw) {
+            const tags = [...raw.matchAll(TAG_RE)].map((m) => [m[1], m[2].trim()]);
+            const links = actionLinks();
+            const acts = [...new Set(tags.filter((t) => t[0] === 'act').map((t) => t[1]))].filter((k) => links[k]).slice(0, 2);
+            const srcs = [...new Set(tags.filter((t) => t[0] === 'src').map((t) => t[1]))].filter((p) => SITE_PAGES[p]).slice(0, 2);
+            if (acts.length) {
+                const d = document.createElement('div');
+                d.className = 'chat-actions';
+                d.innerHTML = acts.map((k) => links[k]).join('');
+                el.appendChild(d);
+            }
+            if (srcs.length) {
+                const d = document.createElement('div');
+                d.className = 'chat-sources';
+                d.innerHTML = '<span>From</span>' + srcs.map((p) => `<a href="${siteRoot() + p.replace(/^\//, '')}">${SITE_PAGES[p]}</a>`).join('');
+                el.appendChild(d);
+            }
+        }
+
+        async function streamFromWorker(txt, history, el, mascot) {
+            const ctrl = new AbortController();
+            let timer = setTimeout(() => ctrl.abort(), 20000);
+            const res = await fetch(chatApi() + '/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                signal: ctrl.signal,
+                body: JSON.stringify({
+                    page: location.pathname,
+                    messages: [...history.map((m) => ({ role: m.r === 'user' ? 'user' : 'assistant', content: m.t })), { role: 'user', content: txt }]
+                })
+            });
+            if (!res.ok || !res.body) { clearTimeout(timer); throw new Error('Chat worker ' + res.status); }
+
+            const reader = res.body.getReader(), dec = new TextDecoder();
+            let buf = '', raw = '', started = false, frame = 0;
+            const paint = () => { frame = 0; el.innerHTML = formatReply(visible(raw)); chatBody.scrollTop = chatBody.scrollHeight; };
+            try {
+                for (;;) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    clearTimeout(timer); timer = setTimeout(() => ctrl.abort(), 15000);   // stalled stream
+                    buf += dec.decode(value, { stream: true });
+                    const lines = buf.split('\n'); buf = lines.pop();
+                    for (const line of lines) {
+                        const l = line.trim();
+                        if (!l.startsWith('data:')) continue;
+                        const data = l.slice(5).trim();
+                        if (!data || data === '[DONE]') continue;
+                        try {
+                            const c = JSON.parse(data).choices;
+                            const d = c && c[0] && (c[0].delta || c[0].message);
+                            if (d && typeof d.content === 'string') raw += d.content;
+                        } catch (e) { /* keep-alive or partial line */ }
+                    }
+                    if (!started && visible(raw)) {
+                        started = true;
+                        el.classList.remove('typing-indicator'); el.classList.add('is-streaming');
+                        if (mascot) mascot.setExpression('responding');
+                    }
+                    if (started && !frame) frame = requestAnimationFrame(paint);
+                }
+            } catch (e) {
+                if (!visible(raw)) throw e;       // nothing arrived: let the fallback answer instead
+            } finally {
+                clearTimeout(timer);
+            }
+            if (!visible(raw)) throw new Error('Empty reply');
+            if (frame) cancelAnimationFrame(frame);
+            paint();
+            el.classList.remove('is-streaming');
+            addExtras(el, raw);
+            return visible(raw);
+        }
 
         async function sendChat() {
             const txt = chatInput.value.trim();
-            if (!txt) return;
+            if (!txt || chatWidget.classList.contains('is-busy')) return;
 
             if (typeof playSound === 'function') playSound('type');
             chatInput.value = '';
+            syncComposer();
+
+            // the last few turns give the model context for follow-up questions
+            const history = store.get(LOG_KEY, []).filter((m) => m.t).slice(-6);
 
             // User Message
-            appendMsg(txt, 'user');
+            beginThread(); setBusy(true);
+            appendMsg(txt, 'user'); remember('user', esc(txt), txt);
 
             // Mascot state: USER SENDS MESSAGE & AI IS PROCESSING -> THINKING
             const mascot = getMascot();
@@ -1783,39 +1992,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let isSuccess = false;
             let isError = false;
+            let streamed = false, answerText = '';
 
             try {
-                // Primary: Local AI Bridge — dev only. On the live site this would hit the
-                // visitor's own machine (and HTTPS blocks it anyway), so skip straight to the fallback.
-                if (!['localhost', '127.0.0.1'].includes(location.hostname)) throw new Error('Local bridge disabled in production');
-                const primaryResponse = await fetch('http://localhost:8000/v1/chat/completions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        model: "gpt-3.5-turbo",
-                        messages: [
-                            { role: "system", content: "You are Mehedi's professional AI assistant. You help users navigate his portfolio. Keep responses concise and technical. Mehedi is a Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect with 4+ years of production experience. If you don't know something, suggest contacting him via WhatsApp." },
-                            { role: "user", content: txt }
-                        ],
-                        temperature: 0.7
-                    })
-                });
-
-                if (primaryResponse.ok) {
-                    const data = await primaryResponse.json();
-                    typingEl.textContent = data.choices[0].message.content;
-                    isSuccess = true;
-                } else {
-                    throw new Error("Primary Handshake Failed");
-                }
-
+                // Primary: the chat Worker (Gemini / OmniRoute grounded in the site's knowledge base), streamed
+                if (!chatApi()) throw new Error('Chat API not configured');
+                answerText = await streamFromWorker(txt, history, typingEl, mascot);
+                streamed = true;
+                isSuccess = true;
             } catch (primaryError) {
-                console.warn("[AI_CHAT] Local Bridge Offline. Attempting Secondary Cloud AI...");
+                console.warn("[AI_CHAT] Chat worker unavailable, using the free fallback.", primaryError && primaryError.message);
                 
                 try {
                     // Secondary: Free Public AI Fallback (Direct Text Endpoint)
-                    const systemPrompt = "You are Mehedi's helpful AI assistant on his portfolio website. Keep responses short (1-2 sentences). Mehedi is a Full-Stack Developer & AI Automation Engineer.\n\nUser: ";
-                    const encodedPrompt = encodeURIComponent(systemPrompt + txt);
+                    const past = history.slice(-4).map((m) => (m.r === 'user' ? 'User: ' : 'Assistant: ') + m.t.slice(0, 180)).join('\n');
+                    const encodedPrompt = encodeURIComponent(CHAT_PROFILE + '\n\n' + (past ? past + '\n' : '') + 'User: ' + txt + '\nAssistant:');
                     const secondaryResponse = await fetch(`https://text.pollinations.ai/${encodedPrompt}`);
 
                     if (secondaryResponse.ok) {
@@ -1826,7 +2017,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             reply = reply.substring(reply.indexOf(noticeMarker) + noticeMarker.length).trim();
                         }
                         if (reply) {
-                            typingEl.textContent = reply;
+                            typingEl.innerHTML = formatReply(reply);
                             isSuccess = true;
                         } else {
                             throw new Error("Reply was empty after stripping notice");
@@ -1838,11 +2029,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (secondaryError) {
                     // Tertiary: Hardcoded Rule-Based Fallback
                     console.warn("[AI_CHAT] All APIs Offline. Reverting to Offline Rule-Based Protocol.");
-                    typingEl.innerHTML = getBotResponse(txt);
+                    typingEl.innerHTML = formatReply(getBotResponse(txt));
                     isSuccess = true;
                 }
             } finally {
                 typingEl.classList.remove('typing-indicator');
+                if (!streamed) settle(typingEl);
+                remember('bot', typingEl.innerHTML, answerText || typingEl.textContent);
+                setBusy(false); followUps();
                 chatBody.scrollTop = chatBody.scrollHeight;
                 if (typeof playSound === 'function') playSound('type');
 

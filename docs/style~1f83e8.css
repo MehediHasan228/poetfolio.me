@@ -4423,301 +4423,176 @@ ai-orb-mascot {
     display: block;
 }
 
-/* --- Sphere Floating Motion --- */
+/* --- Sphere: slow breathing float --- */
 .ai-orb-group {
     transform-origin: 100px 100px;
-    animation: aiOrbFloat 4.2s ease-in-out infinite;
+    animation: aiOrbBreathe 4.6s ease-in-out infinite;
     will-change: transform;
 }
-
-@keyframes aiOrbFloat {
-    0%, 100% {
-        transform: translateY(0px) scale(1);
-    }
-    50% {
-        transform: translateY(-4px) scale(1.015);
-    }
+@keyframes aiOrbBreathe {
+    0%, 100% { transform: translateY(0) scale(1, 1); }
+    45%      { transform: translateY(-3px) scale(1.012, 0.994); }
+    55%      { transform: translateY(-3px) scale(1.012, 0.994); }
 }
 
-/* --- Face & Eye Base --- */
+/* --- Face & eyes: every part transforms around its OWN centre (fill-box), so tilts and scales stay in place --- */
 .ai-orb-face {
     transform-origin: 100px 97px;
     transform: translate(var(--orb-look-x, 0px), var(--orb-look-y, 0px));
-    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform .45s cubic-bezier(.3, 1.35, .55, 1);
     will-change: transform;
 }
-
-.ai-orb-eye {
+.ai-orb-eye, .ai-orb-eye-inner, .ai-orb-capsule, .ai-orb-arch, .ai-orb-sparkle, .ai-orb-sparkle-micro {
+    transform-box: fill-box;
     transform-origin: center;
-    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
 }
-
-.ai-orb-eye-inner {
-    transform-origin: center;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-}
-
+.ai-orb-eye { transition: transform .42s cubic-bezier(.3, 1.35, .55, 1); will-change: transform; }
+/* the right eye trails the left by a hair, like real eyes */
+.ai-orb-eye-right { transition-delay: 35ms; }
+.ai-orb-eye-inner { transition: transform .32s cubic-bezier(.3, 1.2, .55, 1), opacity .2s ease; }
+/* eyelid: the capsule closes from the top down (origin at the bottom edge) */
 .ai-orb-capsule {
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: 50% 100%;
+    transition: transform .22s cubic-bezier(.4, 0, .2, 1), opacity .2s ease;
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
 }
-
-.ai-orb-sparkle {
-    transform-origin: -2.5px -7.5px;
-    transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-.ai-orb-sparkle-micro {
-    transform-origin: 2px 5.5px;
-    transition: opacity 0.25s ease;
-}
-
+.ai-orb-sparkle, .ai-orb-sparkle-micro { transition: transform .25s ease, opacity .2s ease; }
 .ai-orb-arch {
     opacity: 0;
-    transform-origin: 0px 0px;
-    transform: scaleY(0.1);
-    transition: opacity 0.25s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: scaleY(.2) translateY(3px);
+    transition: opacity .2s ease, transform .32s cubic-bezier(.34, 1.56, .64, 1);
 }
 
 /* ==========================================================================
-   EXPRESSION STATES (ONLY TWO CAPSULE EYES, NO EYEBROWS, NO MOUTH)
+   12 EXPRESSIONS (eyes only: no brows, no mouth)
    ========================================================================== */
 
-/* 1. IDLE / NORMAL */
-ai-orb-mascot.orb-expr-idle .ai-orb-eye-left,
-ai-orb-mascot[data-expression="idle"] .ai-orb-eye-left {
-    transform: translate(0, 0) rotate(0deg) scale(1, 1);
-}
-ai-orb-mascot.orb-expr-idle .ai-orb-eye-right,
-ai-orb-mascot[data-expression="idle"] .ai-orb-eye-right {
-    transform: translate(0, 0) rotate(0deg) scale(1, 1);
-}
+/* 1. IDLE */
+ai-orb-mascot[data-expression="idle"] .ai-orb-eye { transform: none; }
 
-/* Organic Blinking for Idle State */
-ai-orb-mascot.orb-is-blinking .ai-orb-capsule,
+/* blink: the lid sweeps down fast and lifts a little slower */
+ai-orb-mascot.orb-is-blinking .ai-orb-capsule { transform: scaleY(.08); transition: transform .07s cubic-bezier(.5, 0, .9, .5); }
 ai-orb-mascot.orb-is-blinking .ai-orb-sparkle,
-ai-orb-mascot.orb-is-blinking .ai-orb-sparkle-micro {
-    transform: scaleY(0.06);
-    opacity: 0.1;
-    transition: transform 0.12s ease-in, opacity 0.12s ease-in;
+ai-orb-mascot.orb-is-blinking .ai-orb-sparkle-micro { opacity: 0; transition-duration: .05s; }
+
+/* 2. LOOKING-LEFT and 3. LOOKING-RIGHT: the face turns, the far eye foreshortens */
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-face  { transform: translate(-11px, -3px); }
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-left  { transform: scale(.88, .97); }
+ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-right { transform: scale(.97, 1); }
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-face { transform: translate(11px, -2px); }
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-left  { transform: scale(.97, 1); }
+ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-right { transform: scale(.88, .97); }
+
+/* 4. EXCITED: eyes widen in place and sparkle; two quick hops, then a happy wobble */
+ai-orb-mascot[data-expression="excited"] .ai-orb-group { animation: aiOrbHop .5s cubic-bezier(.3, 1.4, .5, 1) 2, aiOrbBreathe 4.6s ease-in-out 1s infinite; }
+ai-orb-mascot[data-expression="excited"] .ai-orb-eye { transform: translateY(-2px) scale(1.16, 1.2); }
+ai-orb-mascot[data-expression="excited"] .ai-orb-sparkle { transform: scale(1.35); }
+ai-orb-mascot[data-expression="excited"] .ai-orb-sparkle-micro { opacity: .7; transform: scale(1.4); }
+@keyframes aiOrbHop {
+    0%   { transform: translateY(0) scale(1.04, .94); }
+    40%  { transform: translateY(-9px) scale(.96, 1.05); }
+    75%  { transform: translateY(0) scale(1.03, .96); }
+    100% { transform: translateY(0) scale(1, 1); }
 }
 
-/* 2. LOOKING_LEFT (Upward Curious 3D Spherical Glance) */
-ai-orb-mascot.orb-expr-looking-left .ai-orb-face,
-ai-orb-mascot[data-expression="looking-left"] .ai-orb-face {
-    transform: translate(-18px, -8px);
-}
-ai-orb-mascot.orb-expr-looking-left .ai-orb-eye-left,
-ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-left {
-    transform: translate(0px, -2px) rotate(-3deg) scale(0.88, 0.98);
-}
-ai-orb-mascot.orb-expr-looking-left .ai-orb-eye-right,
-ai-orb-mascot[data-expression="looking-left"] .ai-orb-eye-right {
-    transform: translate(0px, -2px) rotate(-1deg) scale(0.96, 1);
-}
-
-/* 3. LOOKING_RIGHT (Silky-Smooth 3D Spherical Glance) */
-ai-orb-mascot.orb-expr-looking-right .ai-orb-face,
-ai-orb-mascot[data-expression="looking-right"] .ai-orb-face {
-    transform: translate(18px, -1px);
-}
-ai-orb-mascot.orb-expr-looking-right .ai-orb-eye-left,
-ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-left {
-    transform: rotate(2deg) scale(0.96, 1);
-}
-ai-orb-mascot.orb-expr-looking-right .ai-orb-eye-right,
-ai-orb-mascot[data-expression="looking-right"] .ai-orb-eye-right {
-    transform: rotate(5deg) scale(0.88, 0.98);
-}
-
-/* 4. EXCITED */
-ai-orb-mascot.orb-expr-excited .ai-orb-group,
-ai-orb-mascot[data-expression="excited"] .ai-orb-group {
-    animation: aiOrbExcitedBounce 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
-}
-@keyframes aiOrbExcitedBounce {
-    0% { transform: translateY(0px) scale(1); }
-    100% { transform: translateY(-7px) scale(1.05); }
-}
-ai-orb-mascot.orb-expr-excited .ai-orb-eye-left,
-ai-orb-mascot[data-expression="excited"] .ai-orb-eye-left {
-    transform: translate(-3px, -7px) scale(1.18, 1.18) rotate(-4deg);
-}
-ai-orb-mascot.orb-expr-excited .ai-orb-eye-right,
-ai-orb-mascot[data-expression="excited"] .ai-orb-eye-right {
-    transform: translate(3px, -7px) scale(1.18, 1.18) rotate(4deg);
-}
-ai-orb-mascot.orb-expr-excited .ai-orb-sparkle,
-ai-orb-mascot[data-expression="excited"] .ai-orb-sparkle {
-    transform: scale(1.35);
-    filter: drop-shadow(0 0 3px #ffffff);
-}
-
-/* 5. HAPPY (Smiling Upward Arches ^ ^, NO Mouth) */
-ai-orb-mascot.orb-expr-happy .ai-orb-group,
-ai-orb-mascot[data-expression="happy"] .ai-orb-group {
-    animation: aiOrbHappyFloat 2.8s ease-in-out infinite alternate;
-}
-@keyframes aiOrbHappyFloat {
-    0% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(1.5deg); }
-    100% { transform: translateY(-2px) rotate(-1.5deg); }
-}
-ai-orb-mascot.orb-expr-happy .ai-orb-capsule,
-ai-orb-mascot[data-expression="happy"] .ai-orb-capsule {
-    opacity: 0;
-    transform: scaleY(0.1);
-}
-ai-orb-mascot.orb-expr-happy .ai-orb-sparkle,
-ai-orb-mascot.orb-expr-happy .ai-orb-sparkle-micro,
+/* 5. HAPPY: smiling ^ ^ eyes and a soft sway */
+ai-orb-mascot[data-expression="happy"] .ai-orb-group { animation: aiOrbHop .5s cubic-bezier(.3, 1.4, .5, 1) 1, aiOrbSway 2.6s ease-in-out .5s infinite; }
+ai-orb-mascot[data-expression="happy"] .ai-orb-capsule { opacity: 0; transform: scaleY(.1); }
 ai-orb-mascot[data-expression="happy"] .ai-orb-sparkle,
-ai-orb-mascot[data-expression="happy"] .ai-orb-sparkle-micro {
-    opacity: 0;
-}
-ai-orb-mascot.orb-expr-happy .ai-orb-arch,
-ai-orb-mascot[data-expression="happy"] .ai-orb-arch {
-    opacity: 1;
-    transform: scale(1.1) translateY(-4px);
-}
-ai-orb-mascot.orb-expr-happy .ai-orb-eye-left,
-ai-orb-mascot[data-expression="happy"] .ai-orb-eye-left {
-    transform: translate(-1px, -4px);
-}
-ai-orb-mascot.orb-expr-happy .ai-orb-eye-right,
-ai-orb-mascot[data-expression="happy"] .ai-orb-eye-right {
-    transform: translate(1px, -4px);
+ai-orb-mascot[data-expression="happy"] .ai-orb-sparkle-micro { opacity: 0; }
+ai-orb-mascot[data-expression="happy"] .ai-orb-arch { opacity: 1; transform: scale(1.08) translateY(-2px); }
+ai-orb-mascot[data-expression="happy"] .ai-orb-eye { transform: translateY(-3px); }
+@keyframes aiOrbSway {
+    0%, 100% { transform: translateY(-1px) rotate(-2deg); }
+    50%      { transform: translateY(-3px) rotate(2deg); }
 }
 
-/* 6. ANGRY (Sharp Inward Tilt \ /, Narrower Eyes, NO Eyebrows, NO Mouth) */
-ai-orb-mascot.orb-expr-angry .ai-orb-eye-left,
-ai-orb-mascot[data-expression="angry"] .ai-orb-eye-left {
-    transform: translate(2px, -1px) rotate(17deg) scale(0.85, 1.05);
-}
-ai-orb-mascot.orb-expr-angry .ai-orb-eye-right,
-ai-orb-mascot[data-expression="angry"] .ai-orb-eye-right {
-    transform: translate(-2px, -1px) rotate(-17deg) scale(0.85, 1.05);
-}
-ai-orb-mascot.orb-expr-angry .ai-orb-capsule,
-ai-orb-mascot[data-expression="angry"] .ai-orb-capsule {
-    filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.45));
-}
-
-/* 7. POUT / UPSET (Downward Droop, Outward Tilt / \) */
-ai-orb-mascot.orb-expr-pout .ai-orb-eye-left,
-ai-orb-mascot[data-expression="pout"] .ai-orb-eye-left {
-    transform: translate(1px, 8px) rotate(-13deg) scale(0.86, 0.86);
-}
-ai-orb-mascot.orb-expr-pout .ai-orb-eye-right,
-ai-orb-mascot[data-expression="pout"] .ai-orb-eye-right {
-    transform: translate(-1px, 8px) rotate(13deg) scale(0.86, 0.86);
-}
-ai-orb-mascot.orb-expr-pout .ai-orb-group,
-ai-orb-mascot[data-expression="pout"] .ai-orb-group {
-    animation: aiOrbPoutDrift 3.5s ease-in-out infinite;
-}
-@keyframes aiOrbPoutDrift {
-    0%, 100% { transform: translateY(3px) rotate(0deg); }
-    50% { transform: translateY(6px) rotate(-1.5deg); }
+/* 6. ANGRY (playful): eyes narrow from the top and tilt inward \ /, with one short shake */
+ai-orb-mascot[data-expression="angry"] .ai-orb-group { animation: aiOrbShake .38s ease-in-out 1, aiOrbBreathe 4.6s ease-in-out .4s infinite; }
+ai-orb-mascot[data-expression="angry"] .ai-orb-eye-left  { transform: translate(2px, 2px) rotate(16deg); }
+ai-orb-mascot[data-expression="angry"] .ai-orb-eye-right { transform: translate(-2px, 2px) rotate(-16deg); }
+ai-orb-mascot[data-expression="angry"] .ai-orb-capsule { transform: scaleY(.62); }
+ai-orb-mascot[data-expression="angry"] .ai-orb-sparkle { transform: scale(.8); }
+@keyframes aiOrbShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-3px) rotate(-2deg); }
+    45% { transform: translateX(3px) rotate(2deg); }
+    70% { transform: translateX(-2px); }
 }
 
-/* 8. SURPRISED (Wide Alert Capsules, Increased Spacing) */
-ai-orb-mascot.orb-expr-surprised .ai-orb-group,
-ai-orb-mascot[data-expression="surprised"] .ai-orb-group {
-    transform: translateY(-4px) scale(1.04);
-}
-ai-orb-mascot.orb-expr-surprised .ai-orb-eye-left,
-ai-orb-mascot[data-expression="surprised"] .ai-orb-eye-left {
-    transform: translate(-5px, -3px) scale(1.3, 1.25);
-}
-ai-orb-mascot.orb-expr-surprised .ai-orb-eye-right,
-ai-orb-mascot[data-expression="surprised"] .ai-orb-eye-right {
-    transform: translate(5px, -3px) scale(1.3, 1.25);
-}
-ai-orb-mascot.orb-expr-surprised .ai-orb-sparkle,
-ai-orb-mascot[data-expression="surprised"] .ai-orb-sparkle {
-    transform: scale(1.4);
+/* 7. POUT: looks down and away / \, body tilts and sinks a little */
+ai-orb-mascot[data-expression="pout"] .ai-orb-face { transform: translate(-6px, 5px); }
+ai-orb-mascot[data-expression="pout"] .ai-orb-eye-left  { transform: rotate(-10deg) scale(.95); }
+ai-orb-mascot[data-expression="pout"] .ai-orb-eye-right { transform: rotate(10deg) scale(.95); }
+ai-orb-mascot[data-expression="pout"] .ai-orb-capsule { transform: scaleY(.72); }
+ai-orb-mascot[data-expression="pout"] .ai-orb-group { animation: aiOrbPout 3.4s ease-in-out infinite; }
+@keyframes aiOrbPout {
+    0%, 100% { transform: translateY(3px) rotate(-4deg); }
+    50%      { transform: translateY(5px) rotate(-5.5deg); }
 }
 
-/* 9. BLINK (Smooth Vertical Collapse) */
-ai-orb-mascot.orb-expr-blink .ai-orb-capsule,
-ai-orb-mascot.orb-expr-blink .ai-orb-sparkle,
-ai-orb-mascot.orb-expr-blink .ai-orb-sparkle-micro,
-ai-orb-mascot[data-expression="blink"] .ai-orb-capsule,
+/* 8. SURPRISED: eyes pop wide and round, body springs up then settles */
+ai-orb-mascot[data-expression="surprised"] .ai-orb-group { animation: aiOrbPop .55s cubic-bezier(.3, 1.6, .5, 1) 1 forwards; }
+ai-orb-mascot[data-expression="surprised"] .ai-orb-eye { transform: translateY(-3px) scale(1.24, 1.12); }
+ai-orb-mascot[data-expression="surprised"] .ai-orb-sparkle { transform: scale(1.3); }
+@keyframes aiOrbPop {
+    0%   { transform: translateY(0) scale(.96, 1.04); }
+    35%  { transform: translateY(-7px) scale(1.04, .97); }
+    100% { transform: translateY(-2px) scale(1, 1); }
+}
+
+/* 9. BLINK (held) */
+ai-orb-mascot[data-expression="blink"] .ai-orb-capsule { transform: scaleY(.08); }
 ai-orb-mascot[data-expression="blink"] .ai-orb-sparkle,
-ai-orb-mascot[data-expression="blink"] .ai-orb-sparkle-micro {
-    transform: scaleY(0.06);
-    opacity: 0.1;
+ai-orb-mascot[data-expression="blink"] .ai-orb-sparkle-micro { opacity: 0; }
+
+/* 10. THINKING: looks up and to the side, lids half down, slow drifting gaze with a thoughtful blink */
+ai-orb-mascot[data-expression="thinking"] .ai-orb-face { animation: aiOrbThink 3.6s ease-in-out infinite; }
+ai-orb-mascot[data-expression="thinking"] .ai-orb-capsule { animation: aiOrbThinkLid 3.6s ease-in-out infinite; }
+@keyframes aiOrbThink {
+    0%, 100% { transform: translate(-8px, -7px); }
+    45%      { transform: translate(-5px, -8px); }
+    60%      { transform: translate(6px, -6px); }
+    85%      { transform: translate(4px, -5px); }
+}
+@keyframes aiOrbThinkLid {
+    0%, 70%, 80%, 100% { transform: scaleY(.78); }
+    75%                { transform: scaleY(.08); }
 }
 
-/* 10. THINKING (Subtle Processing Eye Drift & Micro-Blinks) */
-ai-orb-mascot.orb-expr-thinking .ai-orb-face,
-ai-orb-mascot[data-expression="thinking"] .ai-orb-face {
-    animation: aiOrbThinkingGaze 3.2s ease-in-out infinite;
+/* 11. RESPONDING: attentive, eyes slightly wide, a gentle speaking bob */
+ai-orb-mascot[data-expression="responding"] .ai-orb-group { animation: aiOrbTalk .62s ease-in-out infinite; }
+ai-orb-mascot[data-expression="responding"] .ai-orb-eye { transform: translateY(-1px) scale(1.08); }
+ai-orb-mascot[data-expression="responding"] .ai-orb-eye-inner { animation: aiOrbTalkEyes .62s ease-in-out infinite; }
+@keyframes aiOrbTalk {
+    0%, 100% { transform: translateY(0) scale(1, 1); }
+    50%      { transform: translateY(-2.5px) scale(1.01, .99); }
 }
-@keyframes aiOrbThinkingGaze {
-    0%, 100% {
-        transform: translate(-8px, -6px) scale(0.96);
-    }
-    40% {
-        transform: translate(-6px, -7px) scale(0.96);
-    }
-    55% {
-        transform: translate(7px, -4px) scale(0.98);
-    }
-    80% {
-        transform: translate(6px, -2px) scale(0.98);
-    }
-}
-ai-orb-mascot.orb-expr-thinking .ai-orb-eye-inner,
-ai-orb-mascot[data-expression="thinking"] .ai-orb-eye-inner {
-    animation: aiOrbThinkingBlink 3.2s ease-in-out infinite;
-}
-@keyframes aiOrbThinkingBlink {
-    0%, 75%, 83%, 100% {
-        transform: scaleY(1);
-    }
-    79% {
-        transform: scaleY(0.08); /* Thoughtful blink */
-    }
+@keyframes aiOrbTalkEyes {
+    0%, 100% { transform: scaleY(1); }
+    50%      { transform: scaleY(.9); }
 }
 
-/* 11. RESPONDING (Attentive Pulse & Eye Widening) */
-ai-orb-mascot.orb-expr-responding .ai-orb-group,
-ai-orb-mascot[data-expression="responding"] .ai-orb-group {
-    animation: aiOrbRespondingPulse 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
-}
-@keyframes aiOrbRespondingPulse {
-    0% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-6px) scale(1.05); }
-    100% { transform: translateY(0) scale(1); }
-}
-ai-orb-mascot.orb-expr-responding .ai-orb-eye-left,
-ai-orb-mascot[data-expression="responding"] .ai-orb-eye-left {
-    transform: translate(-1px, -3px) scale(1.12, 1.12);
-}
-ai-orb-mascot.orb-expr-responding .ai-orb-eye-right,
-ai-orb-mascot[data-expression="responding"] .ai-orb-eye-right {
-    transform: translate(1px, -3px) scale(1.12, 1.12);
+/* 12. ERROR (sad / apologetic): eyes droop outward / \, lids heavy, a slow sigh */
+ai-orb-mascot[data-expression="error"] .ai-orb-face { transform: translateY(5px); }
+ai-orb-mascot[data-expression="error"] .ai-orb-eye-left  { transform: rotate(-12deg) scale(.92); }
+ai-orb-mascot[data-expression="error"] .ai-orb-eye-right { transform: rotate(12deg) scale(.92); }
+ai-orb-mascot[data-expression="error"] .ai-orb-capsule { transform: scaleY(.66); }
+ai-orb-mascot[data-expression="error"] .ai-orb-sparkle { opacity: .55; }
+ai-orb-mascot[data-expression="error"] .ai-orb-group { animation: aiOrbSigh 4s ease-in-out infinite; }
+@keyframes aiOrbSigh {
+    0%, 100% { transform: translateY(4px) scale(1, 1); }
+    40%      { transform: translateY(1px) scale(1.01, 1.01); }
+    65%      { transform: translateY(6px) scale(1.01, .98); }
 }
 
-/* 12. ERROR / SAD (Downward Droop, Slow Heavy Drift) */
-ai-orb-mascot.orb-expr-error .ai-orb-eye-left,
-ai-orb-mascot[data-expression="error"] .ai-orb-eye-left {
-    transform: translate(0, 10px) rotate(-12deg) scale(0.85, 0.85);
+/* paused when off-screen or the tab is hidden; still when the visitor prefers less motion */
+ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) {
+    ai-orb-mascot .ai-orb-group, ai-orb-mascot .ai-orb-face, ai-orb-mascot .ai-orb-capsule, ai-orb-mascot .ai-orb-eye-inner { animation: none !important; }
+    ai-orb-mascot .ai-orb-eye, ai-orb-mascot .ai-orb-face { transition-duration: .01s !important; }
 }
-ai-orb-mascot.orb-expr-error .ai-orb-eye-right,
-ai-orb-mascot[data-expression="error"] .ai-orb-eye-right {
-    transform: translate(0, 10px) rotate(12deg) scale(0.85, 0.85);
-}
-ai-orb-mascot.orb-expr-error .ai-orb-group,
-ai-orb-mascot[data-expression="error"] .ai-orb-group {
-    animation: aiOrbErrorDrift 3.8s ease-in-out infinite;
-}
-@keyframes aiOrbErrorDrift {
-    0%, 100% { transform: translateY(4px) rotate(0deg); }
-    50% { transform: translateY(8px) rotate(-1deg); }
-}
+
 
 /* ==========================================================================
    SMART PROACTIVE GREETING SPEECH BUBBLE (IDLE TRIGGER)
@@ -14009,3 +13884,211 @@ nav[aria-label="Main navigation"] .brand-name { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .bottom-nav .bn-ico, .bottom-nav a.is-pressed .bn-ico { transition: none; transform: none; }
 }
+
+/* ================= AI assistant: chat-style greeting and device-aware placement ================= */
+/* greeting as a short DM thread */
+html body #ai-orb-speech-bubble.is-dm:not(#_ai) { width: 300px !important; max-width: calc(100vw - 24px) !important; padding: 12px 14px 14px !important; }
+#ai-orb-speech-bubble.is-dm { opacity: 0; transform: translateY(8px) scale(.98); transition: opacity .25s ease, transform .3s cubic-bezier(.16,1,.3,1); }
+#ai-orb-speech-bubble.is-dm.is-in { opacity: 1; transform: none; }
+#ai-orb-speech-bubble.is-dm.bubble-closing { opacity: 0 !important; transform: translateY(6px) !important; }
+#ai-orb-speech-bubble .dm-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+#ai-orb-speech-bubble .dm-avatar { width: 34px; height: 34px; flex-shrink: 0; position: relative; display: grid; place-items: center; }
+#ai-orb-speech-bubble .dm-avatar ai-orb-mascot { width: 34px !important; height: 34px !important; }
+#ai-orb-speech-bubble .dm-avatar::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 9px; height: 9px; border-radius: 50%;
+  background: #22c55e; box-shadow: 0 0 0 2px var(--bg-color, #0b1120); }
+#ai-orb-speech-bubble .dm-who b { display: block; font-size: 13.5px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+#ai-orb-speech-bubble .dm-who small { display: block; font-size: 11.5px; color: var(--text-secondary); line-height: 1.2; }
+#ai-orb-speech-bubble .dm-thread { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 10px 0 2px; }
+#ai-orb-speech-bubble .dm-msg { margin: 0; max-width: 100%; padding: 7px 12px; border-radius: 16px 16px 16px 6px; font-size: 13.5px; line-height: 1.45;
+  color: var(--text-primary); background: color-mix(in srgb, var(--text-primary) 8%, transparent); animation: dm-in .28s cubic-bezier(.16,1,.3,1); }
+#ai-orb-speech-bubble .dm-msg.dm-mine { align-self: flex-end; border-radius: 16px 16px 6px 16px; color: var(--accent-active-color, #0b1120);
+  background: var(--gradient-accent, var(--accent-1)); }
+@keyframes dm-in { from { opacity: 0; transform: translateY(6px) scale(.97); } }
+#ai-orb-speech-bubble .dm-typing { display: inline-flex; gap: 4px; padding: 9px 12px; border-radius: 16px 16px 16px 6px; background: color-mix(in srgb, var(--text-primary) 8%, transparent); }
+#ai-orb-speech-bubble .dm-typing[hidden] { display: none; }
+#ai-orb-speech-bubble .dm-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); animation: dm-dot 1.2s ease-in-out infinite; }
+#ai-orb-speech-bubble .dm-typing i:nth-child(2) { animation-delay: .15s; } #ai-orb-speech-bubble .dm-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes dm-dot { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-3px); opacity: 1; } }
+#ai-orb-speech-bubble .dm-chips { margin-top: 10px; }
+#ai-orb-speech-bubble .dm-chips[hidden], #ai-orb-speech-bubble .dm-cta[hidden] { display: none !important; }
+#ai-orb-speech-bubble .dm-chips-label { margin: 0 0 6px; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); }
+#ai-orb-speech-bubble .dm-chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+#ai-orb-speech-bubble .dm-chip { padding: 6px 12px; border-radius: 999px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  color: var(--accent-1); background: color-mix(in srgb, var(--accent-1) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent-1) 40%, transparent);
+  transition: background .2s ease, transform .15s ease; }
+#ai-orb-speech-bubble .dm-chip:hover { background: color-mix(in srgb, var(--accent-1) 18%, transparent); }
+#ai-orb-speech-bubble .dm-chip:active { transform: scale(.96); }
+#ai-orb-speech-bubble .dm-cta { margin-top: 10px; display: flex; gap: 8px; }
+#ai-orb-speech-bubble .dm-cta > * { flex: 1; justify-content: center; text-decoration: none; }
+#ai-orb-speech-bubble .dm-heart { position: absolute; z-index: 2; pointer-events: none; color: #f43f5e; font-size: 14px;
+  animation: dm-heart 1.2s ease-out var(--d, 0ms) forwards; opacity: 0; }
+@keyframes dm-heart { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), -70px) scale(1.2); } }
+
+/* unread dot on the orb / pill after the greeting fades */
+#ai-chat-widget.has-unread::after { content: ""; position: absolute; top: 4px; right: 6px; z-index: 3; width: 11px; height: 11px; border-radius: 50%;
+  background: #ef4444; box-shadow: 0 0 0 2px var(--bg-color, #0b1120); }
+
+/* tablets: the pill and greeting sit above the tab bar */
+@media (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+  html body #ai-chat-widget.chat-collapsed:not(#_ai) { bottom: calc(80px + env(safe-area-inset-bottom)) !important; right: 20px !important; }
+  html body #ai-chat-widget.chat-expanded:not(#_ai) { bottom: calc(80px + env(safe-area-inset-bottom)) !important; right: 20px !important; left: auto !important;
+    width: 380px !important; height: min(70vh, 560px) !important; }
+  html body #ai-orb-speech-bubble:not(#_ai) { bottom: calc(150px + env(safe-area-inset-bottom)) !important; right: 20px !important; }
+}
+
+/* phones: just the orb above the tab bar; tucks away on scroll down; the chat opens as a bottom sheet */
+@media (max-width: 767px) {
+  html body #ai-chat-widget.chat-collapsed:not(#_ai) { bottom: calc(76px + env(safe-area-inset-bottom)) !important; right: 14px !important;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), opacity .25s ease !important; }
+  html body #ai-chat-widget.chat-collapsed.ai-tucked:not(#_ai) { transform: translateY(160%) !important; opacity: 0 !important; pointer-events: none !important; }
+  html body #ai-orb-speech-bubble:not(#_ai) { bottom: calc(146px + env(safe-area-inset-bottom)) !important; right: 12px !important; left: auto !important; }
+  html body #ai-chat-widget.chat-expanded:not(#_ai) { left: 0 !important; right: 0 !important; bottom: 0 !important; top: auto !important;
+    width: 100% !important; max-width: none !important; height: min(82dvh, 660px) !important; border-radius: 22px 22px 0 0 !important;
+    z-index: 100010 !important; padding-bottom: env(safe-area-inset-bottom) !important; }
+  html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header { position: relative; padding-top: 18px !important; }
+  html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header::before { content: ""; position: absolute; top: 7px; left: 50%; width: 38px; height: 4px; margin-left: -19px;
+    border-radius: 999px; background: color-mix(in srgb, var(--text-primary, #fff) 28%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #ai-orb-speech-bubble.is-dm, #ai-orb-speech-bubble .dm-msg { transition: none; animation: none; }
+  #ai-orb-speech-bubble .dm-typing i { animation: none; }
+}
+
+/* ==========================================================
+   CHAT PANEL v2 — assistant-style home screen, starter cards,
+   follow-up chips, formatted replies, live status, new chat
+   ========================================================== */
+#ai-chat-widget .chat-header-name,
+#ai-chat-widget .chat-head-btn,
+#ai-chat-widget .chat-foot { display: none; }
+html body #ai-chat-widget.chat-collapsed:not(#_ai) :is(.chat-header-name, .chat-head-btn, .chat-foot) { display: none !important; }
+
+/* header: name + live status + actions */
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header { gap: 6px; padding-right: 10px !important; }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header-content { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header-title { display: none !important; }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header-name { display: block; font-weight: 700; font-size: .95rem; letter-spacing: .1px; color: var(--text-primary); }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header-sub { display: inline-flex; align-items: center; gap: 6px; }
+#ai-chat-widget .chat-live { position: relative; width: 7px; height: 7px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+#ai-chat-widget .chat-live::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: #22c55e; animation: chatLive 2.2s ease-out infinite; }
+@keyframes chatLive { 0% { transform: scale(1); opacity: .6; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-head-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; padding: 0; border: none; border-radius: 10px; cursor: pointer;
+    background: transparent; color: var(--chat-sub);
+    transition: background .2s ease, color .2s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-head-btn:hover { background: rgba(var(--accent-1-rgb), .12); color: var(--accent-1); transform: rotate(-60deg); }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-head-btn:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 1px; }
+html body #ai-chat-widget.chat-expanded:not(#_ai) #chat-toggle-icon {
+    width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px;
+    transition: background .2s ease;
+}
+html body #ai-chat-widget.chat-expanded:not(#_ai) #chat-toggle-icon:hover { background: rgba(var(--accent-1-rgb), .12); }
+
+/* home: mascot, time-aware hello, one line of purpose */
+#ai-chat-widget .chat-hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 14px 8px 4px; transition: padding .35s ease; }
+#ai-chat-widget .chat-hero-orb { position: relative; width: 60px; height: 60px; display: inline-flex; margin-bottom: 10px; }
+#ai-chat-widget .chat-hero-orb::before { content: ""; position: absolute; inset: -14px; border-radius: 50%; z-index: -1;
+    background: radial-gradient(circle, rgba(var(--accent-1-rgb), .28), transparent 65%); animation: chatHalo 3.6s ease-in-out infinite; }
+@keyframes chatHalo { 0%, 100% { transform: scale(.92); opacity: .7; } 50% { transform: scale(1.08); opacity: 1; } }
+#ai-chat-widget .chat-hero-orb ai-orb-mascot { width: 60px; height: 60px; }
+#ai-chat-widget .chat-hero-title { margin: 0; font-size: 1.22rem; font-weight: 800; letter-spacing: -.2px; color: var(--text-primary); line-height: 1.2; }
+#ai-chat-widget .chat-wave { display: inline-block; transform-origin: 70% 80%; animation: chatWave 2.4s ease-in-out .6s 2; }
+@keyframes chatWave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(16deg); } 20%, 40% { transform: rotate(-8deg); } }
+#ai-chat-widget .chat-hero-sub { margin: 6px auto 0; max-width: 270px; font-size: .8rem; line-height: 1.5; color: var(--chat-sub); }
+/* once a conversation starts the intro becomes a small header row */
+#ai-chat-widget .chat-hero.is-compact { flex-direction: row; justify-content: center; gap: 8px; padding: 0 0 4px; }
+#ai-chat-widget .chat-hero.is-compact .chat-hero-orb,
+#ai-chat-widget .chat-hero.is-compact .chat-hero-title { display: none; }
+#ai-chat-widget .chat-hero.is-compact .chat-hero-sub { margin: 0; font-size: .7rem; opacity: .8; max-width: none; }
+
+/* starter cards */
+#ai-chat-widget .chat-starters { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+#ai-chat-widget .chat-starter {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; text-align: left; cursor: pointer;
+    border: none; border-radius: 14px; font: inherit; color: var(--chip-fg, var(--text-primary));
+    background: var(--chat-bot-bg); box-shadow: inset 0 0 0 1px var(--chat-bot-edge);
+    opacity: 0; animation: chatRise .45s cubic-bezier(.16,1,.3,1) forwards; animation-delay: calc(.12s + var(--i, 0) * 60ms);
+    transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease, background .25s ease;
+}
+#ai-chat-widget .chat-starter:hover { transform: translateY(-2px); background: rgba(var(--accent-1-rgb), .08); box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), .45), 0 10px 22px -12px rgba(var(--accent-1-rgb), .6); }
+#ai-chat-widget .chat-starter:active { transform: scale(.97); }
+#ai-chat-widget .chat-starter:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+#ai-chat-widget .cs-ico { flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(var(--accent-1-rgb), .12); }
+#ai-chat-widget .cs-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+#ai-chat-widget .cs-text b { font-size: .8rem; font-weight: 700; line-height: 1.25; white-space: nowrap; }
+#ai-chat-widget .cs-text small { font-size: .68rem; line-height: 1.3; color: var(--chat-sub); }
+#ai-chat-widget :is(.chat-starter, .chat-followup) .chip-ico {
+    width: 15px; height: 15px; flex-shrink: 0; fill: none; stroke: var(--chip-ico, var(--accent-1)); stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round; overflow: visible;
+}
+#ai-chat-widget :is(.chat-starter, .chat-followup) .chip-ico .ci-clasp { fill: var(--chip-ico, var(--accent-1)); }
+
+/* follow-up chips after an answer */
+#ai-chat-widget .chat-followups { display: flex; flex-wrap: wrap; gap: 6px; margin-top: -2px; animation: chatRise .4s cubic-bezier(.16,1,.3,1) .1s both; }
+#ai-chat-widget .chat-followup {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border: none; border-radius: 999px; cursor: pointer;
+    font: inherit; font-size: .72rem; font-weight: 600; color: var(--chip-fg, var(--text-primary));
+    background: rgba(var(--accent-1-rgb), .07); box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), .26);
+    transition: background .2s ease, transform .2s ease, color .2s ease;
+}
+#ai-chat-widget .chat-followup .chip-ico { width: 13px; height: 13px; }
+#ai-chat-widget .chat-followup:hover { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: var(--chat-user-fg); transform: translateY(-1px); }
+#ai-chat-widget .chat-followup:hover .chip-ico { stroke: var(--chat-user-fg); }
+#ai-chat-widget .chat-followup:hover .chip-ico .ci-clasp { fill: var(--chat-user-fg); }
+#ai-chat-widget.is-busy :is(.chat-followup, .chat-starter) { pointer-events: none; opacity: .5; }
+
+/* formatted replies */
+html #ai-chat-widget .bot-msg p { margin: 0; }
+html #ai-chat-widget .bot-msg p + p, html #ai-chat-widget .bot-msg p + ul, html #ai-chat-widget .bot-msg ul + p { margin-top: 6px; }
+html #ai-chat-widget .bot-msg ul { margin: 4px 0 0; padding-left: 16px; }
+html #ai-chat-widget .bot-msg li { margin: 2px 0; }
+html #ai-chat-widget .bot-msg li::marker { color: var(--accent-1); }
+html #ai-chat-widget .bot-msg code { font-family: 'Fira Code', ui-monospace, monospace; font-size: .76em; padding: 1px 5px; border-radius: 5px; background: rgba(var(--accent-1-rgb), .12); }
+html #ai-chat-widget .bot-msg a:not(.chat-action) { color: var(--action-fg, var(--accent-1)); text-decoration: underline; text-underline-offset: 2px; word-break: break-word; }
+html #ai-chat-widget .bot-msg.is-new { animation: chatRise .35s cubic-bezier(.16,1,.3,1) both; }
+html #ai-chat-widget .bot-msg.is-new > * { opacity: 0; animation: chatRise .4s cubic-bezier(.16,1,.3,1) forwards; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes chatRise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* composer: the field draws the focus ring, not the bare input */
+html body #ai-chat-widget:not(#_ai) #chat-input:is(:focus, :focus-visible) { outline: none !important; box-shadow: none !important; border: none !important; }
+
+/* composer: send lights up only when there is something to send */
+html body #ai-chat-widget:not(#_ai) #chat-send { transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, filter .2s ease, box-shadow .2s ease; }
+html body #ai-chat-widget:not(.has-text):not(#_ai) #chat-send { opacity: .45; filter: saturate(.4); box-shadow: none; transform: scale(.92); }
+html body #ai-chat-widget.is-busy:not(#_ai) #chat-send { opacity: .45; pointer-events: none; }
+html body #ai-chat-widget.has-text:not(#_ai) #chat-send i { animation: chatSendPop .3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes chatSendPop { from { transform: translateY(4px); opacity: .4; } to { transform: none; opacity: 1; } }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-input-area { margin-bottom: 6px !important; }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-foot {
+    display: block; flex-shrink: 0; margin: 0 0 9px; padding: 0 14px; text-align: center;
+    font-size: .64rem; letter-spacing: .1px; color: var(--chat-sub); opacity: .85;
+}
+
+/* phones: a touch roomier taps, one-column starters on very narrow screens */
+@media (max-width: 767px) {
+    #ai-chat-widget .chat-starter { padding: 12px; }
+    html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-foot { margin-bottom: max(9px, env(safe-area-inset-bottom)); }
+}
+@media (max-width: 340px) { #ai-chat-widget .chat-starters { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: reduce) {
+    #ai-chat-widget :is(.chat-starter, .chat-followups, .chat-wave),
+    #ai-chat-widget .chat-live::after, #ai-chat-widget .chat-hero-orb::before,
+    html #ai-chat-widget .bot-msg.is-new, html #ai-chat-widget .bot-msg.is-new > * { animation: none !important; opacity: 1; }
+}
+
+/* chat: where an answer came from, and a caret while it streams in */
+#ai-chat-widget .chat-sources { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 9px; padding-top: 8px;
+    border-top: 1px solid var(--chat-hair); font-size: .68rem; color: var(--chat-sub); }
+#ai-chat-widget .chat-sources > span { text-transform: uppercase; letter-spacing: .6px; font-weight: 700; font-size: .6rem; opacity: .8; }
+html #ai-chat-widget .chat-sources a { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; text-decoration: none;
+    color: var(--action-fg, var(--accent-1)); background: rgba(var(--accent-1-rgb), .08); transition: background .2s ease; }
+html #ai-chat-widget .chat-sources a::before { content: "\2197"; font-size: .9em; opacity: .8; }
+html #ai-chat-widget .chat-sources a:hover { background: rgba(var(--accent-1-rgb), .18); }
+html #ai-chat-widget .bot-msg.is-streaming > :last-child::after { content: ""; display: inline-block; width: 7px; height: 1em; margin-left: 2px;
+    vertical-align: -2px; border-radius: 2px; background: var(--accent-1); animation: chatCaret .9s steps(2) infinite; }
+@keyframes chatCaret { 50% { opacity: 0; } }

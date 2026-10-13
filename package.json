@@ -13,7 +13,9 @@
     "sync:arena": "node scripts/sync_arena.js",
     "mcp:arena": "node scripts/arena_mcp_server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "python3 scripts/build_pages.py && python3 scripts/build_nx_pages.py"
+    "build": "python3 scripts/build_pages.py && python3 scripts/build_nx_pages.py && python3 scripts/build_knowledge.py",
+    "chat:dev": "cd chat-worker && npx wrangler dev",
+    "chat:deploy": "cd chat-worker && npx wrangler deploy"
   },
   "keywords": [],
   "author": "Mehedi Hasan",

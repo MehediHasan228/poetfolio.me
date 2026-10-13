@@ -47,3 +47,7 @@ scratch/
 *.sqlite3
 .env
 .env.*
+
+# Cloudflare Worker local secrets
+.dev.vars
+chat-worker/.wrangler/

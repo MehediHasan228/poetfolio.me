@@ -43,7 +43,7 @@
     <!-- Reliable FontAwesome with fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=206">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=212">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -246,7 +246,7 @@
     /* once per release: re-fetch the main pages so the browser drops any old copies it kept
        (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
     window.addEventListener('load', function () {
-        var RELEASE = '2026-10-13';
+        var RELEASE = '2026-10-13b';
         try { if (localStorage.getItem('pages_refreshed') === RELEASE) return; } catch (e) { return; }
         var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
         var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
@@ -473,23 +473,25 @@ document.addEventListener("pointermove", function (ev) {
                 <span class="grok-bot-avatar ai-orb-avatar" aria-label="Mehedi's AI Assistant">
                     <ai-orb-mascot id="chat-mascot" expression="idle"></ai-orb-mascot>
                 </span>
-                <span class="chat-header-text"><span class="chat-header-title">Ask My AI</span><span class="chat-header-sub">Portfolio assistant</span></span>
+                <span class="chat-header-text"><span class="chat-header-title">Ask My AI</span><span class="chat-header-name">Mehedi's AI</span><span class="chat-header-sub"><i class="chat-live" aria-hidden="true"></i>Online · replies in seconds</span></span>
             </span>
+            <button type="button" class="chat-head-btn" id="chat-reset" title="New chat" aria-label="Start a new chat"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10a6 6 0 1 0 1.8-4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 3.5v3.2h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             <i class="fa-solid fa-chevron-up" id="chat-toggle-icon"></i>
         </div>
         <div class="chat-body" id="chat-body">
             <!-- Dynamic chat messages rendered via JS -->
         </div>
         <div class="chat-input-area">
-            <input aria-label="Message the AI assistant" type="text" id="chat-input" placeholder="Type a query...">
+            <input aria-label="Message the AI assistant" type="text" id="chat-input" placeholder="Ask about projects, stack, hiring…" autocomplete="off" enterkeyhint="send" maxlength="500">
             <button id="voice-btn" class="magnetic-element hover-sound"
                 style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:pointer;"
                 title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
-            <button id="chat-send" class="magnetic-element hover-sound"><i class="fa-solid fa-paper-plane"></i></button>
+            <button id="chat-send" class="magnetic-element hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
         </div>
+        <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../ai-orb-mascot.js?v=6" defer></script>
-    <script src="../script~9e1709.js?v=192" defer></script>
+    <script src="../ai-orb-mascot.js?v=10" defer></script>
+    <script src="../script~9e1709.js?v=196" defer></script>
 
 </body>
 
