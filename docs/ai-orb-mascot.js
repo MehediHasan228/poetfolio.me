@@ -409,10 +409,202 @@
         customElements.define('ai-orb-mascot', AIOrbMascot);
     }
 
+    /* ===================================================================
+     * Visitor sense: reads how this visitor browses so the greeting and the
+     * chat can meet them where they are. Everything stays in this tab
+     * (sessionStorage); only a one-line summary goes to the AI, and only
+     * when the visitor opens the chat themselves.
+     * =================================================================== */
+    const VisitorSense = (() => {
+        const KEY = 'vs:v1';
+        const TECH = /\b(kafka|nestjs|nest|langgraph|langchain|mcp|rag|pgvector|postgres(ql)?|redis|rabbitmq|docker|kubernetes|k8s|aws|react|next\.?js|typescript|python|fastapi|laravel|flutter|ollama|claude|openai|gemini|llm|agent|microservices?|erp|n8n|whisper|vat|payroll)\b/i;
+        const ITEMS = [
+            ['.project-card, .proj, .work2-row', 'project'],
+            ['.exp-item-modern', 'experience'],
+            ['.edu, .cert-card', 'education'],
+            ['.svc2-card, .svc-card, .home-svc', 'service'],
+            ['.person', 'person'],
+            ['.nl-card, .nl-bm, .nl-ch, .nl-feature', 'library'],
+            ['.arch-unified-card', 'architecture'],
+            ['.sk', 'skills']
+        ];
+        let st;
+        try { st = JSON.parse(sessionStorage.getItem(KEY)); } catch (e) { st = null; }
+        if (!st || typeof st !== 'object') st = {};
+        st.dwell = st.dwell || {}; st.kind = st.kind || {}; st.revisits = st.revisits || {}; st.chips = st.chips || {};
+        st.clicks = st.clicks || {}; st.pages = st.pages || []; st.scroll = st.scroll || { fast: 0, slow: 0, back: 0 }; st.revAt = st.revAt || {};
+        const save = () => { try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+        let started = false;
+
+        function label(el, kind) {
+            if (kind === 'experience') {
+                const t = el.querySelector('h3'), sub = el.querySelector('.exp-sub');
+                const co = sub && sub.firstChild && sub.firstChild.nodeType === 3 ? sub.firstChild.textContent.trim() : '';
+                return ((t ? t.textContent.trim() : 'a role') + (co ? ' at ' + co : '')).slice(0, 60);
+            }
+            const h = el.querySelector('h3, h4, .nl-card-title, .svc2-title, b, strong');
+            return (h ? h.textContent : el.textContent).replace(/\s+/g, ' ').trim().slice(0, 48);
+        }
+
+        function start() {
+            if (started) return; started = true;
+            if (!st.pages.includes(location.pathname)) st.pages.push(location.pathname);
+            st.pages = st.pages.slice(-20);
+            save();
+
+            /* what is on screen, and which item sits in the middle of it */
+            const items = [];
+            ITEMS.forEach(([sel, kind]) => document.querySelectorAll(sel).forEach((el) => { if (!items.some((x) => x.el === el)) items.push({ el, kind, label: label(el, kind) }); }));
+            const visible = new Set();
+            if ('IntersectionObserver' in window && items.length) {
+                const io = new IntersectionObserver((es) => es.forEach((e) => {
+                    const it = items.find((x) => x.el === e.target);
+                    if (!it) return;
+                    const big = e.intersectionRect.height >= Math.min(e.boundingClientRect.height * 0.5, window.innerHeight * 0.35);
+                    if (e.isIntersecting && big) visible.add(it); else visible.delete(it);
+                }), { threshold: [0, 0.25, 0.5, 0.75, 1] });
+                items.forEach((it) => io.observe(it.el));
+            }
+
+            /* scrolling style: fast skimming vs slow reading, and scrolling back up to re-read */
+            let lastY = window.scrollY, lastT = performance.now(), lastActive = Date.now(), scrollingFast = false;
+            addEventListener('scroll', () => {
+                const now = performance.now(), y = window.scrollY, dt = Math.max(16, now - lastT), dy = y - lastY;
+                lastActive = Date.now();
+                if (dt > 300) { lastY = y; lastT = now; return; }        /* first event of a new gesture: no speed yet */
+                const speed = Math.abs(dy) / dt * 1000;
+                scrollingFast = speed > 1800;
+                if (scrollingFast) st.scroll.fast += dt; else if (speed < 700) st.scroll.slow += dt;
+                if (dy < 0) st.scroll.back += -dy;
+                lastY = y; lastT = now; lastActive = Date.now();
+            }, { passive: true });
+            ['pointermove', 'pointerdown', 'keydown', 'touchstart'].forEach((t) => addEventListener(t, () => { lastActive = Date.now(); }, { passive: true }));
+
+            /* one second at a time: the item in the middle of the screen earns the time; leaving and coming back is a revisit */
+            const lastFocusAt = {}; let current = null, glances = 0, lastGlance = 0;
+            setInterval(() => {
+                save();
+                if (document.visibilityState !== 'visible' || Date.now() - lastActive > 20000 || scrollingFast || !visible.size) { current = null; return; }
+                const mid = window.innerHeight / 2;
+                let best = null, bestD = Infinity;
+                visible.forEach((it) => { const r = it.el.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - mid); if (d < bestD) { bestD = d; best = it; } });
+                if (!best) return;
+                const now = Date.now(), l = best.label;
+                if (current !== l) {
+                    if (lastFocusAt[l] && now - lastFocusAt[l] > 6000 && (st.dwell[l] || 0) >= 3000) { st.revisits[l] = (st.revisits[l] || 0) + 1; st.revAt[l] = now; }
+                    current = l;
+                }
+                lastFocusAt[l] = now;
+                const before = st.dwell[l] || 0;
+                st.dwell[l] = before + 1000; st.kind[l] = best.kind;
+                /* the orb quietly looks at what the visitor is reading, now and then */
+                if (before < 5000 && st.dwell[l] >= 5000 && glances < 3 && now - lastGlance > 45000) {
+                    const m = document.getElementById('chat-mascot'), w = document.getElementById('ai-chat-widget');
+                    if (m && w && w.classList.contains('chat-collapsed') && !document.getElementById('ai-orb-speech-bubble') && m.expression === 'idle' && typeof m.triggerReaction === 'function') {
+                        const r = best.el.getBoundingClientRect(), o = m.getBoundingClientRect();
+                        m.triggerReaction(r.left + r.width / 2 < o.left ? 'looking-left' : 'looking-right', 1600);
+                        glances++; lastGlance = now;
+                    }
+                }
+                save();
+            }, 1000);
+
+            /* words they highlight or copy */
+            let selTimer = 0;
+            const takeSelection = (copied) => {
+                const sel = window.getSelection && window.getSelection();
+                const a = document.activeElement;
+                if (!sel || (a && a.matches && a.matches('input, textarea'))) return;
+                if (sel.anchorNode && sel.anchorNode.parentElement && sel.anchorNode.parentElement.closest('#ai-chat-widget, #ai-orb-speech-bubble')) return;
+                const t = String(sel).replace(/\s+/g, ' ').trim();
+                if (t.length < 2 || t.length > 40) return;
+                st.sel = { t, at: Date.now(), copied: !!copied }; save();
+            };
+            document.addEventListener('selectionchange', () => { clearTimeout(selTimer); selTimer = setTimeout(() => takeSelection(false), 700); });
+            document.addEventListener('copy', () => takeSelection(true));
+
+            /* tools they hover, and what they click */
+            let chipAt = 0;
+            document.addEventListener('pointerover', (e) => {
+                const c = e.target.closest && e.target.closest('[data-ask]');
+                if (!c || Date.now() - chipAt < 1500) return;
+                chipAt = Date.now(); st.chips[c.dataset.ask] = (st.chips[c.dataset.ask] || 0) + 1; save();
+            }, { passive: true });
+            document.addEventListener('click', (e) => {
+                const a = e.target.closest && e.target.closest('a[href], [data-discuss], .chat-fit-card, .svc2-card');
+                if (!a) return;
+                const h = a.getAttribute('href') || '';
+                const k = /\.pdf/i.test(h) ? 'cv' : /github\.com/i.test(h) ? 'github' : /linkedin\.com/i.test(h) ? 'linkedin'
+                    : /wa\.me|whatsapp/i.test(h) ? 'whatsapp' : /^mailto:/i.test(h) ? 'email'
+                    : a.matches('[data-discuss], .chat-fit-card') ? 'discuss' : a.matches('.svc2-card') ? 'service' : '';
+                if (k) { st.clicks[k] = (st.clicks[k] || 0) + 1; save(); }
+            }, true);
+        }
+
+        function profile() {
+            let from = ''; try { from = sessionStorage.getItem('greet:from') || ''; } catch (e) {}
+            const has = (p) => st.pages.some((x) => x.indexOf(p) !== -1);
+            const kd = (k) => Object.keys(st.dwell).filter((l) => st.kind[l] === k).reduce((a, l) => a + st.dwell[l], 0);
+            const s = { recruiter: 0, technical: 0, client: 0, personal: 0 };
+            if (/linkedin/i.test(from)) s.recruiter += 3;
+            if (/github|dev|reddit/i.test(from)) s.technical += 3;
+            if (st.clicks.cv) s.recruiter += 3;
+            if (st.clicks.linkedin) s.recruiter += 1;
+            if (kd('experience') + kd('education') > 15000) s.recruiter += 2;
+            if (has('/profile/')) s.recruiter += 1;
+            if (st.clicks.github) s.technical += 2;
+            if (has('/stack/') || has('/architecture/')) s.technical += 2;
+            if (kd('architecture') + kd('skills') > 10000) s.technical += 2;
+            if (Object.values(st.chips).reduce((a, b) => a + b, 0) >= 2) s.technical += 2;
+            const sel = st.sel && Date.now() - st.sel.at < 4 * 60000 ? st.sel : null;
+            if (sel && TECH.test(sel.t)) s.technical += 2;
+            if (st.clicks.whatsapp || st.clicks.email || st.clicks.discuss) s.client += 3;
+            if (st.clicks.service || kd('service') > 8000) s.client += 3;
+            if (has('/contact/')) s.client += 2;
+            if (kd('project') > 30000) { s.technical += 1; s.client += 1; }
+            if (has('/people/')) s.personal += 2;
+            if (has('/library/')) s.personal += 2;
+            if (kd('library') + kd('person') > 20000) s.personal += 2;
+            const ranked = Object.entries(s).sort((a, b) => b[1] - a[1]);
+            const persona = ranked[0][1] >= 3 ? ranked[0][0] : 'explorer';
+            const timed = st.scroll.fast + st.scroll.slow;
+            const totalDwell = Object.values(st.dwell).reduce((a, b) => a + b, 0);
+            const style = timed > 1500 && st.scroll.fast / timed > 0.45 ? 'scanner' : (totalDwell > 40000 && st.scroll.fast / Math.max(timed, 1) < 0.2 ? 'reader' : 'browser');
+            const top = Object.entries(st.dwell).filter(([, ms]) => ms >= 5000).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([l]) => l);
+            const rev = Object.entries(st.revisits).sort((a, b) => b[1] - a[1] || (st.revAt[b[0]] || 0) - (st.revAt[a[0]] || 0))[0];
+            const expRead = Object.keys(st.dwell).filter((l) => st.kind[l] === 'experience' && st.dwell[l] >= 4000).length;
+            return {
+                persona, scores: s, style, from, pages: st.pages.length,
+                top, topKind: top[0] ? st.kind[top[0]] : null, topMs: top[0] ? st.dwell[top[0]] : 0,
+                revisited: rev && rev[1] >= 1 ? rev[0] : null, revisitedKind: rev ? st.kind[rev[0]] : null,
+                selected: sel ? sel.t : null, selectedTech: !!(sel && TECH.test(sel.t)),
+                expRead, serviceMs: kd('service'), clicks: Object.assign({}, st.clicks)
+            };
+        }
+
+        /* the one line the AI sees, only when the visitor opens the chat */
+        function line() {
+            const v = profile(), bits = [];
+            const who = { recruiter: 'likely recruiting or hiring', technical: 'likely technical (a developer or tech lead)', client: 'likely a potential client weighing a project', personal: 'curious about me as a person', explorer: 'just exploring' }[v.persona];
+            bits.push(who);
+            bits.push({ scanner: 'skims fast', reader: 'reads carefully', browser: 'browses at a normal pace' }[v.style]);
+            if (v.top.length) bits.push('spent most time on: ' + v.top.join(', '));
+            if (v.revisited) bits.push('came back to: ' + v.revisited);
+            if (v.selected) bits.push('highlighted "' + v.selected + '"');
+            if (v.from) bits.push('came from ' + v.from);
+            bits.push(window.matchMedia('(max-width: 767px)').matches ? 'on a phone' : 'on a computer');
+            return bits.join('; ').replace(/[\u0000-\u001f]/g, ' ').slice(0, 380);
+        }
+
+        return { start, profile, line };
+    })();
+    window.MehediVisitor = { profile: () => VisitorSense.profile(), line: () => VisitorSense.line() };
+
     /**
      * Proactive greeting, modelled on nahian.bd's "DM toast":
      *  - counts *active* attention (tab visible and the visitor interacted in the last 20s), kept per session across pages
      *  - shows after 2 min of attention, or 1 min plus (2+ pages or half-way down a page), once the visitor pauses for 2.5s
+     *  - a visitor who sits still (no scrolling for 20s) gets it at 45s on the page, and it steps aside after 20s
      *  - also on desktop exit intent (after 30s), or while the tab is hidden (after 45s) with a "(1) ..." title flash
      *  - never on Contact, while typing, with text selected, or while the chat or menu is open
      *  - reads like a chat: typing dots, a context-aware greeting, one question per page, quick-reply chips,
@@ -464,7 +656,8 @@
            two visits in a row dismissed means three quiet days; talking to it also ends it for the visit ---- */
         const coarse = window.matchMedia('(pointer: coarse)');
         const phoneLike = () => phone.matches || coarse.matches;
-        const CLOSE_AFTER = () => (phoneLike() ? 18000 : 30000);
+        let fromStill = false;                                   /* shown to a visitor sitting still: steps aside sooner */
+        const CLOSE_AFTER = () => (phoneLike() ? 18000 : fromStill ? 20000 : 30000);
         const pageStart = Date.now(), visitId = ss.get('greet:start');
         const readDismissals = () => { try { return JSON.parse(ls.get('greet:dismissals') || '[]'); } catch (e) { return []; } };
         function snoozed() {
@@ -587,6 +780,66 @@
                 { label: 'A few of them', hearts: true, answers: [['Then you are in good company!']], ai: 'Who on this list influenced you the most, and why?' },
                 { label: 'Not yet', answers: [['Then you are in for a treat.', 'Start with the first one, you will not regret it.']], then: 'bye' } ] })
         };
+        /* ---- reading the visitor: what they highlighted, came back to, or lingered on, and who they seem to be ---- */
+        const cvHref = () => { const c = document.getElementById('hero-link-cv'); return c ? c.getAttribute('href') : rootHref + 'uploads/Mehedi_Hasan_CV.pdf?v=2'; };
+        const quote = (t) => `“${t}”`;
+        const BYE = (t) => ({ label: t || 'Just browsing', answers: [['Sure, take your time.'], ['No rush. I am right here if you need me.']], then: 'bye' });
+        function insight() {
+            let v = null;
+            try { v = window.MehediVisitor && window.MehediVisitor.profile(); } catch (e) { v = null; }
+            if (!v) return null;
+            const sel = v.selected;
+            if (sel && /@|\+?\d[\d\s-]{7,}/.test(sel)) return { strong: true, say: 'Saving my contact? Smart move.', ask: ['WhatsApp is the fastest way to reach me. Want to say hi now?'], replies: [
+                { label: 'Open WhatsApp', href: 'https://wa.me/8801799447594?text=' + encodeURIComponent('Hi Mehedi, I found you through your portfolio.'), hearts: true },
+                { label: 'Ask something first', ai: 'What kind of work are you open to right now?' }, BYE('Later') ] };
+            if (sel && v.selectedTech) return { strong: true, say: `You highlighted ${quote(sel)}.`, ask: [`Want to know how I use ${sel} in real work?`, `Curious where ${sel} fits in my systems?`], replies: [
+                { label: 'Yes, show me', hearts: true, ai: `How do you use ${sel} in your real projects?` },
+                { label: 'Why you chose it', ai: `Why did you choose ${sel} over the alternatives?` }, BYE('Just noting it') ] };
+            if (sel && sel.length >= 4) return { strong: true, say: `Something caught your eye: ${quote(sel)}.`, ask: ['Want me to tell you more about it?'], replies: [
+                { label: 'Yes, tell me', hearts: true, ai: `Tell me more about "${sel}"` }, BYE('No, all good') ] };
+            if (v.revisited) {
+                const t = v.revisited, k = v.revisitedKind;
+                if (k === 'project') return { strong: true, say: `You keep coming back to ${t}.`, ask: ['Want the story behind it?', 'Shall I tell you how I built it?'], replies: [
+                    { label: 'Yes, tell me', hearts: true, ai: `Tell me the story behind ${t}. What was the hardest part?` },
+                    { label: 'I need something similar', project: true }, BYE('Just looking') ] };
+                if (k === 'experience') return { strong: true, say: `You came back to my time as ${t}.`, ask: ['Want to know what I actually did there?'], replies: [
+                    { label: 'Yes, tell me', hearts: true, ai: `What did you actually do as ${t}, and what did you ship?` },
+                    { label: 'Get the CV', href: cvHref() }, BYE('Just reading') ] };
+                if (k === 'person') return { strong: true, say: `You keep coming back to ${t}.`, ask: ['Want to know why they are on my list?'], replies: [
+                    { label: 'Yes, why?', hearts: true, ai: `Why is ${t} on your list, and what did you learn from them?` }, BYE('Just curious') ] };
+                if (k === 'library') return { strong: true, say: `${t} caught your eye twice.`, ask: ['Want to know why I keep it in my library?'], replies: [
+                    { label: 'Yes, why?', hearts: true, ai: `Why do you recommend ${t}?` },
+                    { label: 'Recommend another', ai: 'Recommend one more thing from your library I should try' }, BYE() ] };
+                if (k === 'service') return { strong: true, say: `You came back to ${t}.`, ask: ['Have something like this in mind?'], replies: [
+                    { label: 'Yes, I do', hearts: true, project: true },
+                    { label: 'How you work', ai: `How do you approach ${t} work, from brief to delivery?` }, BYE('Just looking') ] };
+                return { strong: true, say: `You came back to ${t}.`, ask: ['Want me to go deeper on it?'], replies: [
+                    { label: 'Yes, go deeper', hearts: true, ai: `Go deeper on ${t}` }, BYE() ] };
+            }
+            if (v.persona === 'client') return { say: 'Looks like you might have something to build.', ask: ['Want a quick, honest check on whether I am the right fit?'], replies: [
+                { label: 'Yes, check the fit', hearts: true, project: true },
+                { label: 'How you work', ai: 'How do you work with clients, from brief to delivery?' }, BYE('Not yet') ] };
+            if (v.persona === 'recruiter' && v.style === 'scanner') return { say: 'You move fast, so here is the short version.', ask: ['My pitch in three lines, or straight to the CV?'], replies: [
+                { label: '3-line pitch', hearts: true, ai: 'Give me your pitch in 3 short lines: who you are, what you ship, why hire you.' },
+                { label: 'Get the CV', href: cvHref() }, BYE('Not now') ] };
+            if (v.persona === 'recruiter' || v.expRead >= 3) return { say: v.expRead >= 3 ? 'You read through my experience carefully. Thank you.' : 'Looks like you are checking my background.', ask: ['Hiring for a role?', 'Is this for a role you are hiring for?'], replies: [
+                { label: 'Yes, hiring', hearts: true, ai: 'Give me the 30-second pitch: why should I hire you?' },
+                { label: 'Get the CV', href: cvHref() }, BYE('Just reading') ] };
+            if (v.persona === 'technical') return { say: v.clicks.github ? 'Saw you checking my GitHub. A fellow builder, then.' : 'Looks like you speak tech.', ask: ['Want the architecture behind one of my systems?', 'Shall I show you how one of my systems works inside?'], replies: [
+                { label: 'Show me', hearts: true, ai: 'Walk me through the architecture of your most complex system' },
+                { label: 'Why NestJS + Kafka?', ai: 'Why do you use NestJS with Kafka?' }, BYE() ] };
+            if (v.persona === 'personal') return { say: 'You seem curious about me, not just my work.', ask: ['Want to get to know me a little?', 'Fancy a chat that is not about work?'], replies: [
+                { label: 'Tell me about you', hearts: true, ai: 'Tell me a bit about yourself outside of work' },
+                { label: 'Tell me a joke', ai: 'Tell me a joke' }, BYE() ] };
+            if (v.top.length && v.topMs >= 20000) {
+                const t = v.top[0], k = v.topKind;
+                const ai = k === 'project' ? `Tell me the story behind ${t}. What was the hardest part?` : k === 'experience' ? `What did you actually do as ${t}?`
+                    : k === 'person' ? `Why is ${t} on your list?` : k === 'library' ? `Why do you recommend ${t}?` : `Tell me more about ${t}`;
+                return { say: `You spent a while on ${t}.`, ask: ['Want the story behind it?', 'Shall I tell you more about it?'], replies: [
+                    { label: 'Yes, tell me', hearts: true, ai }, k === 'project' ? { label: 'I need something similar', project: true } : { label: 'Tell me a joke', ai: 'Tell me a joke' }, BYE() ] };
+            }
+            return null;
+        }
         const late = new Date().getHours() < 5;
         const pickFlow = () => (late ? { ask: ['Working late tonight?'], replies: [
             { label: 'Yes, deadline mode', answers: [['I know that feeling.', 'Hope it goes well. Take a short break too!']], then: 'bye' },
@@ -622,7 +875,7 @@
             if (el && document.visibilityState === 'visible' && !el.matches(':hover, :focus-within')) closeTimer = setTimeout(() => close(true), CLOSE_AFTER());
         }
         function close(leaveDot) {
-            run++; state = 'idle'; clearTimeout(closeTimer); flashTitle(false); savedTitle = '';
+            run++; state = 'idle'; fromStill = false; clearTimeout(closeTimer); flashTitle(false); savedTitle = '';
             if (!el) return;
             const node = el; el = null;
             node.classList.add('bubble-closing');
@@ -690,7 +943,7 @@
             ctaRow(choice.then); armClose();
         }
         async function show(silent) {
-            if (state !== 'idle' || el || isChatOpen() || document.body.classList.contains('drawer-open')) return;
+            if (state !== 'idle' || el || isChatOpen() || document.body.classList.contains('drawer-open')) { fromStill = false; return; }
             state = 'open';
             attention = 0; ss.set('greet:active', '0');            /* the next greeting needs fresh attention */
             ss.set('greet:shown', String(num(ss.get('greet:shown')) + 1)); ss.set('greet:shownAt', String(Date.now()));
@@ -731,9 +984,10 @@
             if (!silent) await wait(650);              /* a beat of surprise before it starts typing */
             if (id !== run) return;
 
-            flow = pickFlow();
-            const seen = observation();
-            const lines = [(!seen || Math.random() < 0.6) ? greeting() : null, seen, pick(flow.ask)].filter(Boolean);
+            const known = late ? null : insight();
+            flow = known || pickFlow();
+            const seen = known ? known.say : observation();
+            const lines = [(!seen || Math.random() < 0.5) ? greeting() : null, seen, pick(flow.ask)].filter(Boolean);
             for (const [i, t] of lines.entries()) {
                 if (i && !silent) await wait(rand(350, 750));
                 if (id !== run) return;
@@ -741,6 +995,11 @@
             }
             const list = el.querySelector('.dm-chip-list');
             flow.replies.forEach((r) => {
+                if (r.href) {
+                    const a = document.createElement('a'); a.className = 'dm-chip'; a.href = r.href; a.textContent = r.label; a.target = '_blank'; a.rel = 'noopener';
+                    a.addEventListener('click', (e) => { e.stopPropagation(); engaged(); if (r.hearts) burst(a); sound('pop'); setTimeout(() => close(false), 400); });
+                    list.appendChild(a); return;
+                }
                 const b = document.createElement('button'); b.type = 'button'; b.className = 'dm-chip'; b.textContent = r.label;
                 b.addEventListener('click', (e) => { e.stopPropagation(); reply(r, b); });
                 list.appendChild(b);
@@ -763,7 +1022,10 @@
         ['touchend', 'touchcancel'].forEach((t) => addEventListener(t, () => { touching = false; }, { passive: true }));
         const keyboardOpen = () => !!(window.visualViewport && window.visualViewport.height < window.innerHeight * 0.75);
         const paused = () => !touching && stableTicks >= 2 && !keyboardOpen() && Date.now() - lastMove >= (phoneLike() ? 4000 : 2500);
-        const ready = () => (attention >= 120000 || (attention >= 60000 && (num(ss.get('greet:pages')) >= 2 || depth >= 0.5))) && paused() && canShow();
+        const strongInsight = () => { const i = insight(); return !!(i && i.strong); };
+        /* sitting still is the calmest moment: no scrolling for 20s (canShow keeps it to 45s+ on the page) */
+        const stillReady = () => Date.now() - lastMove >= 20000 && paused() && canShow();
+        const ready = () => (attention >= 120000 || (attention >= 60000 && (num(ss.get('greet:pages')) >= 2 || depth >= 0.5)) || (attention >= 40000 && strongInsight())) && paused() && canShow();
         const touch = () => { lastMove = lastActive = Date.now(); };
         ['scroll', 'wheel', 'keydown', 'touchmove'].forEach((t) => addEventListener(t, touch, { passive: true }));
         ['pointermove', 'pointerdown'].forEach((t) => addEventListener(t, () => { lastActive = Date.now(); }, { passive: true }));
@@ -771,9 +1033,10 @@
         setInterval(() => {
             const y = window.scrollY; stableTicks = y === prevY ? stableTicks + 1 : 0; prevY = y;
             if (state !== 'idle' || document.visibilityState !== 'visible') return;
-            if (Date.now() - lastActive > IDLE) return;
-            attention += 1000; ss.set('greet:active', String(attention));
-            if (ready() && !blocked()) show(false);
+            if (Date.now() - lastActive <= IDLE) { attention += 1000; ss.set('greet:active', String(attention)); }
+            if (blocked()) return;
+            if (ready()) show(false);
+            else if (stillReady()) { fromStill = true; show(false); }
         }, 1000);
         let hiddenTimer = null;
         document.addEventListener('visibilitychange', () => {
@@ -837,13 +1100,14 @@
         if (w) w.addEventListener('click', () => { if (el) { engaged(); close(false); } markUnread(false); });
 
         /* test hook: AIOrbGreeting.show() */
-        window.AIOrbGreeting = { show: () => show(false) };
+        window.AIOrbGreeting = { show: () => show(false), insight };
     }
 
     /* a page prerendered in the background starts counting only once the visitor actually opens it */
     const startGreeting = () => {
-        if (document.prerendering) document.addEventListener('prerenderingchange', initProactiveGreeting, { once: true });
-        else initProactiveGreeting();
+        const go = () => { VisitorSense.start(); initProactiveGreeting(); };
+        if (document.prerendering) document.addEventListener('prerenderingchange', go, { once: true });
+        else go();
     };
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', startGreeting);

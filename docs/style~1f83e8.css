@@ -14565,3 +14565,6 @@ html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton .sk-card { bac
 @media (max-width: 860px) {
     html body #leaderboard-widget .lb-toggle:not(#_lb) { touch-action: pan-y !important; }
 }
+
+/* greeting chips that are links (CV, WhatsApp) look like the other chips */
+#ai-orb-speech-bubble a.dm-chip { display: inline-flex; align-items: center; text-decoration: none; }

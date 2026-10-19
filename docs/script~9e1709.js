@@ -1838,9 +1838,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return hit || 'home';
         };
         const EXAMPLES = {
-            en: ['Have you used Kafka in production?', 'Can you build a RAG system?', 'Do you work remotely?', 'What did you build at Jibika?', 'Which LLMs have you shipped with?'],
-            bn: ['প্রোডাকশনে Kafka ব্যবহার করেছেন?', 'RAG সিস্টেম বানাতে পারেন?', 'রিমোটে কাজ করেন?', 'Jibika-তে কী বানিয়েছেন?', 'কোন কোন LLM নিয়ে কাজ করেছেন?']
+            en: ['Have you used Kafka in production?', 'Can you build a RAG system?', 'Do you work remotely?', 'Tell me a joke', 'What did you build at Jibika?', 'Which LLMs have you shipped with?'],
+            bn: ['প্রোডাকশনে Kafka ব্যবহার করেছেন?', 'RAG সিস্টেম বানাতে পারেন?', 'রিমোটে কাজ করেন?', 'একটা জোক শোনান', 'Jibika-তে কী বানিয়েছেন?', 'কোন কোন LLM নিয়ে কাজ করেছেন?']
         };
+        // What this visitor seems to be here for (read in the browser by ai-orb-mascot.js); null until it is clear
+        const visitor = () => { try { return window.MehediVisitor ? window.MehediVisitor.profile() : null; } catch (e) { return null; } };
+        const PERSONA_PROMPTS = {
+            recruiter: { en: ['Give me your pitch in 3 lines', 'Why should I hire you?'], bn: ['৩ লাইনে নিজের পিচ দিন', 'আপনাকে কেন নেব?'] },
+            technical: { en: ['Walk me through your hardest architecture', 'How do you build AI agents?'], bn: ['সবচেয়ে কঠিন আর্কিটেকচারটা বুঝিয়ে বলুন', 'AI এজেন্ট কীভাবে বানান?'] },
+            client: { en: ['What kind of projects do you take on?', 'How do you work with clients?'], bn: ['কেমন প্রজেক্ট নেন?', 'ক্লায়েন্টের সাথে কীভাবে কাজ করেন?'] },
+            personal: { en: ['Tell me about yourself outside work', 'Tell me a joke'], bn: ['কাজের বাইরে আপনি কেমন মানুষ?', 'একটা জোক শোনান'] }
+        };
+        // Page questions, led by what this visitor is clearly into: a word they highlighted, then their persona
+        function prompts(L) {
+            const v = visitor(), base = PAGE_PROMPTS[pageKey()][L], out = [];
+            if (v && v.selected && v.selectedTech) out.push(L === 'bn' ? `${v.selected} কীভাবে ব্যবহার করেন?` : `How do you use ${v.selected}?`);
+            if (v && PERSONA_PROMPTS[v.persona]) out.push(...PERSONA_PROMPTS[v.persona][L]);
+            base.forEach((q) => out.push(q));
+            return [...new Set(out)].slice(0, 3);
+        }
         const T = {
             en: { sub: 'Ask me anything about my work.', fitT: 'Discuss your project', fitS: "Tell me what you're building, I'll be honest if I can help", mode: 'Project discussion', end: 'End',
                   label: 'Suggested here', swap: 'বাংলায়', back: 'Welcome back', ask: 'Ask: ', fitAsk: "Tell me what you want to build. I'll compare it with my real projects and tell you honestly whether I can do it.", steps: ['Describe your idea', 'Get an honest fit check', 'Send me the brief'], exLabel: 'Or start from an example',
@@ -1953,7 +1969,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fit.innerHTML = `<span class="cs-ico">${TARGET}</span><span class="cs-text"><b>${t.fitT}</b><small>${t.fitS}</small></span><span class="cs-go" aria-hidden="true">\u2192</span>`;
             fit.onclick = startFit;
             box.appendChild(fit);
-            PAGE_PROMPTS[pageKey()][L].forEach((q, i) => {
+            prompts(L).forEach((q, i) => {
                 const b = document.createElement('button');
                 b.type = 'button'; b.className = 'chat-prompt'; b.style.setProperty('--i', i + 1);
                 b.innerHTML = `${SPARK}<span>${esc(q)}</span>`;
@@ -1993,7 +2009,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const items = [];
             (nexts || []).forEach((q) => items.push({ html: `${SPARK}<span>${esc(q)}</span>`, go: () => askAI(q), ai: true }));
             if (!items.length && !fitMode) {
-                PAGE_PROMPTS[pageKey()][lang()].filter((q) => !used.includes(q)).slice(0, 2)
+                prompts(lang()).filter((q) => !used.includes(q)).slice(0, 2)
                     .forEach((q) => items.push({ html: `${SPARK}<span>${esc(q)}</span>`, go: () => askAI(q), ai: true }));
                 if (!used.includes('fit') && !fitMode) items.push({ html: `${TARGET}<span>${esc(T[lang()].fitT)}</span>`, go: startFit });
                 QUICK.filter((x) => !used.includes(x.key))
@@ -2031,7 +2047,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (away > 1) return { title: bn ? 'আবার স্বাগতম!' : 'Welcome back!', sub: bn ? `${away} দিন পর দেখা হলো। কী জানতে চান?` : `It's been ${away} days. What would you like to know?` };
                 return { title: bn ? 'আবার স্বাগতম!' : 'Welcome back!', sub: bn ? 'আবার দেখা হয়ে ভালো লাগলো। ' + ask : 'Good to see you again. ' + ask };
             }
+            const v = visitor();
+            if (v && v.selected && v.selectedTech) return { title: hello(), sub: bn ? `“${v.selected}” হাইলাইট করেছেন দেখলাম। আমি এটা কীভাবে ব্যবহার করি, জিজ্ঞেস করুন।` : `I saw you highlight “${v.selected}”. Ask me how I use it.` };
+            if (v && v.revisited) return { title: hello(), sub: bn ? `${v.revisited}-এ বারবার ফিরে আসছেন। এটা নিয়ে যা খুশি জিজ্ঞেস করুন।` : `You keep coming back to ${v.revisited}. Ask me anything about it.` };
             if (from) return { title: hello(), sub: bn ? `${from} থেকে আসার জন্য ধন্যবাদ। ` + ask : `Thanks for coming over from ${from}. ` + ask };
+            if (v && v.persona === 'personal') return { title: hello(), sub: bn ? 'কাজ ছাড়াও আমাকে নিয়ে যা খুশি জিজ্ঞেস করুন, একটা জোকও চাইতে পারেন।' : 'Ask me anything, work or not. You can even ask for a joke.' };
             if (page === 'projects') return { title: hello(), sub: bn ? 'আমার প্রজেক্ট দেখছেন? যেকোনোটার পেছনের গল্প জিজ্ঞেস করুন।' : 'Looking at my projects? Ask me the story behind one.' };
             if (pages >= 3) return { title: hello(), sub: bn ? `${pages}টা পাতা ঘুরে দেখেছেন। কী খুঁজছেন, বলুন?` : `You've explored ${pages} pages. What can I help you find?` };
             if (h < 5) return { title: bn ? 'এত রাতে জেগে?' : 'Up late?', sub: ask };
@@ -2181,6 +2201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     page: location.pathname,
                     mode: mode || undefined,
+                    visitor: (() => { try { return window.MehediVisitor ? window.MehediVisitor.line() : undefined; } catch (e) { return undefined; } })(),
                     messages: [...history.map((m) => ({ role: m.r === 'user' ? 'user' : 'assistant', content: m.t })), { role: 'user', content: txt }]
                 })
             });
