@@ -1494,5 +1494,110 @@
       "body": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"5\" cy=\"6\" r=\"2.5\"/><circle cx=\"19\" cy=\"6\" r=\"2.5\"/><circle cx=\"12\" cy=\"18\" r=\"2.5\"/><path d=\"M7.3 7.2 10.7 16M16.7 7.2 13.3 16M7.5 6h9\"/></g>"
     }
   },
-  "_note": "Library content. Copied from nahian.bd/library as a starting point; replace with your own items. Rebuild with: python3 scripts/build_nx_pages.py"
+  "_note": "Library content. Copied from nahian.bd/library as a starting point; replace with your own items. Rebuild with: python3 scripts/build_nx_pages.py",
+  "focus": {
+    "intro": "The sounds I code to: Dhaka rain, a tea stall, a village night. Mix your own, start the timer and keep browsing; the sound follows you around the site.",
+    "picks": [
+      {
+        "id": "25wH52RSam8",
+        "title": "Ya Nabi Salam Alayka",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "IxwdZLtMf7I",
+        "title": "Qalbi Fil Madinah",
+        "sub": "Maher Zain feat. Harris J"
+      },
+      {
+        "id": "AIyAPGumseA",
+        "title": "Ramadan",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "nuYA88YJSC4",
+        "title": "Bika Moulhimi",
+        "sub": "Maher Zain feat. Mustafa Ceceli"
+      },
+      {
+        "id": "61C6FxprHuY",
+        "title": "Barak Allah Lakuma",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "9Jsb0Dy6wWA",
+        "title": "I’m Alive",
+        "sub": "Maher Zain feat. Atif Aslam"
+      },
+      {
+        "id": "LkAm79Edtlo",
+        "title": "Assalamu Alaika",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "pFMofSt2vVw",
+        "title": "Number One For Me",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "UW5K0OzOmVI",
+        "title": "Rahmatun Lil’Alameen",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "0a43eUZf5iQ",
+        "title": "La Tahzan",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "4VU4_NZuL24",
+        "title": "The Power",
+        "sub": "Maher Zain"
+      },
+      {
+        "id": "KTkdQ2q3jCA",
+        "title": "The Book of Allah Is My Constitution",
+        "sub": "Muhammad al Muqit"
+      },
+      {
+        "id": "JqGv0EdJdJI",
+        "title": "I Rise",
+        "sub": "Muhammad al Muqit"
+      },
+      {
+        "id": "NrsCej6SVxM",
+        "title": "The Beauty of Existence",
+        "sub": "Muhammad al Muqit"
+      },
+      {
+        "id": "YiSQ_db-Dcw",
+        "title": "The Way of the Tears",
+        "sub": "Muhammad al Muqit"
+      },
+      {
+        "id": "JaHtx79UhIM",
+        "title": "My Dream",
+        "sub": "Muhammad al Muqit"
+      },
+      {
+        "id": "ZZEgiM8QMM4",
+        "title": "My Mother",
+        "sub": "Muhammad al Muqit"
+      },
+      {
+        "id": "Ov0-CBnOW4w",
+        "title": "My Arabic Language",
+        "sub": "Muhammad al Muqit"
+      },
+      {
+        "id": "D7mg8zkmiy8",
+        "title": "Be Happy",
+        "sub": "Othman Alibrahim"
+      },
+      {
+        "id": "mTTk1QX30t0",
+        "title": "Watheq",
+        "sub": "Othman Alibrahim"
+      }
+    ]
+  }
 }

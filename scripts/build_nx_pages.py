@@ -2861,6 +2861,136 @@ html body.nx-page .nx .cover-banner-wrap [data-slats-canvas] { transition: opaci
   html body.nx-page footer:not(#_pb) { display: none !important; }
 }
 
+/* library hero: the Focus tile stands apart from the counts */
+.nx .nl-stat.nl-stat-focus { border-color: color-mix(in srgb, var(--brand) 45%, transparent);
+  background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--brand) 22%, var(--surface)) 0%, color-mix(in srgb, var(--surface) 80%, transparent) 70%); }
+.nx .nl-stat-focus b { display: inline-flex; align-items: center; gap: 8px; }
+.nx .fx-live { display: none; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 0 rgba(var(--brand-rgb), .6); animation: fx-live 1.6s ease-out infinite; }
+html.fp-playing .nx .fx-live { display: inline-block; }
+@keyframes fx-live { 70% { box-shadow: 0 0 0 8px rgba(var(--brand-rgb), 0); } 100% { box-shadow: 0 0 0 0 rgba(var(--brand-rgb), 0); } }
+
+/* Focus page (library/focus): drives window.FocusPlayer from focus/focus.js */
+.nx .fx-page button { font: inherit; }
+.nx .fx-page input[type="range"] { width: 100%; height: 20px; margin: 0; accent-color: var(--brand); cursor: pointer; background: transparent; }
+.nx .fx-hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+.nx .fx-hero .nl-hero-title { margin-top: 14px; }
+.nx .fx-hero-text > p { margin: 0; max-width: 520px; font-size: 15.5px; line-height: 1.6; color: var(--ink-2); }
+.nx .fx-now { display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 22px; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 82%, transparent); }
+.nx .fx-now-row { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.nx .fx-big { flex-shrink: 0; width: 60px; height: 60px; border-radius: 50%; border: 0; cursor: pointer; font-size: 20px; color: var(--on-brand); background: var(--brand);
+  box-shadow: 0 10px 26px -10px rgba(var(--brand-rgb), .9); transition: transform .15s ease, box-shadow .2s ease; }
+.nx .fx-big:hover { transform: scale(1.05); }
+.nx .fx-big:active { transform: scale(.95); }
+.nx .fx-now-text { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.nx .fx-now-text b { font-size: 17px; font-weight: 700; color: var(--ink); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nx .fx-now-text small { font-size: 13px; color: var(--ink-3); }
+.nx .fx-vol { display: flex; align-items: center; gap: 10px; color: var(--ink-3); font-size: 14px; }
+.nx .fx-eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 16px; margin-left: auto; }
+.nx .fx-eq i { width: 3px; height: 30%; border-radius: 2px; background: var(--brand); }
+html.fp-playing .nx .fx-eq i { animation: fx-eq 1s ease-in-out infinite; }
+html.fp-playing .nx .fx-eq i:nth-child(2) { animation-delay: -.45s; }
+html.fp-playing .nx .fx-eq i:nth-child(3) { animation-delay: -.2s; }
+html.fp-playing .nx .fx-eq i:nth-child(4) { animation-delay: -.7s; }
+@keyframes fx-eq { 0%, 100% { height: 25%; } 50% { height: 100%; } }
+
+.nx .fx-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: -16px; }
+.nx .fx-card { display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: 20px; border-radius: 22px; border: 1px solid var(--line); background: var(--surface); }
+.nx .fx-card-head { display: flex; align-items: center; gap: 10px; }
+.nx .fx-card-head h3 { margin: 0; display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: var(--ink); }
+.nx .fx-card-head h3 svg { color: var(--brand); }
+.nx .fx-card-head small { margin-left: auto; font-size: 12.5px; color: var(--ink-3); }
+.nx .fx-phases { display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: var(--surface-2); }
+.nx .fx-phases button { flex: 1; padding: 7px 6px; border: 0; border-radius: 999px; cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--ink-2); background: transparent; white-space: nowrap; }
+.nx .fx-phases button[aria-pressed="true"] { color: var(--bg); background: var(--ink); }
+.nx .fx-clock { position: relative; align-self: center; width: 168px; height: 168px; display: grid; place-items: center; }
+.nx .fx-clock svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.nx .fx-clock circle { fill: none; stroke-width: 7; }
+.nx .fx-ring-bg { stroke: var(--surface-2); }
+.nx .fx-ring-fg { stroke: var(--brand); stroke-linecap: round; stroke-dasharray: 339.3; transition: stroke-dashoffset .9s linear; }
+.nx .fx-clock-text { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.nx .fx-clock-text b { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.nx .fx-clock-text small { font-size: 12.5px; color: var(--ink-3); }
+.nx .fx-actions { display: flex; gap: 8px; }
+.nx .fx-btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; border-radius: 999px; cursor: pointer;
+  font-size: 13.5px; font-weight: 600; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); transition: border-color .2s ease, color .2s ease; }
+.nx .fx-btn:hover { border-color: color-mix(in srgb, var(--brand) 55%, transparent); color: var(--brand); }
+.nx .fx-btn.fx-primary { color: var(--on-brand); background: var(--brand); border-color: var(--brand); }
+.nx .fx-btn.fx-primary:hover { color: var(--on-brand); filter: brightness(1.08); }
+.nx .fx-mix-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; max-height: 260px; overflow-y: auto; }
+.nx .fx-mix-list li { display: grid; grid-template-columns: 28px minmax(0, 1fr) 28px; align-items: center; gap: 4px 10px; }
+.nx .fx-mix-list li > i { color: var(--brand); text-align: center; }
+.nx .fx-mix-list li span { font-size: 13.5px; font-weight: 600; color: var(--ink); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nx .fx-mix-list li input { grid-column: 2; }
+.nx .fx-mix-list li button { grid-column: 3; grid-row: 1 / span 2; width: 28px; height: 28px; border: 0; border-radius: 50%; cursor: pointer; color: var(--ink-3); background: transparent; }
+.nx .fx-mix-list li button:hover { color: var(--ink); background: var(--surface-2); }
+.nx .fx-mix-empty { margin: 0; padding: 16px; border-radius: 16px; font-size: 13.5px; line-height: 1.5; text-align: center; color: var(--ink-3); background: var(--surface-2); }
+
+.nx .fx-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.nx .fx-preset { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 14px; border-radius: 18px; cursor: pointer; text-align: left;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.nx .fx-preset:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--brand) 50%, transparent); }
+.nx .fx-preset > i { flex-shrink: 0; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; font-size: 16px; color: var(--brand); background: var(--surface-2); }
+.nx .fx-preset span { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.nx .fx-preset b { font-size: 14px; font-weight: 700; }
+.nx .fx-preset small { font-size: 12px; line-height: 1.35; color: var(--ink-3); }
+.nx .fx-preset[aria-pressed="true"] { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(var(--brand-rgb), .15); }
+.nx .fx-preset[aria-pressed="true"] > i { color: var(--on-brand); background: var(--brand); }
+
+.nx .fx-tools { display: flex; flex-direction: column; gap: 12px; margin-bottom: 4px; }
+.nx .fx-search { display: flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 14px; color: var(--ink-3); background: var(--surface); border: 1px solid var(--line); }
+.nx .fx-search:focus-within { border-color: var(--brand); }
+.nx .fx-search input { flex: 1; min-width: 0; height: 42px; border: 0; outline: 0; font: inherit; font-size: 14px; color: var(--ink); background: transparent; }
+.nx .fx-cats { margin-bottom: 8px; }
+.nx .fx-sounds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.nx .fx-sound { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 12px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); transition: border-color .2s ease, background .2s ease; }
+.nx .fx-sound button { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 0; border: 0; cursor: pointer; text-align: left; color: var(--ink); background: transparent; }
+.nx .fx-sound button > i { flex-shrink: 0; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; font-size: 14px; color: var(--ink-2); background: var(--surface-2); transition: color .2s ease, background .2s ease; }
+.nx .fx-sound button span { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.nx .fx-sound b { font-size: 13.5px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nx .fx-sound small { font-size: 11.5px; color: var(--ink-3); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nx .fx-sound input { display: none; }
+.nx .fx-sound.is-on { border-color: color-mix(in srgb, var(--brand) 55%, transparent); background: color-mix(in srgb, var(--brand) 7%, var(--surface)); }
+.nx .fx-sound.is-on button > i { color: var(--on-brand); background: var(--brand); }
+.nx .fx-sound.is-on input { display: block; }
+.nx .fx-sound.is-loading button > i::before { content: "\\f110"; display: inline-block; animation: fx-spin 1s linear infinite; }
+@keyframes fx-spin { to { transform: rotate(360deg); } }
+.nx .fx-empty { margin: 8px 0 0; font-size: 14px; color: var(--ink-3); }
+
+.nx .fx-yt { display: flex; flex-direction: column; gap: 14px; }
+.nx .fx-paste { display: flex; gap: 8px; }
+.nx .fx-paste .fx-search { flex: 1; }
+.nx .fx-paste .fx-btn { flex: 0 0 auto; }
+.nx .fx-yt-msg { margin: -6px 0 0; font-size: 12.5px; color: var(--ink-3); }
+.nx .fx-yt-msg.is-err { color: #f87171; }
+.nx .fx-yt-sub { margin: 6px 0 0; font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--ink-3); }
+.nx .fx-picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.nx .fx-pick { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; min-width: 0; padding: 8px; border-radius: 14px; cursor: pointer; text-align: left;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line); transition: border-color .2s ease; }
+.nx .fx-pick:hover { border-color: color-mix(in srgb, var(--brand) 50%, transparent); }
+.nx .fx-pick img { flex-shrink: 0; width: 72px; height: 40px; border-radius: 8px; object-fit: cover; background: var(--surface-2); }
+.nx .fx-pick span { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.nx .fx-pick b { font-size: 13px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nx .fx-pick small { font-size: 11.5px; color: var(--ink-3); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nx .fx-pick.is-on { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(var(--brand-rgb), .15); }
+.nx .fx-pick .fx-del { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; color: var(--ink-3); background: var(--surface); }
+.nx .fx-credits { margin: -16px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--ink-3); }
+.nx .fx-credits a { color: var(--ink-2); }
+
+@media (max-width: 1100px) { .nx .fx-presets, .nx .fx-sounds { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 767px) {
+  /* the site-wide phone h2 size would shrink the library hero titles to body size */
+  html body .nx .nl-hero-title:not(#_x) { font-size: 28px !important; margin: 14px 0 10px !important; }
+  .nx .fx-hero, .nx .fx-row, .nx .fx-picks { grid-template-columns: 1fr; }
+  .nx .fx-row { margin-top: -20px; }
+  .nx .fx-presets, .nx .fx-sounds { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .nx .fx-preset { flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px; }
+  .nx .fx-preset small { display: none; }
+  .nx .fx-sound { padding: 10px; }
+  .nx .fx-sound small { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .nx .fx-live, html.fp-playing .nx .fx-eq i { animation: none; } }
+
 """
 
 
@@ -3637,6 +3767,10 @@ NL_UI = {  # small UI glyphs not in the data file
     "trophy": '<path fill="currentColor" d="M17 3H7v2H3v3a4 4 0 0 0 4 4h.3A5 5 0 0 0 11 14.9V18H8v3h8v-3h-3v-3.1A5 5 0 0 0 16.7 12h.3a4 4 0 0 0 4-4V5h-4zM5 8V7h2v3a2 2 0 0 1-2-2zm14 0a2 2 0 0 1-2 2V7h2z"/>',
     "pen": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
     "books": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/>',
+    "wave": '<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M3 10v4M7 7v10M11 4v16M15 8v8M19 6v12"/>',
+    "timer": '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/></g>',
+    "spark": '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 3.5l1.9 4.8 4.8 1.9-4.8 1.9L11 17l-1.9-4.9-4.8-1.9 4.8-1.9zM18.5 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+    "mix": '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></g>',
 }
 
 
@@ -3670,10 +3804,10 @@ def nl_more(key, label):
 
 def nl_tabs(cur):
     c = lib_counts()
-    items = [("", "All", "books", sum(c.values()))] + [(k, l, LIB_SUB_ICON[k], c[k]) for k, l in LIB_SUBS]
+    items = [("", "All", "books", sum(c.values()))] + [(k, l, LIB_SUB_ICON[k], c[k]) for k, l in LIB_SUBS] + [("focus", "Focus", "wave", None)]
     lis = "".join(
         f'<li><a href="../library/{k + "/" if k else ""}"{" class=\"is-active\" aria-current=\"page\"" if k == cur else ""}>'
-        f'{nl_icon(ic, 16)}<span>{e(l)}</span><b>{n}</b></a></li>' for k, l, ic, n in items)
+        f'{nl_icon(ic, 16)}<span>{e(l)}</span>{f"<b>{n}</b>" if n is not None else ""}</a></li>' for k, l, ic, n in items)
     return f'<div class="nl-tabs" role="navigation" aria-label="Library sections"><ul>{lis}</ul></div>'
 
 
@@ -3763,6 +3897,8 @@ def library():
     stats = "".join(
         f'<a class="nl-stat" href="../library/{k}/"><span class="nl-stat-ico">{nl_icon(LIB_SUB_ICON[k], 20)}</span><b>{c[k]}</b><span>{e(l)}</span></a>'
         for k, l in LIB_SUBS)
+    stats += (f'<a class="nl-stat nl-stat-focus" href="../library/focus/"><span class="nl-stat-ico">{nl_icon("wave", 20)}</span>'
+              f'<b>Focus<i class="fx-live" aria-hidden="true"></i></b><span>Sounds &amp; a timer</span></a>')
     hero = (f'<div class="nl-hero"><span class="nl-pill"><i></i>{sum(c.values())} things I use, love and recommend</span>'
             f'<h2 class="nl-hero-title">{e(o["title"])}</h2><p>{e(o["intro"])}</p><div class="nl-stats">{stats}</div></div>')
     groups = LIB["skills"]["groups"]
@@ -3850,6 +3986,33 @@ def library_sub(key):
     html_out = page(f"library/{key}", f"{title} · Library", d["intro"], "Library", body, "library")
     # the shell writes paths for pages one level deep; these live two levels deep
     # also paths inside JSON data attributes, which arrive HTML-escaped as &quot;../
+    return re.sub(r'(["\'(]|&quot;)\.\./', r'\1../../', html_out)
+
+
+def fx_head(icon, title, sub):
+    return (f'<div class="nl-head"><span class="nl-tile">{nl_icon(icon, 20)}</span>'
+            f'<div class="nl-head-text"><h2>{e(title)}</h2><p>{e(sub)}</p></div></div>')
+
+
+def library_focus():
+    f = LIB["focus"]
+    hero = (f'<div class="nl-hero fx-hero"><div class="fx-hero-text"><span class="nl-pill"><i></i>Sounds, nasheeds &amp; a timer</span>'
+            f'<h2 class="nl-hero-title">Focus</h2><p>{e(f["intro"])}</p></div><div class="fx-now" id="fx-now"></div></div>')
+    body = (f'<div class="pad nl-page fx-page">{nl_tabs("focus")}{hero}'
+            f'<div class="fx-row"><div class="fx-card fx-timer" id="fx-timer"></div><div class="fx-card fx-mix" id="fx-mix"></div></div>'
+            f'<div class="nl-section">{fx_head("spark", "Presets", "One tap mixes. Most of them sound like home.")}<div class="fx-presets" id="fx-presets"></div></div>'
+            f'<div class="nl-section">{fx_head("wave", "Sounds", "Layer any of them and set each volume.")}'
+            f'<div class="fx-tools"><label class="fx-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>'
+            f'<input type="search" id="fx-search" placeholder="Search sounds" aria-label="Search sounds" autocomplete="off"></label>'
+            f'<div class="nl-chips fx-cats" id="fx-cats" role="group" aria-label="Sound categories"></div></div><div class="fx-sounds" id="fx-sounds"></div>'
+            f'<p class="fx-empty" id="fx-empty" hidden>No sound matches that.</p></div>'
+            f'<div class="nl-section">{fx_head("yt", "Nasheeds", "Vocals-only nasheeds from YouTube, or paste a link of your own.")}'
+            f'<div class="fx-yt" id="fx-yt" data-picks="{e(json.dumps(f["picks"], ensure_ascii=False))}"></div></div>'
+            f'<p class="fx-credits">Sound recordings come from <a href="https://github.com/remvze/moodist" target="_blank" rel="noopener noreferrer">Moodist</a> '
+            f'by remvze (MIT), under the Pixabay License or CC0. Noise and binaural tones are generated in your browser. Nasheeds play from YouTube.</p>'
+            f'</div>{LIB_JS}<script src="../focus/focus-page.js?v=1" defer></script>')
+    html_out = page("library/focus", "Focus · Library", "Ambient sounds, nasheeds and a focus timer that keep playing while you browse.",
+                    "Library", body, "library")
     return re.sub(r'(["\'(]|&quot;)\.\./', r'\1../../', html_out)
 
 
@@ -4056,6 +4219,7 @@ def main():
     pages = [("profile", profile), ("projects", projects), ("people", people),
              ("contact", contact), ("library", library)]
     pages += [(f"library/{k}", (lambda k=k: library_sub(k))) for k, _ in LIB_SUBS]
+    pages += [("library/focus", library_focus)]
     for slug, fn in pages:
         out = DOCS / slug / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)

@@ -484,7 +484,8 @@
             const lastFocusAt = {}; let current = null, glances = 0, lastGlance = 0;
             setInterval(() => {
                 save();
-                if (document.visibilityState !== 'visible' || Date.now() - lastActive > 20000 || scrollingFast || !visible.size) { current = null; return; }
+                if (document.visibilityState !== 'visible' || Date.now() - lastActive > 20000 || scrollingFast || !visible.size
+                    || document.documentElement.classList.contains('fp-shell-on')) { current = null; return; }   /* covered by a Focus frame */
                 const mid = window.innerHeight / 2;
                 let best = null, bestD = Infinity;
                 visible.forEach((it) => { const r = it.el.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - mid); if (d < bestD) { bestD = d; best = it; } });
@@ -615,7 +616,7 @@
         if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
         const page = ((document.body && document.body.dataset.page) || 'home').split('/')[0];
-        if (page === 'contact') return;
+        if (page === 'contact' || (document.body && document.body.dataset.page === 'library/focus')) return;
         const NAME = 'Mehedi', CITY = 'Dhaka', TZ = 'Asia/Dhaka';
         const IDLE = 20000, DAY = 864e5;
         const widget = () => document.getElementById('ai-chat-widget');
@@ -666,8 +667,9 @@
             const [a, b] = d.slice(-2);
             return a.v !== b.v && Date.now() - b.t < 3 * DAY;
         }
+        const focusing = () => { try { return !!(window.FocusPlayer && window.FocusPlayer.busy()); } catch (e) { return false; } };
         function canShow() {
-            if (ss.get('greet:done') === '1' || snoozed()) return false;
+            if (ss.get('greet:done') === '1' || snoozed() || focusing()) return false;   /* never during a Focus session */
             if (Date.now() - pageStart < 45000) return false;
             const shown = num(ss.get('greet:shown'));
             if (shown >= (phoneLike() ? 1 : 2)) return false;

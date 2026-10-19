@@ -1,0 +1,56 @@
+/* Focus mini player, YouTube dock and the page frame (see focus.js). Colours come from the site theme. */
+#fp-pill, #fp-dock {
+    --fp-bg: color-mix(in srgb, var(--bg-color, #0b1120) 90%, transparent);
+    --fp-ink: var(--text-primary, #f8fafc);
+    --fp-ink-2: var(--text-secondary, #94a3b8);
+    --fp-acc: var(--accent-1, #00f2fe);
+    --fp-acc-rgb: var(--accent-1-rgb, 0, 242, 254);
+    position: fixed; z-index: 2147483600; box-sizing: border-box;
+    color: var(--fp-ink); background: var(--fp-bg);
+    border: 1px solid rgba(var(--fp-acc-rgb), .32);
+    box-shadow: 0 14px 34px -14px rgba(0, 0, 0, .6), 0 0 0 4px rgba(var(--fp-acc-rgb), .06);
+    -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%);
+    font: 600 13px/1.25 Poppins, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+#fp-pill { left: 88px; bottom: 24px; display: flex; align-items: center; gap: 10px; padding: 7px 7px 7px 14px; border-radius: 999px;
+    max-width: min(420px, calc(100vw - 320px)); animation: fp-in .35s cubic-bezier(.2, .9, .3, 1.2) both; }
+@keyframes fp-in { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+#fp-pill .fp-info { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; color: inherit; text-decoration: none; }
+#fp-pill .fp-info b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 700; }
+#fp-pill .fp-info small { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 11.5px; font-weight: 500; color: var(--fp-ink-2); font-variant-numeric: tabular-nums; }
+#fp-pill .fp-info:hover b { color: var(--fp-acc); }
+.fp-btn { flex-shrink: 0; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;
+    border: 0; cursor: pointer; font-size: 13px; color: var(--fp-ink); background: rgba(var(--fp-acc-rgb), .1); transition: background .2s ease, transform .15s ease; }
+.fp-btn:hover { background: rgba(var(--fp-acc-rgb), .2); }
+.fp-btn:active { transform: scale(.92); }
+#fp-pill .fp-play { color: var(--accent-active-color, #0b1120); background: var(--fp-acc); }
+#fp-pill .fp-x { background: transparent; color: var(--fp-ink-2); }
+#fp-pill .fp-x:hover { color: var(--fp-ink); background: rgba(var(--fp-acc-rgb), .1); }
+.fp-eq { flex-shrink: 0; display: inline-flex; align-items: flex-end; gap: 2px; width: 16px; height: 14px; }
+.fp-eq i { flex: 1; height: 30%; border-radius: 1px; background: var(--fp-acc); }
+#fp-pill.is-on .fp-eq i { animation: fp-eq 1s ease-in-out infinite; }
+#fp-pill.is-on .fp-eq i:nth-child(2) { animation-delay: -.4s; }
+#fp-pill.is-on .fp-eq i:nth-child(3) { animation-delay: -.7s; }
+#fp-pill.is-on .fp-eq i:nth-child(4) { animation-delay: -.2s; }
+@keyframes fp-eq { 0%, 100% { height: 25%; } 50% { height: 100%; } }
+
+#fp-dock { left: 88px; bottom: 84px; width: 280px; border-radius: 16px; overflow: hidden; animation: fp-in .35s ease both; }
+.fp-dock-head { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 12px; }
+.fp-dock-head .fa-youtube { color: #ff0033; }
+.fp-dock-head b { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12.5px; }
+.fp-dock-head .fp-btn { width: 28px; height: 28px; background: transparent; color: var(--fp-ink-2); }
+.fp-dock-video { aspect-ratio: 16 / 9; background: #000; }
+.fp-dock-video iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+#fp-dock.fp-low { bottom: 24px; }
+@media (max-width: 767px) {
+    #fp-pill { left: 12px; right: 92px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); max-width: none; }
+    #fp-dock { left: 12px; bottom: calc(138px + env(safe-area-inset-bottom, 0px)); width: 216px; }
+    #fp-dock.fp-low { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { #fp-pill, #fp-dock, #fp-pill.is-on .fp-eq i { animation: none; } }
+
+/* the page frame covers the page the sound started on; that page keeps playing underneath */
+#fp-shell { position: fixed; inset: 0; z-index: 2147483000; width: 100%; height: 100%; border: 0; background: var(--bg-color, #0b1120); }
+html.fp-shell-on, html.fp-shell-on body { overflow: hidden !important; }
+html.fp-shell-on body > :not(#fp-shell):not(#fp-pill):not(#fp-dock) { visibility: hidden !important; }

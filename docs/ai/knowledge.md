@@ -452,7 +452,7 @@ Email mehedihasan228.cse@gmail.com WhatsApp +880 1799-447594 LinkedIn in/mehedi-
 100 things I use, love and recommend
 ## My library
 The AI skills in my daily workflow, the sites I keep bookmarked and the nasheeds on repeat while I code.
-11 AI Skills 44 Bookmarks 45 Watch & Listen
+11 AI Skills 44 Bookmarks 45 Watch & Listen Focus Sounds & a timer
 ## AI Skills
 The agent skills I use every day in my agentic development workflow.
 See all 11
@@ -539,3 +539,4 @@ Open Watch & Listen
 - music > learning > Hussein Nasser: How Postgres works, What is Kafka and how does it work?, Redis In-Memory Database Crash Course, Connection Pooling in PostgreSQL with Node.js, What is a database index?, Socket Management in Backend System Design
 - music > learning > Stack Learner: System Design and Application Architecture, Building Microservices with TypeScript, Hands-on Docker for Microservices, Express 101: Node.js in Bangla, JavaScript for Absolute Beginners, SQL vs NoSQL in Bangla
 - overview > sections: AI Skills, Bookmarks, Watch & Listen
+- focus > picks: Ya Nabi Salam Alayka, Qalbi Fil Madinah, Ramadan, Bika Moulhimi, Barak Allah Lakuma, I’m Alive, Assalamu Alaika, Number One For Me, Rahmatun Lil’Alameen, La Tahzan, The Power, The Book of Allah Is My Constitution, I Rise, The Beauty of Existence, The Way of the Tears, My Dream, My Mother, My Arabic Language, Be Happy, Watheq
