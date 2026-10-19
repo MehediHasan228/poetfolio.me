@@ -14556,3 +14556,12 @@ html[data-theme="god-mode"] #page-skeleton { background: #000; --sk: rgba(0, 255
 html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton { --sk: #e2e8f0; --sk-hi: #f1f5f9; background: #f8fafc; }
 html[data-theme="mint"] #page-skeleton { --sk: #dcefe6; --sk-hi: #eef8f3; background: #f4faf7; }
 html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton .sk-card { background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, .05), inset 0 0 0 1px #e2e8f0; }
+
+/* Phones: the greeting never covers more than ~40% of the screen */
+@media (max-width: 767px) {
+    html body #ai-orb-speech-bubble:not(#_ai) { max-height: 42vh; max-height: 42dvh; overflow-y: auto; }
+}
+/* Phones: the leaderboard edge tab lets vertical swipes scroll the page (it moves only after press-and-hold) */
+@media (max-width: 860px) {
+    html body #leaderboard-widget .lb-toggle:not(#_lb) { touch-action: pan-y !important; }
+}

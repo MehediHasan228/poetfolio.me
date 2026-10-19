@@ -425,7 +425,7 @@
         const page = ((document.body && document.body.dataset.page) || 'home').split('/')[0];
         if (page === 'contact') return;
         const NAME = 'Mehedi', CITY = 'Dhaka', TZ = 'Asia/Dhaka';
-        const IDLE = 20000, CLOSE_AFTER = 30000, DAY = 864e5;
+        const IDLE = 20000, DAY = 864e5;
         const widget = () => document.getElementById('ai-chat-widget');
         const isChatOpen = () => { const w = widget(); return !!(w && w.classList.contains('chat-expanded')); };
         const phone = window.matchMedia('(max-width: 767px)');
@@ -459,6 +459,35 @@
             ss.set('greet:pages', String(seenPaths.length));
         } catch (e) {}
         let attention = num(ss.get('greet:active'));
+
+        /* ---- how often: phones once per visit, desktop twice (10 min apart); a dismissal ends it for the visit,
+           two visits in a row dismissed means three quiet days; talking to it also ends it for the visit ---- */
+        const coarse = window.matchMedia('(pointer: coarse)');
+        const phoneLike = () => phone.matches || coarse.matches;
+        const CLOSE_AFTER = () => (phoneLike() ? 18000 : 30000);
+        const pageStart = Date.now(), visitId = ss.get('greet:start');
+        const readDismissals = () => { try { return JSON.parse(ls.get('greet:dismissals') || '[]'); } catch (e) { return []; } };
+        function snoozed() {
+            const d = readDismissals();
+            if (d.length < 2) return false;
+            const [a, b] = d.slice(-2);
+            return a.v !== b.v && Date.now() - b.t < 3 * DAY;
+        }
+        function canShow() {
+            if (ss.get('greet:done') === '1' || snoozed()) return false;
+            if (Date.now() - pageStart < 45000) return false;
+            const shown = num(ss.get('greet:shown'));
+            if (shown >= (phoneLike() ? 1 : 2)) return false;
+            if (shown && Date.now() - num(ss.get('greet:shownAt')) < 10 * 60000) return false;
+            return true;
+        }
+        function dismissed() {
+            ss.set('greet:done', '1');
+            const d = readDismissals().filter((x) => x.v !== visitId);
+            d.push({ t: Date.now(), v: visitId });
+            ls.set('greet:dismissals', JSON.stringify(d.slice(-4)));
+        }
+        function engaged() { ss.set('greet:done', '1'); ls.set('greet:dismissals', '[]'); }
 
         /* the project card in view the longest (projects page), remembered for this visit */
         const focusTime = new Map(), inView = new Set();
@@ -571,6 +600,7 @@
 
         /* ---- the bubble ---- */
         let el = null, run = 0, state = 'idle', closeTimer = null, titleTimer = null, savedTitle = '';
+        let openY = 0, touchedBubble = false;
         const wait = (ms) => new Promise((r) => setTimeout(r, still.matches ? 0 : ms));
         const rand = (a, b) => a + Math.random() * (b - a);
         const typeTime = (t) => Math.min(2600, Math.max(700, 380 + t.length * 30)) * rand(0.85, 1.15);
@@ -578,6 +608,7 @@
         function flashTitle(on) {
             clearInterval(titleTimer);
             if (!on) { if (savedTitle) document.title = savedTitle; return; }
+            if (phoneLike()) return;
             if (!savedTitle) savedTitle = document.title;
             if (document.visibilityState === 'hidden') {
                 let alt = false;
@@ -588,7 +619,7 @@
         function markUnread(on) { const w = widget(); if (w) w.classList.toggle('has-unread', on); }
         function armClose() {
             clearTimeout(closeTimer);
-            if (el && document.visibilityState === 'visible' && !el.matches(':hover, :focus-within')) closeTimer = setTimeout(() => close(true), CLOSE_AFTER);
+            if (el && document.visibilityState === 'visible' && !el.matches(':hover, :focus-within')) closeTimer = setTimeout(() => close(true), CLOSE_AFTER());
         }
         function close(leaveDot) {
             run++; state = 'idle'; clearTimeout(closeTimer); flashTitle(false); savedTitle = '';
@@ -638,6 +669,7 @@
         }
         async function reply(choice, btn) {
             const id = run;
+            engaged();
             clearTimeout(closeTimer); flashTitle(false);
             if (choice.hearts) { burst(btn); mood('excited', 1800); }
             sound(choice.hearts ? 'love' : 'pop');
@@ -661,6 +693,8 @@
             if (state !== 'idle' || el || isChatOpen() || document.body.classList.contains('drawer-open')) return;
             state = 'open';
             attention = 0; ss.set('greet:active', '0');            /* the next greeting needs fresh attention */
+            ss.set('greet:shown', String(num(ss.get('greet:shown')) + 1)); ss.set('greet:shownAt', String(Date.now()));
+            openY = window.scrollY; touchedBubble = false;
             const id = ++run, compact = phone.matches;
             el = document.createElement('div');
             el.id = 'ai-orb-speech-bubble';
@@ -677,16 +711,18 @@
                 <div class="ai-orb-bubble-arrow"></div>`;
             el.addEventListener('click', (e) => {
                 const b = e.target.closest('[data-act]');
-                if (e.target.closest('.ai-orb-bubble-close') || (b && b.dataset.act === 'later')) { close(false); mood('pout', 1500); return; }
-                if (b && b.dataset.act === 'chat') { openChat(); return; }
+                if (e.target.closest('.ai-orb-bubble-close') || (b && b.dataset.act === 'later')) { dismissed(); close(false); mood('pout', 1500); return; }
+                if (b && b.dataset.act === 'chat') { engaged(); openChat(); return; }
                 if (e.target.closest('a')) close(false);
             });
             el.addEventListener('mouseenter', () => { clearTimeout(closeTimer); flashTitle(false); });
             el.addEventListener('mouseleave', armClose);
             el.addEventListener('focusin', () => flashTitle(false));
             let sx = 0, sy = 0;
-            el.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-            el.addEventListener('touchend', (e) => { const t = e.changedTouches[0]; if (t.clientX - sx > 60 || t.clientY - sy > 50) close(true); }, { passive: true });
+            el.addEventListener('pointerdown', () => { touchedBubble = true; }, { passive: true });
+            el.addEventListener('touchstart', (e) => { touchedBubble = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+            /* a clear swipe to the right puts it away; vertical moves are left to the page */
+            el.addEventListener('touchend', (e) => { const t = e.changedTouches[0]; if (t.clientX - sx > 60 && Math.abs(t.clientY - sy) < 40) { dismissed(); close(true); } }, { passive: true });
             document.body.appendChild(el);
             { const w = widget(); if (w) w.classList.remove('ai-dodge', 'ai-tucked'); }
             requestAnimationFrame(() => el && el.classList.add('is-in'));
@@ -722,12 +758,18 @@
             if (a && a.matches && a.matches('input, textarea, select, [contenteditable]')) return true;
             return !!(window.getSelection && String(window.getSelection()));
         };
-        const ready = () => (attention >= 120000 || (attention >= 60000 && (num(ss.get('greet:pages')) >= 2 || depth >= 0.5))) && Date.now() - lastMove >= 2500;
+        let touching = false, prevY = window.scrollY, stableTicks = 0;
+        addEventListener('touchstart', () => { touching = true; }, { passive: true });
+        ['touchend', 'touchcancel'].forEach((t) => addEventListener(t, () => { touching = false; }, { passive: true }));
+        const keyboardOpen = () => !!(window.visualViewport && window.visualViewport.height < window.innerHeight * 0.75);
+        const paused = () => !touching && stableTicks >= 2 && !keyboardOpen() && Date.now() - lastMove >= (phoneLike() ? 4000 : 2500);
+        const ready = () => (attention >= 120000 || (attention >= 60000 && (num(ss.get('greet:pages')) >= 2 || depth >= 0.5))) && paused() && canShow();
         const touch = () => { lastMove = lastActive = Date.now(); };
         ['scroll', 'wheel', 'keydown', 'touchmove'].forEach((t) => addEventListener(t, touch, { passive: true }));
         ['pointermove', 'pointerdown'].forEach((t) => addEventListener(t, () => { lastActive = Date.now(); }, { passive: true }));
         addEventListener('scroll', () => { depth = Math.max(depth, (scrollY + innerHeight) / document.documentElement.scrollHeight); }, { passive: true });
         setInterval(() => {
+            const y = window.scrollY; stableTicks = y === prevY ? stableTicks + 1 : 0; prevY = y;
             if (state !== 'idle' || document.visibilityState !== 'visible') return;
             if (Date.now() - lastActive > IDLE) return;
             attention += 1000; ss.set('greet:active', String(attention));
@@ -738,23 +780,25 @@
             clearTimeout(hiddenTimer);
             if (document.visibilityState === 'hidden') {
                 clearTimeout(closeTimer);
-                if (state === 'idle' && attention >= 45000 && !blocked(true)) hiddenTimer = setTimeout(() => { if (document.visibilityState === 'hidden') show(true); }, rand(5000, 12000));
+                if (state === 'idle' && !phoneLike() && attention >= 45000 && canShow() && !blocked(true)) hiddenTimer = setTimeout(() => { if (document.visibilityState === 'hidden') show(true); }, rand(5000, 12000));
             } else { touch(); if (el) { flashTitle(true); armClose(); } }
         });
         document.addEventListener('mouseout', (e) => {
             if (e.relatedTarget || e.clientY > 0 || state !== 'idle' || attention < 30000) return;
-            if (window.matchMedia('(pointer: fine)').matches && !blocked()) show(false);
+            if (window.matchMedia('(pointer: fine)').matches && canShow() && !blocked()) show(false);
         });
 
-        /* ---- phones: tuck the orb away while scrolling down, bring it back on scroll up ---- */
-        let lastY = window.scrollY, ticking = false;
+        /* ---- scrolling: the orb tucks away only after a real move (40px), and an untouched greeting steps aside ---- */
+        let lastY = window.scrollY, travel = 0, ticking = false;
         addEventListener('scroll', () => {
             if (ticking) return; ticking = true;
             requestAnimationFrame(() => {
-                const w = widget(), y = window.scrollY;
+                const w = widget(), y = window.scrollY, dy = y - lastY;
+                travel = (dy > 0) === (travel > 0) ? travel + dy : dy;
+                if (el && !touchedBubble && Math.abs(y - openY) > 40) { dismissed(); close(true); }
                 if (w && phone.matches && !isChatOpen() && !el) {
-                    if (y > lastY + 6 && y > 120) w.classList.add('ai-tucked');
-                    else if (y < lastY - 6 || y <= 120) w.classList.remove('ai-tucked');
+                    if (travel > 40 && y > 120) w.classList.add('ai-tucked');
+                    else if (travel < -40 || y <= 120) w.classList.remove('ai-tucked');
                 }
                 lastY = y; ticking = false;
             });
@@ -762,7 +806,7 @@
 
         /* ---- keyboard: Esc closes; "/" opens the chat (when not typing somewhere) ---- */
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && el) { close(false); mood('pout', 1500); return; }
+            if (e.key === 'Escape' && el) { dismissed(); close(false); mood('pout', 1500); return; }
             if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
                 const t = e.target;
                 if (t && (t.isContentEditable || /^(input|textarea|select)$/i.test(t.tagName))) return;
@@ -790,16 +834,21 @@
 
         /* opening the chat any other way clears the greeting and the dot */
         const w = widget();
-        if (w) w.addEventListener('click', () => { if (el) close(false); markUnread(false); });
+        if (w) w.addEventListener('click', () => { if (el) { engaged(); close(false); } markUnread(false); });
 
         /* test hook: AIOrbGreeting.show() */
         window.AIOrbGreeting = { show: () => show(false) };
     }
 
+    /* a page prerendered in the background starts counting only once the visitor actually opens it */
+    const startGreeting = () => {
+        if (document.prerendering) document.addEventListener('prerenderingchange', initProactiveGreeting, { once: true });
+        else initProactiveGreeting();
+    };
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initProactiveGreeting);
+        document.addEventListener('DOMContentLoaded', startGreeting);
     } else {
-        initProactiveGreeting();
+        startGreeting();
     }
 
     window.AIOrbMascot = AIOrbMascot;

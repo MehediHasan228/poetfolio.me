@@ -380,10 +380,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const rect = element.getBoundingClientRect();
             const startElemTop = rect.top;
             pos4 = clientY;
+            // on touch, a quick swipe scrolls the page; the tab only moves after a short press-and-hold
+            let armed = !isTouch, cancelled = false;
+            const holdTimer = isTouch ? setTimeout(() => {
+                if (cancelled) return;
+                armed = true;
+                element.classList.add('is-tab-dragging');
+                if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
+            }, 280) : 0;
 
             function onMove(ev) {
                 const moveY = ev.touches ? ev.touches[0].clientY : ev.clientY;
                 const diffY = Math.abs(moveY - startY);
+                if (!armed) { if (diffY > 8) { cancelled = true; clearTimeout(holdTimer); } return; }
                 if (diffY > 8) {
                     hasMoved = true;
                     isDragging = true;
@@ -414,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             function onEnd() {
+                clearTimeout(holdTimer);
                 document.removeEventListener('mousemove', onMove);
                 document.removeEventListener('mouseup', onEnd);
                 document.removeEventListener('touchmove', onMove);
@@ -4084,22 +4094,26 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (!orb || !targets.length) return;
         const phone = window.matchMedia('(max-width: 767px)');
         let raf = 0;
-        // instead of hiding, the orb lifts just above the hero buttons while they would sit under it
+        // instead of hiding, the orb lifts just above the hero buttons while they would sit under it;
+        // it is measured only when the page is still (never mid-scroll), so the orb never bobs while scrolling
         const check = () => {
             raf = 0;
             orb.classList.remove('ai-dodge');
-            if (!phone.matches || !orb.classList.contains('chat-collapsed')) { orb.style.removeProperty('--ai-lift'); return; }
-            orb.style.removeProperty('--ai-lift');
-            const o = orb.getBoundingClientRect();
+            if (!phone.matches || !orb.classList.contains('chat-collapsed') || window.scrollY > 400) { orb.style.removeProperty('--ai-lift'); return; }
+            const cur = parseFloat(orb.style.getPropertyValue('--ai-lift')) || 0;
+            const o = orb.getBoundingClientRect(), top = o.top + cur, bottom = o.bottom + cur;   // where it sits without the lift
             let lift = 0;
             targets.forEach((t) => {
                 const r = t.getBoundingClientRect();
-                if (!(o.left > r.right || o.right < r.left || o.top > r.bottom || o.bottom < r.top)) lift = Math.max(lift, o.bottom - r.top + 10);
+                if (!(o.left > r.right || o.right < r.left || top > r.bottom || bottom < r.top)) lift = Math.max(lift, bottom - r.top + 10);
             });
-            if (lift) orb.style.setProperty('--ai-lift', Math.min(lift, 140) + 'px');
+            if (lift) orb.style.setProperty('--ai-lift', Math.min(lift, 140) + 'px'); else orb.style.removeProperty('--ai-lift');
         };
         const queue = () => { if (!raf) raf = requestAnimationFrame(check); };
-        addEventListener('scroll', queue, { passive: true });
+        let settle = 0;
+        const afterScroll = () => { clearTimeout(settle); settle = setTimeout(queue, 150); };
+        if ('onscrollend' in window) addEventListener('scrollend', queue, { passive: true });
+        else addEventListener('scroll', afterScroll, { passive: true });
         addEventListener('resize', queue);
         setTimeout(check, 400);
         // the greeting bubble points at the orb, so the orb comes back while it is open and re-checks when it closes
