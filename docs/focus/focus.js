@@ -1,5 +1,5 @@
 /**
- * Focus: layered ambient sounds, nasheeds from YouTube and a focus timer that keep playing while the
+ * Focus: layered ambient sounds, Quran radio and a focus timer that keep playing while the
  * visitor moves around the site.
  *
  * The sound lives in the page where it started (the "host"). While something plays, a click on a link to
@@ -8,7 +8,10 @@
  * the frame load this script too, find the host's player and use it instead of starting their own.
  *
  * Sounds: focus/sounds/*.mp3 are 60s seamless loops cut from Moodist (github.com/remvze/moodist, MIT;
- * recordings under the Pixabay License or CC0). Noise and binaural tones are generated here, no download.
+ * recordings under the Pixabay License or CC0). Noise, binaural tones and the sci-fi hum are generated here.
+ * Scenes: focus/scenes/*.webp are photos from Wikimedia Commons, credited in SCENES; the mix picks one.
+ * Radio: live Quran recitation from mp3quran.net; the Quran with Bangla meaning played surah by surah from
+ * archive.org sets; or any stream the visitor pastes.
  */
 (function () {
     'use strict';
@@ -29,8 +32,33 @@
     const IS_FOCUS = new URL(FOCUS_URL).pathname === location.pathname.replace(/index\.html$/, '');
 
     /* ---- catalogue ---- */
-    const CATS = [['rain', 'Rain'], ['nature', 'Nature'], ['animals', 'Animals'], ['places', 'Places'], ['transport', 'Transport'],
-        ['things', 'Things'], ['city', 'City'], ['noise', 'Noise and tones']];
+    const CATS = [['rain', 'Rain', 'window'], ['nature', 'Nature', 'forest'], ['animals', 'Animals', 'garden'], ['places', 'Places', 'teastall'],
+        ['transport', 'Transport', 'train'], ['things', 'Things', 'desk'], ['city', 'City', 'city'], ['noise', 'Noise and tones', 'hills']];
+    /* scene: [place, photographer, licence, Commons file] */
+    const SCENES = {
+        hills: ['Sajek Valley', 'G.B. G.Son', 'CC BY-SA 4.0', 'Of_Serene_Sajek_Valley.jpg'],
+        monsoon: ['Fuller Road, Dhaka', 'Hasan Nahiyan Nobel', 'CC BY-SA 4.0', 'A_Vespa_in_Rain_at_Fuller_Road,_Dhaka.jpg'],
+        window: ['Rain on the glass', 'ASaber91', 'CC BY 2.0', 'Window_in_the_rain_(26729717796).jpg'],
+        teastall: ['A tea stall at night', 'চিত্রকথক', 'CC BY-SA 4.0', 'Tea_stall.jpg'],
+        desk: ['Working late', 'Kuba Bożanowski', 'CC BY 2.0', 'Working_lat(t)e_(3583874642).jpg'],
+        village: ['Village under the Milky Way', 'NPS', 'Public domain', 'Milky_Way_Galaxy_Over_North_Manitou_Village_(02d407c9-8929-4e76-b784-3f161060c0bb).jpg'],
+        river: ['Sunset on the river', 'Syed Abhi', 'CC BY-SA 4.0', 'A_beautiful_sunset_of_Bangladesh.jpg'],
+        train: ['Bangladesh Railway', 'Rafsanahmed', 'CC BY-SA 4.0', 'Scene_from_Bangladesh_Railway_train_5.jpg'],
+        library: ['Suzzallo Reading Room', 'Guywelch2000', 'CC BY 4.0', 'Suzzallo_Reading_Room_University_of_Washington_restoration_Seattle_Washington_2026.jpg'],
+        forest: ['Lawachara Forest', 'Abdulmominbd', 'CC BY-SA 4.0', 'Lawachara_Forest.jpg'],
+        beach: ["Cox's Bazar at dusk", 'Thomas Faraday', 'CC BY-SA 4.0', "Cox's_Bazar_sea_Beach_(evening_sunset).jpg"],
+        hearth: ['A cozy fire', 'Kaarina Dillabough', 'CC BY-SA 2.0', 'Cozy_fire_(45059571665).jpg'],
+        cafe: ['Hot coffee on a rainy day', 'David Joyce', 'CC BY-SA 2.0', 'Hot_Coffee_on_a_rainy_day_-_Flickr_-_DeaPeaJay.jpg'],
+        storm: ['Lightning over the hills', 'NOIRLab/NSF/AURA/J. Chu', 'CC BY 4.0', 'Lightning_Above_the_Mountaintop_(iotw2433a).jpg'],
+        city: ['Traffic in the rain', 'ASaber91', 'CC BY 2.0', 'Traffic_in_the_rain_(26755138955).jpg'],
+        garden: ['Tea garden, Srimangal', 'Xahidur Reza', 'CC BY 2.0', 'Tea_Garden_near_Srimangal,_Sylhet,_Bangladesh.jpg'],
+        space: ['The Cosmic Cliffs', 'NASA, ESA, CSA, STScI', 'Public domain', 'James_Webb_Space_Telescope_NIRCam_Image_of_the_“Cosmic_Cliffs”_in_Carina_Nebula_(carina_nebula).png']
+    };
+    /* sounds whose own place differs from their category's */
+    const SOUND_SCENE = { 'heavy-rain': 'storm', thunder: 'storm', 'rain-umbrella': 'monsoon', 'rain-car': 'monsoon', 'rain-leaves': 'forest', 'rain-tent': 'forest',
+        river: 'river', waves: 'beach', wind: 'hills', 'wind-trees': 'garden', campfire: 'hearth', crows: 'village', crickets: 'village', frogs: 'village',
+        owl: 'village', cat: 'hearth', seagulls: 'beach', cafe: 'cafe', library: 'library', 'village-night': 'village', restaurant: 'cafe', office: 'desk',
+        boat: 'river', 'ceiling-fan': 'monsoon', clock: 'library', kettle: 'teastall', paper: 'library', 'wind-chimes': 'garden', vinyl: 'hearth', scifi: 'space' };
     const SOUNDS = [
         ['light-rain', 'Light rain', 'rain', 'cloud-rain'], ['heavy-rain', 'Heavy rain', 'rain', 'cloud-showers-heavy'],
         ['thunder', 'Thunder', 'rain', 'bolt'], ['rain-window', 'Rain on a window', 'rain', 'window-maximize'],
@@ -52,31 +80,94 @@
         ['brown', 'Brown noise', 'noise', 'wave-square', 'Deep and warm', 'brown'], ['pink', 'Pink noise', 'noise', 'wave-square', 'Soft, like rainfall', 'pink'],
         ['white', 'White noise', 'noise', 'wave-square', 'Bright, blocks voices', 'white'],
         ['alpha', 'Binaural alpha', 'noise', 'headphones', '10 Hz, calm · headphones', 10], ['beta', 'Binaural beta', 'noise', 'headphones', '15 Hz, alert · headphones', 15],
-        ['gamma', 'Binaural gamma', 'noise', 'headphones', '40 Hz, sharp · headphones', 40]
+        ['gamma', 'Binaural gamma', 'noise', 'headphones', '40 Hz, sharp · headphones', 40],
+        ['scifi', 'Sci-fi hum', 'noise', 'rocket', 'A starship engine room', 'drone']
     ].map(([id, label, cat, icon, hint, gen]) => ({ id, label, cat, icon, hint: hint || '', gen: gen || null }));
     const BY = {}; SOUNDS.forEach((s) => { BY[s.id] = s; });
     const PRESETS = [
-        { id: 'deep', name: 'Deep focus', sub: 'Brown noise under soft rain', icon: 'brain', mix: { brown: 0.55, 'light-rain': 0.3 } },
-        { id: 'monsoon', name: 'Dhaka monsoon', sub: 'Heavy rain, thunder, the fan overhead', icon: 'cloud-showers-heavy', mix: { 'heavy-rain': 0.55, thunder: 0.35, 'rain-window': 0.35, 'ceiling-fan': 0.25 } },
-        { id: 'cha', name: 'Tea stall', sub: 'Chatter, a boiling kettle, the street', icon: 'mug-hot', mix: { cafe: 0.5, kettle: 0.25, crowd: 0.2, traffic: 0.15 } },
-        { id: 'coding', name: 'Late-night coding', sub: 'Keys, rain on the glass, brown noise', icon: 'laptop-code', mix: { keyboard: 0.35, 'rain-window': 0.4, brown: 0.25, clock: 0.12 } },
-        { id: 'village', name: 'Village night', sub: 'Crickets, frogs, wind in the trees', icon: 'moon', mix: { crickets: 0.5, frogs: 0.35, 'wind-trees': 0.25, 'village-night': 0.2 } },
-        { id: 'river', name: 'On the river', sub: 'Water, oars and birds', icon: 'sailboat', mix: { river: 0.5, boat: 0.35, birds: 0.2, wind: 0.15 } },
-        { id: 'train', name: 'Night train', sub: 'Rails and rain on the window', icon: 'train-subway', mix: { 'inside-train': 0.55, 'rain-window': 0.3 } },
-        { id: 'study', name: 'Study hall', sub: 'A quiet library, pages turning', icon: 'book-open', mix: { library: 0.5, paper: 0.2, clock: 0.12 } },
-        { id: 'forest', name: 'Forest walk', sub: 'Birds, leaves and a stream', icon: 'tree', mix: { birds: 0.45, 'wind-trees': 0.35, river: 0.2 } },
-        { id: 'coxs', name: "Cox's Bazar", sub: 'Waves, sea wind and gulls', icon: 'umbrella-beach', mix: { waves: 0.6, wind: 0.2, seagulls: 0.15 } },
-        { id: 'cozy', name: 'Cozy evening', sub: 'Campfire, rain and a purring cat', icon: 'fire', mix: { campfire: 0.45, 'light-rain': 0.3, cat: 0.2 } },
-        { id: 'cafe', name: 'Rainy café', sub: 'Café murmur with rain outside', icon: 'cloud-rain', mix: { cafe: 0.45, 'light-rain': 0.35, 'rain-umbrella': 0.15 } }
+        { id: 'deep', name: 'Deep focus', sub: 'Brown noise under soft rain', icon: 'brain', scene: 'hills', mix: { brown: 0.55, 'light-rain': 0.3 } },
+        { id: 'monsoon', name: 'Dhaka monsoon', sub: 'Heavy rain, thunder, the fan overhead', icon: 'cloud-showers-heavy', scene: 'monsoon', mix: { 'heavy-rain': 0.55, thunder: 0.35, 'rain-window': 0.35, 'ceiling-fan': 0.25 } },
+        { id: 'cha', name: 'Tea stall', sub: 'Chatter, a boiling kettle, the street', icon: 'mug-hot', scene: 'teastall', mix: { cafe: 0.5, kettle: 0.25, crowd: 0.2, traffic: 0.15 } },
+        { id: 'coding', name: 'Late-night coding', sub: 'Keys, rain on the glass, brown noise', icon: 'laptop-code', scene: 'desk', mix: { keyboard: 0.35, 'rain-window': 0.4, brown: 0.25, clock: 0.12 } },
+        { id: 'village', name: 'Village night', sub: 'Crickets, frogs, wind in the trees', icon: 'moon', scene: 'village', mix: { crickets: 0.5, frogs: 0.35, 'wind-trees': 0.25, 'village-night': 0.2 } },
+        { id: 'river', name: 'On the river', sub: 'Water, oars and birds', icon: 'sailboat', scene: 'river', mix: { river: 0.5, boat: 0.35, birds: 0.2, wind: 0.15 } },
+        { id: 'train', name: 'Night train', sub: 'Rails and rain on the window', icon: 'train-subway', scene: 'train', mix: { 'inside-train': 0.55, 'rain-window': 0.3 } },
+        { id: 'study', name: 'Study hall', sub: 'A quiet library, pages turning', icon: 'book-open', scene: 'library', mix: { library: 0.5, paper: 0.2, clock: 0.12 } },
+        { id: 'forest', name: 'Forest walk', sub: 'Birds, leaves and a stream', icon: 'tree', scene: 'forest', mix: { birds: 0.45, 'wind-trees': 0.35, river: 0.2 } },
+        { id: 'coxs', name: "Cox's Bazar", sub: 'Waves, sea wind and gulls', icon: 'umbrella-beach', scene: 'beach', mix: { waves: 0.6, wind: 0.2, seagulls: 0.15 } },
+        { id: 'cozy', name: 'Cozy evening', sub: 'Campfire, rain and a purring cat', icon: 'fire', scene: 'hearth', mix: { campfire: 0.45, 'light-rain': 0.3, cat: 0.2 } },
+        { id: 'cafe', name: 'Rainy café', sub: 'Café murmur with rain outside', icon: 'cloud-rain', scene: 'cafe', mix: { cafe: 0.45, 'light-rain': 0.35, 'rain-umbrella': 0.15 } },
+        { id: 'storm', name: 'Thunderstorm', sub: 'Heavy rain, thunder and wind', icon: 'cloud-bolt', scene: 'storm', mix: { 'heavy-rain': 0.6, thunder: 0.5, wind: 0.2 } },
+        { id: 'starship', name: 'Starship', sub: 'An engine hum under brown noise', icon: 'rocket', scene: 'space', mix: { scifi: 0.6, brown: 0.25 } }
     ];
     const PHASES = { focus: ['Focus', 25], short: ['Short break', 5], long: ['Long break', 15] };
+    /* minutes of focus, a short break and the long break after every fourth round */
+    const PLANS = { classic: [25, 5, 15, 'Classic'], deep: [50, 10, 20, 'Deep work'], flow: [90, 20, 30, 'Flow'] };
+    const usePlan = (id) => { const p = PLANS[id] || PLANS.classic; PHASES.focus[1] = p[0]; PHASES.short[1] = p[1]; PHASES.long[1] = p[2]; };
+    /* mp3quran.net streams send CORS headers, so they play through the same chain (volume, limiter, visualizer) as the sounds;
+       qurango.net first, its backup host when it stumbles. group: top (always shown), more (renowned reciters), bn (Bangla meaning) */
+    const QR = 'https://qurango.net/radio/', QR2 = 'https://backup.qurango.net/radio/';
+    const live = (group, sub) => ([id, name, path, note]) => ({ id, name, group, sub: note || sub, url: QR + path, alt: QR2 + path });
+    /* the Quran with Bangla meaning: complete sets on archive.org, one file per surah, played in order */
+    const set = ([id, name, item, sub]) => ({ id, name, group: 'bn', sub, list: item, url: 'https://archive.org/details/' + item });
+    const STATIONS = [].concat(
+        [['mishary', 'Mishary Alafasi', 'mishary_alafasi'], ['basit', 'Abdul Basit Abdus Samad', 'abdulbasit_abdulsamad'],
+            ['minshawi', 'Muhammad Siddiq Al-Minshawi', 'mohammed_siddiq_alminshawi'], ['husary', 'Mahmoud Khalil Al-Husary', 'mahmoud_khalil_alhussary'],
+            ['ghamdi', 'Saad Al-Ghamdi', 'saad_alghamdi'], ['maher', 'Maher Al-Muaiqly', 'maher'], ['dosari', 'Yasser Al-Dosari', 'yasser_aldosari'],
+            ['english', 'Quran in English', 'translation_quran_english_basit', 'English meaning · Abdul Basit']].map(live('top', 'Murattal')),
+        [['sudais', 'Abdul Rahman Al-Sudais', 'abdulrahman_alsudaes'], ['shuraim', 'Saud Al-Shuraim', 'saud_alshuraim'],
+            ['huthaifi', 'Ali Al-Huthaifi', 'ali_alhuthaifi'], ['ajmy', 'Ahmad Al-Ajmy', 'ahmad_alajmy'],
+            ['shatri', 'Abu Bakr Al-Shatri', 'shaik_abu_bakr_al_shatri'], ['abkr', 'Idrees Abkr', 'idrees_abkr'],
+            ['abbad', 'Fares Abbad', 'fares_abbad'], ['qatami', 'Nasser Al-Qatami', 'nasser_alqatami'],
+            ['ayyub', 'Muhammad Ayyub', 'mohammed_ayyub'], ['basfar', 'Abdullah Basfar', 'abdullah_basfer'],
+            ['juhany', 'Abdullah Al-Juhany', 'abdullah_aljohany'], ['jaleel', 'Khalid Al-Jaleel', 'khalid_aljileel'],
+            ['rifai', 'Hani Ar-Rifai', 'hani_arrifai'], ['tablawi', 'Mohammad Al-Tablawi', 'mohammad_altablaway'],
+            ['ismail', 'Mustafa Ismail', 'mustafa_ismail'], ['jibreel', 'Muhammad Jibreel', 'mohammed_jibreel'],
+            ['balilah', 'Bandar Balilah', 'bandar_balilah'], ['bukhatir', 'Salah Bukhatir', 'slaah_bukhatir'],
+            ['basit-mj', 'Abdul Basit, mujawwad', 'abdulbasit_abdulsamad_mojawwad', 'Mujawwad'],
+            ['minshawi-mj', 'Al-Minshawi, mujawwad', 'mohammed_siddiq_alminshawi_mojawwad', 'Mujawwad']].map(live('more', 'Murattal')),
+        [['bn-mishary', 'Mishary Alafasi, Bangla', 'bdquran', 'Bangla meaning · Islamic Foundation'],
+            ['bn-basit', 'Abdul Basit, Bangla', 'Al-QuranArabicToBanglaAudio', 'Bangla voice · Sayed Ismat Toha'],
+            ['bn-shuraim', 'Saud Al-Shuraim, Bangla', 'AlQuranWithBengaliBanglaTranslation-ReciterSheikhSaudAlSuraima-VoiceZayedIqbal', 'Bangla voice · Zayed Iqbal'],
+            ['bn-sudais', 'Sudais & Shuraim, Bangla', 'alquranwithbanglaaudio', 'Bangla voice · Sayed Ismat Toha']].map(set));
+    /* reciters' photos (focus/reciters/*.webp, cropped from Wikimedia Commons): [photographer, licence, Commons file] */
+    const FACES = {
+        mishary: ['quranic.ru', 'Copyrighted free use', 'Мишари_Рашид.jpg'],
+        minshawi: ['Unknown author', 'Public domain', 'Elminshwey.jpg'],
+        husary: ['Zubairkhan1', 'Public domain', 'Hussary.jpg'],
+        ghamdi: ['الشيخ هيثم الدخين', 'CC BY-SA 4.0', 'Saad_al_Ghamdi.jpg'],
+        maher: ['وليد أيوب', 'CC BY-SA 3.0', 'Maher_Al_Mueaqly.png'],
+        dosari: ['أحمد زين', 'CC BY-SA 3.0', 'Yasser_Al-Dosari.png'],
+        sudais: ['India, Prime Minister\'s Office', 'GODL-India', 'Abdul-Rahman_Al-Sudais_(Cropped,_2011).jpg'],
+        shuraim: ['India, Vice President\'s Secretariat', 'GODL-India', 'The_IMAM_of_Holy_Mosque_in_Makka_Al_Mukarramah,_Saudi_Arabia,_Sheikh_Dr._Saud_Bin_Ibrahem_Al_Shuraim_meeting_the_Vice_President,_Shri_Mohd._Hamid_Ansari,_in_New_Delhi_on_March_03,_2012_(cropped).jpg'],
+        huthaifi: ['آيات', 'CC BY 3.0', 'Ali_al-Hudhayfi.jpg'],
+        ajmy: ['أحمد زين', 'CC BY-SA 3.0', 'Ahmad_bin_Ali_Al-Ajmi.png'],
+        qatami: ['Ayman dhū alghiná', 'CC BY-SA 4.0', 'صورة_شخصية_ناصر_القطامي.jpg'],
+        juhany: ['الشيخ هيثم الدخين', 'CC BY-SA 4.0', 'Abdullah_Al_Juhany_(Cropped).png'],
+        ismail: ['Unknown author', 'Public domain', 'Mustafa_Ismail_(1).jpg'],
+        balilah: ['محبين يحيى الزعبي', 'CC BY-SA 3.0', 'Bandar_Baleela.jpg']
+    };
+    const SURAHS = ('Al-Fatihah,Al-Baqarah,Al-Imran,An-Nisa,Al-Ma\'idah,Al-An\'am,Al-A\'raf,Al-Anfal,At-Tawbah,Yunus,Hud,Yusuf,Ar-Ra\'d,Ibrahim,Al-Hijr,An-Nahl,'
+        + 'Al-Isra,Al-Kahf,Maryam,Ta-Ha,Al-Anbiya,Al-Hajj,Al-Mu\'minun,An-Nur,Al-Furqan,Ash-Shu\'ara,An-Naml,Al-Qasas,Al-Ankabut,Ar-Rum,Luqman,As-Sajdah,'
+        + 'Al-Ahzab,Saba,Fatir,Ya-Sin,As-Saffat,Sad,Az-Zumar,Ghafir,Fussilat,Ash-Shura,Az-Zukhruf,Ad-Dukhan,Al-Jathiyah,Al-Ahqaf,Muhammad,Al-Fath,'
+        + 'Al-Hujurat,Qaf,Adh-Dhariyat,At-Tur,An-Najm,Al-Qamar,Ar-Rahman,Al-Waqi\'ah,Al-Hadid,Al-Mujadilah,Al-Hashr,Al-Mumtahanah,As-Saff,Al-Jumu\'ah,'
+        + 'Al-Munafiqun,At-Taghabun,At-Talaq,At-Tahrim,Al-Mulk,Al-Qalam,Al-Haqqah,Al-Ma\'arij,Nuh,Al-Jinn,Al-Muzzammil,Al-Muddaththir,Al-Qiyamah,Al-Insan,'
+        + 'Al-Mursalat,An-Naba,An-Nazi\'at,Abasa,At-Takwir,Al-Infitar,Al-Mutaffifin,Al-Inshiqaq,Al-Buruj,At-Tariq,Al-A\'la,Al-Ghashiyah,Al-Fajr,Al-Balad,'
+        + 'Ash-Shams,Al-Layl,Ad-Duha,Ash-Sharh,At-Tin,Al-Alaq,Al-Qadr,Al-Bayyinah,Az-Zalzalah,Al-Adiyat,Al-Qari\'ah,At-Takathur,Al-Asr,Al-Humazah,Al-Fil,'
+        + 'Quraysh,Al-Ma\'un,Al-Kawthar,Al-Kafirun,An-Nasr,Al-Masad,Al-Ikhlas,Al-Falaq,An-Nas').split(',');
 
     /* ---- state, kept per browser so a new page can offer to resume ---- */
     const KEY = 'focus:v1';
     const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
-    const st = Object.assign({ mix: {}, master: 0.8, preset: null, active: false, at: 0, yt: null, done: 0,
+    const st = Object.assign({ mix: {}, master: 0.8, active: false, at: 0, done: 0, radio: null, radioVol: 0.8, sleep: 0, lead: 'mix',
+        plan: 'classic', dip: true, day: '', mins: 0, tracks: {},
         timer: { phase: 'focus', running: false, endsAt: 0, left: PHASES.focus[1] * 60000 } }, read());
     Object.keys(st.mix).forEach((id) => { if (!BY[id]) delete st.mix[id]; });
+    delete st.yt;                                          /* a YouTube nasheed saved before the player went */
+    if (st.radio && st.radio.url) st.radio.url = st.radio.url.replace('//backup.qurango.net/', '//qurango.net/');   /* saved before the hosts swapped */
+    usePlan(st.plan);
+    const rollDay = () => { const d = new Date().toDateString(); if (st.day !== d) { st.day = d; st.done = 0; st.mins = 0; } };     /* rounds count per day */
+    rollDay();
     let saveTimer = 0;
     function save(now) {
         clearTimeout(saveTimer);
@@ -89,20 +180,22 @@
     function emit() {
         listeners.forEach((fn) => { try { fn(); } catch (e) { listeners.delete(fn); } });
         docs.forEach((d) => {
-            try { d.documentElement.classList.toggle('fp-playing', playing || !!ytOn); d.documentElement.classList.toggle('fp-busy', busy()); } catch (e) { docs.delete(d); }
+            try { d.documentElement.classList.toggle('fp-playing', playing || radioOn); d.documentElement.classList.toggle('fp-busy', busy()); } catch (e) { docs.delete(d); }
         });
         render();
     }
 
     /* ---- audio ---- */
-    let ctx = null, master = null, playing = false, ytOn = false, silent = null;
+    let ctx = null, master = null, playing = false, radioOn = false, silent = null;
     const nodes = new Map(), buffers = new Map();
     const curve = (v) => v * v;            /* sliders feel even to the ear */
     function audio() {
         if (ctx) return ctx;
         const AC = window.AudioContext || window.webkitAudioContext;
         ctx = new AC();
-        master = ctx.createGain(); master.gain.value = curve(st.master); master.connect(ctx.destination);
+        master = ctx.createGain(); master.gain.value = masterLevel();
+        const limit = ctx.createDynamicsCompressor(); limit.threshold.value = -10; limit.ratio.value = 3;   /* a stack of loud layers never clips */
+        master.connect(limit).connect(ctx.destination);
         try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
         return ctx;
     }
@@ -139,6 +232,19 @@
         }
         return b;
     }
+    /* the sci-fi hum: detuned saws and a fifth through a slowly breathing low-pass, with a little air on top */
+    function hum(out) {
+        const parts = [];
+        const osc = (f, type) => { const o = ctx.createOscillator(); o.type = type || 'sine'; o.frequency.value = f; o.start(); parts.push(o); return o; };
+        const level = (v) => { const g = ctx.createGain(); g.gain.value = v; return g; };
+        const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 380; lp.Q.value = 1.1; lp.connect(out);
+        [[55, 'sawtooth', 0.11], [55.5, 'sawtooth', 0.11], [82.5, 'triangle', 0.09], [110, 'sine', 0.07]].forEach(([f, t, v]) => osc(f, t).connect(level(v)).connect(lp));
+        osc(0.04).connect(level(140)).connect(lp.frequency);      /* opens and closes every 25 s */
+        const air = ctx.createBufferSource(), bp = ctx.createBiquadFilter();
+        air.buffer = generate('pink'); air.loop = true; bp.type = 'bandpass'; bp.frequency.value = 600; bp.Q.value = 0.7;
+        air.connect(bp).connect(level(0.5)).connect(out); air.start(); parts.push(air);
+        return { stop: () => parts.forEach((p) => { try { p.stop(); } catch (e) {} }) };
+    }
     function buffer(id) {
         if (!buffers.has(id)) {
             const s = BY[id];
@@ -154,7 +260,9 @@
     async function start(id) {
         if (nodes.has(id)) return;
         const n = { gain: ctx.createGain(), src: null, loading: true };
-        n.gain.gain.value = 0; n.gain.connect(master); nodes.set(id, n); emit();
+        n.gain.gain.value = 0; n.gain.connect(master); nodes.set(id, n);
+        if (BY[id].gen === 'drone') { n.src = hum(n.gain); n.loading = false; ramp(n.gain.gain, curve(st.mix[id] == null ? 0.5 : st.mix[id]), 1.2); emit(); return; }
+        emit();
         let buf;
         try { buf = await buffer(id); } catch (e) { nodes.delete(id); n.gain.disconnect(); emit(); return; }
         if (nodes.get(id) !== n) return;
@@ -174,23 +282,23 @@
         setTimeout(() => { try { if (n.src) n.src.stop(); } catch (e) {} n.gain.disconnect(); }, (secs || 0.6) * 1000 + 150);
     }
     function play() {
-        if (!Object.keys(st.mix).length && !st.yt) return;
+        if (!Object.keys(st.mix).length && !st.radio) return;
         audio(); if (ctx.state !== 'running') ctx.resume();
         playing = Object.keys(st.mix).length > 0; st.active = true;
         Object.keys(st.mix).forEach(start);
-        if (st.yt && !ytOn) playYouTube(st.yt.id, st.yt.title);
+        if (st.radio && !radioOn) tune();
         keepAwake(true); media(); save(true); emit();
     }
     function pause() {
         playing = false;
         [...nodes.keys()].forEach((id) => stop(id, 0.5));
+        detune();
         keepAwake(false); media(); save(true); emit();
     }
     function toggleSound(id) {
         if (!BY[id]) return;
-        st.preset = null;
-        if (id in st.mix) { delete st.mix[id]; stop(id); if (!Object.keys(st.mix).length) { playing = false; keepAwake(!!ytOn); } }
-        else { st.mix[id] = 0.5; if (playing) start(id); else play(); }
+        if (id in st.mix) { delete st.mix[id]; stop(id); if (!Object.keys(st.mix).length) { playing = false; keepAwake(radioOn); } }
+        else { st.mix[id] = 0.5; st.lead = 'mix'; if (playing) start(id); else play(); }
         media(); save(); emit();
     }
     function setVolume(id, v) {
@@ -199,11 +307,17 @@
         const n = nodes.get(id); if (n && !n.loading) ramp(n.gain.gain, curve(st.mix[id]), 0.15);
         save(); emit();
     }
-    function setMaster(v) { st.master = Math.max(0, Math.min(1, v)); if (master) ramp(master.gain, curve(st.master), 0.15); save(); emit(); }
+    let unmuted = st.master || 0.8;
+    function setMaster(v) {
+        st.master = Math.max(0, Math.min(1, v)); if (st.master > 0) unmuted = st.master;
+        if (master && !fading) ramp(master.gain, masterLevel(), 0.15);
+        level(); save(); emit();
+    }
+    const toggleMute = () => setMaster(st.master > 0 ? 0 : unmuted);
     function usePreset(id) {
         const p = PRESETS.find((x) => x.id === id); if (!p) return;
         Object.keys(st.mix).forEach((k) => { if (!(k in p.mix)) stop(k); });
-        st.mix = Object.assign({}, p.mix); st.preset = p.id;
+        st.mix = Object.assign({}, p.mix); st.lead = 'mix';
         if (playing) Object.keys(st.mix).forEach((k) => { const n = nodes.get(k); if (n && !n.loading) ramp(n.gain.gain, curve(st.mix[k]), 0.8); else start(k); });
         else play();
         media(); save(true); emit();
@@ -211,67 +325,219 @@
     function setMix(mix, autoplay) {
         Object.keys(st.mix).forEach((k) => { if (!(k in mix)) stop(k); });
         st.mix = {}; Object.keys(mix).forEach((k) => { if (BY[k]) st.mix[k] = Math.max(0, Math.min(1, mix[k])); });
-        st.preset = null;
-        if (autoplay) play(); else { save(true); emit(); }
+        if (Object.keys(st.mix).length) st.lead = 'mix';
+        nodes.forEach((n, k) => { if (!n.loading && k in st.mix) ramp(n.gain.gain, curve(st.mix[k]), 0.8); });
+        if (!Object.keys(st.mix).length && playing) { playing = false; [...nodes.keys()].forEach((k) => stop(k)); keepAwake(radioOn); save(true); emit(); }
+        else if (autoplay || playing) play(); else { save(true); emit(); }
     }
-    function clear() { pause(); st.mix = {}; st.preset = null; if (!ytOn && !st.timer.running) st.active = false; save(true); emit(); }
+    /* a surprise mix: one bed to sit in, one or two details on top */
+    function shuffle() {
+        const pick = (list) => list[Math.floor(Math.random() * list.length)];
+        const vol = (lo, hi) => Math.round((lo + Math.random() * (hi - lo)) * 100) / 100;
+        const beds = SOUNDS.filter((s) => s.cat === 'rain' || s.cat === 'nature' || s.gen === 'brown' || s.gen === 'pink');
+        const details = SOUNDS.filter((s) => /^(animals|places|transport|things|city)$/.test(s.cat));
+        const mix = {}; mix[pick(beds).id] = vol(0.45, 0.65);
+        for (let n = Math.random() < 0.5 ? 1 : 2; n > 0;) { const d = pick(details); if (!(d.id in mix)) { mix[d.id] = vol(0.15, 0.4); n--; } }
+        setMix(mix, true);
+    }
+    function clear() { pause(); st.mix = {}; st.radio = null; if (!st.timer.running) st.active = false; media(); save(true); emit(); }
     function end() {             /* the pill's close button: everything stops, nothing is offered for resume */
-        pause(); stopYouTube(); pauseTimer(); st.active = false; save(true); emit();
+        pause(); stopRadio(); pauseTimer(); setSleep(0); st.active = false; save(true); emit();
+    }
+    function matched() {         /* the preset this mix is, even when it was put together by hand */
+        const ids = Object.keys(st.mix).sort().join();
+        return (ids && PRESETS.find((p) => Object.keys(p.mix).sort().join() === ids)) || null;
+    }
+    const sceneOf = (id) => SOUND_SCENE[id] || CATS.find((c) => c[0] === BY[id].cat)[2];
+    const sceneUrl = (key, w) => new URL('scenes/' + key + '-' + (w || 1600) + '.webp?v=2', BASE).href;     /* v: a photo was replaced */
+    function scene() {           /* the preset's place, or the place of the loudest sound */
+        const p = matched(); if (p) return p.scene;
+        let top = null; Object.keys(st.mix).forEach((id) => { if (!top || st.mix[id] > st.mix[top]) top = id; });
+        return top ? sceneOf(top) : null;
+    }
+    /* the lead is what the visitor chose last, the radio or the mix; next/previous, the title and the lock screen follow it */
+    const lead = () => (st.radio && (st.lead === 'radio' || !Object.keys(st.mix).length) ? 'radio' : 'mix');
+    function setLead(x) { st.lead = x === 'radio' ? 'radio' : 'mix'; media(); save(); emit(); }
+    function mixTitle() {
+        const p = matched(), ids = Object.keys(st.mix);
+        if (p) return p.name;
+        return ids.length ? ids.slice(0, 3).map((id) => BY[id].label).join(' · ') + (ids.length > 3 ? ' +' + (ids.length - 3) : '') : '';
     }
     function title() {
-        const p = PRESETS.find((x) => x.id === st.preset), n = Object.keys(st.mix).length;
-        if (p) return p.name;
-        if (n) return n === 1 ? BY[Object.keys(st.mix)[0]].label : n + ' sounds';
-        return st.yt ? st.yt.title : 'Focus';
+        if (lead() === 'radio') return st.radio.name;
+        return mixTitle() || 'Focus';
+    }
+    /* the lock screen, headset buttons and media keys: next and previous step through the presets, or the stations when only the radio plays */
+    const myStations = () => { try { return (JSON.parse(localStorage.getItem('focus:stations')) || []).filter((x) => x && /^https:\/\//i.test(x.url)); } catch (e) { return []; } };
+    function step(d) {
+        const set = lead() === 'radio' && stationOf(st.radio.url);
+        if (set && set.list) { surah(trackOf(set).n + d); return; }          /* in a set, next and previous are surahs */
+        if (lead() === 'radio') {          /* the live stations, then the ones the visitor added; a set is entered by picking it */
+            const list = STATIONS.filter((x) => !x.list).concat(myStations().filter((x) => !STATIONS.some((y) => y.url === x.url)));
+            const i = list.findIndex((x) => x.url === st.radio.url), s = list[(Math.max(i, d > 0 ? -1 : 0) + d + list.length) % list.length];
+            playRadio(s.url, s.name); return;
+        }
+        const p = matched(), i = p ? PRESETS.indexOf(p) : (d > 0 ? -1 : 0);
+        usePreset(PRESETS[(i + d + PRESETS.length) % PRESETS.length].id);
     }
     function media() {
         if (!('mediaSession' in navigator)) return;
+        const ms = navigator.mediaSession, on = (a, fn) => { try { ms.setActionHandler(a, fn); } catch (e) {} };
         try {
-            navigator.mediaSession.metadata = new MediaMetadata({ title: title(), artist: 'Focus · mehedi.pro.bd', artwork: [{ src: new URL('../mehedi-logo.png', BASE).href, sizes: '512x512', type: 'image/png' }] });
-            navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
-            navigator.mediaSession.setActionHandler('play', play);
-            navigator.mediaSession.setActionHandler('pause', pause);
+            const sc = scene(), face = lead() === 'radio' && faceOf(stationOf(st.radio.url));
+            const art = face ? { src: face, sizes: '144x144', type: 'image/webp' } : sc ? { src: sceneUrl(sc, 800), sizes: '800x533', type: 'image/webp' } : { src: new URL('../mehedi-logo.png', BASE).href, sizes: '512x512', type: 'image/png' };
+            const stn = st.radio && stationOf(st.radio.url), mt = mixTitle();
+            let by = lead() === 'radio' ? (stn ? 'Quran radio' : 'Radio') + (mt ? ' · with ' + mt : stn ? ' · ' + stn.sub : '')
+                : st.radio ? 'Focus · with ' + st.radio.name : 'Focus · mehedi.pro.bd';
+            let name = title();
+            if (lead() === 'radio' && stn && stn.list) { const t = trackOf(stn); name = 'Surah ' + t.n + ' · ' + SURAHS[t.n - 1]; by = stn.name + (mt ? ' · with ' + mt : ''); }
+            ms.metadata = new MediaMetadata({ title: name, artist: by, artwork: [art] });
+            ms.playbackState = playing || radioOn ? 'playing' : 'paused';
         } catch (e) {}
+        on('play', play); on('pause', pause); on('stop', end);
+        on('nexttrack', () => step(1)); on('previoustrack', () => step(-1));
     }
 
-    /* ---- YouTube: the video stays visible in a small dock, as YouTube requires ---- */
-    let dock = null;
-    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    function playYouTube(id, name) {
-        if (!/^[\w-]{11}$/.test(id || '')) return false;
-        css();
-        if (!dock) {
-            dock = document.createElement('div');
-            dock.id = 'fp-dock';
-            dock.innerHTML = '<div class="fp-dock-head"><i class="fa-brands fa-youtube" aria-hidden="true"></i><b></b>'
-                + '<button type="button" class="fp-btn" aria-label="Close the video"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="fp-dock-video"></div>';
-            dock.querySelector('button').addEventListener('click', () => { stopYouTube(); });
-            document.body.appendChild(dock);
+    /* ---- radio: a live stream joins the mix with its own volume; one without CORS headers plays straight, outside the chain ---- */
+    let radio = null, radioError = '';
+    const stationOf = (url) => STATIONS.find((x) => x.url === url) || null;
+    /* a station's face: the reciter's photo where a free one exists (Bangla and mujawwad stations share it) */
+    const faceOf = (stn) => { const k = stn && stn.id && stn.id.replace(/^bn-/, '').replace(/-mj$/, ''); return k && FACES[k] ? new URL('reciters/' + k + '.webp', BASE).href : null; };
+    /* a set's files, sorted by surah, read once from archive.org (it sends CORS headers) and kept for the visit */
+    const lists = new Map();
+    function listOf(item) {
+        if (!lists.has(item)) {
+            const p = fetch('https://archive.org/metadata/' + encodeURIComponent(item) + '/files').then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+                .then((d) => (d.result || []).filter((f) => /\.mp3$/i.test(f.name) && f.source === 'original' && /^\s*\d+/.test(f.name))
+                    .map((f) => ({ n: parseInt(f.name, 10), url: 'https://archive.org/download/' + encodeURIComponent(item) + '/' + f.name.split('/').map(encodeURIComponent).join('/') }))
+                    .filter((f) => f.n >= 1 && f.n <= 114).sort((a, b) => a.n - b.n));
+            p.catch(() => lists.delete(item));
+            lists.set(item, p);
         }
-        dock.querySelector('b').textContent = name || 'YouTube';
-        dock.querySelector('.fp-dock-video').innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&rel=0&playsinline=1" title="${esc(name || 'YouTube video')}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-        ytOn = true; st.yt = { id, title: name || '' }; st.active = true;
-        keepAwake(true); save(true); emit();
+        return lists.get(item);
+    }
+    const trackOf = (stn) => { const t = (st.tracks || {})[stn.id]; return t && t.n >= 1 && t.n <= 114 ? t : { n: 1, at: 0 }; };
+    function tune() {
+        detune();
+        const stn = stationOf(st.radio.url);
+        const r = { el: null, gain: ctx.createGain(), cors: true, loading: true, stn };
+        r.gain.gain.value = curve(st.radioVol); r.gain.connect(master);
+        const hosts = stn && stn.alt ? [stn.url, stn.alt] : [st.radio.url];
+        let retries = stn ? 3 : 0, h = 0;                  /* our stations do send CORS headers; an error there is a passing server hiccup */
+        const source = () => {
+            if (!stn || !stn.list) return Promise.resolve({ url: hosts[h % hosts.length] });
+            const t = trackOf(stn);
+            return listOf(stn.list).then((files) => {
+                const f = files.find((x) => x.n >= t.n) || files[0];
+                if (!f) throw new Error('empty');
+                return { url: f.url, n: f.n, at: f.n === t.n ? t.at || 0 : 0 };
+            });
+        };
+        const fail = () => {
+            if (radio !== r) return;
+            radioError = st.radio ? st.radio.name : 'The stream'; detune(); st.radio = null;
+            keepAwake(playing); media(); save(true); emit();
+        };
+        const load = (cors) => {
+            const el = new Audio(); r.el = el; r.cors = cors;
+            el.preload = 'none'; el.setAttribute('playsinline', '');
+            if (cors) { el.crossOrigin = 'anonymous'; ctx.createMediaElementSource(el).connect(r.gain); }
+            el.addEventListener('playing', () => { if (radio === r) { r.loading = false; radioError = ''; emit(); } });
+            el.addEventListener('waiting', () => { if (radio === r) { r.loading = true; emit(); } });
+            el.addEventListener('ended', () => { if (radio === r && stn && stn.list) surah(r.n + 1, true); });     /* a set plays on to the next surah */
+            el.addEventListener('error', () => {
+                if (radio !== r) return;
+                el.removeAttribute('src');
+                if (cors && retries-- > 0) { h++; setTimeout(() => { if (radio === r) load(true); }, 900); return; }
+                if (cors) { load(false); return; }                               /* no CORS headers: try once more without the chain */
+                fail();
+            });
+            source().then((x) => {
+                if (radio !== r) return;
+                r.n = x.n;
+                if (x.at) el.addEventListener('loadedmetadata', () => { try { el.currentTime = x.at; } catch (e) {} }, { once: true });   /* where the listener left off */
+                el.src = x.url; level();
+                el.play().catch(() => {});
+                emit();
+            }, fail);
+        };
+        radio = r; radioOn = true; radioError = '';
+        load(true);
+    }
+    function detune() {
+        const r = radio; if (!r) return;
+        radio = null; radioOn = false;
+        if (r.stn && r.stn.list && r.n && r.el) {          /* a set remembers the surah and the minute */
+            st.tracks = st.tracks || {}; st.tracks[r.stn.id] = { n: r.n, at: Math.floor(r.el.currentTime || 0) };
+        }
+        if (r.el) { r.el.pause(); r.el.removeAttribute('src'); r.el.load(); }
+        r.gain.disconnect();
+    }
+    /* go to a surah of the set that is playing: 1-114, wrapping round */
+    function surah(n, fromEnd) {
+        const stn = st.radio && stationOf(st.radio.url); if (!stn || !stn.list) return;
+        const k = ((Math.round(n) - 1) % 114 + 114) % 114 + 1;
+        st.tracks = st.tracks || {}; st.tracks[stn.id] = { n: k, at: 0 };
+        if (radio) radio.n = 0;                            /* detune must not write the old surah back */
+        if (radioOn || fromEnd) { audio(); tune(); } 
+        media(); save(true); emit();
+    }
+    function level() {          /* a stream outside the chain follows the volume and the sleep fade itself */
+        if (radio) radio.gain.gain.value = curve(st.radioVol);
+        if (radio && !radio.cors && radio.el) radio.el.volume = Math.min(1, masterLevel() * curve(st.radioVol) * (fading ? fadeLeft : 1));
+    }
+    function playRadio(url, name) {
+        if (!/^https:\/\/\S+$/i.test(url || '')) return false;
+        st.radio = { url, name: name || new URL(url).hostname.replace(/^www\./, '') }; st.active = true; st.lead = 'radio';
+        audio(); if (ctx.state !== 'running') ctx.resume();
+        tune(); keepAwake(true); media(); save(true); emit();
         return true;
     }
-    function stopYouTube() {
-        if (dock) { dock.remove(); dock = null; }
-        ytOn = false; st.yt = null;
+    function stopRadio() {
+        detune(); st.radio = null;
         if (!playing) keepAwake(false);
         if (!playing && !st.timer.running && !Object.keys(st.mix).length) st.active = false;
+        media(); save(true); emit();
+    }
+    function setRadioVolume(v) { st.radioVol = Math.max(0, Math.min(1, v)); level(); save(); emit(); }
+
+    /* ---- sleep timer: everything fades out over the last 30 seconds, then stops ---- */
+    let fading = false, fadeLeft = 1;
+    function setSleep(mins) {
+        st.sleep = mins > 0 ? Date.now() + mins * 60000 : 0;
+        if (fading) { fading = false; fadeLeft = 1; if (master) ramp(master.gain, masterLevel(), 0.4); level(); }
         save(true); emit();
+    }
+    function sleepTick() {
+        const ms = st.sleep - Date.now();
+        if (ms <= 0) {
+            st.sleep = 0; pause();
+            setTimeout(() => { fading = false; fadeLeft = 1; if (master) ramp(master.gain, masterLevel(), 0.1); level(); }, 900);   /* back to full for the next play */
+            save(true); emit(); return;
+        }
+        if (ms <= 30000 && (playing || radioOn)) {
+            if (!fading && master) ramp(master.gain, 0, ms / 1000);
+            fading = true; fadeLeft = ms / 30000; level();
+        }
     }
 
     /* ---- focus timer: 25 minutes of work, then a break; every fourth break is a long one ---- */
     const T = st.timer;
     const left = () => (T.running ? Math.max(0, T.endsAt - Date.now()) : T.left);
+    /* on a break the sounds step back to a third, so the break is felt; they come back with the next round */
+    function onBreak() { return !!(st && st.timer && st.timer.running && st.timer.phase !== 'focus' && st.dip !== false); }
+    function masterLevel() { return curve(st.master) * (onBreak() ? 0.35 : 1); }
+    function relevel(secs) { if (master && !fading) ramp(master.gain, masterLevel(), secs); level(); }
     function startTimer() {
         if (T.running) return;
+        rollDay();
         audio(); if (ctx.state !== 'running') ctx.resume();     /* unlocked now, so the chime can sound later without a tap */
-        T.running = true; T.endsAt = Date.now() + T.left; st.active = true; if (T.phase === 'focus') react('excited', 1500); save(true); emit(); }
-    function pauseTimer() { if (!T.running) return; T.left = left(); T.running = false; save(true); emit(); }
-    function resetTimer() { T.running = false; T.left = PHASES[T.phase][1] * 60000; save(true); emit(); }
-    function setPhase(p) { if (!PHASES[p]) return; T.phase = p; T.running = false; T.left = PHASES[p][1] * 60000; save(true); emit(); }
+        T.running = true; T.endsAt = Date.now() + T.left; st.active = true; if (T.phase === 'focus') react('excited', 1500); relevel(1); save(true); emit(); }
+    function pauseTimer() { if (!T.running) return; T.left = left(); T.running = false; relevel(1); save(true); emit(); }
+    function resetTimer() { T.running = false; T.left = PHASES[T.phase][1] * 60000; relevel(1); save(true); emit(); }
+    function setPhase(p) { if (!PHASES[p]) return; T.phase = p; T.running = false; T.left = PHASES[p][1] * 60000; relevel(1); save(true); emit(); }
+    function setPlan(id) { if (!PLANS[id]) return; st.plan = id; usePlan(id); T.running = false; T.left = PHASES[T.phase][1] * 60000; relevel(1); save(true); emit(); }
+    function setDip(on) { st.dip = !!on; relevel(1); save(true); emit(); }
     function chime(up) {
         try {
             audio(); if (ctx.state !== 'running') ctx.resume();
@@ -287,7 +553,8 @@
     }
     function phaseEnd() {
         if (T.phase === 'focus') {
-            st.done = (st.done || 0) + 1;
+            rollDay();
+            st.done = (st.done || 0) + 1; st.mins = (st.mins || 0) + PHASES.focus[1];
             T.phase = st.done % 4 === 0 ? 'long' : 'short';
             T.left = PHASES[T.phase][1] * 60000; T.running = true; T.endsAt = Date.now() + T.left;   /* the break starts by itself */
             chime(false); react('happy', 2400);
@@ -295,62 +562,179 @@
             T.phase = 'focus'; T.left = PHASES.focus[1] * 60000; T.running = false;                 /* the next round waits for the visitor */
             chime(true); react('excited', 1800);
         }
-        save(true); emit();
+        relevel(3); save(true); emit();
     }
     setInterval(() => {
-        if (!T.running) return;
-        if (Date.now() >= T.endsAt) phaseEnd(); else renderTime();
+        if (st.sleep) sleepTick();
+        if (!T.running && !st.sleep) return;
+        if (T.running && Date.now() >= T.endsAt) phaseEnd(); else renderTime();
         listeners.forEach((fn) => { try { fn('tick'); } catch (e) { listeners.delete(fn); } });
     }, 1000);
     const clock = (ms) => { const s = Math.ceil(ms / 1000); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
 
-    const busy = () => playing || ytOn || T.running;
-    const resumable = () => st.active && (Object.keys(st.mix).length > 0 || !!st.yt) && Date.now() - (st.at || 0) < 6 * 3600000;
+    const busy = () => playing || radioOn || T.running;
+    const resumable = () => st.active && (Object.keys(st.mix).length > 0 || !!st.radio) && Date.now() - (st.at || 0) < 6 * 3600000;
 
     /* ---- the mini player, on every page while a session is on ---- */
     let pill = null, cssDone = false;
     function css() {
         if (cssDone) return; cssDone = true;
-        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=1', BASE).href;
+        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=7', BASE).href;
         document.head.appendChild(l);
     }
+    /* the same player as the Focus page's bar: the photo, the name (it opens the mix: each layer's volume and ✕), the volume,
+       play, a link to the mix, the focus view and stop. Built once, kept in step on every change */
+    const fa = (n, extra) => `<i class="fa-solid fa-${n}${extra ? ' ' + extra : ''}" aria-hidden="true"></i>`;
+    const escH = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const vol = (label, v, cls) => { const p = Math.round(v * 100); return `<div class="fp-vol${cls ? ' ' + cls : ''}" role="slider" tabindex="0" aria-label="${escH(label)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${p}" aria-valuetext="${p}%" style="--fill:${p}%"><span class="fp-vol-fill"></span><span class="fp-vol-ico">${fa('volume-low')}</span><span class="fp-vol-ico fp-vol-on">${fa('volume-low')}</span></div>`; };
+    function setVol(el, v) {
+        if (!el || 'dragging' in el.dataset) return;
+        const p = Math.round(Math.max(0, Math.min(1, v)) * 100);
+        el.style.setProperty('--fill', p + '%'); el.setAttribute('aria-valuenow', p); el.setAttribute('aria-valuetext', p + '%');
+    }
+    function slid(el, v) {                       /* a slider moved: the master, a sound, or the radio */
+        v = Math.max(0, Math.min(1, v));
+        const p = Math.round(v * 100); el.style.setProperty('--fill', p + '%'); el.setAttribute('aria-valuenow', p); el.setAttribute('aria-valuetext', p + '%');
+        const row = el.closest('[data-layer]');
+        if (!row) setMaster(v); else if (row.dataset.layer === 'radio') setRadioVolume(v); else setVolume(row.dataset.layer, v);
+    }
+    function sliders(root) {
+        root.addEventListener('pointerdown', (e) => {
+            const el = e.target.closest('.fp-vol'); if (!el || e.button !== 0) return;
+            const at = (x) => { const r = el.getBoundingClientRect(); return (x - r.left) / r.width; };
+            const x0 = e.clientX, y0 = e.clientY; let drag = false;
+            const grab = (ev) => { drag = true; el.setPointerCapture(ev.pointerId); el.dataset.dragging = ''; };
+            if (e.pointerType === 'mouse') { grab(e); slid(el, at(e.clientX)); }
+            const move = (ev) => { if (!drag) { const dx = Math.abs(ev.clientX - x0); if (dx < 6 || dx < Math.abs(ev.clientY - y0)) return; grab(ev); } slid(el, at(ev.clientX)); };
+            const up = (ev) => { if (!drag && ev.type === 'pointerup') slid(el, at(ev.clientX)); delete el.dataset.dragging;
+                el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
+            el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+        });
+        root.addEventListener('keydown', (e) => {
+            const el = e.target.closest('.fp-vol'); if (!el) return;
+            const v = Number(el.getAttribute('aria-valuenow')) / 100;
+            const to = { ArrowRight: v + 0.05, ArrowUp: v + 0.05, ArrowLeft: v - 0.05, ArrowDown: v - 0.05, PageUp: v + 0.1, PageDown: v - 0.1, Home: 0, End: 1 }[e.key];
+            if (to !== undefined) { e.preventDefault(); e.stopPropagation(); slid(el, to); }
+        });
+    }
+    function goFocus(view) {                     /* the Focus page, without stopping the sound: in the frame when one is open or needed */
+        const url = FOCUS_URL + (view ? '#view' : '');
+        if (frame && IS_FOCUS) { closeShell(true); if (view) dispatchEvent(new Event('fp-view')); }
+        else if (frame) frame.contentWindow.location.href = url;
+        else if (busy()) openShell(url, true);
+        else location.href = url;
+    }
+    function subline() {
+        const n = Object.keys(st.mix).length, on = playing || radioOn, parts = [];
+        if (n) parts.push(n + (n === 1 ? ' sound' : ' sounds'));
+        if (st.radio) { const stn = stationOf(st.radio.url), t = stn && stn.list ? trackOf(stn) : null; parts.push(t ? `Surah ${t.n} · ${SURAHS[t.n - 1]}` : 'Quran radio'); }
+        parts.push(on ? 'playing' : 'paused');
+        if (T.running) parts.push(PHASES[T.phase][0] + ' ' + clock(left()));
+        else if (st.sleep && on) parts.push('Sleep ' + clock(st.sleep - Date.now()));
+        return parts.join(' · ');
+    }
+    let layersKey = null;
+    function mixerOpen(open) {
+        if (!pill) return;
+        const m = pill.querySelector('.fp-mixer');
+        if (open === !m.hidden) return;
+        m.hidden = !open; pill.classList.toggle('is-open', open);
+        pill.querySelector('.fp-now').setAttribute('aria-expanded', String(open));
+    }
+    function drawLayers() {
+        const ids = Object.keys(st.mix), key = ids.join() + '|' + (st.radio ? st.radio.url : '');
+        const list = pill.querySelector('.fp-layers');
+        if (key !== layersKey) {
+            layersKey = key;
+            const face = st.radio && faceOf(stationOf(st.radio.url));
+            list.innerHTML = ids.map((id) => `<li data-layer="${id}"><span class="fp-layer-ico">${fa(BY[id].icon)}</span><span class="fp-layer-name">${escH(BY[id].label)}</span>`
+                + vol(BY[id].label + ' volume', st.mix[id]) + `<button type="button" class="fp-btn fp-ghost" data-remove="${id}" aria-label="Remove ${escH(BY[id].label)}">${fa('xmark')}</button></li>`).join('')
+                + (st.radio ? `<li data-layer="radio"><span class="fp-layer-ico${face ? ' fp-face' : ''}">${face ? `<img src="${face}" alt="">` : fa('tower-broadcast')}</span>`
+                    + `<span class="fp-layer-name">${escH(st.radio.name)}</span>${vol(st.radio.name + ' volume', st.radioVol)}`
+                    + `<button type="button" class="fp-btn fp-ghost" data-remove="radio" aria-label="Stop the radio">${fa('xmark')}</button></li>` : '');
+        }
+        list.querySelectorAll('[data-layer]').forEach((li) => setVol(li.querySelector('.fp-vol'), li.dataset.layer === 'radio' ? st.radioVol : st.mix[li.dataset.layer]));
+        if (!ids.length && !st.radio) mixerOpen(false);
+    }
+    function shareMix(btn) {
+        const ids = Object.keys(st.mix); if (!ids.length) return;
+        const url = FOCUS_URL + '?mix=' + ids.map((id) => id + ':' + Math.round(st.mix[id] * 100)).join(',');
+        const was = btn.innerHTML, done = (ok) => { btn.innerHTML = fa(ok ? 'check' : 'xmark') + (btn.dataset.text ? `<span>${ok ? 'Link copied' : 'Copy failed'}</span>` : ''); setTimeout(() => { btn.innerHTML = was; }, 1600); };
+        if (navigator.share && matchMedia('(pointer: coarse)').matches) navigator.share({ title: 'My Focus mix', url }).catch(() => {});
+        else if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => done(true), () => done(false));
+    }
     function render() {
-        const show = !(IS_FOCUS && !frame) && (busy() || resumable());
-        if (dock) dock.classList.toggle('fp-low', !show);       /* no pill below it: the video sits lower */
-        if (!show) { if (pill) { pill.remove(); pill = null; } return; }
+        const show = !(IS_FOCUS && !frame) && !framedFocus && (busy() || resumable());     /* the Focus page has its own player bar */
+        if (!show) { if (pill) { pill.remove(); pill = null; layersKey = null; } return; }
         css();
         if (!pill) {
             pill = document.createElement('div');
             pill.id = 'fp-pill'; pill.setAttribute('role', 'region'); pill.setAttribute('aria-label', 'Focus player');
-            pill.innerHTML = '<span class="fp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>'
-                + `<a class="fp-info" href="${FOCUS_URL}"><b></b><small></small></a>`
+            pill.innerHTML = '<div class="fp-mixer" hidden><div class="fp-mixer-head"><b>In this mix</b>'
+                + `<button type="button" class="fp-tbtn" data-act="share" data-text="1">${fa('link')}<span>Share</span></button>`
+                + `<button type="button" class="fp-tbtn" data-act="clear">${fa('trash-can')}<span>Clear all</span></button></div><ul class="fp-layers"></ul></div>`
+                + `<a class="fp-art" href="${FOCUS_URL}" aria-label="Open Focus" title="Open Focus"></a>`
+                + '<button type="button" class="fp-now" aria-expanded="false" title="The mix"><span class="fp-info"><b></b>'
+                + `<small><span class="fp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="fp-sub"></span></small></span>${fa('chevron-up', 'fp-chev')}</button>`
+                + vol('Volume', st.master, 'fp-master')
                 + '<button type="button" class="fp-btn fp-play"><i aria-hidden="true"></i></button>'
-                + '<button type="button" class="fp-btn fp-x" aria-label="Stop Focus"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>';
-            pill.querySelector('.fp-play').addEventListener('click', () => { if (playing || ytOn) { pause(); if (ytOn) stopYouTube(); } else play(); });
-            pill.querySelector('.fp-x').addEventListener('click', end);
-            pill.querySelector('.fp-info').addEventListener('click', (e) => {
-                if (!frame) return;
-                e.preventDefault();
-                if (IS_FOCUS) closeShell(true); else frame.contentWindow.location.href = FOCUS_URL;
+                + `<button type="button" class="fp-btn fp-wide" data-act="share" aria-label="Copy a link to this mix" title="Copy a link to this mix">${fa('link')}</button>`
+                + `<button type="button" class="fp-btn fp-wide" data-act="view" aria-label="Focus view" title="Focus view">${fa('expand')}</button>`
+                + `<button type="button" class="fp-btn fp-x" aria-label="Stop Focus" title="Stop">${fa('xmark')}</button>`;
+            sliders(pill);
+            /* the site's round cursor over the player: it draws above it, it follows the mouse here even while another page is
+               open in the frame (whose own cursor steps aside meanwhile), and its ring grows over the player's controls */
+            const dot = document.querySelector('.cursor-dot'), ring = document.querySelector('.cursor-outline');
+            const frameCursors = (show) => { if (frame) try { frame.contentDocument.querySelectorAll('.cursor-dot, .cursor-outline').forEach((el) => { el.style.opacity = show ? '' : '0'; }); } catch (e) {} };
+            pill.addEventListener('mouseenter', (e) => {
+                document.documentElement.classList.add('fp-over-pill'); frameCursors(false);
+                if (dot && ring) {                      /* jump to the pointer, so the ring doesn't sweep in from where it last was */
+                    const at = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+                    dot.style.transform = at; ring.getAnimations().forEach((x) => x.cancel()); ring.style.transform = at;
+                }
             });
+            pill.addEventListener('mouseleave', () => { document.documentElement.classList.remove('fp-over-pill'); frameCursors(true); if (ring) ring.classList.remove('cursor-hover'); });
+            pill.addEventListener('mouseover', (e) => { if (ring) ring.classList.toggle('cursor-hover', !!e.target.closest('button, a, [role="slider"]')); });
+            pill.addEventListener('click', (e) => {
+                const t = e.target;
+                if (t.closest('.fp-art')) { e.preventDefault(); goFocus(false); return; }
+                if (t.closest('.fp-now')) { mixerOpen(pill.querySelector('.fp-mixer').hidden); return; }
+                if (t.closest('.fp-play')) { if (playing || radioOn) pause(); else play(); return; }
+                if (t.closest('.fp-x')) { end(); return; }
+                const rm = t.closest('[data-remove]');
+                if (rm) { if (rm.dataset.remove === 'radio') stopRadio(); else toggleSound(rm.dataset.remove); return; }
+                const act = t.closest('[data-act]');
+                if (!act) return;
+                if (act.dataset.act === 'share') shareMix(act);
+                else if (act.dataset.act === 'clear') clear();
+                else if (act.dataset.act === 'view') goFocus(true);
+            });
+            document.addEventListener('click', (e) => { if (pill && !e.composedPath().includes(pill)) mixerOpen(false); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') mixerOpen(false); });
             document.body.appendChild(pill);
         }
-        const on = playing || ytOn;
+        const on = playing || radioOn, sc = scene(), face = lead() === 'radio' && faceOf(stationOf(st.radio.url));
         pill.classList.toggle('is-on', on);
-        pill.querySelector('b').textContent = title();
+        const art = face || (sc ? sceneUrl(sc, 800) : '');           /* the reciter's photo while the radio leads, else the scene */
+        pill.querySelector('.fp-art').style.backgroundImage = art ? `url("${art}")` : '';
+        pill.querySelector('.fp-info b').textContent = title();
         const p = pill.querySelector('.fp-play');
         p.setAttribute('aria-label', on ? 'Pause' : 'Play');
         p.querySelector('i').className = 'fa-solid ' + (on ? 'fa-pause' : 'fa-play');
+        setVol(pill.querySelector('.fp-master'), st.master);
+        pill.querySelector('.fp-master').classList.toggle('is-muted', st.master === 0);
+        pill.querySelectorAll('[data-act="share"]').forEach((b) => { b.disabled = !Object.keys(st.mix).length; });
+        drawLayers();
         renderTime();
     }
     function renderTime() {
         if (!pill) return;
-        const on = playing || ytOn;
-        pill.querySelector('small').textContent = T.running ? PHASES[T.phase][0] + ' · ' + clock(left()) : (on ? 'Playing' : 'Paused · tap play to resume');
+        const text = subline(), sub = pill.querySelector('.fp-sub');
+        if (sub.textContent !== text) sub.textContent = text;
     }
 
     /* ---- the shell: while something plays, other pages open in a frame over this one ---- */
-    let frame = null;
+    let frame = null, framedFocus = false;
     const hostUrl = location.href, hostTitle = document.title;
     function pageLink(u) {
         if (u.origin !== location.origin || !/(\/|\.html)$/.test(u.pathname)) return false;     /* files (the CV, images) open as usual */
@@ -369,7 +753,7 @@
     }
     function closeShell(push) {
         if (!frame) return;
-        frame.remove(); frame = null;
+        frame.remove(); frame = null; framedFocus = false;
         document.documentElement.classList.remove('fp-shell-on');
         document.title = hostTitle;
         if (push) history.pushState(null, '', hostUrl);
@@ -384,6 +768,8 @@
         if (IS_FOCUS && new URL(href).pathname === new URL(hostUrl).pathname) { closeShell(false); history.replaceState(null, '', hostUrl); return; }
         history.replaceState({ fpShell: 1 }, '', href);
         document.title = w.document.title;
+        const onFocus = new URL(href).pathname.replace(/index\.html$/, '') === new URL(FOCUS_URL).pathname;
+        if (onFocus !== framedFocus) { framedFocus = onFocus; render(); }
         const d = w.document;
         if (wired.has(d)) return;
         wired.add(d);
@@ -424,12 +810,18 @@
     });
 
     window.FocusPlayer = {
-        host: true, CATS, SOUNDS, PRESETS, PHASES, FOCUS_URL,
-        state: () => ({ mix: Object.assign({}, st.mix), master: st.master, preset: st.preset, playing, yt: ytOn ? st.yt : null, active: st.active,
-            loading: [...nodes].filter(([, n]) => n.loading).map(([id]) => id),
-            timer: { phase: T.phase, running: T.running, left: left(), total: PHASES[T.phase][1] * 60000 }, done: st.done || 0 }),
-        title, busy, play, pause, toggleSound, setVolume, setMaster, usePreset, setMix, clear, end,
-        playYouTube, stopYouTube, startTimer, pauseTimer, resetTimer, setPhase, clock,
+        host: true, CATS, SOUNDS, PRESETS, PHASES, PLANS, SCENES, STATIONS, SURAHS, FACES, FOCUS_URL, faceOf,
+        state: () => ({ mix: Object.assign({}, st.mix), master: st.master, preset: (matched() || {}).id || null, scene: scene(), playing,
+            radio: st.radio ? { url: st.radio.url, name: st.radio.name, on: radioOn, loading: !!(radio && radio.loading), direct: !!(radio && !radio.cors), volume: st.radioVol,
+                track: (() => { const stn = stationOf(st.radio.url); if (!stn || !stn.list) return null; const t = trackOf(stn); return { n: t.n, name: SURAHS[t.n - 1] }; })() } : null,
+            radioError, sleep: st.sleep ? Math.max(0, st.sleep - Date.now()) : 0, lead: lead(), mixName: mixTitle(),
+            active: st.active, loading: [...nodes].filter(([, n]) => n.loading).map(([id]) => id),
+            timer: { phase: T.phase, running: T.running, left: left(), total: PHASES[T.phase][1] * 60000 }, done: st.done || 0,
+            plan: st.plan, dip: st.dip !== false, mins: st.mins || 0, dipping: onBreak() }),
+        title, busy, play, pause, toggleSound, setVolume, setMaster, toggleMute, usePreset, setMix, shuffle, clear, end, sceneOf, sceneUrl,
+        playRadio, stopRadio, setRadioVolume, setSleep, setLead, setPlan, setDip, surah, next: () => step(1), prev: () => step(-1),
+        tap: () => { audio(); if (ctx.state !== 'running') ctx.resume(); return { ctx, node: master }; },     /* for the visualizer */
+        startTimer, pauseTimer, resetTimer, setPhase, clock,
         on: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
         attach: (d) => { docs.add(d); if (frame && frame.contentDocument === d) framed(); emit(); }, detach: (d) => { docs.delete(d); }
     };

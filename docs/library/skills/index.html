@@ -48,7 +48,7 @@
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
-<link rel="stylesheet" href="../../nx/nx.scoped.css?v=51f81cfd78">
+<link rel="stylesheet" href="../../nx/nx.scoped.css?v=98392b1536">
 </head>
 
 <body class="subpage nx-page" data-page="library/skills">
@@ -357,7 +357,7 @@
     var row = el.closest(".nl-chips, .nl-tabs ul");
     if (!row) return;
     var left = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2;
-    row.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
+    row.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "instant" });   // "auto" would follow the row's smooth scrolling
   }
   rows.forEach(function (row) {
     row.addEventListener("scroll", function () { fade(row); }, { passive: true });
@@ -372,7 +372,13 @@
     if (active) center(active, false);
     fade(row);
   });
-  window.addEventListener("resize", function () { rows.forEach(fade); });
+  // the active tab is measured again once the web fonts have widened the tabs, and after a resize
+  function settle() {
+    rows.forEach(function (row) { var a = row.querySelector(".is-active"); if (a) center(a, false); fade(row); });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(settle);
+  var resizeT = 0;
+  window.addEventListener("resize", function () { clearTimeout(resizeT); resizeT = setTimeout(settle, 120); });
 
   /* position dots under sideways video rows (shown on phones only, via CSS) */
   document.querySelectorAll(".nl-vids, .nl-shelf-row").forEach(function (row) {
@@ -655,7 +661,7 @@ document.addEventListener("pointermove", function (ev) {
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../../focus/focus.js?v=1" defer></script>
+    <script src="../../focus/focus.js?v=14" defer></script>
     <script src="../../ai-orb-mascot.js?v=18" defer></script>
     <script src="../../script~9e1709.js?v=214" defer></script>
 
