@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // The first screen (and the hero photo, the page's largest paint) draws before all the set-up below runs; a hidden
+    // or prerendering tab, where no frame comes, starts after 100 ms.
+    await new Promise((go) => { let done = false; const once = () => { if (!done) { done = true; setTimeout(go, 0); } }; requestAnimationFrame(once); setTimeout(once, 100); });
+
     // Respect the OS "reduce motion" setting for the heavy decorative effects.
     const PREFERS_REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -1122,6 +1126,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initCinematicDepth();
+
+    // The portrait card's 35 tool logos (data-src) only show once the card is hovered or opened, so they load 3 s after
+    // the page has, or the moment the card is touched, instead of alongside the first screen.
+    const depthCard = document.getElementById('hero-depth-container');
+    if (depthCard) {
+        const loadLogos = () => depthCard.querySelectorAll('img[data-src]').forEach((img) => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
+        ['pointerenter', 'touchstart', 'focusin'].forEach((t) => depthCard.addEventListener(t, loadLogos, { once: true, passive: true }));
+        const whenIdle = () => setTimeout(() => ('requestIdleCallback' in window ? requestIdleCallback(loadLogos, { timeout: 2000 }) : loadLogos()), 3000);
+        if (document.readyState === 'complete') whenIdle();
+        else window.addEventListener('load', whenIdle, { once: true });
+    }
 
     /* ==========================================
        6. MATRIX DECRYPTION EFFECT
@@ -2676,13 +2691,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('resize', initParticles);
 
-        let particlesOn = false, heroInView = true;
+        let particlesOn = false, heroInView = true, particleFrame = 0;
         const LINK_STEPS = 10;
+        // Phones draw every other frame (~30 fps) and move twice as far each time: the same drift at half the work.
+        const PARTICLE_STEP = matchMedia('(pointer: coarse)').matches ? 2 : 1;
 
         function animateParticles() {
             // Reduced motion: draw a single static frame instead of looping. The loop also rests while the hero is scrolled away.
             particlesOn = !PREFERS_REDUCED_MOTION && heroInView;
             if (particlesOn) requestAnimationFrame(animateParticles);
+            if (particlesOn && ++particleFrame % PARTICLE_STEP) return;
 
             if (deepDiveMode) {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -2724,7 +2742,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (Math.abs(p.dx) < 0.3) p.dx = p.dx > 0 ? 0.3 : -0.3;
                     if (Math.abs(p.dy) < 0.3) p.dy = p.dy > 0 ? 0.3 : -0.3;
 
-                    p.x += p.dx; p.y += p.dy;
+                    p.x += p.dx * PARTICLE_STEP; p.y += p.dy * PARTICLE_STEP;
                     ctx.moveTo(p.x + p.s, p.y);
                     ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
                 });
@@ -3128,6 +3146,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const prefixSpan = document.querySelector(".prefix-text");
 
     if (typingSpan) {
+        // The subtitle keeps the height of its tallest phrase (some wrap to two lines), so the centred hero never jumps
+        // while phrases type and erase. Measured again once the fonts are in and when the width changes.
+        const subtitle = typingSpan.closest('h2');
+        const reserveSubtitle = () => {
+            if (!subtitle) return;
+            const was = [prefixSpan ? prefixSpan.textContent : '', typingSpan.textContent];
+            subtitle.style.minHeight = '';
+            let tallest = 0;
+            tArr.forEach((it) => {
+                if (prefixSpan) prefixSpan.textContent = it.prefix;
+                typingSpan.textContent = it.text;
+                tallest = Math.max(tallest, subtitle.offsetHeight);
+            });
+            if (prefixSpan) prefixSpan.textContent = was[0];
+            typingSpan.textContent = was[1];
+            subtitle.style.minHeight = tallest + 'px';
+        };
+        reserveSubtitle();
+        if (document.fonts) document.fonts.ready.then(reserveSubtitle);
+        let subtitleW = innerWidth;
+        window.addEventListener('resize', () => { if (innerWidth !== subtitleW) { subtitleW = innerWidth; reserveSubtitle(); } });
+
         function type() {
             const currentItem = tArr[tIdx];
             if (prefixSpan) {
@@ -4366,6 +4406,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }, { rootMargin: '800px 0px' });
         previewObserver.observe(projectsGrid);
     } else showPreviews();
+
+    // Animations that loop forever cost a style pass every frame even off screen (the live dots far down the page, cover
+    // blobs). After load each one rests while its element is off screen (.anim-rest in the stylesheet). The portrait
+    // card's own loops are paused by the stylesheet until the card is opened.
+    const restAnimations = () => {
+        if (!('IntersectionObserver' in window) || !document.getAnimations) return;
+        const looping = new Set();
+        document.getAnimations().forEach((a) => {
+            const el = a.effect && a.effect.target;
+            if (!(a instanceof CSSAnimation) || !el || el.closest('.cinematic-depth-card')) return;
+            if (a.effect.getComputedTiming().iterations === Infinity) looping.add(el);
+        });
+        const restObserver = new IntersectionObserver((entries) => {
+            entries.forEach((e) => e.target.classList.toggle('anim-rest', !e.isIntersecting));
+        }, { rootMargin: '120px' });
+        looping.forEach((el) => restObserver.observe(el));
+    };
+    if (document.readyState === 'complete') setTimeout(restAnimations, 300);
+    else window.addEventListener('load', () => setTimeout(restAnimations, 300), { once: true });
 
     // ----------------------------------------------------
     // Unified System Architecture & Enterprise Stack Filters

@@ -52,9 +52,9 @@
     </style>
 
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
-    <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=1">
+    <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=2">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=244">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=248">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -496,14 +496,26 @@
     </div>
     <script src="../focus/focus.js?v=14" defer></script>
     <script src="../ai-orb-mascot.js?v=18" defer></script>
-    <script src="../script~9e1709.js?v=217" defer></script>
+    <script src="../script~9e1709.js?v=220" defer></script>
 
-    <!-- Instant page changes: the main pages are prerendered in the background (Chrome, Edge),
-         and any other browser prefetches a link the moment it is touched or hovered -->
-    <script type="speculationrules">
-    {"prerender": [{"source": "list", "urls": ["/", "/profile/", "/people/", "/library/"], "eagerness": "eager"},
-                   {"where": {"href_matches": "/*"}, "eagerness": "moderate"}],
-     "prefetch": [{"source": "list", "urls": ["/projects/", "/contact/"], "eagerness": "eager"}]}
+    <!-- Instant page changes: 3 s after the page has loaded (so they never compete with it), the main pages are
+         prerendered in the background (Chrome, Edge); any other browser prefetches a link the moment it is touched or hovered -->
+    <script>
+    (function () {
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                if (!(HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules'))) return;
+                var rules = document.createElement('script');
+                rules.type = 'speculationrules';
+                rules.textContent = JSON.stringify({
+                    prerender: [{ source: 'list', urls: ['/', '/profile/', '/people/', '/library/'], eagerness: 'eager' },
+                                { where: { href_matches: '/*' }, eagerness: 'moderate' }],
+                    prefetch: [{ source: 'list', urls: ['/projects/', '/contact/'], eagerness: 'eager' }]
+                });
+                document.head.appendChild(rules);
+            }, 3000);
+        });
+    })();
     </script>
     <script>
     (function () {
@@ -513,10 +525,10 @@
             done[href] = 1;
             var l = document.createElement('link'); l.rel = 'prefetch'; l.href = href; document.head.appendChild(l);
         }
-        /* once the page is idle, quietly fetch the tab pages so a tap opens them from cache */
+        /* 3 s after the page has loaded, quietly fetch the tab pages so a tap opens them from cache */
         window.addEventListener('load', function () {
             var go = function () { document.querySelectorAll('.bottom-nav a[href]').forEach(function (a) { fetchIn(a.href.split('#')[0]); }); };
-            if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+            setTimeout(function () { if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else go(); }, 3000);
         });
         function warm(e) {
             var a = e.target.closest && e.target.closest('a[href]');

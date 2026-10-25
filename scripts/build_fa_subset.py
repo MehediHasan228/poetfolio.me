@@ -83,6 +83,13 @@ def main():
         shutil.copy(tmp / "fa-v4compatibility.woff2", OUT / "webfonts" / "fa-v4compatibility.woff2")
         # woff2 only: every browser that runs this site reads it
         css = re.sub(r',url\(\.\./webfonts/[a-z0-9-]+\.ttf\) format\("truetype"\)', "", css)
+        # and only the icon rules for the names in use (the full list is ~2,000 rules the fonts can't draw anyway)
+        def keep_icons(m):
+            sels = [x for x in m.group(1).split(",") if re.match(r"\.fa-([a-z0-9-]+):", x).group(1) in names]
+            return f'{",".join(sels)}{{content:"\\{m.group(2)}"}}' if sels else ""
+        before = len(css)
+        css = re.sub(r'((?:\.fa-[a-z0-9-]+:+before,?)+)\{content:"\\([0-9a-f]+)"\}', keep_icons, css)
+        print(f"css {before // 1024} KB -> {len(css) // 1024} KB")
         (OUT / "css" / "all.min.css").write_text(css, encoding="utf-8")
         print("wrote docs/vendor/fa/css/all.min.css")
 

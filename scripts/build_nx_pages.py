@@ -374,7 +374,6 @@ def cover_banner():
             '<span class="cover-blob" style="--blob: var(--cover-5); top: -30%; left: 76%; --dur: 31s; --delay: -6s;"></span>'
             '<span class="cover-blob" style="--blob: var(--cover-6); top: 45%; left: 38%; --dur: 33s; --delay: -16s; width: 45%;"></span>'
             '</div>'
-            '<div class="absolute inset-0" data-slats-canvas style="position:absolute;inset:0;opacity:0;transition:opacity .25s;"></div>'
             '<div class="cover-gradient-vignette" aria-hidden="true"></div>'
             '</div>')
 
@@ -854,18 +853,6 @@ body.nx-page[data-page="profile"] .nx .rail {
   pointer-events: none;
   background: linear-gradient(180deg, transparent 55%, color-mix(in srgb, var(--bg) 40%, transparent) 80%, var(--bg) 100%);
   z-index: 2;
-}
-[data-slats-canvas] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  pointer-events: auto;
-}
-[data-slats-canvas] canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
 }
 
 /* Post Cards Contrast & Surface across Subpages */
@@ -2778,7 +2765,7 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
 .nx :is(.nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover { box-shadow: 0 16px 34px -16px color-mix(in srgb, var(--brand) 55%, transparent) !important; }
 @media (hover: none) { .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::after, .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::before { display: none; } }
 
-/* the slat pattern is painted at once, so the cover is never empty while the animation loads */
+/* the cover's slat pattern, painted in CSS */
 .nx .cover-banner-wrap {
   background-color: var(--slats-bg, var(--bg)) !important;
   background-image:
@@ -2786,7 +2773,6 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
     linear-gradient(90deg, color-mix(in srgb, var(--slats-color, var(--brand)) 26%, transparent) 0 8px, transparent 8px 11px) !important;
   background-size: 11px 23px, 11px 23px !important;
 }
-.nx [data-slats-canvas] { transition: opacity .2s ease !important; }
 
 /* the bar above the right column: no slab of its own, just the two buttons resting on the page */
 body.nx-page[data-page="profile"] .nx .rail-top {
@@ -2815,7 +2801,6 @@ html body.nx-page .nx .cover-banner-wrap:not(#_cv) {
     radial-gradient(45% 100% at 50% 10%, rgba(var(--leak-3, 129, 140, 248), .35), transparent 70%),
     var(--bg) !important;
 }
-html body.nx-page .nx .cover-banner-wrap [data-slats-canvas] { transition: opacity .6s ease !important; }
 
 /* About: fade the text itself instead of laying a block of page colour over it, so no shade shows on the aurora background */
 .nx .about-prose::after { display: none !important; }
@@ -3646,8 +3631,6 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True, show_rail=T
 {bottom_nav(cur, prefix="../")}
 </div>
 <script src="../nx/nx.js?v=8"></script>
-<link rel="modulepreload" href="../nx/micro-slats.js">
-<script type="module" src="../nx/slats-cover.js?v=8"></script>
 <script src="../nx/proj-dots.js?v=5"></script>
 {SHARE_JS if (sub_bar or is_profile) else ""}
 {tail}'''
@@ -4397,7 +4380,7 @@ def nl_player(first_index=0):
     tracks = [dict(t, av=av.get(t["by"], "")) for t in m["tracks"]]
     t = tracks[first_index]
     return (f'<div class="nl-player" data-nl-player data-tracks="{e(json.dumps(tracks, ensure_ascii=False))}">'
-            f'<div class="nl-screen"><img class="nl-screen-thumb" src="{yt_thumb(t["id"], "hqdefault")}" alt="">'
+            f'<div class="nl-screen"><img class="nl-screen-thumb" src="{yt_thumb(t["id"], "hqdefault")}" alt="" fetchpriority="high">'
             f'<button type="button" class="nl-play" data-nl-play aria-label="Play">{nl_icon("play", 30)}</button><div class="nl-frame"></div></div>'
             f'<div class="nl-player-bar"><img class="nl-player-av" src="{t["av"]}" alt="" width="48" height="48">'
             f'<div class="nl-player-meta"><p class="nl-upnext"><span class="nl-eq"><i></i><i></i><i></i><i></i></span>Up next</p>'
@@ -4534,6 +4517,8 @@ def library_sub(key):
                    f'<div><h3>More channels I follow</h3><p>Grouped by topic. Tap any channel to open it on YouTube.</p></div></div>{groups}')
     body = f'<div class="pad nl-page">{nl_tabs(key)}<div class="nl-section">{head}{content}</div></div>{LIB_JS}'
     html_out = page(f"library/{key}", f"{title} · Library", d["intro"], "Library", body, "library")
+    if key == "music":   # the player's YouTube thumbnail is the page's largest paint: open the connection to its host early
+        html_out = html_out.replace("</head>", '<link rel="preconnect" href="https://i.ytimg.com">\n</head>', 1)
     return two_deep(html_out)
 
 
