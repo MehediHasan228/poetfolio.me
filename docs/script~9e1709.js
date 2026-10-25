@@ -4387,11 +4387,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     setupMobileAppCarousel('#ethicalGrid', '.ethical-card', '.ethical-mobile-tabs', '#ethicalDots');
     setupMobileAppCarousel('#deeptechGrid', '#deeptechGrid .archive-card', '.deeptech-mobile-tabs', '#deeptechDots');
 
-    // The carousels start snapping after load or the first touch (html.snap-ready in the stylesheet): an early snap
-    // counts as a scroll and would end Chrome's LCP measurement before the hero has painted.
+    // The carousels start snapping with the visitor's first touch, wheel or key (html.snap-ready in the stylesheet).
+    // A snap counts as a scroll, and Chrome stops measuring the largest paint (LCP) at the first scroll, so it must never
+    // happen on its own: on a slow first paint a timed snap landed before the hero was measured and the score had no LCP.
     const snapReady = () => document.documentElement.classList.add('snap-ready');
-    if (document.readyState === 'complete') snapReady();
-    else window.addEventListener('load', () => setTimeout(snapReady, 500), { once: true });
     ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(t => window.addEventListener(t, snapReady, { once: true, passive: true }));
 
     // Project screenshots (data-bg) load as the projects section comes near, not with the first screen.
