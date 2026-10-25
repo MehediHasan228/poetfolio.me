@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.siteSound = (type) => { try { playSound(type); } catch (e) {} };
     function playSound(type) {
         if (isMuted) return;
+        // Browsers keep audio silent until the first tap or key, so don't wake the audio engine before then.
+        if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return;
         if (!audioCtx) audioCtx = new AudioContext();
         if (audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -1157,7 +1159,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, { threshold: 0.8 });
 
-    document.querySelectorAll('.decrypt-text').forEach(el => decryptObserver.observe(el));
+    document.querySelectorAll('.decrypt-text').forEach(el => {
+        // The hero heading is the first big thing painted (the page's LCP), so it reads plainly on load and decrypts on mouse hover.
+        if (el.closest('#home')) {
+            el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') decryptText(el); });
+            return;
+        }
+        decryptObserver.observe(el);
+    });
 
     /* ==========================================
        7. LIVE SERVER & CLIENT TELEMETRY COCKPIT
@@ -2667,9 +2676,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('resize', initParticles);
 
+        let particlesOn = false, heroInView = true;
+        const LINK_STEPS = 10;
+
         function animateParticles() {
-            // Reduced motion: draw a single static frame instead of looping.
-            if (!PREFERS_REDUCED_MOTION) requestAnimationFrame(animateParticles);
+            // Reduced motion: draw a single static frame instead of looping. The loop also rests while the hero is scrolled away.
+            particlesOn = !PREFERS_REDUCED_MOTION && heroInView;
+            if (particlesOn) requestAnimationFrame(animateParticles);
 
             if (deepDiveMode) {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -2685,6 +2698,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 ctx.clearRect(0, 0, innerWidth, innerHeight);
+                // One path for all the dots and one per alpha step for the links: a few draw calls a frame instead of hundreds.
+                const col = pArray.length ? pArray[0].col : '';
+                ctx.fillStyle = col;
+                ctx.beginPath();
                 pArray.forEach(p => {
                     if (p.x >= canvas.width) { p.x = canvas.width; p.dx *= -1; }
                     else if (p.x <= 0) { p.x = 0; p.dx *= -1; }
@@ -2708,30 +2725,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (Math.abs(p.dy) < 0.3) p.dy = p.dy > 0 ? 0.3 : -0.3;
 
                     p.x += p.dx; p.y += p.dy;
-                    ctx.beginPath();
+                    ctx.moveTo(p.x + p.s, p.y);
                     ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
-                    ctx.fillStyle = p.col;
-                    ctx.fill();
                 });
+                ctx.fill();
 
+                const links = Array.from({ length: LINK_STEPS }, () => new Path2D());
                 for (let a = 0; a < pArray.length; a++) {
-                    for (let b = a; b < pArray.length; b++) {
+                    for (let b = a + 1; b < pArray.length; b++) {
                         let d = Math.pow(pArray[a].x - pArray[b].x, 2) + Math.pow(pArray[a].y - pArray[b].y, 2);
                         if (d < 15000) {
-                            ctx.strokeStyle = pArray[a].col;
-                            ctx.globalAlpha = 1 - (d / 15000);
-                            ctx.beginPath();
-                            ctx.moveTo(pArray[a].x, pArray[a].y);
-                            ctx.lineTo(pArray[b].x, pArray[b].y);
-                            ctx.stroke();
-                            ctx.globalAlpha = 1;
+                            const link = links[Math.min(LINK_STEPS - 1, Math.floor((1 - d / 15000) * LINK_STEPS))];
+                            link.moveTo(pArray[a].x, pArray[a].y);
+                            link.lineTo(pArray[b].x, pArray[b].y);
                         }
                     }
                 }
+                ctx.strokeStyle = col;
+                links.forEach((link, i) => { ctx.globalAlpha = (i + 0.5) / LINK_STEPS; ctx.stroke(link); });
+                ctx.globalAlpha = 1;
             }
         }
-        initParticles();
-        animateParticles();
+
+        // The page paints first: the particles start once the browser is idle, and rest while the hero is off screen.
+        const startParticles = () => {
+            initParticles();
+            animateParticles();
+            new IntersectionObserver(([entry]) => {
+                heroInView = entry.isIntersecting;
+                if (heroInView && !particlesOn) animateParticles();
+            }).observe(canvas);
+        };
+        if ('requestIdleCallback' in window) requestIdleCallback(startParticles, { timeout: 3000 });
+        else setTimeout(startParticles, 1200);
     }
 
     /* ==========================================
@@ -4320,6 +4346,26 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     setupMobileAppCarousel('.projects-grid', '.project-card', '.projects-mobile-tabs', '#projectsCarouselDots');
     setupMobileAppCarousel('#ethicalGrid', '.ethical-card', '.ethical-mobile-tabs', '#ethicalDots');
     setupMobileAppCarousel('#deeptechGrid', '#deeptechGrid .archive-card', '.deeptech-mobile-tabs', '#deeptechDots');
+
+    // The carousels start snapping after load or the first touch (html.snap-ready in the stylesheet): an early snap
+    // counts as a scroll and would end Chrome's LCP measurement before the hero has painted.
+    const snapReady = () => document.documentElement.classList.add('snap-ready');
+    if (document.readyState === 'complete') snapReady();
+    else window.addEventListener('load', () => setTimeout(snapReady, 500), { once: true });
+    ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(t => window.addEventListener(t, snapReady, { once: true, passive: true }));
+
+    // Project screenshots (data-bg) load as the projects section comes near, not with the first screen.
+    const previews = document.querySelectorAll('.project-preview[data-bg]');
+    const showPreviews = () => previews.forEach(el => { el.style.backgroundImage = `url('${el.dataset.bg}')`; });
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (previews.length && projectsGrid && 'IntersectionObserver' in window) {
+        const previewObserver = new IntersectionObserver((entries) => {
+            if (!entries.some(e => e.isIntersecting)) return;
+            previewObserver.disconnect();
+            showPreviews();
+        }, { rootMargin: '800px 0px' });
+        previewObserver.observe(projectsGrid);
+    } else showPreviews();
 
     // ----------------------------------------------------
     // Unified System Architecture & Enterprise Stack Filters

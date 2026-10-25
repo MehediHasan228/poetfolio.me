@@ -1536,6 +1536,9 @@ body.nx-page[data-page="profile"] .nx .rail {
 .extra-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 /* sidebar: no inner scroller; it stays sticky while the page scrolls and reaches its full height at the page end */
 body.nx-page[data-page] .nx .rail { max-height: none !important; overflow: visible !important; }
+/* the sidebar comes after the page in the HTML, and long pages paint before it arrives: its 392px is kept from the first paint,
+   so the page column never jumps sideways */
+@media (min-width: 1240px) { .nx .shell.has-rail > .main { max-width: calc(100% - 392px); } }
 body.nx-page[data-page="profile"] .nx .rail {
   scrollbar-width: thin !important;
   scrollbar-color: color-mix(in srgb, var(--brand) 45%, transparent) transparent !important;
@@ -3833,11 +3836,15 @@ html.fx-view-on:has(.fx-view[data-idle]) body :is(.cursor-dot, .cursor-outline) 
   html body .nx .nl-hero-title:not(#_x) { font-size: 28px !important; margin: 14px 0 10px !important; }
   html body .nx .fx-title:not(#_x) { font-size: 38px !important; margin: 8px 0 0 !important; }
   .nx .fx-stage { min-height: 0; border-radius: 22px; }
+  /* the stage fills the first screen from the first paint (fit() in focus-page.js sets the same height): 213px above it, the 64px tab bar, 14px gap */
+  .nx .fx-stage { min-height: max(460px, calc(100svh - 291px - env(safe-area-inset-bottom, 0px))); }
   .nx .fx-stage::before { background: linear-gradient(0deg, rgba(3, 7, 18, .85) 0%, rgba(3, 7, 18, .45) 60%, rgba(3, 7, 18, .4) 100%); }
   .nx .fx-stage-in { padding: 36px 20px 30px; }      /* the bottom band (the scroll cue and the orb beside it) stays clear of buttons */
   /* the first screen is a player, laid out like any music app: one transport row (shuffle, previous, play, next, the mix),
      then the presets with the focus view and the visualizer beside them (focus-page.js moves those two there on phones) */
   .nx .fx-ctrls { justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  /* arrange() (focus-page.js) moves these two beside the presets on phones; until then they stay out of the row, so it never changes height */
+  .nx .fx-ctrls > :is(#fx-expand, #fx-stage-viz) { display: none; }
   .nx #fx-shuffle { order: 1; } .nx #fx-prev { order: 2; } .nx #fx-play { order: 3; } .nx #fx-next { order: 4; } .nx .fx-stage-mix { order: 5; margin: 0; }
   .nx .fx-glass.fx-side, .nx .fx-glass.fx-step { width: 44px; height: 44px; font-size: 15px; }
   /* the mix button: round, its count as a badge; it keeps its place while empty so the row stays balanced */

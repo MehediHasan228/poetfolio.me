@@ -165,7 +165,7 @@ PROJECTS = [
     ("AI-Native NGO ERP", "Distributed humanitarian ERP with NestJS microservices, Kafka event streaming, PGVector RAG, "
      "Redis locks and LangGraph multi-agents. Planned across 85+ modules; in active development.",
      ["NestJS", "Kafka", "PGVector", "LangGraph"], "fa-sitemap", "85+ modules", [("github", GH + "/ai-native-ngo-erp")],
-     "../ngo_erp_dashboard.jpg"),
+     "../ngo_erp_dashboard.webp"),
     ("Karbar ERP", "Business suite for Bangladesh: accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), payroll with TDS and "
      "tax slabs, inventory, sales, purchases and project tracking.",
      ["Laravel", "Filament", "ERP", "VAT"], "fa-building-columns", None, [("github", GH + "/karbar-erp")],
@@ -189,7 +189,7 @@ PROJECTS = [
     ("HR & Payroll System", "Web-based platform for employee master records, payroll processing, tax deductions, "
      "attendance tracking and compliance reporting.",
      ["Payroll", "HR", "Compliance"], "fa-users-gear", None, [("github", GH)],
-     "../hr_payroll_dashboard.jpg"),
+     "../hr_payroll_dashboard.webp"),
     ("Savora: AI Hostel Management", "Hostel mess-management app (React 19, Vite, Firebase, Capacitor) for meal planning, "
      "pantry inventory tracking, recipe suggestions and grocery optimisation.",
      ["React", "Firebase", "AI"], "fa-utensils", None,
@@ -1100,6 +1100,9 @@ body.nx-page[data-page="profile"] .nx .rail {
 .extra-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 /* sidebar: no inner scroller; it stays sticky while the page scrolls and reaches its full height at the page end */
 body.nx-page[data-page] .nx .rail { max-height: none !important; overflow: visible !important; }
+/* the sidebar comes after the page in the HTML, and long pages paint before it arrives: its 392px is kept from the first paint,
+   so the page column never jumps sideways */
+@media (min-width: 1240px) { .nx .shell.has-rail > .main { max-width: calc(100% - 392px); } }
 body.nx-page[data-page="profile"] .nx .rail {
   scrollbar-width: thin !important;
   scrollbar-color: color-mix(in srgb, var(--brand) 45%, transparent) transparent !important;
@@ -3397,11 +3400,15 @@ html.fx-view-on:has(.fx-view[data-idle]) body :is(.cursor-dot, .cursor-outline) 
   html body .nx .nl-hero-title:not(#_x) { font-size: 28px !important; margin: 14px 0 10px !important; }
   html body .nx .fx-title:not(#_x) { font-size: 38px !important; margin: 8px 0 0 !important; }
   .nx .fx-stage { min-height: 0; border-radius: 22px; }
+  /* the stage fills the first screen from the first paint (fit() in focus-page.js sets the same height): 213px above it, the 64px tab bar, 14px gap */
+  .nx .fx-stage { min-height: max(460px, calc(100svh - 291px - env(safe-area-inset-bottom, 0px))); }
   .nx .fx-stage::before { background: linear-gradient(0deg, rgba(3, 7, 18, .85) 0%, rgba(3, 7, 18, .45) 60%, rgba(3, 7, 18, .4) 100%); }
   .nx .fx-stage-in { padding: 36px 20px 30px; }      /* the bottom band (the scroll cue and the orb beside it) stays clear of buttons */
   /* the first screen is a player, laid out like any music app: one transport row (shuffle, previous, play, next, the mix),
      then the presets with the focus view and the visualizer beside them (focus-page.js moves those two there on phones) */
   .nx .fx-ctrls { justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  /* arrange() (focus-page.js) moves these two beside the presets on phones; until then they stay out of the row, so it never changes height */
+  .nx .fx-ctrls > :is(#fx-expand, #fx-stage-viz) { display: none; }
   .nx #fx-shuffle { order: 1; } .nx #fx-prev { order: 2; } .nx #fx-play { order: 3; } .nx #fx-next { order: 4; } .nx .fx-stage-mix { order: 5; margin: 0; }
   .nx .fx-glass.fx-side, .nx .fx-glass.fx-step { width: 44px; height: 44px; font-size: 15px; }
   /* the mix button: round, its count as a badge; it keeps its place while empty so the row stays balanced */
@@ -3630,7 +3637,7 @@ def page(slug, title, desc, topbar_title, body, cur, show_open=True, show_rail=T
     return f'''{head}<body class="subpage nx-page" data-page="{slug}">{opening}
 <div class="nx">
 {sub_bar}
-<div class="shell">
+<div class="shell{" has-rail" if show_rail else ""}">
 <main class="main">
 {body}
 </main>
@@ -3694,6 +3701,38 @@ SHARE_JS = """<script>
 
 def icon_src(name):
     return f"../uploads/brand-icons/{name}.svg" if (DOCS / "uploads/brand-icons" / f"{name}.svg").exists() else None
+
+
+CARD_SIZES = "(max-width: 767px) calc(100vw - 48px), 340px"   # card images: ~364px wide on phones, ~340px in the desktop grids
+LCP_LOAD = 'loading="eager" fetchpriority="high"'               # the image that is the first big paint on its page
+
+
+def two_deep(html_out):
+    """The shell writes paths for pages one level deep; library pages live two levels deep. Also paths inside JSON data
+    attributes, which arrive HTML-escaped as &quot;../, and the later candidates in a srcset list."""
+    html_out = re.sub(r'(["\'(]|&quot;)\.\./', r'\1../../', html_out)
+    return re.sub(r'srcset="[^"]*"', lambda m: m.group(0).replace(", ../", ", ../../"), html_out)
+
+
+def resp_img(src, sizes=CARD_SIZES):
+    """srcset/sizes for a local .webp with a 640px copy beside it (x-640.webp, made here when missing), so phones
+    don't download the full-size file. Remote images, or no Pillow, get nothing extra."""
+    path = src.split("?")[0]
+    if path.startswith("http") or not path.endswith(".webp") or path.endswith("-640.webp"):
+        return ""
+    full = DOCS / re.sub(r"^(\.\./)+", "", path)
+    small = full.with_name(full.stem + "-640.webp")
+    try:
+        from PIL import Image
+        with Image.open(full) as im:
+            w = im.width
+            if w <= 700:
+                return ""
+            if not small.exists():
+                im.resize((640, round(im.height * 640 / w)), Image.LANCZOS).save(small, "WEBP", quality=80, method=6)
+    except (ImportError, OSError):
+        return ""
+    return f' srcset="{path[:-5]}-640.webp 640w, {src} {w}w" sizes="{sizes}"'
 
 
 def ask_chip(label, icon, color, note, extra=False):
@@ -4212,7 +4251,7 @@ def profile():
     return page("profile", f"{NAME} · Profile", f"{NAME}: {TAGLINE}. {ROLE_NOW}. Laravel, NestJS, Kafka and agentic AI systems.", "", body, "profile")
 
 
-def proj_card(t, d, tags, icon, badge, links, img):
+def proj_card(t, d, tags, icon, badge, links, img, first=False):
     b = f'<span class="badge"><i class="fa-solid fa-arrow-trend-up"></i> {badge}</span>' if badge else ""
     lk = "".join(
         f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="{t} {k}"><i class="fa-brands fa-github"></i></a>' if k == "github"
@@ -4236,7 +4275,8 @@ def proj_card(t, d, tags, icon, badge, links, img):
                       '</span>')
     return (f'<article class="proj">'
               f'{cov_open}'
-              f'<img src="{img}" alt="{e(t)}" class="proj-img" loading="lazy">'
+              # the first card's image is the page's largest paint (LCP): fetched early, not lazily
+              f'<img src="{img}"{resp_img(img)} alt="{e(t)}" class="proj-img" {LCP_LOAD if first else 'loading="lazy"'} decoding="async">'
               f'<div class="proj-overlay"></div>'
               f'<canvas class="proj-dots-canvas"></canvas>'
               f'{b}'
@@ -4247,7 +4287,7 @@ def proj_card(t, d, tags, icon, badge, links, img):
 
 
 def projects():
-    cards = "".join(proj_card(*x) for x in PROJECTS)
+    cards = "".join(proj_card(*x, first=i == 0) for i, x in enumerate(PROJECTS))
     body = (f'<div class="pad"><p class="lead">Products I\'ve designed, built and shipped: NGO and ERP platforms, AI automation and web projects.</p>'
             f'<div class="grid2">{cards}</div></div>')
     return page("projects", "Projects", "Products and systems built by Mehedi Hasan: NGO ERP, Karbar ERP, SAWAB platforms, AI video engine and more.",
@@ -4336,16 +4376,17 @@ def nl_bm_card(it, cat):
     top = f'<span class="nl-top">{nl_icon("star", 12)}Top pick</span>' if it["top"] else ""
     kind = f'<span>{e(it["kind"])}</span>' if it["kind"] else ""
     return (f'<article class="nl-bm" data-cat="{e(cat)}"><a class="nl-bm-thumb" href="{it["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1">'
-            f'<img src="{it["img"]}" alt="" loading="lazy"><span class="nl-bm-badges">{kind}{top}</span></a>'
+            f'<img src="{it["img"]}"{resp_img(it["img"])} alt="" loading="lazy" decoding="async"><span class="nl-bm-badges">{kind}{top}</span></a>'
             f'<div class="nl-bm-body"><h3><a href="{it["url"]}" target="_blank" rel="noopener noreferrer">{e(it["title"])}</a></h3><p>{e(it["desc"])}</p>'
             f'<p class="nl-domain">{nl_icon("link", 14)}<span>{e(it["domain"])}</span>{nl_icon("out", 15)}</p></div></article>')
 
 
-def nl_feature(cat="Learn"):
+def nl_feature(cat="Learn", first=False):
     f = LIB["bookmarks"]["feature"]
     badges = "".join(f'<span class="nl-top">{nl_icon("star", 12)}{e(b)}</span>' if b == "Top pick" else f'<span>{e(b)}</span>' for b in f["badges"])
     return (f'<div class="nl-feature" data-cat="{e(cat)}"><a class="nl-feature-img" href="{f["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1">'
-            f'<img src="{f["img"]}" alt="" loading="lazy"></a><div class="nl-feature-body"><p class="nl-badges">{badges}</p>'
+            f'<img src="{f["img"]}"{resp_img(f["img"])} alt="" {LCP_LOAD if first else 'loading="lazy"'} decoding="async"></a>'
+            f'<div class="nl-feature-body"><p class="nl-badges">{badges}</p>'
             f'<h3>{e(f["title"])}</h3><p class="nl-feature-by">{e(f["by"])}</p><p>{e(f["desc"])}</p>'
             f'<a class="nl-cta" href="{f["url"]}" target="_blank" rel="noopener noreferrer">{e(f["cta"])}{nl_icon("out", 15)}</a></div></div>')
 
@@ -4466,7 +4507,7 @@ def library_sub(key):
             f'<span class="nl-ext-meta"><span>{e(it["name"])}</span><span>{e(it["desc"])}</span></span>{nl_icon("out", 16)}</a></li>' for it in x["items"])
         ext = (f'<div class="nl-ext" data-cat="Extensions"><div class="nl-ext-head">{nl_icon(x["icon"], 18)}<h3>{e(x["title"])}</h3><span class="nl-tag">{e(x["tag"])}</span></div>'
                f'{feat}<ul class="nl-ext-list">{ext_items}</ul></div>')
-        content = f'<div class="nl-chips" role="group" aria-label="Filter bookmarks">{chips}</div>{nl_feature()}{sections}{ext}'
+        content = f'<div class="nl-chips" role="group" aria-label="Filter bookmarks">{chips}</div>{nl_feature(first=True)}{sections}{ext}'
     elif key == "music":
         cats = d["categories"]
         count = {k: 0 for k in cats}
@@ -4493,9 +4534,7 @@ def library_sub(key):
                    f'<div><h3>More channels I follow</h3><p>Grouped by topic. Tap any channel to open it on YouTube.</p></div></div>{groups}')
     body = f'<div class="pad nl-page">{nl_tabs(key)}<div class="nl-section">{head}{content}</div></div>{LIB_JS}'
     html_out = page(f"library/{key}", f"{title} · Library", d["intro"], "Library", body, "library")
-    # the shell writes paths for pages one level deep; these live two levels deep
-    # also paths inside JSON data attributes, which arrive HTML-escaped as &quot;../
-    return re.sub(r'(["\'(]|&quot;)\.\./', r'\1../../', html_out)
+    return two_deep(html_out)
 
 
 def fx_head(icon, title, sub):
@@ -4521,8 +4560,10 @@ def library_focus():
              f'<canvas class="fx-viz" id="fx-viz-canvas" hidden aria-hidden="true"></canvas>'
              f'<div class="fx-stage-in">'
              f'<p class="fx-state" id="fx-state">Ready to play</p><h2 class="fx-title" id="fx-title-h"><span id="fx-title">Focus</span></h2>'
-             f'<p class="fx-about" id="fx-about"></p>'
-             f'<div class="fx-now-chips" id="fx-now-chips"></div>'
+             # the line and the radio chip are there before the script fills them, so the controls below never jump
+             f'<p class="fx-about" id="fx-about">&nbsp;</p>'
+             f'<div class="fx-now-chips" id="fx-now-chips"><button type="button" class="fx-now-chip fx-qr" data-random '
+             f'title="A live recitation, by a reciter picked at random (R)">{fa("tower-broadcast")}<span>Quran radio</span></button></div>'
              f'<p class="fx-quote">{fa("quote-left")}<span id="fx-quote"></span>'
              f'<button type="button" class="fx-quote-next" id="fx-quote-next" aria-label="Show another line" title="Another line">{fa("rotate")}</button></p>'
              f'<p class="fx-viz-name" id="fx-stage-viz-name" aria-live="polite"></p>'
@@ -4533,7 +4574,8 @@ def library_focus():
              f'<button type="button" class="fx-glass fx-side" id="fx-shuffle" aria-label="Shuffle: a surprise mix" title="Shuffle">{fa("shuffle")}</button>'
              f'<button type="button" class="fx-glass fx-side" id="fx-expand" aria-label="Open the focus view" title="Focus view (V)">{fa("expand")}</button>'
              f'<button type="button" class="fx-glass fx-side" id="fx-stage-viz" aria-pressed="false" aria-label="Visualizer" title="Visualizer">{fa("wand-magic-sparkles")}</button>'
-             f'<div class="fx-stage-mix" id="fx-stage-mix"></div></div>'
+             f'<div class="fx-stage-mix" id="fx-stage-mix"><button type="button" class="fx-glass fx-mixbtn" id="fx-mixbtn" aria-controls="fx-mixer" hidden>'
+             f'{fa("sliders")}<b id="fx-mixcount"></b></button></div></div>'
              f'<div class="fx-presets-wrap" id="fx-presets-wrap">'
              f'<div class="fx-presets-bar">'
              f'<button type="button" class="fx-presets-pill" id="fx-presets-pill" aria-expanded="false" aria-controls="fx-presets">'
@@ -4572,7 +4614,7 @@ def library_focus():
             f'</div>{LIB_JS}<script src="../focus/focus-page.js?v=35" defer></script>')
     html_out = page("library/focus", "Focus · Library", "Ambient sounds, Quran radio and a focus timer that keep playing while you browse.",
                     "Library", body, "library", show_rail=False)
-    return re.sub(r'(["\'(]|&quot;)\.\./', r'\1../../', html_out)
+    return two_deep(html_out)
 
 
 LIB_JS = """<script>

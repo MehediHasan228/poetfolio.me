@@ -14568,3 +14568,7 @@ html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton .sk-card { bac
 
 /* greeting chips that are links (CV, WhatsApp) look like the other chips */
 #ai-orb-speech-bubble a.dm-chip { display: inline-flex; align-items: center; text-decoration: none; }
+
+/* The phone carousels snap to a centred card, and that first snap counts as a scroll: Chrome stops measuring the largest paint (LCP) at the first scroll,
+   before the hero has painted. So snapping starts once the page has loaded or the visitor touches it (html.snap-ready, set in script~). */
+html:not(.snap-ready) :is(.arch-unified-grid, .arch-pillars-grid, .arch-pipeline-strip, .archives-grid, .projects-grid, .deeptech-mobile-tabs) { scroll-snap-type: none !important; }
