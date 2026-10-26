@@ -523,11 +523,13 @@ document.addEventListener("pointermove", function (ev) {
     });
     /* phones: hide the header while scrolling down, bring it back when scrolling up */
     (function () {
-        var last = window.scrollY, ticking = false, mq = window.matchMedia('(max-width: 768px)');
+        /* the first scroll sets the starting point: reading scrollY while the page loads would lay it all out early */
+        var last = null, ticking = false, mq = window.matchMedia('(max-width: 768px)');
         window.addEventListener('scroll', function () {
             if (ticking) return; ticking = true;
             requestAnimationFrame(function () {
                 var nav = document.querySelector('nav[aria-label="Main navigation"]'), y = window.scrollY;
+                if (last === null) last = y;
                 if (nav && mq.matches && !document.body.classList.contains('drawer-open')) {
                     if (y > last + 6 && y > 80) nav.classList.add('nav-hidden');
                     else if (y < last - 6 || y <= 80) nav.classList.remove('nav-hidden');

@@ -6,10 +6,13 @@
     <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
     <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <script id="hero-net">
     /* Home only (the page builders drop it from the other pages): the particle network is part of the first look, so its
        first still frame is drawn the moment the parser reaches the canvas. A script in the body would wait for the
-       stylesheets and run after the first paint. script~9e1709.js sets these same dots moving with drawParticleNet. */
+       stylesheets and run after the first paint. script~9e1709.js sets these same dots moving with drawParticleNet.
+       The viewport is measured here, after the viewport meta and before the body: reading it once the parser is deep in
+       the page would lay the whole page out without its stylesheets. */
     (function () {
         var COLORS = { dark: '#00f2fe', light: '#94a3b8', cyberpunk: '#f43f5e', mint: '#10b981', 'god-mode': '#00ff00' };
         // One path for all the dots and one per alpha step for the links: a few draw calls a frame instead of hundreds.
@@ -31,13 +34,14 @@
             links.forEach(function (l, k) { x.globalAlpha = (k + 0.5) / STEPS; x.stroke(l); });
             x.globalAlpha = 1;
         };
+        var W = document.documentElement.clientWidth, H = document.documentElement.clientHeight;
         var mo = new MutationObserver(function () {
             var c = document.getElementById('particle-canvas'), x = c && c.getContext('2d');
             if (!c) return;
             mo.disconnect();
             if (!x) return;
-            // the root's client size: on phones innerWidth still holds the pre-viewport-meta width at this point
-            var w = document.documentElement.clientWidth, h = document.documentElement.clientHeight, ps = [], i;
+            // the root's client size: on phones innerWidth can still hold the pre-viewport-meta width at this point
+            var w = W, h = H, ps = [], i;
             var col = COLORS[document.documentElement.getAttribute('data-theme')] || COLORS.dark;
             c.width = w; c.height = h;
             for (i = 0; i < w * h / 9000; i++) {
@@ -50,7 +54,6 @@
         document.addEventListener('DOMContentLoaded', function () { mo.disconnect(); });
     })();
     </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
     <meta name="description" content="Mehedi Hasan is an AI-native software engineer in Dhaka who builds AI agents, ERPs and distributed systems with NestJS, Kafka, LangGraph and local LLMs.">
@@ -1793,11 +1796,13 @@
     });
     /* phones: hide the header while scrolling down, bring it back when scrolling up */
     (function () {
-        var last = window.scrollY, ticking = false, mq = window.matchMedia('(max-width: 768px)');
+        /* the first scroll sets the starting point: reading scrollY while the page loads would lay it all out early */
+        var last = null, ticking = false, mq = window.matchMedia('(max-width: 768px)');
         window.addEventListener('scroll', function () {
             if (ticking) return; ticking = true;
             requestAnimationFrame(function () {
                 var nav = document.querySelector('nav[aria-label="Main navigation"]'), y = window.scrollY;
+                if (last === null) last = y;
                 if (nav && mq.matches && !document.body.classList.contains('drawer-open')) {
                     if (y > last + 6 && y > 80) nav.classList.add('nav-hidden');
                     else if (y < last - 6 || y <= 80) nav.classList.remove('nav-hidden');
