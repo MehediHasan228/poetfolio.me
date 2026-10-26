@@ -1010,7 +1010,8 @@ body.nx-page[data-page="profile"] .nx .rail {
 .exp-summary { font-size: 14px; color: var(--ink-3); margin: 6px 0 0; }
 .exp-dur { color: var(--ink-3); opacity: 0.85; }
 .exp-kind { font-weight: 600; color: var(--ink-2); }
-.exp-kind.is-volunteer { color: #b45309; }
+.exp-kind.is-volunteer { color: #d97706; }   /* 5.9:1 on the dark page */
+[data-theme="light"] .exp-kind.is-volunteer, [data-theme="mint"] .exp-kind.is-volunteer { color: #b45309; }
 .exp-sep { color: var(--ink-3); margin: 0 6px; }
 @media (max-width: 767px) {
   .exp-item-modern { gap: 14px; }
@@ -3024,7 +3025,7 @@ html.fx-orb-away body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { opaci
 .nx .fx-timer-text small { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nx .fx-phases { margin-left: auto; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface-2); }
 .nx .fx-phases button { padding: 7px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; color: var(--ink-2); transition: background .2s ease, color .2s ease; }
-.nx .fx-phases button b { font-weight: 700; opacity: .55; }
+.nx .fx-phases button b { font-weight: 700; opacity: .72; }   /* .72 keeps the minutes at 4.5:1 on the lit pill */
 .nx .fx-phases button:hover { color: var(--ink); }
 .nx .fx-phases button[aria-pressed="true"] { color: var(--bg); background: var(--ink); }
 .nx .fx-icon { flex-shrink: 0; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; font-size: 14px; color: var(--ink-2); background: var(--surface-2);
@@ -3821,7 +3822,7 @@ def profile_meta_widgets():
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
           </button>
         </div>
-        <div class="lang-bars" aria-label="Proficiency: 4 of 5">
+        <div class="lang-bars" role="img" aria-label="Proficiency: 4 of 5">
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
@@ -3840,7 +3841,7 @@ def profile_meta_widgets():
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
           </button>
         </div>
-        <div class="lang-bars" aria-label="Proficiency: 5 of 5">
+        <div class="lang-bars" role="img" aria-label="Proficiency: 5 of 5">
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
@@ -3859,7 +3860,7 @@ def profile_meta_widgets():
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
           </button>
         </div>
-        <div class="lang-bars" aria-label="Proficiency: 3 of 5">
+        <div class="lang-bars" role="img" aria-label="Proficiency: 3 of 5">
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
           <span class="bar-seg active"></span>
@@ -3953,7 +3954,7 @@ HERO_JS = """<script>
   // where I use each tool, in a small tip above the chip (mouse and keyboard only; taps go straight to the AI)
   if (matchMedia('(hover: hover)').matches) {
     var tip = document.createElement('div'), timer;
-    tip.className = 'hero-tip'; tip.setAttribute('role', 'tooltip');
+    tip.className = 'hero-tip'; tip.setAttribute('aria-hidden', 'true');
     document.querySelector('.nx').appendChild(tip);
     var show = function (chip) {
       clearTimeout(timer);
@@ -4093,7 +4094,7 @@ def extra_card(title, text):
     stat_html = f'<div class="extra-stat"><b>{e(stat[0])}</b><span>{e(stat[1])}</span></div>' if stat else ""
     tag_html = "".join(f'<span class="chip">{e(t)}</span>' for t in tags)
     return (f'<article class="extra-card"><div class="extra-top"><span class="extra-kicker">{e(kicker)}</span>{stat_html}</div>'
-            f'<h4>{e(title)}</h4><p>{e(text)}</p><div class="extra-tags">{tag_html}</div></article>')
+            f'<h4 aria-level="3">{e(title)}</h4><p>{e(text)}</p><div class="extra-tags">{tag_html}</div></article>')
 
 
 # WORK tab: one line of impact, a status and categories per project
@@ -4177,9 +4178,9 @@ def profile():
         f'<article class="cert-card"><span class="cert-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" '
         f'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'
         f'<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>'
-        f'<div><h4>{e(t)}</h4><p>{e(o)}</p></div></article>' for t, o in CERTS)
+        f'<div><h4 aria-level="3">{e(t)}</h4><p>{e(o)}</p></div></article>' for t, o in CERTS)
     skills = "".join(
-        f'<div class="sk"><h4>{g}</h4><p class="sk-desc">{e(d)}</p><div class="chips">'
+        f'<div class="sk"><h4 aria-level="3">{g}</h4><p class="sk-desc">{e(d)}</p><div class="chips">'
         + "".join(skill_chip(l, i, "chip-core") for l, i in core)
         + "".join(skill_chip(l, i, "chip-more") for l, i in more)
         + "</div></div>" for g, d, core, more in SKILLS)
@@ -4189,7 +4190,7 @@ def profile():
     body = f'''{cover_banner()}
 <section class="nx-hero">
 <img class="avatar" src="../uploads/mehedi-avatar.jpg?v=1" alt="{NAME}" width="320" height="320" fetchpriority="high">
-<h1 class="nx-name">{NAME} <span class="verified-badge" title="Verified Profile" aria-label="Verified">{ico("badge","verified")}</span></h1>
+<h1 class="nx-name">{NAME} <span class="verified-badge" title="Verified Profile" role="img" aria-label="Verified">{ico("badge","verified")}</span></h1>
 <p class="tagline">{TAGLINE}</p>
 <a class="pill-status" href="../contact/"><span class="dot"></span>Open to freelance &amp; full-time</a>
 <ul class="facts">
@@ -4265,7 +4266,7 @@ def proj_card(t, d, tags, icon, badge, links, img, first=False):
               f'{b}'
               f'{center_btn}'
               f'{cov_close}'
-              f'<div class="proj-body"><h3>{e(t)}</h3><p>{e(d)}</p>'
+              f'<div class="proj-body"><h3 aria-level="2">{e(t)}</h3><p>{e(d)}</p>'
               f'<div class="proj-foot"><div class="tag-row">{tg}</div><div class="proj-links">{lk}</div></div></div></article>')
 
 
@@ -4367,7 +4368,7 @@ def nl_bm_card(it, cat):
 def nl_feature(cat="Learn", first=False):
     f = LIB["bookmarks"]["feature"]
     badges = "".join(f'<span class="nl-top">{nl_icon("star", 12)}{e(b)}</span>' if b == "Top pick" else f'<span>{e(b)}</span>' for b in f["badges"])
-    return (f'<div class="nl-feature" data-cat="{e(cat)}"><a class="nl-feature-img" href="{f["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1">'
+    return (f'<div class="nl-feature" data-cat="{e(cat)}"><a class="nl-feature-img" href="{f["url"]}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label="{e(f["title"])}">'
             f'<img src="{f["img"]}"{resp_img(f["img"])} alt="" {LCP_LOAD if first else 'loading="lazy"'} decoding="async"></a>'
             f'<div class="nl-feature-body"><p class="nl-badges">{badges}</p>'
             f'<h3>{e(f["title"])}</h3><p class="nl-feature-by">{e(f["by"])}</p><p>{e(f["desc"])}</p>'
@@ -4419,7 +4420,7 @@ def nl_shelf(c):
     return (f'<div class="nl-shelf" data-cat="{e(c["cat"])}"><div class="nl-shelf-head">'
             f'<img src="{c["avatar"]}" alt="" width="32" height="32" loading="lazy">'
             f'<div class="nl-shelf-id"><b>{e(c["name"])}</b><span>{e(c["why"])}</span></div>'
-            f'<a class="nl-shelf-visit" href="{c["url"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 14)}<span>Visit</span></a></div>'
+            f'<a class="nl-shelf-visit" href="{c["url"]}" target="_blank" rel="noopener noreferrer" aria-label="Visit {e(c["name"])} on YouTube">{nl_icon("yt", 14)}<span>Visit</span></a></div>'
             f'<div class="nl-shelf-row">{"".join(nl_video(v) for v in c["videos"])}</div></div>')
 
 

@@ -2533,7 +2533,7 @@ section {
     width: 40px;
     padding: 15px 5px 15px 0;
     background: #1e1e1e;
-    color: #6e7681;
+    color: #848b94;   /* 4.8:1 on the editor */
     font-family: 'Fira Code', Consolas, Monaco, monospace;
     font-size: 0.9rem;
     line-height: 1.5;
@@ -5283,7 +5283,7 @@ footer {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--accent-3);
+    color: color-mix(in srgb, var(--accent-3) 85%, #fff);   /* 4.9:1 on the card */
     font-weight: bold;
     margin-bottom: 3px;
 }
@@ -7340,7 +7340,7 @@ footer {
     .archive-card .archive-cat {
         font-size: 0.68rem !important;
         letter-spacing: 1.2px !important;
-        color: var(--accent-3, #f43f5e) !important;
+        color: color-mix(in srgb, var(--accent-3, #f43f5e) 85%, #fff) !important;   /* 4.9:1 on the card */
         font-weight: 700 !important;
         text-transform: uppercase !important;
         margin-bottom: 2px !important;
@@ -9927,7 +9927,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 /* ===== Separate pages: page hero + home explore grid ===== */
 .page-hero { max-width: 1000px; margin: 0 auto; padding: 9rem 1.5rem 1rem; }
 .page-crumb { font-size: .85rem; color: var(--text-secondary); margin-bottom: 1rem; }
-.page-crumb a { color: var(--accent-1); text-decoration: none; }
+.page-crumb a { color: var(--accent-1); text-decoration: underline; text-underline-offset: 3px; }   /* a link inside text shows it is one */
 .page-hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 0 0 1rem; color: var(--text-primary); background: var(--gradient-accent); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .page-hero p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7; max-width: 760px; }
 .page-points { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: .6rem; }
@@ -11405,7 +11405,7 @@ html body .bottom-nav:not(:has(a[aria-current="page"])) .bn-pill:not(#_bn) { opa
 html body .bottom-nav:not(#_bn) .bn-pill { display: none !important; }
 html body .bottom-nav:not(#_bn) a svg,
 html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { background: transparent !important; box-shadow: none !important; }
-html body .bottom-nav:not(#_bn) a { opacity: .62; transition: opacity .2s ease, color .2s ease; }
+html body .bottom-nav:not(#_bn) a { opacity: .7; transition: opacity .2s ease, color .2s ease; }   /* .7: the 11 px labels keep 4.5:1 contrast */
 html body .bottom-nav:not(#_bn) a[aria-current="page"],
 html body .bottom-nav:not(#_bn) a.is-pending { opacity: 1; color: var(--accent-1) !important; }
 html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { filter: drop-shadow(0 0 6px rgba(var(--accent-1-rgb), .55)); }

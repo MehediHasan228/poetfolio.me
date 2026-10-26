@@ -136,7 +136,9 @@ def main() -> None:
         )
         # drop the section's own h2 title to avoid two headings competing
         sec = re.sub(r'<div class="section-title[^"]*">.*?</div>\s*', "", sec, count=1, flags=re.S)
-        doc = set_meta(head, slug, title, intro, "../") + body_open + page_hero + sec + "\n\n" + bottom_nav(slug, prefix="../") + "\n" + tail
+        doc = (set_meta(head, slug, title, intro, "../") + body_open + '<main id="main-content">\n' + page_hero
+               + f'<h2 class="sr-only">{label}</h2>\n' + sec + "\n</main>\n\n"
+               + bottom_nav(slug, prefix="../") + "\n" + tail)
         doc = swap_nav(rewrite(doc, "../"), "../")
         doc = doc.replace("<body>", f'<body class="subpage" data-page="{slug}">', 1)
         out = DOCS / slug / "index.html"
@@ -149,7 +151,9 @@ def main() -> None:
     # the sandbox has its own page; the home page links to it instead of repeating it
     home = re.sub(r'\s*<section id="archives".*?</section>', '', home, count=1, flags=re.S)
     tail_idx = home.index('<div style="text-align: center; padding-bottom: 2rem;">')
-    home = home[:tail_idx] + bottom_nav(None, prefix="./") + "\n" + home[tail_idx:]
+    home = home[:tail_idx] + "</main>\n\n    " + bottom_nav(None, prefix="./") + "\n" + home[tail_idx:]
+    # the page content (hero to contact) is the main landmark; the source keeps no <main>, since its parts are reused
+    home = home.replace('<header class="hero"', '<main id="main-content">\n    <header class="hero"', 1)
     (DOCS / "index.html").write_text(home, encoding="utf-8")
     print("wrote docs/index.html")
 

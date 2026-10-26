@@ -301,6 +301,12 @@ Corporate website for a freight and logistics company on WordPress with cPanel h
 WordPress cPanel
 
 # Tech stack (/stack/)
+Home / Stack
+## Technology Stack
+The tools I reach for in production, grouped by what they are used for: AI and agents, full-stack web, data and vector search, and cloud/DevOps.
+- TypeScript, NestJS, Next.js and Laravel (Filament)
+- PostgreSQL, PGVector and Redis for data and retrieval
+- OpenAI, Claude, Gemini and local models via Ollama
 mehedi_workspace - VS Code
 order_service.nest.ts
 EXPLORER
@@ -308,6 +314,12 @@ main*
 TypeScript
 
 # Architecture (/architecture/)
+Home / Architecture
+## Architecture
+How I design systems: clean-architecture NestJS services, event streaming with Kafka, Redis-backed consistency and agentic AI layers on top. Four-plus years of freelance delivery across ERP, NGO and AI automation products.
+- Clean-architecture NestJS + PostgreSQL + Redis backends
+- Event-driven design with Kafka and gRPC between services
+- Agentic layer: LangGraph, MCP and RAG over PGVector
 ### Autonomous AI & Agents
 Agentic SOTA
 Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.
