@@ -9071,56 +9071,10 @@ footer {
     display: none !important;
 }
 
-.arch-matrix-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-}
-
-.arch-matrix-tag {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.72rem;
-    font-weight: 500;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 4px 8px;
-    border-radius: 7px;
-    color: var(--text-primary);
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    transition: all 0.2s ease;
-    cursor: default;
-}
-
-.arch-matrix-tag:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(0, 242, 254, 0.35);
-    transform: translateY(-1px);
-}
-
-.arch-matrix-tag img {
-    width: 14px;
-    height: 14px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
 /* Light Theme overrides */
 
 
-:is([data-theme="light"], [data-theme="mint"]) .arch-matrix-tag {
-    background: #f8fafc;
-    border-color: #e2e8f0;
-    color: #1e293b;
-}
 
-:is([data-theme="light"], [data-theme="mint"]) .arch-matrix-tag:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-}
 
 /* Responsive Breakpoints */
 @media (max-width: 1200px) {
@@ -9201,15 +9155,13 @@ footer {
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
     }
-    .arch-pillar-tags,
-    .arch-matrix-tags {
+    .arch-pillar-tags {
         margin-top: auto !important;
         display: flex !important;
         flex-wrap: wrap !important;
         gap: 5px !important;
     }
-    .arch-tech-tag,
-    .arch-matrix-tag {
+    .arch-tech-tag {
         font-size: 0.68rem !important;
         padding: 3px 7px !important;
     }
@@ -9740,8 +9692,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     background: #eaf6f0 !important;
 }
 
-[data-theme="mint"] .arch-tech-tag,
-[data-theme="mint"] .arch-matrix-tag:hover {
+[data-theme="mint"] .arch-tech-tag {
     border-color: #a7f3d0 !important;
     background: #eaf6f0 !important;
     color: #047857 !important;
@@ -11294,7 +11245,7 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     .hero-text-side h1 .gradient-text { vertical-align: top; }
 }
 
-/* How I Build: each card lists the work behind it; the stack below names each tool once */
+/* How I Build: each card lists the work behind it, then the tools it used */
 .arch-proof {
     list-style: none;
     margin: 0;
@@ -11327,70 +11278,20 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     color: var(--text-primary);
     font-weight: 600;
 }
-.arch-stack {
-    background: rgba(15, 23, 42, 0.65);
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    border-radius: 12px;
-    padding: 1.1rem 1.25rem 0.35rem;
+.arch-proof + .arch-pillar-tags {
+    margin-top: 0.85rem;
 }
-.arch-stack-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-bottom: 0.7rem;
-}
-.arch-stack-title {
-    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    font-size: 0.96rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
-}
-.arch-stack-hint {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
-.arch-stack-row {
-    display: grid;
-    grid-template-columns: 170px 1fr;
-    gap: 1rem;
-    align-items: center;
-    padding: 0.7rem 0;
-    border-top: 1px solid rgba(148, 163, 184, 0.1);
-}
-.arch-stack-label {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-}
-.arch-stack .arch-matrix-tag i {
-    width: 14px;
-    font-size: 0.78rem;
-    text-align: center;
-}
-:is([data-theme="light"], [data-theme="mint"]) .arch-stack {
-    background: #ffffff;
-    border-color: #e2e8f0;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-}
-:is([data-theme="light"], [data-theme="mint"]) .arch-proof,
-:is([data-theme="light"], [data-theme="mint"]) .arch-stack-row {
+/* the proof list follows the description and takes the spare height, so the tools line up at the bottom */
+.arch-infographic-wrap .arch-pillar-desc { flex-grow: 0; }
+.arch-proof { flex-grow: 1; }
+:is([data-theme="light"], [data-theme="mint"]) .arch-proof {
     border-top-color: #e2e8f0;
 }
-:is([data-theme="light"], [data-theme="mint"]) :is(.arch-proof strong, .arch-stack-title) {
+:is([data-theme="light"], [data-theme="mint"]) .arch-proof strong {
     color: #0f172a;
 }
-@media (hover: none) {
-    .arch-stack-hint { display: none; }
-}
 @media (max-width: 860px) {
-    /* the cards hold their proof lines, so they are taller than the carousel's usual 250px */
+    /* the cards hold their proof lines and tools, so they are taller than the carousel's usual 250px */
     .arch-infographic-wrap .arch-unified-card { max-height: none !important; }
-    .arch-stack { padding: 1rem 1rem 0.25rem; }
-    .arch-stack-row { grid-template-columns: 1fr; gap: 0.45rem; }
+    .arch-infographic-wrap .arch-proof + .arch-pillar-tags { margin-top: 0.75rem !important; }
 }
