@@ -11289,10 +11289,12 @@ html[data-theme="mint"]      { --leak-3: 45, 212, 191;  --leak-a: .42; --leak-b:
 html[data-theme="cyberpunk"] { --leak-3: 168, 85, 247;  --leak-a: .26; --leak-b: .16; --leak-c: .22; }
 html[data-theme="god-mode"]  { --leak-3: 0, 180, 90;    --leak-a: .20; --leak-b: .14; --leak-c: .12; }
 html::before, html::after, body::after { content: ""; position: fixed; z-index: -1; pointer-events: none; }
-/* AURORA — two bands of light ribbons sway slowly across the top of every page */
+/* AURORA — two bands of light ribbons sway slowly across the top of every page. The bands are soft from their own
+   gradients and mask; a blur(46px) saturate(1.25) filter on these two layers, wider than the screen and always moving,
+   looked the same (screenshots match pixel for pixel) but cost every frame dearly where there is no GPU, as on
+   PageSpeed's machines, delaying the first paint. */
 html::before, body::after {
     left: -25%; right: -25%; top: -12vh; height: 78vh;
-    filter: blur(46px) saturate(1.25);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
             mask-image: linear-gradient(to bottom, #000 0%, #000 34%, transparent 88%);
     transform-origin: 50% 0;
