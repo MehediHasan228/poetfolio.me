@@ -12,6 +12,7 @@ import sys
 from collections import Counter
 from datetime import date
 from pathlib import Path
+from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build_pages  # noqa: E402  (shared home-page shell helpers)
@@ -36,8 +37,8 @@ ABOUT = [
     "An AI-native engineer who leverages state-of-the-art LLM workflows (Claude, OpenAI, Antigravity, OpenCode, Ollama) to accelerate engineering "
     "velocity without sacrificing code hygiene. Actively building multi-agent automation systems using LangGraph, MCP, and "
     "retrieval-augmented workflows (PGVector), backed by Kafka event streaming, Docker containerisation, and Kubernetes.",
-    "Currently leading development for SAWAB Bangladesh's digital web platforms and architecting an AI-native NGO ERP spanning "
-    "85+ planned modules. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.",
+    "Currently leading development for SAWAB Bangladesh's digital web platforms and building SAWAB's multi-organisation NGO ERP "
+    "and HRM system on Frappe and Next.js. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.",
 ]
 AI_TOOLS = [("Claude", "claude", "#d97757"), ("OpenAI", "openai", "#10a37f"),
             ("Ollama", "ollama", "#475569"), ("Antigravity", "antigravity", "#3b82f6"),
@@ -50,20 +51,20 @@ STACK = [("LangGraph", "langgraph"), ("NestJS", "nestjs"), ("TypeScript", "types
 HERO_STACK = [
     ("AI", [("Claude", "claude", "#d97757", "LLM behind HR reports and appraisal drafts at Jibika"),
             ("OpenAI", "openai", "#10a37f", "LLM APIs in Jibika's Reports, Appraisal and Leave modules"),
-            ("LangGraph", "langgraph", None, "Multi-agent workflows in the NGO ERP"),
+            ("LangGraph", "langgraph", None, "Multi-agent workflows"),
             ("Ollama", "ollama", "#475569", "Local LLMs for private, on-device AI"),
             ("Antigravity", "antigravity", "#3b82f6", "AI coding agent in my daily workflow"),
             ("OpenCode", "opencode", None, "Terminal coding agent I use every day")], 4),
-    ("Build", [("NestJS", "nestjs", None, "Microservices in the NGO ERP"),
+    ("Build", [("NestJS", "nestjs", None, "Microservices and REST APIs"),
                ("TypeScript", "typescript", None, "My default across frontend and backend"),
                ("Python", "python", None, "AI pipelines and automation"),
                ("FastAPI", "fastapi", None, "Backend of the AI Video Making Engine"),
                ("Next.js", "nextjs", None, "Frontend of the AI Video Making Engine"),
                ("React", "react", None, "SAWAB platform and Foundation portal"),
                ("Tailwind CSS", "tailwind", None, "Styling for the SAWAB Foundation portal")], 4),
-    ("Data & Ops", [("PostgreSQL", "postgresql", None, "Data layer of the SAWAB platform and NGO ERP"),
-                    ("Redis", "redis", None, "Caching and distributed locks in the NGO ERP"),
-                    ("Kafka", "apachekafka", None, "Event streaming in the 85-module NGO ERP"),
+    ("Data & Ops", [("PostgreSQL", "postgresql", None, "Data layer of the SAWAB platform"),
+                    ("Redis", "redis", None, "Cache and background-job queues in the NGO ERP"),
+                    ("Kafka", "apachekafka", None, "Event streaming"),
                     ("Docker", "docker", None, "Containerised deploys for the SAWAB platform"),
                     ("Kubernetes", "kubernetes", None, "Orchestration for distributed services"),
                     ("n8n", "n8n", None, "Workflow automations")], 4),
@@ -73,9 +74,10 @@ JOBS = [
     ("Software Developer", "SAWAB Bangladesh", "Dhaka, Bangladesh", "Jul 2026 - Present", "Full-time",
      ["Build and maintain SAWAB Bangladesh's public web platforms (sawabbd.org, sawabfoundation.org.bd) on Node.js / "
       "React: donation pipelines, bilingual (Bangla/English) content, and program pages for education, healthcare and WASH initiatives.",
-      "Design and develop an AI-native NGO ERP: NestJS microservices, Kafka event streaming, Redis, PGVector-based "
-      "retrieval and LangGraph multi-agent workflows, planned across 85+ modules; currently in active development."],
-     ["Node.js", "React", "NestJS", "Kafka", "PGVector", "LangGraph"]),
+      "Design and develop SAWAB's multi-organisation NGO ERP and HRM on Frappe, ERPNext and HRMS with a Next.js 15 portal: "
+      "HR, ZKTeco biometric attendance, multi-project payroll, NGOAB and donor grants, micro-investment, accounts and "
+      "procurement, for SAWAB and SAWAB Foundation; in active development, with a live demo."],
+     ["Node.js", "React", "Frappe", "ERPNext", "Next.js", "MariaDB"]),
     ("Software Developer & AI Specialist", "Jibika Intelligic Ltd.", "Dhaka, Bangladesh",
      "Jan 2025 - Jun 2026", "Full-time",
      ["Worked on Jibika Plexus, a web-based HR & payroll platform used by 300+ companies, covering personnel, leave, "
@@ -107,7 +109,7 @@ JOBS = [
 ]
 # Per-role headline numbers shown as a stat strip (figures taken from the bullets above)
 JOB_STATS = {
-    "SAWAB Bangladesh": [("Scope", "85+", "modules planned in the NGO ERP", "layers"),
+    "SAWAB Bangladesh": [("Scope", "10", "module areas in the NGO ERP", "layers"),
                          ("Delivery", "2", "public web platforms maintained", "globe")],
     "Jibika Intelligic Ltd.": [("Efficiency", "~50%", "less manual effort on HRM content, research and reporting, with humans approving every output", "zap")],
     "Smart Software Limited": [("Scope", "3", "ERP modules built for institutional clients", "layers"),
@@ -162,10 +164,14 @@ EXTRA = [("Leadership & Community", "President, Gobindopur Rising Tigers Club: l
          ("Voluntary Work", "Technical contributor for community websites and open-source non-profit initiatives.")]
 # (title, description, tags, icon, badge, [links])
 PROJECTS = [
-    ("AI-Native NGO ERP", "Distributed humanitarian ERP with NestJS microservices, Kafka event streaming, PGVector RAG, "
-     "Redis locks and LangGraph multi-agents. Planned across 85+ modules; in active development.",
-     ["NestJS", "Kafka", "PGVector", "LangGraph"], "fa-sitemap", "85+ modules", [("github", GH + "/ai-native-ngo-erp")],
-     "../ngo_erp_dashboard.webp"),
+    ("SAWAB NGO ERP", "Multi-organisation ERP and HRM for SAWAB and SAWAB Foundation, in Bangla and English: HR, live "
+     "ZKTeco attendance, multi-project payroll (BEFTN, bKash), NGOAB and donor grants with burn-rate tracking, MEAL, "
+     "micro-investment, accounts and procurement, with approval workflows. In active development, with a live demo.",
+     ["Frappe", "ERPNext", "Next.js", "MariaDB"], "fa-sitemap", "Live demo",
+     # the demo is live; sign-in details are given on request over WhatsApp
+     [("link", "https://sawab-erp-demo.tail5e47fb.ts.net/"),
+      ("whatsapp", WA + "?text=" + quote("Hi Mehedi, I'd like demo access to the SAWAB NGO ERP."))],
+     "../sawab_erp_dashboard.webp"),
     ("Karbar ERP", "Business suite for Bangladesh: accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), payroll with TDS and "
      "tax slabs, inventory, sales, purchases and project tracking.",
      ["Laravel", "Filament", "ERP", "VAT"], "fa-building-columns", None, [("github", GH + "/karbar-erp")],
@@ -4118,7 +4124,7 @@ def extra_card(title, text):
 
 # WORK tab: one line of impact, a status and categories per project
 WORK_META = {
-    "AI-Native NGO ERP": ("85+ modules planned for humanitarian operations", "In development", ["AI", "ERP", "Non-profit"]),
+    "SAWAB NGO ERP": ("HR, payroll, attendance, grants, micro-investment and accounts for SAWAB and SAWAB Foundation", "Live demo", ["ERP", "Non-profit"]),
     "Karbar ERP": ("NBR VAT (Mushak), payroll and TDS for Bangladeshi businesses", None, ["ERP"]),
     "SAWAB Bangladesh Platform": ("Live NGO portal for education, health, WASH and donations", None, ["Web", "Non-profit"]),
     "SAWAB Foundation Portal": ("Zakat calculator, relief tracking and instant donations", None, ["Web", "Non-profit"]),
@@ -4162,13 +4168,15 @@ def work_tab():
         impact, status, cats = WORK_META.get(t, (d, None, ["Web"]))
         site = next((u for k, u in links if k == "link"), None)
         code = next((u for k, u in links if k == "github"), None)
+        wa = next((u for k, u in links if k == "whatsapp"), None)
         if not status:
             status = "Live" if site else None
-        live += status == "Live"; ai += "AI" in cats; npo += "Non-profit" in cats
-        st_cls = {"Live": "is-live", "In development": "is-dev", "Volunteer": "is-vol"}.get(status, "")
+        live += status in ("Live", "Live demo"); ai += "AI" in cats; npo += "Non-profit" in cats
+        st_cls = {"Live": "is-live", "Live demo": "is-live", "In development": "is-dev", "Volunteer": "is-vol"}.get(status, "")
         st = f'<span class="work2-status {st_cls}"><i></i>{e(status)}</span>' if status else ""
         acts = ""
         if site: acts += f'<a class="work2-btn" href="{site}" target="_blank" rel="noopener noreferrer">Live <span aria-hidden="true">&#8599;</span></a>'
+        if wa: acts += f'<a class="work2-btn" href="{wa}" target="_blank" rel="noopener noreferrer">Demo access <span aria-hidden="true">&#8599;</span></a>'
         if code and code != GH: acts += f'<a class="work2-btn" href="{code}" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">&#8599;</span></a>'
         acts += f'<button type="button" class="work2-btn is-ai" data-ask-project="{e(t)}"><span aria-hidden="true">&#10022;</span> Ask AI</button>'
         chips = "".join(f'<span class="tag">{e(x)}</span>' for x in tags[:4])
@@ -4258,14 +4266,20 @@ def proj_card(t, d, tags, icon, badge, links, img, first=False):
     b = f'<span class="badge"><i class="fa-solid fa-arrow-trend-up"></i> {badge}</span>' if badge else ""
     lk = "".join(
         f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="{t} {k}"><i class="fa-brands fa-github"></i></a>' if k == "github"
+        else f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="Ask for {t} demo access on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>' if k == "whatsapp"
         else f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="Open {t}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>'
         for k, u in links)
+    # a demo that opens on request says where to ask
+    wa = next((u for k, u in links if k == "whatsapp"), None)
+    note = (f'<p class="proj-note"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Live demo access: '
+            f'<a href="{wa}" target="_blank" rel="noopener noreferrer">message me on WhatsApp</a></p>') if wa else ""
     tg = "".join(f'<span class="tag">{x}</span>' for x in tags)
     prim = links[0][1] if links else None
     cov_open = '<div class="proj-cover">'
     cov_close = '</div>'
     if prim:
-        btn_label = "Live Preview" if badge == "Live" else ("View Code" if (links and links[0][0] == "github") else "View Project")
+        btn_label = ("Live Preview" if badge == "Live" else "Live Demo" if badge == "Live demo"
+                     else "View Code" if links[0][0] == "github" else "View Project")
         btn_ico = '<i class="fa-solid fa-arrow-up-right-from-square"></i>'
         center_btn = (f'<a href="{prim}" target="_blank" rel="noopener noreferrer" class="proj-center-btn" aria-label="{btn_label} for {e(t)}">'
                       f'<span class="btn-ico">{btn_ico}</span>'
@@ -4285,7 +4299,7 @@ def proj_card(t, d, tags, icon, badge, links, img, first=False):
               f'{b}'
               f'{center_btn}'
               f'{cov_close}'
-              f'<div class="proj-body"><h3 aria-level="2">{e(t)}</h3><p>{e(d)}</p>'
+              f'<div class="proj-body"><h3 aria-level="2">{e(t)}</h3><p>{e(d)}</p>{note}'
               f'<div class="proj-foot"><div class="tag-row">{tg}</div><div class="proj-links">{lk}</div></div></div></article>')
 
 

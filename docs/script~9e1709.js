@@ -1544,7 +1544,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         projects: {
             keywords: [/\b(project|portfolio|build|create|done|example|work|app|erp|sawab|karbar|hostel)\b/i],
-            response: "Featured Deployments:\n• AI-Native Enterprise NGO ERP (85+ Microservices, NestJS, Kafka, PGVector, LangGraph)\n• Karbar ERP — BD Business Suite (Laravel, Filament, NBR VAT & Payroll)\n• SAWAB Bangladesh Enterprise Platform & Foundation Portal\n• AI Video Making Engine & AI Hostel Management\n• Autonomous AI Swarms & Local LLM Sandbox"
+            response: "Featured Deployments:\n• SAWAB NGO ERP (Frappe, ERPNext, Next.js: HR, payroll, grants, micro-investment; live demo)\n• Karbar ERP — BD Business Suite (Laravel, Filament, NBR VAT & Payroll)\n• SAWAB Bangladesh Enterprise Platform & Foundation Portal\n• AI Video Making Engine & AI Hostel Management\n• Autonomous AI Swarms & Local LLM Sandbox"
         },
         credencex: {
             keywords: [/\b(credencex|medical|imaging|healthcare|lab|research|xai)\b/i],
@@ -1570,7 +1570,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const CHAT_PROFILE = "You are Mehedi Hasan, replying in the first person to a visitor on your portfolio site (mehedi.pro.bd); you are an AI version of him, so say so if asked. Answer in the visitor's language, warmly and briefly: 1-3 short sentences. Never invent facts, prices or dates, and never commit to work or deadlines. " +
         "Facts: Mehedi is an AI-native software engineer in Bangladesh with 4+ years in production. Backend and systems: NestJS, Laravel, Node.js, PostgreSQL, Redis, Kafka, RabbitMQ, Docker, Kubernetes, AWS, CI/CD. Frontend: React, TypeScript, Flutter. AI: LangGraph, MCP, RAG with PGVector, local LLMs via Ollama, Claude, Gemini, n8n automations. " +
-        "Work: an AI-native NGO ERP (85+ microservices), HR and payroll systems with AI modules, Karbar ERP (VAT and payroll for Bangladesh), the SAWAB Bangladesh platform, and autonomous AI agent swarms. Open to freelance and contract work. " +
+        "Work: SAWAB's multi-organisation NGO ERP (Frappe, ERPNext, Next.js; live demo), HR and payroll systems with AI modules, Karbar ERP (VAT and payroll for Bangladesh), the SAWAB Bangladesh platform, and autonomous AI agent swarms. Open to freelance and contract work. " +
         "Contact: WhatsApp +880 1799-447594, email mehedihasan228.cse@gmail.com, GitHub github.com/MehediHasan228. If unsure, invite them to message you on WhatsApp.";
 
     const DEFAULT_RESPONSE = "Query complete. Try asking about Mehedi's skills, enterprise ERPs, cloud architectures, AI services, or how to reach him directly.";
@@ -1818,7 +1818,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 projects: {
                     q: 'View Projects',
-                    a: `A few things I've built:<br>• <strong>AI-Native NGO ERP</strong> — 85+ microservices<br>• <strong>HR &amp; Payroll</strong> — BD compliance suite<br>• <strong>Karbar ERP</strong> — VAT &amp; payroll<br>• <strong>Autonomous AI swarms</strong> — local LLM sandbox<div class="chat-actions">${act(projectsHref, 'See my projects')}</div>`
+                    a: `A few things I've built:<br>• <strong>SAWAB NGO ERP</strong> — HR, payroll, grants and accounts (live demo)<br>• <strong>HR &amp; Payroll</strong> — BD compliance suite<br>• <strong>Karbar ERP</strong> — VAT &amp; payroll<br>• <strong>Autonomous AI swarms</strong> — local LLM sandbox<div class="chat-actions">${act(projectsHref, 'See my projects')}</div>`
                 },
                 hire: {
                     q: 'Hire / Collaborate',
@@ -4225,7 +4225,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const terminalTicker = document.getElementById('terminal-ticker');
     if (terminalTicker) {
         const telemetryPool = [
-            { tag: 'SAWAB', tagClass: 'tag-rag', msg: 'Building an AI-native NGO ERP: NestJS, Kafka, LangGraph • <b class="metric-hl">85+ modules</b> planned' },
+            { tag: 'SAWAB', tagClass: 'tag-rag', msg: 'NGO ERP on Frappe + Next.js: <b class="metric-hl">10 modules</b>, live demo' },
             { tag: 'JIBIKA', tagClass: 'tag-ai', msg: 'AI in HR &amp; payroll software used by <b class="metric-hl">300+ companies</b> • ~50% less manual work' },
             { tag: 'KARBAR', tagClass: 'tag-stream', msg: 'ERP for Bangladesh: NBR VAT (Mushak 6.3, 6.5, 9.1), payroll &amp; TDS' },
             { tag: 'FLUTTER', tagClass: 'tag-sre', msg: 'Mobile app with NID OCR onboarding and GPS duty tracking' },

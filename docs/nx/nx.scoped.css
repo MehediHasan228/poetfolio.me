@@ -144,6 +144,9 @@
 .nx .proj-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .nx .proj-body h3 { font-size: 18px; font-weight: 600; }
 .nx .proj-body p { color: var(--ink-3); font-size: 15px; line-height: 1.45; }
+.nx .proj-body .proj-note { font-size: 14px; color: var(--ink-2); }
+.nx .proj-note i { color: #25d366; margin-right: 4px; }
+.nx .proj-note a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
 .nx .proj-foot { margin-top: auto; padding-top: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .nx .proj-links { display: flex; gap: 8px; }
 .nx .proj-links a { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; }

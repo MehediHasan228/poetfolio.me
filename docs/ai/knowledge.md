@@ -90,12 +90,13 @@ EXPLORER
 main*
 TypeScript
 ## Production Deployments
-In Active Dev Blueprint
-VIEW BLUEPRINT
-### AI-Native Enterprise NGO ERP
-Active Development 85+ Microservices
-Distributed humanitarian ERP featuring NestJS microservices, Apache Kafka event streaming, PGVector RAG, Redis locks, and LangGraph multi-agents.
-NestJS Kafka LangGraph PGVector K8s
+Live Demo Access on request
+OPEN LIVE DEMO
+### SAWAB NGO ERP
+Live Demo 10 Modules
+Multi-organisation ERP & HRM for SAWAB and SAWAB Foundation, in Bangla and English: HR, live ZKTeco attendance, multi-project payroll, NGOAB & donor grants, micro-investment, accounts and procurement. In active development, with a live demo.
+Live demo access: message me on WhatsApp
+Frappe / ERPNext Next.js 15 MariaDB Redis Docker
 Live Deployment GitHub Live
 VIEW REPOSITORY
 ### Karbar ERP — BD Business Suite
@@ -147,7 +148,7 @@ Open to freelance & full-time
 ## About
 Full-Stack Software Engineer with 4+ years of hands-on experience architecting high-performance web applications and scalable APIs. Core expertise spans modern TypeScript, React, and Next.js on the frontend, paired with robust NestJS, Python (FastAPI), and event-driven distributed architectures. Also familiar and extensively experienced with PHP / Laravel backend microservices, custom web platforms, and WordPress / WooCommerce solutions.
 An AI-native engineer who leverages state-of-the-art LLM workflows (Claude, OpenAI, Antigravity, OpenCode, Ollama) to accelerate engineering velocity without sacrificing code hygiene. Actively building multi-agent automation systems using LangGraph, MCP, and retrieval-augmented workflows (PGVector), backed by Kafka event streaming, Docker containerisation, and Kubernetes.
-Currently leading development for SAWAB Bangladesh's digital web platforms and architecting an AI-native NGO ERP spanning 85+ planned modules. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.
+Currently leading development for SAWAB Bangladesh's digital web platforms and building SAWAB's multi-organisation NGO ERP and HRM system on Frappe and Next.js. Strong grasp of enterprise IT, VAPT security, and clean documentation—driven to build reliable software fast.
 Based in
 ### Dhaka, Bangladesh
 2:32 PM GMT+6
@@ -173,13 +174,12 @@ Current
 Jul 2026 – Present · 4 mos
 SAWAB Bangladesh · Full-time ·Dhaka, Bangladesh
 Scope
-85+
-modules planned in the NGO ERP
+module areas in the NGO ERP
 Delivery
 public web platforms maintained
 - Build and maintain SAWAB Bangladesh's public web platforms (sawabbd.org, sawabfoundation.org.bd) on Node.js / React: donation pipelines, bilingual (Bangla/English) content, and program pages for education, healthcare and WASH initiatives.
-- Design and develop an AI-native NGO ERP: NestJS microservices, Kafka event streaming, Redis, PGVector-based retrieval and LangGraph multi-agent workflows, planned across 85+ modules; currently in active development.
-Node.js React NestJS Kafka PGVector LangGraph
+- Design and develop SAWAB's multi-organisation NGO ERP and HRM on Frappe, ERPNext and HRMS with a Next.js 15 portal: HR, ZKTeco biometric attendance, multi-project payroll, NGOAB and donor grants, micro-investment, accounts and procurement, for SAWAB and SAWAB Foundation; in active development, with a live demo.
+Node.js React Frappe ERPNext Next.js MariaDB
 ### Software Developer & AI Specialist
 Jan 2025 – Jun 2026 · 1 yr 6 mos
 Jibika Intelligic Ltd. · Full-time ·Dhaka, Bangladesh
@@ -263,10 +263,11 @@ Non-profit WordPress Community tech
 
 # Projects (/projects/)
 Products I've designed, built and shipped: NGO and ERP platforms, AI automation and web projects.
-85+ modules View Code
-### AI-Native NGO ERP
-Distributed humanitarian ERP with NestJS microservices, Kafka event streaming, PGVector RAG, Redis locks and LangGraph multi-agents. Planned across 85+ modules; in active development.
-NestJS Kafka PGVector LangGraph
+Live demo Live Demo
+### SAWAB NGO ERP
+Multi-organisation ERP and HRM for SAWAB and SAWAB Foundation, in Bangla and English: HR, live ZKTeco attendance, multi-project payroll (BEFTN, bKash), NGOAB and donor grants with burn-rate tracking, MEAL, micro-investment, accounts and procurement, with approval workflows. In active development, with a live demo.
+Live demo access: message me on WhatsApp
+Frappe ERPNext Next.js MariaDB
 View Code
 ### Karbar ERP
 Business suite for Bangladesh: accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), payroll with TDS and tax slabs, inventory, sales, purchases and project tracking.
