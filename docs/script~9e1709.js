@@ -3868,11 +3868,16 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             return;
         }
 
+        // Rows slide in only when the panel is open to see it; into the closed panel they are just placed (animating 25
+        // unseen rows re-laid out the table every frame for a second).
+        const rowsShow = !!document.querySelector('#leaderboard-widget:not(.lb-collapsed)');
         modelsList.slice(0, 25).forEach((model, index) => {
             const tr = document.createElement('tr');
-            tr.style.opacity = '0';
-            tr.style.transform = 'translateY(8px)';
-            tr.style.transition = `all 0.25s ease ${index * 0.03}s`;
+            if (rowsShow) {
+                tr.style.opacity = '0';
+                tr.style.transform = 'translateY(8px)';
+                tr.style.transition = `all 0.25s ease ${index * 0.03}s`;
+            }
 
             const rankClass = model.rank === 1 ? 'rank-1' : model.rank === 2 ? 'rank-2' : model.rank === 3 ? 'rank-3' : 'rank-other';
             const statusClass = `badge-${model.status || 'stable'}`;
@@ -3926,7 +3931,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             `;
             leaderboardBody.appendChild(tr);
 
-            setTimeout(() => {
+            if (rowsShow) setTimeout(() => {
                 tr.style.opacity = '1';
                 tr.style.transform = 'translateY(0)';
             }, 20);

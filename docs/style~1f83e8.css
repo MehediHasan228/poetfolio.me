@@ -11482,3 +11482,31 @@ html:not(.snap-ready) :is(.arch-unified-grid, .arch-pillars-grid, .arch-pipeline
    are in): two lines on desktop and on the narrowest phones, where the longer phrases wrap; the centred hero never jumps. */
 @media (min-width: 769px) { html body .hero-text-side h2:not(#_h) { min-height: 3em; } }
 @media (max-width: 380px) { html body .hero-text-side h2:not(#_h) { min-height: 3.2em; } }
+
+/* Loops that ran on the main thread every frame now run on the GPU (each forced a layout pass, which also slows the
+   page's Speed Index). The mascot's idle breathing moves from its SVG group to the <svg> box: the same motion
+   (-3 of 200 units = -1.5%, around the centre), but a transform on an SVG group re-lays out the eyes, capsule and
+   sparkles each frame. The expressions with their own motion (hop, sway, talk...) still move the group. */
+.ai-orb-group { animation: none; }
+.ai-orb-svg { transform-origin: 50% 50%; animation: aiOrbBreatheBox 4.6s ease-in-out infinite; }
+ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-expression="angry"], [data-expression="pout"],
+    [data-expression="surprised"], [data-expression="responding"], [data-expression="error"]) .ai-orb-svg { animation: none; }
+@keyframes aiOrbBreatheBox { 0%, 100% { transform: translateY(0) scale(1, 1); } 45%, 55% { transform: translateY(-1.5%) scale(1.012, 0.994); } }
+@media (prefers-reduced-motion: reduce) { .ai-orb-svg { animation: none !important; } }
+/* The leaderboard tab's three live bars rise and fall with scaleY and opacity instead of height and glow (a height
+   change re-laid out the whole leaderboard each frame). Heights are the old tallest; the scales give the old lows. */
+.lb-telemetry-bars .lb-bar-1 { height: 18px; animation-name: lbBarWave1; }
+.lb-telemetry-bars .lb-bar-2 { height: 21px; animation-name: lbBarWave2; }
+.lb-telemetry-bars .lb-bar-3 { height: 22px; animation-name: lbBarWave3; }
+@keyframes lbBarWave1 { 0%, 100% { transform: scaleY(.444); opacity: .8; } 50% { transform: scaleY(1); opacity: 1; } }
+@keyframes lbBarWave2 { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(.476); opacity: .8; } }
+@keyframes lbBarWave3 { 0%, 100% { transform: scaleY(.59); opacity: .85; } 50% { transform: scaleY(1); opacity: 1; } }
+/* the same for the four bars beside the leaderboard title */
+.lb-title-telemetry .lb-tb-1 { height: 16px; animation-name: lbTitleBar1; }
+.lb-title-telemetry .lb-tb-2 { height: 18px; animation-name: lbTitleBar2; }
+.lb-title-telemetry .lb-tb-3 { height: 17px; animation-name: lbTitleBar3; }
+.lb-title-telemetry .lb-tb-4 { height: 15px; animation-name: lbTitleBar4; }
+@keyframes lbTitleBar1 { 0%, 100% { transform: scaleY(.375); opacity: .8; } 50% { transform: scaleY(1); opacity: 1; } }
+@keyframes lbTitleBar2 { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(.444); opacity: .8; } }
+@keyframes lbTitleBar3 { 0%, 100% { transform: scaleY(.588); opacity: .85; } 50% { transform: scaleY(1); opacity: 1; } }
+@keyframes lbTitleBar4 { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(.467); opacity: .8; } }
