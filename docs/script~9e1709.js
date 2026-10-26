@@ -3190,7 +3190,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tIdx = (tIdx + 1) % tArr.length; setTimeout(type, 500);
             }
         }
-        setTimeout(type, 1000);
+        // The first phrase comes written in the page, so the hero reads complete from the first paint; the typing
+        // cycle takes over after 5 s (typed in from empty, the title kept changing the first screen for seconds).
+        if (typingSpan.textContent === tArr[0].text) { cIdx = tArr[0].text.length; setTimeout(erase, 5000); }
+        else setTimeout(type, 1000);
     }
 
     /* ==========================================
