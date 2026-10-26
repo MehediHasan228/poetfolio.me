@@ -4419,6 +4419,18 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         previewObserver.observe(projectsGrid);
     } else showPreviews();
 
+    // The architecture tags' logos (data-src on the home page) load one by one as they come within 300 px.
+    const tagIcons = document.querySelectorAll('img.arch-tag-icon[data-src]');
+    const showTagIcon = (img) => { img.src = img.dataset.src; img.removeAttribute('data-src'); };
+    if (tagIcons.length && 'IntersectionObserver' in window) {
+        const tagObserver = new IntersectionObserver((entries) => entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            tagObserver.unobserve(e.target);
+            showTagIcon(e.target);
+        }), { rootMargin: '300px 0px' });
+        tagIcons.forEach((img) => tagObserver.observe(img));
+    } else tagIcons.forEach(showTagIcon);
+
     // Animations that loop forever cost a style pass every frame even off screen (the live dots far down the page, cover
     // blobs). After load each one rests while its element is off screen (.anim-rest in the stylesheet). The portrait
     // card's own loops are paused by the stylesheet until the card is opened.

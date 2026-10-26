@@ -157,6 +157,10 @@ def main() -> None:
     home = re.sub(r'\s*<section id="archives".*?</section>', '', home, count=1, flags=re.S)
     tail_idx = home.index('<div style="text-align: center; padding-bottom: 2rem;">')
     home = home[:tail_idx] + "</main>\n\n    " + bottom_nav(None, prefix="./") + "\n" + home[tail_idx:]
+    # the architecture tags' small logos sit just below the first screen, where Chrome's lazy loading (about 1250 px
+    # ahead) fetched them with the first screen; here they wait for script~ to load them as the section comes near
+    home = re.sub(r'<img src="(\./uploads/brand-icons/[^"]+)"([^>]*class="arch-tag-icon")',
+                  r'<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="\1"\2', home)
     # the page content (hero to contact) is the main landmark; the source keeps no <main>, since its parts are reused
     home = home.replace('<header class="hero"', '<main id="main-content">\n    <header class="hero"', 1)
     (DOCS / "index.html").write_text(home, encoding="utf-8")
