@@ -759,6 +759,18 @@ html[data-sidebar="collapsed"] .round-btns { flex-direction: column; }
   50% { transform: translate(12%, -10%) scale(1.15) rotate(20deg); }
   100% { transform: translate(-10%, 8%) scale(.95) rotate(-15deg); }
 }
+[data-slats-canvas] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: auto;
+}
+[data-slats-canvas] canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
 
 /* ---------- responsive ---------- */
 @media (max-width: 1199px) { .rail { display: none; } }
