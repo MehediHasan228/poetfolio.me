@@ -3536,6 +3536,7 @@ def scope_css(css):
 _src = (ROOT / "scripts/site_src/index.full.html").read_text(encoding="utf-8").replace("\r\n", "\n")
 _head = _src[:_src.index("<body>")]
 _head = re.sub(r'<script type="application/ld\+json">.*?</script>', "", _head, flags=re.S)
+_head = re.sub(r'\s*<script id="hero-net">.*?</script>', "", _head, flags=re.S)  # draws the home hero's particles
 _open = _src[_src.index("<body>") + 6:_src.index('<header class="hero"')]
 _tail = _src[_src.index('<div style="text-align: center; padding-bottom: 2rem;">'):]
 _tail = _tail.replace('<div style="text-align: center; padding-bottom: 2rem;">',

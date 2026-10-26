@@ -2673,7 +2673,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             for (let x = 0; x < matrixColumns; x++) matrixDrops[x] = 1;
         }
 
-        function initParticles() {
+        // keep: the dots drawn as the page parsed (the hero-net script in the head) start moving from where they are
+        function initParticles(keep) {
+            if (keep && window.heroParticles && canvas.width === innerWidth && canvas.height === innerHeight) {
+                pArray = window.heroParticles;
+                initMatrix();
+                return true;
+            }
             canvas.width = innerWidth;
             canvas.height = innerHeight;
             pArray = [];
@@ -2689,10 +2695,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        window.addEventListener('resize', initParticles);
+        window.addEventListener('resize', () => initParticles());
 
         let particlesOn = false, heroInView = true, particleFrame = 0;
-        const LINK_STEPS = 10;
         // Phones draw every other frame (~30 fps) and move twice as far each time: the same drift at half the work.
         const PARTICLE_STEP = matchMedia('(pointer: coarse)').matches ? 2 : 1;
 
@@ -2715,11 +2720,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     matrixDrops[i]++;
                 }
             } else {
-                ctx.clearRect(0, 0, innerWidth, innerHeight);
-                // One path for all the dots and one per alpha step for the links: a few draw calls a frame instead of hundreds.
-                const col = pArray.length ? pArray[0].col : '';
-                ctx.fillStyle = col;
-                ctx.beginPath();
                 pArray.forEach(p => {
                     if (p.x >= canvas.width) { p.x = canvas.width; p.dx *= -1; }
                     else if (p.x <= 0) { p.x = 0; p.dx *= -1; }
@@ -2743,32 +2743,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (Math.abs(p.dy) < 0.3) p.dy = p.dy > 0 ? 0.3 : -0.3;
 
                     p.x += p.dx * PARTICLE_STEP; p.y += p.dy * PARTICLE_STEP;
-                    ctx.moveTo(p.x + p.s, p.y);
-                    ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
                 });
-                ctx.fill();
-
-                const links = Array.from({ length: LINK_STEPS }, () => new Path2D());
-                for (let a = 0; a < pArray.length; a++) {
-                    for (let b = a + 1; b < pArray.length; b++) {
-                        let d = Math.pow(pArray[a].x - pArray[b].x, 2) + Math.pow(pArray[a].y - pArray[b].y, 2);
-                        if (d < 15000) {
-                            const link = links[Math.min(LINK_STEPS - 1, Math.floor((1 - d / 15000) * LINK_STEPS))];
-                            link.moveTo(pArray[a].x, pArray[a].y);
-                            link.lineTo(pArray[b].x, pArray[b].y);
-                        }
-                    }
-                }
-                ctx.strokeStyle = col;
-                links.forEach((link, i) => { ctx.globalAlpha = (i + 0.5) / LINK_STEPS; ctx.stroke(link); });
-                ctx.globalAlpha = 1;
+                drawParticleNet(ctx, pArray);
             }
         }
 
         // The page paints first: the particles start once the browser is idle, and rest while the hero is off screen.
-        // The network is part of the first look, so one still frame is drawn right away; the motion follows when idle.
-        initParticles();
-        heroInView = false; animateParticles(); heroInView = true;
+        // The first still frame was drawn with the hero; it is drawn here only if the window changed size since.
+        if (!initParticles(true)) { heroInView = false; animateParticles(); heroInView = true; }
         const startParticles = () => {
             animateParticles();
             new IntersectionObserver(([entry]) => {

@@ -119,6 +119,8 @@ def main() -> None:
     src = SRC.read_text(encoding="utf-8").replace("\r\n", "\n")
     head_end = src.index("<body>")
     head = src[:head_end]
+    # the hero's particle canvas is on the home page only, so is the script that draws its first frame
+    head = re.sub(r'\s*<script id="hero-net">.*?</script>', "", head, flags=re.S)
     body_open = src[head_end:src.index('<header class="hero"')]
     hero = src[src.index('<header class="hero"'):src.index("</header>") + len("</header>")]
     tail = src[src.index('<div style="text-align: center; padding-bottom: 2rem;">'):]
