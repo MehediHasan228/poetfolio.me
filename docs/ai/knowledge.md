@@ -94,8 +94,7 @@ Live Demo Access on request
 OPEN LIVE DEMO
 ### SAWAB NGO ERP
 Live Demo 10 Modules
-Multi-organisation ERP & HRM for SAWAB and SAWAB Foundation, in Bangla and English: HR, live ZKTeco attendance, multi-project payroll, NGOAB & donor grants, micro-investment, accounts and procurement. In active development, with a live demo.
-Live demo access: message me on WhatsApp
+Multi-organisation ERP & HRM for SAWAB and SAWAB Foundation: HR, ZKTeco attendance, payroll, NGOAB grants, micro-investment, accounts and procurement.
 Frappe / ERPNext Next.js 15 MariaDB Redis Docker
 Live Deployment GitHub Live
 VIEW REPOSITORY
@@ -265,9 +264,8 @@ Non-profit WordPress Community tech
 Products I've designed, built and shipped: NGO and ERP platforms, AI automation and web projects.
 Live demo Live Demo
 ### SAWAB NGO ERP
-Multi-organisation ERP and HRM for SAWAB and SAWAB Foundation, in Bangla and English: HR, live ZKTeco attendance, multi-project payroll (BEFTN, bKash), NGOAB and donor grants with burn-rate tracking, MEAL, micro-investment, accounts and procurement, with approval workflows. In active development, with a live demo.
-Live demo access: message me on WhatsApp
-Frappe ERPNext Next.js MariaDB
+Multi-organisation ERP and HRM for SAWAB and SAWAB Foundation: HR, ZKTeco attendance, payroll, NGOAB and donor grants, micro-investment, accounts and procurement.
+Frappe ERPNext Next.js
 View Code
 ### Karbar ERP
 Business suite for Bangladesh: accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), payroll with TDS and tax slabs, inventory, sales, purchases and project tracking.

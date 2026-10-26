@@ -164,10 +164,9 @@ EXTRA = [("Leadership & Community", "President, Gobindopur Rising Tigers Club: l
          ("Voluntary Work", "Technical contributor for community websites and open-source non-profit initiatives.")]
 # (title, description, tags, icon, badge, [links])
 PROJECTS = [
-    ("SAWAB NGO ERP", "Multi-organisation ERP and HRM for SAWAB and SAWAB Foundation, in Bangla and English: HR, live "
-     "ZKTeco attendance, multi-project payroll (BEFTN, bKash), NGOAB and donor grants with burn-rate tracking, MEAL, "
-     "micro-investment, accounts and procurement, with approval workflows. In active development, with a live demo.",
-     ["Frappe", "ERPNext", "Next.js", "MariaDB"], "fa-sitemap", "Live demo",
+    ("SAWAB NGO ERP", "Multi-organisation ERP and HRM for SAWAB and SAWAB Foundation: HR, ZKTeco attendance, payroll, "
+     "NGOAB and donor grants, micro-investment, accounts and procurement.",
+     ["Frappe", "ERPNext", "Next.js"], "fa-sitemap", "Live demo",
      # the demo is live; sign-in details are given on request over WhatsApp
      [("link", "https://sawab-erp-demo.tail5e47fb.ts.net/"),
       ("whatsapp", WA + "?text=" + quote("Hi Mehedi, I'd like demo access to the SAWAB NGO ERP."))],
@@ -4266,13 +4265,9 @@ def proj_card(t, d, tags, icon, badge, links, img, first=False):
     b = f'<span class="badge"><i class="fa-solid fa-arrow-trend-up"></i> {badge}</span>' if badge else ""
     lk = "".join(
         f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="{t} {k}"><i class="fa-brands fa-github"></i></a>' if k == "github"
-        else f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="Ask for {t} demo access on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>' if k == "whatsapp"
+        else f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="Ask for {t} demo access on WhatsApp" title="Demo access on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>' if k == "whatsapp"
         else f'<a href="{u}" target="_blank" rel="noopener noreferrer" aria-label="Open {t}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>'
         for k, u in links)
-    # a demo that opens on request says where to ask
-    wa = next((u for k, u in links if k == "whatsapp"), None)
-    note = (f'<p class="proj-note"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Live demo access: '
-            f'<a href="{wa}" target="_blank" rel="noopener noreferrer">message me on WhatsApp</a></p>') if wa else ""
     tg = "".join(f'<span class="tag">{x}</span>' for x in tags)
     prim = links[0][1] if links else None
     cov_open = '<div class="proj-cover">'
@@ -4299,7 +4294,7 @@ def proj_card(t, d, tags, icon, badge, links, img, first=False):
               f'{b}'
               f'{center_btn}'
               f'{cov_close}'
-              f'<div class="proj-body"><h3 aria-level="2">{e(t)}</h3><p>{e(d)}</p>{note}'
+              f'<div class="proj-body"><h3 aria-level="2">{e(t)}</h3><p>{e(d)}</p>'
               f'<div class="proj-foot"><div class="tag-row">{tg}</div><div class="proj-links">{lk}</div></div></div></article>')
 
 

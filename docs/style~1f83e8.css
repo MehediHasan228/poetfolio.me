@@ -11529,8 +11529,3 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
 @media (min-width: 769px) {
     .hero-text-side h1 .gradient-text { vertical-align: top; }
 }
-
-/* The NGO ERP's live demo opens on request: its card says where to ask */
-.project-demo-note { margin: -0.3rem 0 0.9rem; font-size: 0.85rem; color: var(--text-secondary, #94a3b8); }
-.project-demo-note i { color: #25d366; margin-right: 4px; }
-.project-demo-note a { color: var(--accent-1); text-decoration: underline; text-underline-offset: 3px; }
