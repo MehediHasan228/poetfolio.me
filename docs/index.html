@@ -109,7 +109,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="./vendor/fa/css/all.min.css?v=2">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=262">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=263">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -687,98 +687,82 @@
         </div>
         <div class="arch-infographic-wrap hidden">
 
-            <!-- The kinds of systems I build: the work behind each, then the tools it used (hover a tool for where) -->
-            <div class="arch-unified-grid" id="archUnifiedGrid">
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
-                    <div class="arch-pillar-header">
-                        <div class="arch-pillar-title-wrap">
-                            <div class="arch-pillar-icon" style="color: #38bdf8;"><i class="fa-solid fa-sitemap"></i></div>
-                            <h3 class="arch-pillar-title">ERP &amp; HR Platforms</h3>
-                        </div>
-                        <span class="arch-pillar-badge" style="color:#38bdf8; border-color:rgba(56,189,248,0.25); background:rgba(56,189,248,0.1);"><i class="fa-solid fa-building"></i> 300+ companies</span>
-                    </div>
-                    <p class="arch-pillar-desc">HR, payroll, attendance, accounts and approvals built as one system, for NGOs and businesses.</p>
-                    <ul class="arch-proof">
-                        <li><strong>SAWAB NGO ERP</strong> Frappe and ERPNext with a Next.js 15 portal; live demo</li>
-                        <li><strong>Jibika Plexus</strong> HR and payroll platform used by 300+ companies</li>
-                        <li><strong>Karbar ERP</strong> accounting, VAT, payroll and inventory on Laravel</li>
+            <!-- Each card draws the shape of the system it describes, says where it was built, then names its tools (hover one for where) -->
+            <div class="arch-unified-grid hb-grid" id="archUnifiedGrid">
+                <article class="arch-unified-card hb-card" style="--hb: #38bdf8;">
+                    <h3 class="hb-title">ERP &amp; HR platforms</h3>
+                    <p class="hb-lede">HR, payroll, attendance and accounts built as one system, not separate apps.</p>
+                    <ul class="hb-fig hb-modules" aria-label="Modules that share one data model">
+                        <li class="hb-modules-label" aria-hidden="true">one data model</li>
+                        <li>HR</li><li>Attendance</li><li>Leave</li><li>Payroll</li>
+                        <li>Appraisal</li><li>Grants</li><li>Accounts</li><li>Procurement</li>
                     </ul>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag" title="SAWAB NGO ERP, with ERPNext and HRMS"><i class="fa-solid fa-cubes" style="color:#0089ff;"></i> Frappe</span>
-                        <span class="arch-tech-tag" title="SAWAB NGO ERP"><i class="fa-solid fa-sitemap" style="color:#0089ff;"></i> ERPNext</span>
-                        <span class="arch-tech-tag" title="SAWAB NGO ERP's portal"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/nextjs.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Next.js</span>
-                        <span class="arch-tech-tag" title="Karbar ERP, with Filament"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/laravel.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Laravel</span>
-                        <span class="arch-tech-tag" title="SAWAB NGO ERP's database"><i class="fa-solid fa-database" style="color:#c0765a;"></i> MariaDB</span>
-                        <span class="arch-tech-tag" title="Cache and background-job queues in the NGO ERP"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/redis.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Redis</span>
+                    <p class="hb-where">Built in <strong>SAWAB NGO ERP</strong> (live demo), <strong>Jibika Plexus</strong> (used by 300+ companies) and <strong>Karbar ERP</strong>.</p>
+                    <div class="hb-tools">
+                        <span class="hb-tool" title="SAWAB NGO ERP, with ERPNext and HRMS"><i class="fa-solid fa-cubes" style="color:#0089ff;"></i>Frappe</span>
+                        <span class="hb-tool" title="SAWAB NGO ERP"><i class="fa-solid fa-sitemap" style="color:#0089ff;"></i>ERPNext</span>
+                        <span class="hb-tool" title="SAWAB NGO ERP's portal"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/nextjs.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">Next.js</span>
+                        <span class="hb-tool" title="Karbar ERP, with Filament"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/laravel.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">Laravel</span>
+                        <span class="hb-tool" title="SAWAB NGO ERP's database"><i class="fa-solid fa-database" style="color:#c0765a;"></i>MariaDB</span>
+                        <span class="hb-tool" title="Cache and background-job queues in the NGO ERP"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/redis.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">Redis</span>
                     </div>
-                </div>
+                </article>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
-                    <div class="arch-pillar-header">
-                        <div class="arch-pillar-title-wrap">
-                            <div class="arch-pillar-icon" style="color: #a855f7;"><i class="fa-solid fa-brain"></i></div>
-                            <h3 class="arch-pillar-title">AI in Business Software</h3>
-                        </div>
-                        <span class="arch-pillar-badge" style="color:#b166f8; border-color:rgba(168,85,247,0.25); background:rgba(168,85,247,0.1);"><i class="fa-solid fa-bolt"></i> ~50% less manual work</span>
+                <article class="arch-unified-card hb-card" style="--hb: #a78bfa;">
+                    <h3 class="hb-title">AI in business software</h3>
+                    <p class="hb-lede">LLMs write the first draft inside the HR modules people already use.</p>
+                    <dl class="hb-fig hb-ai">
+                        <div><dt>Reports</dt><dd>narratives</dd></div>
+                        <div><dt>Appraisal</dt><dd>first drafts</dd></div>
+                        <div><dt>Leave</dt><dd>policy answers</dd></div>
+                        <div><dt>Personnel</dt><dd>HR documents</dd></div>
+                    </dl>
+                    <div class="hb-effort" role="img" aria-label="Manual effort cut by about half">
+                        <span class="hb-effort-label">before</span><span class="hb-effort-bar"><i style="width: 100%;"></i></span>
+                        <span class="hb-effort-label">after</span><span class="hb-effort-bar is-after"><i style="width: 50%;"></i><b>~50% less manual work</b></span>
                     </div>
-                    <p class="arch-pillar-desc">LLM features placed inside the modules people already use, not in a separate chatbot.</p>
-                    <ul class="arch-proof">
-                        <li><strong>Jibika Plexus</strong> OpenAI, Claude and Gemini write report narratives, appraisal drafts and leave-policy answers</li>
-                        <li><strong>AI Video Making Engine</strong> Whisper speech-to-text and Bengali NLP cut long videos into 9:16 clips</li>
-                    </ul>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag" title="Report and appraisal drafts at Jibika"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/claude.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude</span>
-                        <span class="arch-tech-tag" title="LLM APIs in Jibika's Reports, Appraisal and Leave modules"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/openai.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI</span>
-                        <span class="arch-tech-tag" title="LLM APIs in Jibika's HR modules"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/gemini.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini</span>
-                        <span class="arch-tech-tag" title="Python backend of the AI Video Making Engine"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/fastapi.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> FastAPI</span>
-                        <span class="arch-tech-tag" title="Multi-agent workflows"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/langgraph.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangGraph</span>
-                        <span class="arch-tech-tag" title="Local LLMs for private, on-device AI"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/ollama.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Ollama</span>
+                    <p class="hb-where">Built in <strong>Jibika Plexus</strong>, and in the <strong>AI Video Making Engine</strong> (Whisper, Bengali NLP).</p>
+                    <div class="hb-tools">
+                        <span class="hb-tool" title="Report and appraisal drafts at Jibika"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/claude.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">Claude</span>
+                        <span class="hb-tool" title="LLM APIs in Jibika's Reports, Appraisal and Leave modules"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/openai.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">OpenAI</span>
+                        <span class="hb-tool" title="LLM APIs in Jibika's HR modules"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/gemini.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">Gemini</span>
+                        <span class="hb-tool" title="Python backend of the AI Video Making Engine"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/fastapi.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">FastAPI</span>
+                        <span class="hb-tool" title="Multi-agent workflows"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/langgraph.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">LangGraph</span>
+                        <span class="hb-tool" title="Local LLMs for private, on-device AI"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/ollama.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">Ollama</span>
                     </div>
-                </div>
+                </article>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
-                    <div class="arch-pillar-header">
-                        <div class="arch-pillar-title-wrap">
-                            <div class="arch-pillar-icon" style="color: #10b981;"><i class="fa-solid fa-microchip"></i></div>
-                            <h3 class="arch-pillar-title">Devices &amp; Field Data</h3>
-                        </div>
-                        <span class="arch-pillar-badge"><i class="fa-solid fa-chart-line"></i> ZKTeco &middot; GPS</span>
+                <article class="arch-unified-card hb-card" style="--hb: #34d399;">
+                    <h3 class="hb-title">Devices and field data</h3>
+                    <p class="hb-lede">Attendance comes straight from biometric devices and phones, then flows into payroll.</p>
+                    <ol class="hb-fig hb-flow" aria-label="How attendance reaches payroll">
+                        <li class="hb-flow-in"><span>ZKTeco punch</span><span>Phone GPS, NID OCR</span></li>
+                        <li><span>Attendance &amp; approvals</span></li>
+                        <li><span>Payroll</span></li>
+                    </ol>
+                    <p class="hb-where">Built in <strong>SAWAB NGO ERP</strong> (live ZKTeco) and <strong>Jibika Plexus</strong> (Flutter app).</p>
+                    <div class="hb-tools">
+                        <span class="hb-tool" title="Jibika's mobile app: NID OCR onboarding and GPS duty tracking"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/flutter.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">Flutter</span>
+                        <span class="hb-tool" title="Jibika Plexus"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/dotnet.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14">.NET</span>
+                        <span class="hb-tool" title="Jibika Plexus"><i class="fa-solid fa-database" style="color:#f80000;"></i>Oracle</span>
                     </div>
-                    <p class="arch-pillar-desc">Attendance and duty data taken straight from biometric devices and phones, then carried through to payroll.</p>
-                    <ul class="arch-proof">
-                        <li><strong>SAWAB NGO ERP</strong> live ZKTeco biometric attendance</li>
-                        <li><strong>Jibika Plexus</strong> device and GPS attendance with multi-layer approvals; Flutter app with NID OCR onboarding</li>
-                    </ul>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag" title="Biometric attendance devices in the NGO ERP"><i class="fa-solid fa-microchip" style="color:#10b981;"></i> ZKTeco</span>
-                        <span class="arch-tech-tag" title="Jibika's mobile app: NID OCR onboarding and GPS duty tracking"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/flutter.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Flutter</span>
-                        <span class="arch-tech-tag" title="Jibika Plexus"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/dotnet.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> .NET</span>
-                        <span class="arch-tech-tag" title="Jibika Plexus"><i class="fa-solid fa-database" style="color:#f80000;"></i> Oracle</span>
-                    </div>
-                </div>
+                </article>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
-                    <div class="arch-pillar-header">
-                        <div class="arch-pillar-title-wrap">
-                            <div class="arch-pillar-icon" style="color: #f59e0b;"><i class="fa-solid fa-building-columns"></i></div>
-                            <h3 class="arch-pillar-title">Bangladesh Compliance</h3>
-                        </div>
-                        <span class="arch-pillar-badge" style="color:#f59e0b; border-color:rgba(245,158,11,0.25); background:rgba(245,158,11,0.1);"><i class="fa-solid fa-receipt"></i> NBR &middot; NGOAB</span>
-                    </div>
-                    <p class="arch-pillar-desc">Rules that change with the law, kept in the system: VAT returns, tax slabs, payroll gazettes and grants.</p>
-                    <ul class="arch-proof">
-                        <li><strong>Karbar ERP</strong> NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), TDS and tax slabs</li>
-                        <li><strong>Jibika Plexus</strong> payroll kept current with government gazette updates</li>
-                        <li><strong>SAWAB NGO ERP</strong> NGOAB and donor grants</li>
+                <article class="arch-unified-card hb-card" style="--hb: #fbbf24;">
+                    <h3 class="hb-title">Bangladesh compliance</h3>
+                    <p class="hb-lede">Rules that change with the law live in the system, so returns and payslips stay correct.</p>
+                    <ul class="hb-fig hb-forms">
+                        <li><b>Mushak 6.3</b><span>Tax invoice</span></li>
+                        <li><b>Mushak 6.5</b><span>Transfer invoice</span></li>
+                        <li><b>Mushak 6.6</b><span>VDS certificate</span></li>
+                        <li><b>Mushak 9.1</b><span>VAT return</span></li>
+                        <li><b>TDS</b><span>Tax at source</span></li>
+                        <li><b>Tax slabs</b><span>Salary tax</span></li>
+                        <li><b>Gazette</b><span>Pay updates</span></li>
+                        <li><b>NGOAB</b><span>Grant approvals</span></li>
                     </ul>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag" title="VAT returns in Karbar ERP">NBR VAT</span>
-                        <span class="arch-tech-tag" title="Mushak 6.3, 6.5, 6.6 and 9.1 in Karbar ERP">Mushak</span>
-                        <span class="arch-tech-tag" title="Tax deducted at source and tax slabs in Karbar ERP">TDS</span>
-                        <span class="arch-tech-tag" title="NGO Affairs Bureau and donor grants in the NGO ERP">NGOAB</span>
-                        <span class="arch-tech-tag" title="Jibika's payroll, kept current with government gazettes">Payroll gazette</span>
-                    </div>
-                </div>
+                    <p class="hb-where">NBR forms and TDS in <strong>Karbar ERP</strong>, pay gazettes in <strong>Jibika Plexus</strong>, NGOAB grants in <strong>SAWAB NGO ERP</strong>.</p>
+                </article>
             </div>
         </div>
     </section>

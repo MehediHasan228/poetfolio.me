@@ -2,32 +2,45 @@ Knowledge base for Mehedi Hasan's portfolio (https://mehedi.pro.bd). Generated f
 
 # Home (/)
 ## How I Build
-### ERP & HR Platforms
-300+ companies
-HR, payroll, attendance, accounts and approvals built as one system, for NGOs and businesses.
-- SAWAB NGO ERP Frappe and ERPNext with a Next.js 15 portal; live demo
-- Jibika Plexus HR and payroll platform used by 300+ companies
-- Karbar ERP accounting, VAT, payroll and inventory on Laravel
+### ERP & HR platforms
+HR, payroll, attendance and accounts built as one system, not separate apps.
+- Attendance
+- Leave
+- Payroll
+- Appraisal
+- Grants
+- Accounts
+- Procurement
+Built in SAWAB NGO ERP (live demo), Jibika Plexus (used by 300+ companies) and Karbar ERP.
 Frappe ERPNext Next.js Laravel MariaDB Redis
-### AI in Business Software
-~50% less manual work
-LLM features placed inside the modules people already use, not in a separate chatbot.
-- Jibika Plexus OpenAI, Claude and Gemini write report narratives, appraisal drafts and leave-policy answers
-- AI Video Making Engine Whisper speech-to-text and Bengali NLP cut long videos into 9:16 clips
+### AI in business software
+LLMs write the first draft inside the HR modules people already use.
+Reports
+narratives
+first drafts
+policy answers
+Personnel
+HR documents
+before after ~50% less manual work
+Built in Jibika Plexus, and in the AI Video Making Engine (Whisper, Bengali NLP).
 Claude OpenAI Gemini FastAPI LangGraph Ollama
-### Devices & Field Data
-ZKTeco · GPS
-Attendance and duty data taken straight from biometric devices and phones, then carried through to payroll.
-- SAWAB NGO ERP live ZKTeco biometric attendance
-- Jibika Plexus device and GPS attendance with multi-layer approvals; Flutter app with NID OCR onboarding
-ZKTeco Flutter .NET Oracle
-### Bangladesh Compliance
-NBR · NGOAB
-Rules that change with the law, kept in the system: VAT returns, tax slabs, payroll gazettes and grants.
-- Karbar ERP NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), TDS and tax slabs
-- Jibika Plexus payroll kept current with government gazette updates
-- SAWAB NGO ERP NGOAB and donor grants
-NBR VAT Mushak TDS NGOAB Payroll gazette
+### Devices and field data
+Attendance comes straight from biometric devices and phones, then flows into payroll.
+- ZKTeco punch Phone GPS, NID OCR
+- Attendance & approvals
+Built in SAWAB NGO ERP (live ZKTeco) and Jibika Plexus (Flutter app).
+Flutter .NET Oracle
+### Bangladesh compliance
+Rules that change with the law live in the system, so returns and payslips stay correct.
+- Mushak 6.3 Tax invoice
+- Mushak 6.5 Transfer invoice
+- Mushak 6.6 VDS certificate
+- Mushak 9.1 VAT return
+- TDS Tax at source
+- Tax slabs Salary tax
+- Gazette Pay updates
+- NGOAB Grant approvals
+NBR forms and TDS in Karbar ERP, pay gazettes in Jibika Plexus, NGOAB grants in SAWAB NGO ERP.
 ## Technical Arsenal
 mehedi_workspace - VS Code
 order_service.nest.ts
@@ -264,32 +277,45 @@ The kinds of systems I build and the work behind each: ERP and HR platforms, LLM
 - SAWAB NGO ERP on Frappe and ERPNext, with a live demo
 - OpenAI, Claude and Gemini inside Jibika's HR modules, ~50% less manual work
 - NBR VAT, TDS and payroll gazettes kept current in code
-### ERP & HR Platforms
-300+ companies
-HR, payroll, attendance, accounts and approvals built as one system, for NGOs and businesses.
-- SAWAB NGO ERP Frappe and ERPNext with a Next.js 15 portal; live demo
-- Jibika Plexus HR and payroll platform used by 300+ companies
-- Karbar ERP accounting, VAT, payroll and inventory on Laravel
+### ERP & HR platforms
+HR, payroll, attendance and accounts built as one system, not separate apps.
+- Attendance
+- Leave
+- Payroll
+- Appraisal
+- Grants
+- Accounts
+- Procurement
+Built in SAWAB NGO ERP (live demo), Jibika Plexus (used by 300+ companies) and Karbar ERP.
 Frappe ERPNext Next.js Laravel MariaDB Redis
-### AI in Business Software
-~50% less manual work
-LLM features placed inside the modules people already use, not in a separate chatbot.
-- Jibika Plexus OpenAI, Claude and Gemini write report narratives, appraisal drafts and leave-policy answers
-- AI Video Making Engine Whisper speech-to-text and Bengali NLP cut long videos into 9:16 clips
+### AI in business software
+LLMs write the first draft inside the HR modules people already use.
+Reports
+narratives
+first drafts
+policy answers
+Personnel
+HR documents
+before after ~50% less manual work
+Built in Jibika Plexus, and in the AI Video Making Engine (Whisper, Bengali NLP).
 Claude OpenAI Gemini FastAPI LangGraph Ollama
-### Devices & Field Data
-ZKTeco · GPS
-Attendance and duty data taken straight from biometric devices and phones, then carried through to payroll.
-- SAWAB NGO ERP live ZKTeco biometric attendance
-- Jibika Plexus device and GPS attendance with multi-layer approvals; Flutter app with NID OCR onboarding
-ZKTeco Flutter .NET Oracle
-### Bangladesh Compliance
-NBR · NGOAB
-Rules that change with the law, kept in the system: VAT returns, tax slabs, payroll gazettes and grants.
-- Karbar ERP NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), TDS and tax slabs
-- Jibika Plexus payroll kept current with government gazette updates
-- SAWAB NGO ERP NGOAB and donor grants
-NBR VAT Mushak TDS NGOAB Payroll gazette
+### Devices and field data
+Attendance comes straight from biometric devices and phones, then flows into payroll.
+- ZKTeco punch Phone GPS, NID OCR
+- Attendance & approvals
+Built in SAWAB NGO ERP (live ZKTeco) and Jibika Plexus (Flutter app).
+Flutter .NET Oracle
+### Bangladesh compliance
+Rules that change with the law live in the system, so returns and payslips stay correct.
+- Mushak 6.3 Tax invoice
+- Mushak 6.5 Transfer invoice
+- Mushak 6.6 VDS certificate
+- Mushak 9.1 VAT return
+- TDS Tax at source
+- Tax slabs Salary tax
+- Gazette Pay updates
+- NGOAB Grant approvals
+NBR forms and TDS in Karbar ERP, pay gazettes in Jibika Plexus, NGOAB grants in SAWAB NGO ERP.
 
 # People (/people/)
 ## People I learn from

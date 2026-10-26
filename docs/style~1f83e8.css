@@ -6942,114 +6942,6 @@ footer {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.arch-pillar-card {
-    background: rgba(15, 23, 42, 0.65);
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    border-radius: 12px;
-    padding: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    backdrop-filter: blur(12px);
-    transition: all 0.25s ease;
-    position: relative;
-    min-height: 220px;
-}
-
-.arch-pillar-card:hover {
-    border-color: rgba(0, 242, 254, 0.4);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-.arch-pillar-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.65rem;
-}
-
-.arch-pillar-title-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
-
-.arch-pillar-icon {
-    font-size: 1.1rem;
-    width: 32px;
-    height: 32px;
-    border-radius: 7px;
-    background: rgba(255, 255, 255, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.arch-pillar-title {
-    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    font-size: 0.96rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--text-primary);
-    margin: 0;
-    line-height: 1.3;
-}
-
-.arch-pillar-badge {
-    font-size: 0.65rem;
-    font-family: 'Fira Code', monospace;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 3px 8px;
-    border-radius: 12px;
-    background: rgba(16, 185, 129, 0.12);
-    color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.arch-pillar-desc {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.8rem;
-    line-height: 1.55;
-    color: var(--text-secondary);
-    margin-bottom: 0.85rem;
-    flex-grow: 1;
-    letter-spacing: -0.005em;
-}
-
-.arch-pillar-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.arch-tech-tag {
-    font-size: 0.7rem;
-    font-family: 'Fira Code', monospace;
-    font-weight: 500;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(150, 150, 150, 0.18);
-    padding: 3px 7px;
-    border-radius: 6px;
-    color: var(--text-primary);
-    display: inline-flex;
-    align-items: center;
-    gap: 4.5px;
-    white-space: nowrap;
-    transition: all 0.2s ease;
-}
-
-.arch-tech-tag:hover {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(var(--accent-rgb), 0.35);
-}
-
 .arch-tag-icon {
     width: 14px;
     height: 14px;
@@ -7149,28 +7041,7 @@ footer {
 
     /* Horizontal Swipable Smart App Carousel (Side-Scroll with Blur Effect) */
 
-    .arch-pillar-card {
-        min-height: auto !important;
-        min-width: 86% !important;
-        max-width: 86% !important;
-        flex: 0 0 86% !important;
-        scroll-snap-align: center !important;
-        scroll-snap-stop: always;
-        padding: 1.1rem !important;
-        border-radius: 16px !important;
-        background: rgba(15, 23, 42, 0.8) !important;
-        border: 1px solid rgba(148, 163, 184, 0.16) !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
-        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                    border-color 0.25s ease, 
-                    box-shadow 0.35s ease !important;
-        user-select: none;
-        cursor: pointer;
-    }
 
-    .arch-pillar-card:active {
-        transform: scale(0.98);
-    }
 
     /* Mobile Carousel Indicator Dots */
     .arch-carousel-dots {
@@ -7195,25 +7066,6 @@ footer {
         width: 22px;
         background: var(--accent-1, #00f2fe);
         box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
-    }
-
-    .arch-pillar-header {
-        margin-bottom: 0.55rem;
-    }
-
-    .arch-pillar-title {
-        font-size: 0.92rem;
-    }
-
-    .arch-pillar-desc {
-        font-size: 0.78rem;
-        line-height: 1.5;
-        margin-bottom: 0.75rem;
-    }
-
-    .arch-tech-tag {
-        font-size: 0.68rem;
-        padding: 3px 6px;
     }
 
     /* Pipeline Wrap on Mobile */
@@ -7680,7 +7532,6 @@ footer {
 /* --- 4. CONTACT FORM (DIRECT MESSAGE OVERRIDE) --- */
 
 /* --- 5. SYSTEM ARCHITECTURE & ARCHIVAL CARDS --- */
-:is([data-theme="light"], [data-theme="mint"]) .arch-pillar-card,
 :is([data-theme="light"], [data-theme="mint"]) .arch-metric-card,
 :is([data-theme="light"], [data-theme="mint"]) .arch-pipeline-strip,
 :is([data-theme="light"], [data-theme="mint"]) .archive-card {
@@ -7689,24 +7540,20 @@ footer {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
 }
 
-:is([data-theme="light"], [data-theme="mint"]) .arch-pillar-card h4,
 :is([data-theme="light"], [data-theme="mint"]) .archive-card h4 {
     color: #0f172a !important;
 }
 
-:is([data-theme="light"], [data-theme="mint"]) .arch-pillar-desc,
 :is([data-theme="light"], [data-theme="mint"]) .archive-card p {
     color: #475569 !important;
 }
 
-[data-theme="light"] .arch-tech-tag,
 [data-theme="light"] .archive-cat {
     background: #eff6ff !important;
     border: 1px solid #bfdbfe !important;
     color: #1d4ed8 !important;
 }
 
-[data-theme="mint"] .arch-tech-tag,
 [data-theme="mint"] .archive-cat {
     background: #eaf6f0 !important;
     border: 1px solid #a7f3d0 !important;
@@ -7754,11 +7601,6 @@ footer {
 :is([data-theme="light"], [data-theme="mint"]) .arch-dot.active {
     background: #0284c7 !important;
     box-shadow: 0 0 8px rgba(2, 132, 199, 0.4) !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .arch-pillar-card.is-active {
-    border-color: #0284c7 !important;
-    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12) !important;
 }
 
 /* --- 6. TERMINAL FEED / LIVE SYSTEM LOGS (Light Theme) --- */
@@ -9128,43 +8970,6 @@ footer {
         cursor: pointer;
         user-select: none;
     }
-    .arch-pillar-header {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 8px !important;
-        margin-bottom: 0.45rem !important;
-    }
-    .arch-pillar-title-wrap {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-    }
-    .arch-pillar-title {
-        font-size: 1rem !important;
-        margin: 0 !important;
-    }
-    .arch-pillar-desc {
-        font-size: 0.78rem !important;
-        line-height: 1.42 !important;
-        margin-bottom: 0.65rem !important;
-        flex-grow: 0 !important;
-        display: -webkit-box !important;
-        -webkit-line-clamp: 3 !important;
-        -webkit-box-orient: vertical !important;
-        overflow: hidden !important;
-    }
-    .arch-pillar-tags {
-        margin-top: auto !important;
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 5px !important;
-    }
-    .arch-tech-tag {
-        font-size: 0.68rem !important;
-        padding: 3px 7px !important;
-    }
     .arch-unified-card.is-active,
     .arch-unified-card.sci-fi-active {
         opacity: 1 !important;
@@ -9690,12 +9495,6 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     border-color: #10b981 !important;
     color: #059669 !important;
     background: #eaf6f0 !important;
-}
-
-[data-theme="mint"] .arch-tech-tag {
-    border-color: #a7f3d0 !important;
-    background: #eaf6f0 !important;
-    color: #047857 !important;
 }
 
 [data-theme="mint"] .status-badge-advanced {
@@ -11245,53 +11044,271 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     .hero-text-side h1 .gradient-text { vertical-align: top; }
 }
 
-/* How I Build: each card lists the work behind it, then the tools it used */
-.arch-proof {
-    list-style: none;
-    margin: 0;
-    padding: 0.75rem 0 0;
-    border-top: 1px solid rgba(148, 163, 184, 0.14);
+/* How I Build: each card draws the shape of the system it describes; --hb is the card's colour */
+.hb-card {
+    --hb-line: color-mix(in srgb, var(--hb) 32%, transparent);
+    --hb-fill: color-mix(in srgb, var(--hb) 9%, transparent);
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    min-width: 0;
+    padding: 1.35rem 1.4rem 1.2rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 16px;
 }
-.arch-proof li {
-    position: relative;
-    padding-left: 0.85rem;
-    font-size: 0.76rem;
-    line-height: 1.45;
+.hb-title {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--text-primary);
+    margin: 0 0 0.35rem;
+}
+.hb-lede {
+    max-width: 46ch;
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.55;
     color: var(--text-secondary);
 }
-.arch-proof li::before {
+.hb-fig {
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.7rem;
+}
+
+/* ERP: the modules sit inside one frame, and the frame is the data model they share */
+.hb-modules {
+    flex: 1 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto;
+    grid-auto-rows: 1fr;
+    gap: 0.4rem;
+    padding: 0.6rem;
+    border: 1px dashed var(--hb-line);
+    border-radius: 12px;
+}
+.hb-modules li {
+    display: grid;
+    place-items: center;
+    padding: 0.5rem 0.3rem;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 7px;
+    background: var(--hb-fill);
+    color: var(--text-primary);
+}
+.hb-modules .hb-modules-label {
+    display: block;
+    grid-column: 1 / -1;
+    padding: 0 0.1rem 0.1rem;
+    text-align: left;
+    background: none;
+    color: var(--hb);
+}
+
+/* AI: which module, and what the model writes in it */
+.hb-ai {
+    display: grid;
+    gap: 0.4rem;
+}
+.hb-ai div {
+    display: grid;
+    grid-template-columns: 6.2rem 1fr;
+    align-items: center;
+    gap: 0.6rem;
+}
+.hb-ai dt { color: var(--text-secondary); }
+.hb-ai dd {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+.hb-ai dd::before {
+    content: "";
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1px;
+    background: var(--hb);
+}
+.hb-effort {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.4rem 0.75rem;
+    margin-top: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.66rem;
+    color: var(--text-secondary);
+}
+.hb-effort-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.hb-effort-bar i {
+    display: block;
+    flex-shrink: 0;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(148, 163, 184, 0.32);
+}
+.hb-effort-bar.is-after i { background: var(--hb); }
+.hb-effort-bar b {
+    min-width: 0;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text-primary);
+}
+
+/* Devices: a left-to-right flow, the arrows are the data moving */
+.hb-flow {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 0.8fr;
+    align-items: center;
+    gap: 1.5rem;
+}
+.hb-flow li {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+}
+.hb-flow span {
+    padding: 0.55rem 0.5rem;
+    text-align: center;
+    line-height: 1.35;
+    border: 1px solid var(--hb-line);
+    border-radius: 8px;
+    background: var(--hb-fill);
+    color: var(--text-primary);
+}
+.hb-flow li:not(:last-child)::after {
     content: "";
     position: absolute;
-    left: 0;
-    top: 0.45em;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent-1, #00f2fe);
-    opacity: 0.75;
+    top: 50%;
+    right: -1.05rem;
+    width: 0.75rem;
+    height: 1px;
+    background: var(--hb);
 }
-.arch-proof strong {
+.hb-flow li:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: calc(50% - 3.5px);
+    right: calc(-1.05rem - 5px);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 5px solid var(--hb);
+}
+
+/* Compliance: one tile per form or rule the system keeps */
+.hb-forms {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+.hb-forms li {
+    padding: 0.55rem 0.65rem 0.6rem;
+    border-top: 2px solid var(--hb);
+    border-radius: 3px 3px 8px 8px;
+    background: var(--hb-fill);
+}
+.hb-forms b {
     display: block;
-    color: var(--text-primary);
+    font-size: 0.8rem;
     font-weight: 600;
+    color: var(--text-primary);
 }
-.arch-proof + .arch-pillar-tags {
-    margin-top: 0.85rem;
+.hb-forms span {
+    display: block;
+    margin-top: 0.15rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.68rem;
+    line-height: 1.35;
+    color: var(--text-secondary);
 }
-/* the proof list follows the description and takes the spare height, so the tools line up at the bottom */
-.arch-infographic-wrap .arch-pillar-desc { flex-grow: 0; }
-.arch-proof { flex-grow: 1; }
-:is([data-theme="light"], [data-theme="mint"]) .arch-proof {
-    border-top-color: #e2e8f0;
+
+/* where it was built, then its tools: pushed to the card's foot so a row's cards end level */
+.hb-where {
+    margin: auto 0 0;
+    padding-top: 1.1rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
 }
-:is([data-theme="light"], [data-theme="mint"]) .arch-proof strong {
-    color: #0f172a;
+.hb-where strong {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.hb-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1rem;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+.hb-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    cursor: default;
+}
+.hb-tool i {
+    width: 14px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+:is([data-theme="light"], [data-theme="mint"]) .hb-card {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+}
+:is([data-theme="light"], [data-theme="mint"]) .hb-card {
+    --hb-line: color-mix(in srgb, var(--hb) 55%, transparent);
+    --hb-fill: color-mix(in srgb, var(--hb) 12%, transparent);
+}
+:is([data-theme="light"], [data-theme="mint"]) .hb-modules .hb-modules-label {
+    color: color-mix(in srgb, var(--hb) 55%, #0f172a);
+}
+:is([data-theme="light"], [data-theme="mint"]) .hb-effort-bar:not(.is-after) i { background: #cbd5e1; }
+:is([data-theme="light"], [data-theme="mint"]) .hb-tools { border-top-color: #e2e8f0; }
+
+/* wide, narrow / narrow, wide on desktop; two equal columns on tablets; the swipe carousel on phones */
+@media (min-width: 861px) {
+    .arch-unified-grid.hb-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .hb-grid > .hb-card:nth-child(4n + 1),
+    .hb-grid > .hb-card:nth-child(4n) { grid-column: span 7; }
+    .hb-grid > .hb-card:nth-child(4n + 2),
+    .hb-grid > .hb-card:nth-child(4n + 3) { grid-column: span 5; }
+}
+@media (min-width: 861px) and (max-width: 1100px) {
+    .hb-grid > .hb-card:nth-child(n) { grid-column: span 6; }
 }
 @media (max-width: 860px) {
-    /* the cards hold their proof lines and tools, so they are taller than the carousel's usual 250px */
     .arch-infographic-wrap .arch-unified-card { max-height: none !important; }
-    .arch-infographic-wrap .arch-proof + .arch-pillar-tags { margin-top: 0.75rem !important; }
+    .hb-title { font-size: 1rem; }
+    /* one card shows at a time, so the text runs on and the spare height stays at the foot */
+    .hb-where { margin-top: 0; }
+    .hb-lede { font-size: 0.8rem; }
+    .hb-fig { font-size: 0.64rem; }
+    /* three to a row, the last row centred */
+    .hb-modules { display: flex; flex-wrap: wrap; justify-content: center; }
+    .hb-modules li { flex: 0 0 calc((100% - 0.8rem) / 3); }
+    .hb-modules .hb-modules-label { flex-basis: 100%; }
+    .hb-flow { gap: 1.3rem; }
+    .hb-flow li:not(:last-child)::after { right: -0.95rem; width: 0.65rem; }
+    .hb-flow li:not(:last-child)::before { right: calc(-0.95rem - 5px); }
+    .hb-forms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hb-forms li { padding: 0.45rem 0.55rem 0.5rem; }
 }
