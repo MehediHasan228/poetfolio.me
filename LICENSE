@@ -1,6 +1,36 @@
+This repository holds two kinds of material, under different terms.
+
+1. Code: MIT License
+
+   The source code (HTML, CSS, JavaScript, Python, the build scripts and the
+   WebClone.js tool) is licensed under the MIT License below.
+
+2. Content: All Rights Reserved
+
+   Copyright (c) 2026 Mehedi Hasan. All rights reserved.
+
+   The content of the portfolio at https://mehedi.pro.bd is not covered by the
+   MIT License. This includes:
+
+   - the written text of the site, its project descriptions and case studies;
+   - the photographs, images and screenshots;
+   - the Mehedi Hasan name and logo;
+   - the CV (Mehedi_Hasan_CV.pdf);
+   - the documents written for this portfolio, such as
+     AI_NATIVE_NGO_ERP_ARCHITECTURE.md and HRM_AI_INTEGRATION_BRIEF.md.
+
+   This content may not be copied, republished or reused without written
+   permission. To ask, use https://mehedi.pro.bd/contact/.
+
+   Logos and trademarks of other companies shown on the site belong to their
+   owners.
+
+--------------------------------------------------------------------------------
+
 MIT License
 
 Copyright (c) 2025 Jade See
+Copyright (c) 2026 Mehedi Hasan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -185,4 +185,4 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+The code is licensed under the MIT License. The portfolio's content (text, images, logo, CV and project write-ups) is © Mehedi Hasan, all rights reserved. See [LICENSE](LICENSE).
