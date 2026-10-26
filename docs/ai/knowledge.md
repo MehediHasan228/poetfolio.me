@@ -1,46 +1,88 @@
 Knowledge base for Mehedi Hasan's portfolio (https://mehedi.pro.bd). Generated from the site; each section names its page.
 
 # Home (/)
-## How I Build
-### ERP & HR platforms
-HR, payroll, attendance and accounts built as one system, not separate apps.
-- Attendance
-- Leave
-- Payroll
-- Appraisal
-- Grants
-- Accounts
-- Procurement
-Built in SAWAB NGO ERP (live demo), Jibika Plexus (used by 300+ companies) and Karbar ERP.
-Frappe ERPNext Next.js Laravel MariaDB Redis
-### AI in business software
-LLMs write the first draft inside the HR modules people already use.
-Reports
-narratives
-first drafts
-policy answers
-Personnel
-HR documents
-before after ~50% less manual work
-Built in Jibika Plexus, and in the AI Video Making Engine (Whisper, Bengali NLP).
-Claude OpenAI Gemini FastAPI LangGraph Ollama
-### Devices and field data
-Attendance comes straight from biometric devices and phones, then flows into payroll.
-- ZKTeco punch Phone GPS, NID OCR
-- Attendance & approvals
-Built in SAWAB NGO ERP (live ZKTeco) and Jibika Plexus (Flutter app).
-Flutter .NET Oracle
-### Bangladesh compliance
-Rules that change with the law live in the system, so returns and payslips stay correct.
-- Mushak 6.3 Tax invoice
-- Mushak 6.5 Transfer invoice
-- Mushak 6.6 VDS certificate
-- Mushak 9.1 VAT return
-- TDS Tax at source
-- Tax slabs Salary tax
-- Gazette Pay updates
-- NGOAB Grant approvals
-NBR forms and TDS in Karbar ERP, pay gazettes in Jibika Plexus, NGOAB grants in SAWAB NGO ERP.
+## System Architecture
+### Autonomous AI & Agents
+Agentic SOTA
+Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.
+MCP LangGraph RAG Multi-Agent Systems OpenAI Claude Gemini Ollama
+### Distributed Backend
+Sub-15ms p99
+Clean-architecture NestJS microservices with PostgreSQL connection pools, distributed Redis locks & type-safe domain boundaries.
+NestJS PostgreSQL Redis TypeScript
+### Event Streaming
+Zero-Loss
+High-throughput asynchronous message bus via Apache Kafka, RabbitMQ enterprise queues & real-time Redis Pub/Sub.
+Kafka RabbitMQ Redis Pub/Sub
+### Cloud & Observability
+HA Cluster
+Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards & centralized ELK logging.
+Docker Kubernetes AWS Prometheus Grafana ELK
+#### AI Models
+Foundation SOTA
+Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.
+OpenAI Claude Gemini Qwen Llama Mistral DeepSeek
+#### AI Agents
+Autonomous Actors
+Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.
+Hermes agent OpenClaw Claude Code Codex Gemini CLI OpenCode Goose Aider
+#### AI IDE
+Next-Gen Editors
+Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.
+Cursor Windsurf GitHub Copilot Kiro Antigravity
+#### Agent Framework
+Multi-Agent Swarm
+Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.
+LangGraph LangChain CrewAI AutoGen PydanticAI
+#### Protocol / Tools
+Open Protocols
+Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.
+MCP A2A Function Calling Tool Use
+#### Local AI
+Edge & Private
+Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.
+Ollama LM Studio llama.cpp vLLM
+#### Automation
+Event Pipeline
+Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.
+n8n Zapier Make
+High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.
+#### RAG / Vector
+Dense Retrieval
+High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.
+Pinecone Chroma Qdrant Weaviate
+#### AI Database
+Storage & Vectors
+ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.
+PostgreSQL pgvector Supabase MongoDB
+#### Web AI
+Streaming Edge UI
+Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.
+Vercel AI SDK AI SDK OpenAI SDK
+#### Frontend
+Reactive Interface
+Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.
+React Next.js TypeScript Tailwind
+#### Backend
+Distributed Primitives
+Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.
+Node.js NestJS Express Python FastAPI
+#### Cloud
+Hyperscale Edge
+Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.
+Vercel AWS Google Cloud Cloudflare
+#### DevOps
+Containers & CD
+Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.
+Docker GitHub Actions Kubernetes
+#### Observability
+Tracing & Metrics
+End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.
+Prometheus Grafana ELK LangSmith Langfuse OpenTelemetry
+#### AI UI / Design
+Generative Scaffolding
+Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.
+v0 Lovable Bolt Google Stitch
 ## Technical Arsenal
 mehedi_workspace - VS Code
 order_service.nest.ts
@@ -271,51 +313,93 @@ main*
 TypeScript
 
 # Architecture (/architecture/)
-Home / How I Build
-## How I Build
-The kinds of systems I build and the work behind each: ERP and HR platforms, LLM features inside business software, attendance from biometric devices and phones, and Bangladesh tax and grant rules kept in code.
-- SAWAB NGO ERP on Frappe and ERPNext, with a live demo
-- OpenAI, Claude and Gemini inside Jibika's HR modules, ~50% less manual work
-- NBR VAT, TDS and payroll gazettes kept current in code
-### ERP & HR platforms
-HR, payroll, attendance and accounts built as one system, not separate apps.
-- Attendance
-- Leave
-- Payroll
-- Appraisal
-- Grants
-- Accounts
-- Procurement
-Built in SAWAB NGO ERP (live demo), Jibika Plexus (used by 300+ companies) and Karbar ERP.
-Frappe ERPNext Next.js Laravel MariaDB Redis
-### AI in business software
-LLMs write the first draft inside the HR modules people already use.
-Reports
-narratives
-first drafts
-policy answers
-Personnel
-HR documents
-before after ~50% less manual work
-Built in Jibika Plexus, and in the AI Video Making Engine (Whisper, Bengali NLP).
-Claude OpenAI Gemini FastAPI LangGraph Ollama
-### Devices and field data
-Attendance comes straight from biometric devices and phones, then flows into payroll.
-- ZKTeco punch Phone GPS, NID OCR
-- Attendance & approvals
-Built in SAWAB NGO ERP (live ZKTeco) and Jibika Plexus (Flutter app).
-Flutter .NET Oracle
-### Bangladesh compliance
-Rules that change with the law live in the system, so returns and payslips stay correct.
-- Mushak 6.3 Tax invoice
-- Mushak 6.5 Transfer invoice
-- Mushak 6.6 VDS certificate
-- Mushak 9.1 VAT return
-- TDS Tax at source
-- Tax slabs Salary tax
-- Gazette Pay updates
-- NGOAB Grant approvals
-NBR forms and TDS in Karbar ERP, pay gazettes in Jibika Plexus, NGOAB grants in SAWAB NGO ERP.
+Home / Architecture
+## Architecture
+How I design systems: clean-architecture NestJS services, event streaming with Kafka, Redis-backed consistency and agentic AI layers on top. Four-plus years of freelance delivery across ERP, NGO and AI automation products.
+- Clean-architecture NestJS + PostgreSQL + Redis backends
+- Event-driven design with Kafka and gRPC between services
+- Agentic layer: LangGraph, MCP and RAG over PGVector
+### Autonomous AI & Agents
+Agentic SOTA
+Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.
+MCP LangGraph RAG Multi-Agent Systems OpenAI Claude Gemini Ollama
+### Distributed Backend
+Sub-15ms p99
+Clean-architecture NestJS microservices with PostgreSQL connection pools, distributed Redis locks & type-safe domain boundaries.
+NestJS PostgreSQL Redis TypeScript
+### Event Streaming
+Zero-Loss
+High-throughput asynchronous message bus via Apache Kafka, RabbitMQ enterprise queues & real-time Redis Pub/Sub.
+Kafka RabbitMQ Redis Pub/Sub
+### Cloud & Observability
+HA Cluster
+Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards & centralized ELK logging.
+Docker Kubernetes AWS Prometheus Grafana ELK
+#### AI Models
+Foundation SOTA
+Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.
+OpenAI Claude Gemini Qwen Llama Mistral DeepSeek
+#### AI Agents
+Autonomous Actors
+Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.
+Hermes agent OpenClaw Claude Code Codex Gemini CLI OpenCode Goose Aider
+#### AI IDE
+Next-Gen Editors
+Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.
+Cursor Windsurf GitHub Copilot Kiro Antigravity
+#### Agent Framework
+Multi-Agent Swarm
+Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.
+LangGraph LangChain CrewAI AutoGen PydanticAI
+#### Protocol / Tools
+Open Protocols
+Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.
+MCP A2A Function Calling Tool Use
+#### Local AI
+Edge & Private
+Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.
+Ollama LM Studio llama.cpp vLLM
+#### Automation
+Event Pipeline
+Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.
+n8n Zapier Make
+High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.
+#### RAG / Vector
+Dense Retrieval
+High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.
+Pinecone Chroma Qdrant Weaviate
+#### AI Database
+Storage & Vectors
+ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.
+PostgreSQL pgvector Supabase MongoDB
+#### Web AI
+Streaming Edge UI
+Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.
+Vercel AI SDK AI SDK OpenAI SDK
+#### Frontend
+Reactive Interface
+Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.
+React Next.js TypeScript Tailwind
+#### Backend
+Distributed Primitives
+Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.
+Node.js NestJS Express Python FastAPI
+#### Cloud
+Hyperscale Edge
+Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.
+Vercel AWS Google Cloud Cloudflare
+#### DevOps
+Containers & CD
+Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.
+Docker GitHub Actions Kubernetes
+#### Observability
+Tracing & Metrics
+End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.
+Prometheus Grafana ELK LangSmith Langfuse OpenTelemetry
+#### AI UI / Design
+Generative Scaffolding
+Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.
+v0 Lovable Bolt Google Stitch
 
 # People (/people/)
 ## People I learn from
