@@ -2766,8 +2766,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // The page paints first: the particles start once the browser is idle, and rest while the hero is off screen.
+        // The network is part of the first look, so one still frame is drawn right away; the motion follows when idle.
+        initParticles();
+        heroInView = false; animateParticles(); heroInView = true;
         const startParticles = () => {
-            initParticles();
             animateParticles();
             new IntersectionObserver(([entry]) => {
                 heroInView = entry.isIntersecting;
