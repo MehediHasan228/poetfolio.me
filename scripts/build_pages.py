@@ -16,13 +16,13 @@ SITE = "https://mehedi.pro.bd"
 
 # section id in source -> (url slug, nav label, meta title, intro, highlights)
 PAGES = {
-    "about": ("architecture", "Architecture", "Architecture",
-              "How I design systems: clean-architecture NestJS services, event streaming with Kafka, "
-              "Redis-backed consistency and agentic AI layers on top. Four-plus years of freelance delivery "
-              "across ERP, NGO and AI automation products.",
-              ["Clean-architecture NestJS + PostgreSQL + Redis backends",
-               "Event-driven design with Kafka and gRPC between services",
-               "Agentic layer: LangGraph, MCP and RAG over PGVector"]),
+    "about": ("architecture", "How I Build", "How I Build",
+              "The kinds of systems I build and the work behind each: ERP and HR platforms, LLM features inside "
+              "business software, attendance from biometric devices and phones, and Bangladesh tax and grant rules "
+              "kept in code.",
+              ["SAWAB NGO ERP on Frappe and ERPNext, with a live demo",
+               "OpenAI, Claude and Gemini inside Jibika's HR modules, ~50% less manual work",
+               "NBR VAT, TDS and payroll gazettes kept current in code"]),
     "skills": ("stack", "Stack", "Technology Stack",
                "The tools I reach for in production, grouped by what they are used for: AI and agents, "
                "full-stack web, data and vector search, and cloud/DevOps.",

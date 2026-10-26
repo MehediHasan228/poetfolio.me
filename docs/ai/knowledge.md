@@ -1,88 +1,41 @@
 Knowledge base for Mehedi Hasan's portfolio (https://mehedi.pro.bd). Generated from the site; each section names its page.
 
 # Home (/)
-## System Architecture
-### Autonomous AI & Agents
-Agentic SOTA
-Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.
-MCP LangGraph RAG Multi-Agent Systems OpenAI Claude Gemini Ollama
-### Distributed Backend
-Sub-15ms p99
-Clean-architecture NestJS microservices with PostgreSQL connection pools, distributed Redis locks & type-safe domain boundaries.
-NestJS PostgreSQL Redis TypeScript
-### Event Streaming
-Zero-Loss
-High-throughput asynchronous message bus via Apache Kafka, RabbitMQ enterprise queues & real-time Redis Pub/Sub.
-Kafka RabbitMQ Redis Pub/Sub
-### Cloud & Observability
-HA Cluster
-Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards & centralized ELK logging.
-Docker Kubernetes AWS Prometheus Grafana ELK
-#### AI Models
-Foundation SOTA
-Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.
-OpenAI Claude Gemini Qwen Llama Mistral DeepSeek
-#### AI Agents
-Autonomous Actors
-Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.
-Hermes agent OpenClaw Claude Code Codex Gemini CLI OpenCode Goose Aider
-#### AI IDE
-Next-Gen Editors
-Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.
-Cursor Windsurf GitHub Copilot Kiro Antigravity
-#### Agent Framework
-Multi-Agent Swarm
-Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.
-LangGraph LangChain CrewAI AutoGen PydanticAI
-#### Protocol / Tools
-Open Protocols
-Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.
-MCP A2A Function Calling Tool Use
-#### Local AI
-Edge & Private
-Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.
-Ollama LM Studio llama.cpp vLLM
-#### Automation
-Event Pipeline
-Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.
-n8n Zapier Make
-High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.
-#### RAG / Vector
-Dense Retrieval
-High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.
-Pinecone Chroma Qdrant Weaviate
-#### AI Database
-Storage & Vectors
-ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.
-PostgreSQL pgvector Supabase MongoDB
-#### Web AI
-Streaming Edge UI
-Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.
-Vercel AI SDK AI SDK OpenAI SDK
-#### Frontend
-Reactive Interface
-Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.
-React Next.js TypeScript Tailwind
-#### Backend
-Distributed Primitives
-Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.
-Node.js NestJS Express Python FastAPI
-#### Cloud
-Hyperscale Edge
-Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.
-Vercel AWS Google Cloud Cloudflare
-#### DevOps
-Containers & CD
-Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.
-Docker GitHub Actions Kubernetes
-#### Observability
-Tracing & Metrics
-End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.
-Prometheus Grafana ELK LangSmith Langfuse OpenTelemetry
-#### AI UI / Design
-Generative Scaffolding
-Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.
-v0 Lovable Bolt Google Stitch
+## How I Build
+### ERP & HR Platforms
+300+ companies
+HR, payroll, attendance, accounts and approvals built as one system, for NGOs and businesses.
+- SAWAB NGO ERP Frappe and ERPNext with a Next.js 15 portal; live demo
+- Jibika Plexus HR and payroll platform used by 300+ companies
+- Karbar ERP accounting, VAT, payroll and inventory on Laravel
+### AI in Business Software
+~50% less manual work
+LLM features placed inside the modules people already use, not in a separate chatbot.
+- Jibika Plexus OpenAI, Claude and Gemini write report narratives, appraisal drafts and leave-policy answers
+- AI Video Making Engine Whisper speech-to-text and Bengali NLP cut long videos into 9:16 clips
+### Devices & Field Data
+ZKTeco · GPS
+Attendance and duty data taken straight from biometric devices and phones, then carried through to payroll.
+- SAWAB NGO ERP live ZKTeco biometric attendance
+- Jibika Plexus device and GPS attendance with multi-layer approvals; Flutter app with NID OCR onboarding
+### Bangladesh Compliance
+NBR · NGOAB
+Rules that change with the law, kept in the system: VAT returns, tax slabs, payroll gazettes and grants.
+- Karbar ERP NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), TDS and tax slabs
+- Jibika Plexus payroll kept current with government gazette updates
+- SAWAB NGO ERP NGOAB and donor grants
+### Stack
+Hover a tool to see where I used it.
+AI & LLMs
+Claude OpenAI Gemini LangGraph Ollama
+Backend
+Frappe Node.js NestJS Laravel FastAPI .NET
+Frontend & Mobile
+TypeScript React Next.js Tailwind CSS Flutter
+Data
+PostgreSQL MariaDB Oracle Redis Kafka
+DevOps & Automation
+Docker Kubernetes GitHub Actions Cloudflare n8n
 ## Technical Arsenal
 mehedi_workspace - VS Code
 order_service.nest.ts
@@ -313,93 +266,46 @@ main*
 TypeScript
 
 # Architecture (/architecture/)
-Home / Architecture
-## Architecture
-How I design systems: clean-architecture NestJS services, event streaming with Kafka, Redis-backed consistency and agentic AI layers on top. Four-plus years of freelance delivery across ERP, NGO and AI automation products.
-- Clean-architecture NestJS + PostgreSQL + Redis backends
-- Event-driven design with Kafka and gRPC between services
-- Agentic layer: LangGraph, MCP and RAG over PGVector
-### Autonomous AI & Agents
-Agentic SOTA
-Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.
-MCP LangGraph RAG Multi-Agent Systems OpenAI Claude Gemini Ollama
-### Distributed Backend
-Sub-15ms p99
-Clean-architecture NestJS microservices with PostgreSQL connection pools, distributed Redis locks & type-safe domain boundaries.
-NestJS PostgreSQL Redis TypeScript
-### Event Streaming
-Zero-Loss
-High-throughput asynchronous message bus via Apache Kafka, RabbitMQ enterprise queues & real-time Redis Pub/Sub.
-Kafka RabbitMQ Redis Pub/Sub
-### Cloud & Observability
-HA Cluster
-Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards & centralized ELK logging.
-Docker Kubernetes AWS Prometheus Grafana ELK
-#### AI Models
-Foundation SOTA
-Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.
-OpenAI Claude Gemini Qwen Llama Mistral DeepSeek
-#### AI Agents
-Autonomous Actors
-Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.
-Hermes agent OpenClaw Claude Code Codex Gemini CLI OpenCode Goose Aider
-#### AI IDE
-Next-Gen Editors
-Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.
-Cursor Windsurf GitHub Copilot Kiro Antigravity
-#### Agent Framework
-Multi-Agent Swarm
-Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.
-LangGraph LangChain CrewAI AutoGen PydanticAI
-#### Protocol / Tools
-Open Protocols
-Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.
-MCP A2A Function Calling Tool Use
-#### Local AI
-Edge & Private
-Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.
-Ollama LM Studio llama.cpp vLLM
-#### Automation
-Event Pipeline
-Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.
-n8n Zapier Make
-High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.
-#### RAG / Vector
-Dense Retrieval
-High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.
-Pinecone Chroma Qdrant Weaviate
-#### AI Database
-Storage & Vectors
-ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.
-PostgreSQL pgvector Supabase MongoDB
-#### Web AI
-Streaming Edge UI
-Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.
-Vercel AI SDK AI SDK OpenAI SDK
-#### Frontend
-Reactive Interface
-Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.
-React Next.js TypeScript Tailwind
-#### Backend
-Distributed Primitives
-Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.
-Node.js NestJS Express Python FastAPI
-#### Cloud
-Hyperscale Edge
-Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.
-Vercel AWS Google Cloud Cloudflare
-#### DevOps
-Containers & CD
-Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.
-Docker GitHub Actions Kubernetes
-#### Observability
-Tracing & Metrics
-End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.
-Prometheus Grafana ELK LangSmith Langfuse OpenTelemetry
-#### AI UI / Design
-Generative Scaffolding
-Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.
-v0 Lovable Bolt Google Stitch
+Home / How I Build
+## How I Build
+The kinds of systems I build and the work behind each: ERP and HR platforms, LLM features inside business software, attendance from biometric devices and phones, and Bangladesh tax and grant rules kept in code.
+- SAWAB NGO ERP on Frappe and ERPNext, with a live demo
+- OpenAI, Claude and Gemini inside Jibika's HR modules, ~50% less manual work
+- NBR VAT, TDS and payroll gazettes kept current in code
+### ERP & HR Platforms
+300+ companies
+HR, payroll, attendance, accounts and approvals built as one system, for NGOs and businesses.
+- SAWAB NGO ERP Frappe and ERPNext with a Next.js 15 portal; live demo
+- Jibika Plexus HR and payroll platform used by 300+ companies
+- Karbar ERP accounting, VAT, payroll and inventory on Laravel
+### AI in Business Software
+~50% less manual work
+LLM features placed inside the modules people already use, not in a separate chatbot.
+- Jibika Plexus OpenAI, Claude and Gemini write report narratives, appraisal drafts and leave-policy answers
+- AI Video Making Engine Whisper speech-to-text and Bengali NLP cut long videos into 9:16 clips
+### Devices & Field Data
+ZKTeco · GPS
+Attendance and duty data taken straight from biometric devices and phones, then carried through to payroll.
+- SAWAB NGO ERP live ZKTeco biometric attendance
+- Jibika Plexus device and GPS attendance with multi-layer approvals; Flutter app with NID OCR onboarding
+### Bangladesh Compliance
+NBR · NGOAB
+Rules that change with the law, kept in the system: VAT returns, tax slabs, payroll gazettes and grants.
+- Karbar ERP NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), TDS and tax slabs
+- Jibika Plexus payroll kept current with government gazette updates
+- SAWAB NGO ERP NGOAB and donor grants
+### Stack
+Hover a tool to see where I used it.
+AI & LLMs
+Claude OpenAI Gemini LangGraph Ollama
+Backend
+Frappe Node.js NestJS Laravel FastAPI .NET
+Frontend & Mobile
+TypeScript React Next.js Tailwind CSS Flutter
+Data
+PostgreSQL MariaDB Oracle Redis Kafka
+DevOps & Automation
+Docker Kubernetes GitHub Actions Cloudflare n8n
 
 # People (/people/)
 ## People I learn from

@@ -9,24 +9,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
-    <meta name="description" content="How I design systems: clean-architecture NestJS services, event streaming with Kafka, Redis-backed consistency and agentic AI layers on top. Four-plus years of freelance delivery across ERP, NGO and AI automation products.">
+    <meta name="description" content="The kinds of systems I build and the work behind each: ERP and HR platforms, LLM features inside business software, attendance from biometric devices and phones, and Bangladesh tax and grant rules kept in code.">
     <meta name="keywords" content="Mehedi Hasan, Full-Stack Developer, AI Automation, LLM Integration, Web Engineering, Bangladesh">
     <link rel="canonical" href="https://mehedi.pro.bd/architecture/">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mehedi.pro.bd/architecture/">
-    <meta property="og:title" content="Architecture | Mehedi Hasan">
+    <meta property="og:title" content="How I Build | Mehedi Hasan">
     <meta property="og:description" content="Architecting the future of web and AI automation. Explore my technical arsenal and production deployments.">
     <meta property="og:image" content="https://mehedi.pro.bd/mehedi-logo.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://mehedi.pro.bd/architecture/">
-    <meta property="twitter:title" content="Architecture | Mehedi Hasan">
+    <meta property="twitter:title" content="How I Build | Mehedi Hasan">
     <meta property="twitter:description" content="Architecting the future of web and AI automation. Explore my technical arsenal and production deployments.">
     <meta property="twitter:image" content="https://mehedi.pro.bd/mehedi-logo.png">
-    <title>Architecture | Mehedi Hasan</title>
+    <title>How I Build | Mehedi Hasan</title>
     <link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="96x96" href="../favicon/icon-96.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../favicon/icon-32.png">
@@ -54,7 +54,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=2">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=260">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=261">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -153,364 +153,131 @@
 
 
     <main id="main-content">
-<div class="page-hero"><div class="page-crumb" aria-label="Breadcrumb"><a href="../">Home</a> / <span>Architecture</span></div><h1>Architecture</h1><p>How I design systems: clean-architecture NestJS services, event streaming with Kafka, Redis-backed consistency and agentic AI layers on top. Four-plus years of freelance delivery across ERP, NGO and AI automation products.</p><ul class="page-points"><li><i class="fa-solid fa-check"></i> Clean-architecture NestJS + PostgreSQL + Redis backends</li><li><i class="fa-solid fa-check"></i> Event-driven design with Kafka and gRPC between services</li><li><i class="fa-solid fa-check"></i> Agentic layer: LangGraph, MCP and RAG over PGVector</li></ul></div>
-<h2 class="sr-only">Architecture</h2>
+<div class="page-hero"><div class="page-crumb" aria-label="Breadcrumb"><a href="../">Home</a> / <span>How I Build</span></div><h1>How I Build</h1><p>The kinds of systems I build and the work behind each: ERP and HR platforms, LLM features inside business software, attendance from biometric devices and phones, and Bangladesh tax and grant rules kept in code.</p><ul class="page-points"><li><i class="fa-solid fa-check"></i> SAWAB NGO ERP on Frappe and ERPNext, with a live demo</li><li><i class="fa-solid fa-check"></i> OpenAI, Claude and Gemini inside Jibika's HR modules, ~50% less manual work</li><li><i class="fa-solid fa-check"></i> NBR VAT, TDS and payroll gazettes kept current in code</li></ul></div>
+<h2 class="sr-only">How I Build</h2>
 <section id="about" class="about-section">
         <div class="arch-infographic-wrap hidden">
 
-            <!-- Unified Architecture & Technology Filter Controller -->
-            <div class="arch-unified-filter-container">
-                <div class="arch-unified-filters" role="tablist" aria-label="Architecture Views and Filters">
-                    <button class="arch-unified-filter-btn active hover-sound" data-filter="pillars" role="tab" aria-selected="true">
-                        <i class="fa-solid fa-cubes"></i> Core Pillars <span class="filter-count">4</span>
-                    </button>
-                    <button class="arch-unified-filter-btn hover-sound" data-filter="all" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-layer-group"></i> All Stack <span class="filter-count">17</span>
-                    </button>
-                    <button class="arch-unified-filter-btn hover-sound" data-filter="ai" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-robot"></i> AI &amp; Agents <span class="filter-count">7</span>
-                    </button>
-                    <button class="arch-unified-filter-btn hover-sound" data-filter="fullstack" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-code"></i> Full-Stack &amp; Web <span class="filter-count">3</span>
-                    </button>
-                    <button class="arch-unified-filter-btn hover-sound" data-filter="data-cloud" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-database"></i> Data &amp; Vector <span class="filter-count">4</span>
-                    </button>
-                    <button class="arch-unified-filter-btn hover-sound" data-filter="cloud-devops" role="tab" aria-selected="false">
-                        <i class="fa-solid fa-server"></i> Cloud &amp; DevOps <span class="filter-count">3</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Unified Architecture Grid (Pillars & Stack View) -->
+            <!-- The kinds of systems I build, each with the work that proves it; the tools are listed once, in the stack below -->
             <div class="arch-unified-grid" id="archUnifiedGrid">
-                <!-- 4 Core Foundational Architecture Pillars -->
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
+                    <div class="arch-pillar-header">
+                        <div class="arch-pillar-title-wrap">
+                            <div class="arch-pillar-icon" style="color: #38bdf8;"><i class="fa-solid fa-sitemap"></i></div>
+                            <h3 class="arch-pillar-title">ERP &amp; HR Platforms</h3>
+                        </div>
+                        <span class="arch-pillar-badge" style="color:#38bdf8; border-color:rgba(56,189,248,0.25); background:rgba(56,189,248,0.1);"><i class="fa-solid fa-building"></i> 300+ companies</span>
+                    </div>
+                    <p class="arch-pillar-desc">HR, payroll, attendance, accounts and approvals built as one system, for NGOs and businesses.</p>
+                    <ul class="arch-proof">
+                        <li><strong>SAWAB NGO ERP</strong> Frappe and ERPNext with a Next.js 15 portal; live demo</li>
+                        <li><strong>Jibika Plexus</strong> HR and payroll platform used by 300+ companies</li>
+                        <li><strong>Karbar ERP</strong> accounting, VAT, payroll and inventory on Laravel</li>
+                    </ul>
+                </div>
+
+                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #a855f7;"><i class="fa-solid fa-brain"></i></div>
-                            <h3 class="arch-pillar-title">Autonomous AI &amp; Agents</h3>
+                            <h3 class="arch-pillar-title">AI in Business Software</h3>
                         </div>
-                        <span class="arch-pillar-badge" style="color:#b166f8; border-color:rgba(168,85,247,0.25); background:rgba(168,85,247,0.1);"><i class="fa-solid fa-robot"></i> Agentic SOTA</span>
+                        <span class="arch-pillar-badge" style="color:#b166f8; border-color:rgba(168,85,247,0.25); background:rgba(168,85,247,0.1);"><i class="fa-solid fa-bolt"></i> ~50% less manual work</span>
                     </div>
-                    <p class="arch-pillar-desc">Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval &amp; local-to-cloud LLMs.</p>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/mcp.svg" alt="MCP" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> MCP</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/langgraph.svg" alt="LangGraph" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangGraph</span>
-                        <span class="arch-tech-tag hover-sound"><i class="fa-solid fa-layer-group" style="color:#06b6d4;"></i> RAG</span>
-                        <span class="arch-tech-tag hover-sound"><i class="fa-solid fa-users-gear" style="color:#a855f7;"></i> Multi-Agent Systems</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/openai.svg" alt="OpenAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/claude.svg" alt="Claude" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/gemini.svg" alt="Gemini" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/ollama.svg" alt="Ollama" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Ollama</span>
-                    </div>
+                    <p class="arch-pillar-desc">LLM features placed inside the modules people already use, not in a separate chatbot.</p>
+                    <ul class="arch-proof">
+                        <li><strong>Jibika Plexus</strong> OpenAI, Claude and Gemini write report narratives, appraisal drafts and leave-policy answers</li>
+                        <li><strong>AI Video Making Engine</strong> Whisper speech-to-text and Bengali NLP cut long videos into 9:16 clips</li>
+                    </ul>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
-                            <div class="arch-pillar-icon" style="color: var(--accent-1);"><i class="fa-solid fa-server"></i></div>
-                            <h3 class="arch-pillar-title">Distributed Backend</h3>
+                            <div class="arch-pillar-icon" style="color: #10b981;"><i class="fa-solid fa-microchip"></i></div>
+                            <h3 class="arch-pillar-title">Devices &amp; Field Data</h3>
                         </div>
-                        <span class="arch-pillar-badge"><i class="fa-solid fa-microchip"></i> Sub-15ms p99</span>
+                        <span class="arch-pillar-badge"><i class="fa-solid fa-chart-line"></i> ZKTeco &middot; GPS</span>
                     </div>
-                    <p class="arch-pillar-desc">Clean-architecture NestJS microservices with PostgreSQL connection pools, distributed Redis locks &amp; type-safe domain boundaries.</p>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/nestjs.svg" alt="NestJS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> NestJS</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/postgresql.svg" alt="PostgreSQL" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PostgreSQL</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/redis.svg" alt="Redis" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Redis</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/typescript.svg" alt="TypeScript" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> TypeScript</span>
-                    </div>
+                    <p class="arch-pillar-desc">Attendance and duty data taken straight from biometric devices and phones, then carried through to payroll.</p>
+                    <ul class="arch-proof">
+                        <li><strong>SAWAB NGO ERP</strong> live ZKTeco biometric attendance</li>
+                        <li><strong>Jibika Plexus</strong> device and GPS attendance with multi-layer approvals; Flutter app with NID OCR onboarding</li>
+                    </ul>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
-                            <div class="arch-pillar-icon" style="color: #f59e0b;"><i class="fa-solid fa-network-wired"></i></div>
-                            <h3 class="arch-pillar-title">Event Streaming</h3>
+                            <div class="arch-pillar-icon" style="color: #f59e0b;"><i class="fa-solid fa-building-columns"></i></div>
+                            <h3 class="arch-pillar-title">Bangladesh Compliance</h3>
                         </div>
-                        <span class="arch-pillar-badge" style="color:#f59e0b; border-color:rgba(245,158,11,0.25); background:rgba(245,158,11,0.1);"><i class="fa-solid fa-arrows-split-up-and-left"></i> Zero-Loss</span>
+                        <span class="arch-pillar-badge" style="color:#f59e0b; border-color:rgba(245,158,11,0.25); background:rgba(245,158,11,0.1);"><i class="fa-solid fa-receipt"></i> NBR &middot; NGOAB</span>
                     </div>
-                    <p class="arch-pillar-desc">High-throughput asynchronous message bus via Apache Kafka, RabbitMQ enterprise queues &amp; real-time Redis Pub/Sub.</p>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/apachekafka.svg" alt="Kafka" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kafka</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/rabbitmq.svg" alt="RabbitMQ" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> RabbitMQ</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/redis.svg" alt="Redis Pub/Sub" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Redis Pub/Sub</span>
-                    </div>
+                    <p class="arch-pillar-desc">Rules that change with the law, kept in the system: VAT returns, tax slabs, payroll gazettes and grants.</p>
+                    <ul class="arch-proof">
+                        <li><strong>Karbar ERP</strong> NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), TDS and tax slabs</li>
+                        <li><strong>Jibika Plexus</strong> payroll kept current with government gazette updates</li>
+                        <li><strong>SAWAB NGO ERP</strong> NGOAB and donor grants</li>
+                    </ul>
                 </div>
+            </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
-                    <div class="arch-pillar-header">
-                        <div class="arch-pillar-title-wrap">
-                            <div class="arch-pillar-icon" style="color: #38bdf8;"><i class="fa-solid fa-cloud"></i></div>
-                            <h3 class="arch-pillar-title">Cloud &amp; Observability</h3>
-                        </div>
-                        <span class="arch-pillar-badge" style="color:#38bdf8; border-color:rgba(56,189,248,0.25); background:rgba(56,189,248,0.1);"><i class="fa-solid fa-chart-line"></i> HA Cluster</span>
-                    </div>
-                    <p class="arch-pillar-desc">Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards &amp; centralized ELK logging.</p>
-                    <div class="arch-pillar-tags">
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/docker.svg" alt="Docker" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Docker</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/kubernetes.svg" alt="Kubernetes" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kubernetes</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/aws.svg" alt="AWS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> AWS</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/prometheus.svg" alt="Prometheus" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Prometheus</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/grafana.svg" alt="Grafana" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Grafana</span>
-                        <span class="arch-tech-tag hover-sound"><img src="../uploads/brand-icons/elastic.svg" alt="ELK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> ELK</span>
+            <!-- Stack: each tool once, with where I used it (title) -->
+            <div class="arch-stack">
+                <div class="arch-stack-head">
+                    <h3 class="arch-stack-title">Stack</h3>
+                    <p class="arch-stack-hint">Hover a tool to see where I used it.</p>
+                </div>
+                <div class="arch-stack-row">
+                    <span class="arch-stack-label">AI &amp; LLMs</span>
+                    <div class="arch-matrix-tags">
+                        <span class="arch-matrix-tag" title="Report and appraisal drafts at Jibika"><img src="../uploads/brand-icons/claude.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude</span>
+                        <span class="arch-matrix-tag" title="LLM APIs in Jibika's Reports, Appraisal and Leave modules"><img src="../uploads/brand-icons/openai.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI</span>
+                        <span class="arch-matrix-tag" title="LLM APIs in Jibika's HR modules"><img src="../uploads/brand-icons/gemini.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini</span>
+                        <span class="arch-matrix-tag" title="Multi-agent workflows"><img src="../uploads/brand-icons/langgraph.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangGraph</span>
+                        <span class="arch-matrix-tag" title="Local LLMs for private, on-device AI"><img src="../uploads/brand-icons/ollama.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Ollama</span>
                     </div>
                 </div>
-
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-models">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #a855f718; color: #a855f7; border: 1px solid #a855f735;">
-                                <i class="fa-solid fa-brain"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">AI Models</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #a855f7; border-color: #a855f735; background: #a855f710;">Foundation SOTA</span>
-                    </div>
-                    <p class="arch-matrix-desc">Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.</p>
+                <div class="arch-stack-row">
+                    <span class="arch-stack-label">Backend</span>
                     <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/openai.svg" alt="OpenAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/claude.svg" alt="Claude" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/gemini.svg" alt="Gemini" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/qwen.svg" alt="Qwen" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Qwen</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/meta.svg" alt="Llama" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Llama</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/mistral.svg" alt="Mistral" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Mistral</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/deepseek.svg" alt="DeepSeek" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> DeepSeek</span>
+                        <span class="arch-matrix-tag" title="SAWAB NGO ERP, with ERPNext and HRMS"><i class="fa-solid fa-cubes" style="color:#0089ff;"></i> Frappe</span>
+                        <span class="arch-matrix-tag" title="SAWAB Bangladesh platform"><img src="../uploads/brand-icons/nodejs.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Node.js</span>
+                        <span class="arch-matrix-tag" title="Microservices and REST APIs; AI Chat Web App"><img src="../uploads/brand-icons/nestjs.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> NestJS</span>
+                        <span class="arch-matrix-tag" title="Karbar ERP, with Filament"><img src="../uploads/brand-icons/laravel.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Laravel</span>
+                        <span class="arch-matrix-tag" title="Python backend of the AI Video Making Engine"><img src="../uploads/brand-icons/fastapi.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> FastAPI</span>
+                        <span class="arch-matrix-tag" title="Jibika Plexus"><img src="../uploads/brand-icons/dotnet.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> .NET</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-agents">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #00f2fe18; color: #00f2fe; border: 1px solid #00f2fe35;">
-                                <i class="fa-solid fa-robot"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">AI Agents</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #00f2fe; border-color: #00f2fe35; background: #00f2fe10;">Autonomous Actors</span>
-                    </div>
-                    <p class="arch-matrix-desc">Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.</p>
+                <div class="arch-stack-row">
+                    <span class="arch-stack-label">Frontend &amp; Mobile</span>
                     <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/hermis.svg" alt="Hermes agent" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Hermes agent</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/openclaw.svg" alt="OpenClaw" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenClaw</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/claudecode.svg" alt="Claude Code" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude Code</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/codex.svg" alt="Codex" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Codex</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/geminicli.svg" alt="Gemini CLI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini CLI</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/opencode.svg" alt="OpenCode" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenCode</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/goose.svg" alt="Goose" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Goose</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/aider.svg" alt="Aider" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Aider</span>
+                        <span class="arch-matrix-tag" title="My default across frontend and backend"><img src="../uploads/brand-icons/typescript.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> TypeScript</span>
+                        <span class="arch-matrix-tag" title="SAWAB Foundation portal"><img src="../uploads/brand-icons/react.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> React</span>
+                        <span class="arch-matrix-tag" title="SAWAB NGO ERP portal; AI Video Making Engine"><img src="../uploads/brand-icons/nextjs.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Next.js</span>
+                        <span class="arch-matrix-tag" title="SAWAB Foundation portal"><img src="../uploads/brand-icons/tailwind.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Tailwind CSS</span>
+                        <span class="arch-matrix-tag" title="Jibika mobile app"><img src="../uploads/brand-icons/flutter.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Flutter</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-ide">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #38bdf818; color: #38bdf8; border: 1px solid #38bdf835;">
-                                <i class="fa-solid fa-laptop-code"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">AI IDE</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #38bdf8; border-color: #38bdf835; background: #38bdf810;">Next-Gen Editors</span>
-                    </div>
-                    <p class="arch-matrix-desc">Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.</p>
+                <div class="arch-stack-row">
+                    <span class="arch-stack-label">Data</span>
                     <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/cursor.svg" alt="Cursor" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Cursor</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/windsurf.svg" alt="Windsurf" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Windsurf</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/githubcopilot.svg" alt="GitHub Copilot" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> GitHub Copilot</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/kiro.svg" alt="Kiro" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kiro</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/antigravity.svg" alt="Antigravity" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Antigravity</span>
+                        <span class="arch-matrix-tag" title="SAWAB Bangladesh platform"><img src="../uploads/brand-icons/postgresql.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PostgreSQL</span>
+                        <span class="arch-matrix-tag" title="SAWAB NGO ERP"><i class="fa-solid fa-database" style="color:#c0765a;"></i> MariaDB</span>
+                        <span class="arch-matrix-tag" title="Jibika Plexus"><i class="fa-solid fa-database" style="color:#f80000;"></i> Oracle</span>
+                        <span class="arch-matrix-tag" title="Cache and background-job queues in the NGO ERP"><img src="../uploads/brand-icons/redis.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Redis</span>
+                        <span class="arch-matrix-tag" title="Event streaming"><img src="../uploads/brand-icons/apachekafka.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kafka</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-agent-framework">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #10b98118; color: #10b981; border: 1px solid #10b98135;">
-                                <i class="fa-solid fa-diagram-project"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Agent Framework</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #10b981; border-color: #10b98135; background: #10b98110;">Multi-Agent Swarm</span>
-                    </div>
-                    <p class="arch-matrix-desc">Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.</p>
+                <div class="arch-stack-row">
+                    <span class="arch-stack-label">DevOps &amp; Automation</span>
                     <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/langgraph.svg" alt="LangGraph" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangGraph</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/langchain.svg" alt="LangChain" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangChain</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/crewai.svg" alt="CrewAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> CrewAI</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/autogen.svg" alt="AutoGen" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> AutoGen</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/pydantic.svg" alt="PydanticAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PydanticAI</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-protocol-tools">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #f59e0b18; color: #f59e0b; border: 1px solid #f59e0b35;">
-                                <i class="fa-solid fa-plug-circle-bolt"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Protocol / Tools</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #f59e0b; border-color: #f59e0b35; background: #f59e0b10;">Open Protocols</span>
-                    </div>
-                    <p class="arch-matrix-desc">Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/mcp.svg" alt="MCP" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> MCP</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-arrows-split-up-and-left" style="color:#06b6d4;"></i> A2A</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-terminal" style="color:#10b981;"></i> Function Calling</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-toolbox" style="color:#f59e0b;"></i> Tool Use</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-local-ai">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #ec489918; color: #ec4899; border: 1px solid #ec489935;">
-                                <i class="fa-solid fa-microchip"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Local AI</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #ec4899; border-color: #ec489935; background: #ec489910;">Edge & Private</span>
-                    </div>
-                    <p class="arch-matrix-desc">Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/ollama.svg" alt="Ollama" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Ollama</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/lmstudio.svg" alt="LM Studio" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LM Studio</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-gears" style="color:#f97316;"></i> llama.cpp</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-bolt-lightning" style="color:#a855f7;"></i> vLLM</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-automation">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #ea580c18; color: #ea580c; border: 1px solid #ea580c35;">
-                                <i class="fa-solid fa-arrows-spin"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Automation</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #ea580c; border-color: #ea580c35; background: #ea580c10;">Event Pipeline</span>
-                    </div>
-                    <p class="arch-matrix-desc">Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/n8n.svg" alt="n8n" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> n8n</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/zapier.svg" alt="Zapier" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Zapier</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/make.svg" alt="Make" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Make</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-event-streaming">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #f59e0b18; color: #f59e0b; border: 1px solid #f59e0b35;">
-                                <i class="fa-solid fa-network-wired"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Event Streaming</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #f59e0b; border-color: #f59e0b35; background: #f59e0b10;">Zero-Loss</span>
-                    </div>
-                    <p class="arch-matrix-desc">High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/apachekafka.svg" alt="Kafka" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kafka</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/rabbitmq.svg" alt="RabbitMQ" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> RabbitMQ</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/redis.svg" alt="Redis Pub/Sub" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Redis Pub/Sub</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-rag-vector">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #06b6d418; color: #06b6d4; border: 1px solid #06b6d435;">
-                                <i class="fa-solid fa-cubes-stacked"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">RAG / Vector</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #06b6d4; border-color: #06b6d435; background: #06b6d410;">Dense Retrieval</span>
-                    </div>
-                    <p class="arch-matrix-desc">High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/pinecone.svg" alt="Pinecone" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Pinecone</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/chroma.svg" alt="Chroma" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Chroma</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/qdrant.svg" alt="Qdrant" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Qdrant</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/weaviate.svg" alt="Weaviate" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Weaviate</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-ai-database">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #33679118; color: #336791; border: 1px solid #33679135;">
-                                <i class="fa-solid fa-database"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">AI Database</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #336791; border-color: #33679135; background: #33679110;">Storage & Vectors</span>
-                    </div>
-                    <p class="arch-matrix-desc">ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/postgresql.svg" alt="PostgreSQL" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PostgreSQL</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/pgvector.svg" alt="pgvector" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> pgvector</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/supabase.svg" alt="Supabase" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Supabase</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/mongodb.svg" alt="MongoDB" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> MongoDB</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-web-ai">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #14b8a618; color: #14b8a6; border: 1px solid #14b8a635;">
-                                <i class="fa-solid fa-cloud-arrow-down"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Web AI</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #14b8a6; border-color: #14b8a635; background: #14b8a610;">Streaming Edge UI</span>
-                    </div>
-                    <p class="arch-matrix-desc">Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/vercel.svg" alt="Vercel AI SDK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Vercel AI SDK</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-cubes" style="color:#06b6d4;"></i> AI SDK</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/openai.svg" alt="OpenAI SDK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI SDK</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-frontend">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #61dafb18; color: #61dafb; border: 1px solid #61dafb35;">
-                                <i class="fa-brands fa-react"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Frontend</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #61dafb; border-color: #61dafb35; background: #61dafb10;">Reactive Interface</span>
-                    </div>
-                    <p class="arch-matrix-desc">Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/react.svg" alt="React" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> React</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/nextjs.svg" alt="Next.js" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Next.js</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/typescript.svg" alt="TypeScript" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> TypeScript</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/tailwind.svg" alt="Tailwind" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Tailwind</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-backend">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #22c55e18; color: #22c55e; border: 1px solid #22c55e35;">
-                                <i class="fa-solid fa-server"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Backend</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #22c55e; border-color: #22c55e35; background: #22c55e10;">Distributed Primitives</span>
-                    </div>
-                    <p class="arch-matrix-desc">Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><i class="fa-brands fa-node-js" style="color:#68a063;"></i> Node.js</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/nestjs.svg" alt="NestJS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> NestJS</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/express.svg" alt="Express" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Express</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/python.svg" alt="Python" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Python</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/fastapi.svg" alt="FastAPI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> FastAPI</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-cloud">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #ff990018; color: #ff9900; border: 1px solid #ff990035;">
-                                <i class="fa-solid fa-cloud"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Cloud</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #ff9900; border-color: #ff990035; background: #ff990010;">Hyperscale Edge</span>
-                    </div>
-                    <p class="arch-matrix-desc">Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/vercel.svg" alt="Vercel" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Vercel</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/aws.svg" alt="AWS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> AWS</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/googlecloud.svg" alt="Google Cloud" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Google Cloud</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/cloudflare.svg" alt="Cloudflare" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Cloudflare</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-devops">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #326ce518; color: #326ce5; border: 1px solid #326ce535;">
-                                <i class="fa-solid fa-gears"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">DevOps</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #326ce5; border-color: #326ce535; background: #326ce510;">Containers & CD</span>
-                    </div>
-                    <p class="arch-matrix-desc">Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/docker.svg" alt="Docker" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Docker</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/githubactions.svg" alt="GitHub Actions" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> GitHub Actions</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/kubernetes.svg" alt="Kubernetes" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kubernetes</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-observability">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #f43f5e18; color: #f43f5e; border: 1px solid #f43f5e35;">
-                                <i class="fa-solid fa-chart-line"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">Observability</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #f43f5e; border-color: #f43f5e35; background: #f43f5e10;">Tracing & Metrics</span>
-                    </div>
-                    <p class="arch-matrix-desc">End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/prometheus.svg" alt="Prometheus" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Prometheus</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/grafana.svg" alt="Grafana" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Grafana</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/elastic.svg" alt="ELK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> ELK</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-magnifying-glass-chart" style="color:#f59e0b;"></i> LangSmith</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-fire-flame-curved" style="color:#ea580c;"></i> Langfuse</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/opentelemetry.svg" alt="OpenTelemetry" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenTelemetry</span>
-                    </div>
-                </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-ui-design">
-                    <div class="arch-matrix-card-header">
-                        <div class="arch-matrix-cat-title">
-                            <div class="arch-matrix-cat-icon" style="background: #d946ef18; color: #d946ef; border: 1px solid #d946ef35;">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            </div>
-                            <h4 class="arch-matrix-cat-name">AI UI / Design</h4>
-                        </div>
-                        <span class="arch-matrix-badge" style="color: #d946ef; border-color: #d946ef35; background: #d946ef10;">Generative Scaffolding</span>
-                    </div>
-                    <p class="arch-matrix-desc">Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.</p>
-                    <div class="arch-matrix-tags">
-                        <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/v0.svg" alt="v0" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> v0</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/lovable.svg" alt="Lovable" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Lovable</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/bolt.svg" alt="Bolt" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Bolt</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/stitch.svg" alt="Google Stitch" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Google Stitch</span>
+                        <span class="arch-matrix-tag" title="Containerised deploys for the SAWAB platform"><img src="../uploads/brand-icons/docker.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Docker</span>
+                        <span class="arch-matrix-tag" title="Orchestration for distributed services"><img src="../uploads/brand-icons/kubernetes.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kubernetes</span>
+                        <span class="arch-matrix-tag" title="Daily data sync for this site"><img src="../uploads/brand-icons/githubactions.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> GitHub Actions</span>
+                        <span class="arch-matrix-tag" title="Worker behind this site's AI chat"><img src="../uploads/brand-icons/cloudflare.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Cloudflare</span>
+                        <span class="arch-matrix-tag" title="Workflow automations"><img src="../uploads/brand-icons/n8n.svg" alt="" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> n8n</span>
                     </div>
                 </div>
             </div>
@@ -673,7 +440,7 @@
     </div>
     <script src="../focus/focus.js?v=14" defer></script>
     <script src="../ai-orb-mascot.js?v=18" defer></script>
-    <script src="../script~9e1709.js?v=234" defer></script>
+    <script src="../script~9e1709.js?v=235" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->
