@@ -3537,6 +3537,8 @@ _src = (ROOT / "scripts/site_src/index.full.html").read_text(encoding="utf-8").r
 _head = _src[:_src.index("<body>")]
 _head = re.sub(r'<script type="application/ld\+json">.*?</script>', "", _head, flags=re.S)
 _head = re.sub(r'\s*<script id="hero-net">.*?</script>', "", _head, flags=re.S)  # draws the home hero's particles
+_head = re.sub(r'\n\s*<!-- Home, desktop:.*?-->', "", _head, flags=re.S)  # the hero's desktop font preloads
+_head = re.sub(r'\n\s*<link[^>]*\bdata-home\b[^>]*>', "", _head)
 _open = _src[_src.index("<body>") + 6:_src.index('<header class="hero"')]
 _tail = _src[_src.index('<div style="text-align: center; padding-bottom: 2rem;">'):]
 _tail = _tail.replace('<div style="text-align: center; padding-bottom: 2rem;">',
