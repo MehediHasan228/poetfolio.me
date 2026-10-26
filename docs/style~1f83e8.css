@@ -11510,3 +11510,10 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
 @keyframes lbTitleBar2 { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(.444); opacity: .8; } }
 @keyframes lbTitleBar3 { 0%, 100% { transform: scaleY(.588); opacity: .85; } 50% { transform: scaleY(1); opacity: 1; } }
 @keyframes lbTitleBar4 { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(.467); opacity: .8; } }
+
+/* Wide screens: the hero's text column took the width its content asked for, which changes when the web fonts swap in,
+   and the photo card (the rest of the row) resized with it: a layout shift on every first visit. The column now holds the
+   width the fonts give it (636 px, up to half the row, at most 650 px), so the card keeps its size from the first paint. */
+@media (min-width: 1201px) {
+    .hero-text-side { flex: 0 0 clamp(636px, calc((100% - 4rem) / 2), 650px); min-width: 0; }
+}
