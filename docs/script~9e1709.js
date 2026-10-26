@@ -888,8 +888,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.addEventListener('touchstart', () => {
                 isDeploymentUnlocked = true;
             }, { passive: true });
-            // Initial run in case loaded midway
-            handleHeroScroll();
+            // Initial run in case loaded midway, with the next frame: its measuring would lay the page out inside the start-up task
+            requestAnimationFrame(handleHeroScroll);
 
             // 5. Mobile Touch Events (Drag & Pan Interaction)
             wrapper.addEventListener('touchstart', (e) => {
@@ -3107,7 +3107,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function generateLines(codeEl) {
         if (!codeEl) return;
-        const count = codeEl.innerText.split(/\r\n|\r|\n/).length;
+        // textContent: the code sits in a <pre> with real newlines, and unlike innerText it needs no layout
+        const count = codeEl.textContent.split(/\r\n|\r|\n/).length;
         const lineNums = document.getElementById('line-numbers');
         if (lineNums) {
             lineNums.innerHTML = Array.from({ length: count }, (_, i) => `<div>${i + 1}</div>`).join('');
@@ -3133,8 +3134,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // The subtitle keeps the height of its tallest phrase (some wrap to two lines), so the centred hero never jumps
         // while phrases type and erase. Measured again once the fonts are in and when the width changes.
         const subtitle = typingSpan.closest('h2');
+        let subtitleW = 0;   // the width it was measured at (read with the measuring: innerWidth lays the page out)
         const reserveSubtitle = () => {
             if (!subtitle) return;
+            subtitleW = innerWidth;
             const was = [prefixSpan ? prefixSpan.textContent : '', typingSpan.textContent];
             subtitle.style.minHeight = '';
             let tallest = 0;
@@ -3147,10 +3150,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             typingSpan.textContent = was[1];
             subtitle.style.minHeight = tallest + 'px';
         };
-        reserveSubtitle();
-        if (document.fonts) document.fonts.ready.then(reserveSubtitle);
-        let subtitleW = innerWidth;
-        window.addEventListener('resize', () => { if (innerWidth !== subtitleW) { subtitleW = innerWidth; reserveSubtitle(); } });
+        // Measured with the next frame (the stylesheet holds the height until then): measuring here would lay the page out
+        // inside the start-up task, and the fonts may already be in, which runs the .then before this task ends.
+        let reserveQueued = false;
+        const reserveSoon = () => {
+            if (reserveQueued) return;
+            reserveQueued = true;
+            requestAnimationFrame(() => { reserveQueued = false; reserveSubtitle(); });
+        };
+        reserveSoon();
+        // fonts.ready is read with the frame too: the getter brings style and layout up to date
+        if (document.fonts) requestAnimationFrame(() => document.fonts.ready.then(reserveSoon));
+        window.addEventListener('resize', () => { if (innerWidth !== subtitleW) reserveSubtitle(); });
 
         function type() {
             const currentItem = tArr[tIdx];
@@ -3996,9 +4007,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (document.readyState === 'complete') setTimeout(loadArenaOnce, 3000);
     else window.addEventListener('load', () => setTimeout(loadArenaOnce, 3000), { once: true });
 
-    // Initial render
-    renderSubtabs(currentCategory);
-    renderLeaderboard(currentCategory, currentSubcategory);
+    // Initial render, as a task of its own: the widget starts folded, and its rows were the largest piece of the start-up task
+    setTimeout(() => {
+        renderSubtabs(currentCategory);
+        renderLeaderboard(currentCategory, currentSubcategory);
+    }, 0);
 
     // Pulse update logic (every 60s)
     setInterval(() => {
@@ -4267,7 +4280,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         const dotContainer = document.querySelector(dotContainerSelector);
         const dots = dotContainer ? dotContainer.querySelectorAll('.arch-dot') : [];
 
-        function setActiveItem(index, triggerScroll = false) {
+        // atStart: the first tab already sits at the left edge, so it is not measured and centred (that would lay the page out mid start-up)
+        function setActiveItem(index, triggerScroll = false, atStart = false) {
             if (index < 0 || index >= cards.length) return;
 
             cards.forEach((card, i) => {
@@ -4288,7 +4302,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                     if (tab.dataset.pillar === activePillar) {
                         tab.classList.add('active');
                         // Scroll tab pill horizontally inside tabContainer so active tab is always centered
-                        if (tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
+                        if (!atStart && tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
                             const tabLeft = tab.offsetLeft;
                             const tabWidth = tab.offsetWidth;
                             const containerWidth = tabContainer.clientWidth;
@@ -4377,7 +4391,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         // Initialize first visible card as active
         const firstVisibleIdx = Array.from(cards).findIndex(c => !c.classList.contains('is-hidden') && c.style.display !== 'none');
-        setActiveItem(firstVisibleIdx !== -1 ? firstVisibleIdx : 0, false);
+        setActiveItem(firstVisibleIdx !== -1 ? firstVisibleIdx : 0, false, firstVisibleIdx <= 0);
     }
 
     // Initialize all 4 Mobile App Carousel Sliders (Architecture, Deployments, Ethical/Philosophy, DeepTech/Telemetry)
