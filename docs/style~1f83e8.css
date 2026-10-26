@@ -11479,8 +11479,9 @@ html:not(.snap-ready) :is(.arch-unified-grid, .arch-pillars-grid, .arch-pipeline
 .anim-rest, .anim-rest::before, .anim-rest::after { animation-play-state: paused !important; }
 
 /* The typed subtitle holds the height of its longest phrase from the first paint (script~ checks it again once the fonts
-   are in): two lines on desktop and on the narrowest phones, where the longer phrases wrap; the centred hero never jumps. */
-@media (min-width: 769px) { html body .hero-text-side h2:not(#_h) { min-height: 3em; } }
+   are in): two lines on desktop and on the narrowest phones, where the longer phrases wrap; the centred hero never jumps.
+   On desktop the height is set outright, so a fallback font that wraps differently cannot change it either. */
+@media (min-width: 769px) { html body .hero-text-side h2:not(#_h) { min-height: 3em; height: 3em; } }
 @media (max-width: 380px) { html body .hero-text-side h2:not(#_h) { min-height: 3.2em; } }
 
 /* Loops that ran on the main thread every frame now run on the GPU (each forced a layout pass, which also slows the
@@ -11516,4 +11517,13 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
    width the fonts give it (636 px, up to half the row, at most 650 px), so the card keeps its size from the first paint. */
 @media (min-width: 1201px) {
     .hero-text-side { flex: 0 0 clamp(636px, calc((100% - 4rem) / 2), 650px); min-width: 0; }
+}
+
+/* The hero's text column is centred in its row, so a height that came from a font's own metrics moved the whole column
+   when the web fonts swapped in (PageSpeed desktop: CLS 0.06 on the heading). These heights come from the stylesheet now:
+   the CV link takes Poppins' own line height (1.5), and the name, alone on the heading's second line on desktop, sits at
+   the line's top instead of on the first font's baseline. */
+.hero-text-link { line-height: 1.5; }
+@media (min-width: 769px) {
+    .hero-text-side h1 .gradient-text { vertical-align: top; }
 }
