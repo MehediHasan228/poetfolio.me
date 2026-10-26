@@ -3995,7 +3995,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     }
 
-    loadArenaData();
+    // The live ranking (a fetch) comes 3 s after load, or as soon as the widget is touched; the built-in ranking shows
+    // until then, and the first screen doesn't share the network with it.
+    let arenaRequested = false;
+    const loadArenaOnce = () => { if (!arenaRequested) { arenaRequested = true; loadArenaData(); } };
+    const lbWidgetEl = document.getElementById('leaderboard-widget');
+    if (lbWidgetEl) ['pointerenter', 'pointerdown', 'focusin'].forEach((t) => lbWidgetEl.addEventListener(t, loadArenaOnce, { once: true, passive: true }));
+    if (document.readyState === 'complete') setTimeout(loadArenaOnce, 3000);
+    else window.addEventListener('load', () => setTimeout(loadArenaOnce, 3000), { once: true });
 
     // Initial render
     renderSubtabs(currentCategory);

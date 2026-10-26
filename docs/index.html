@@ -117,19 +117,19 @@
 
         <div class="mobile-header-right">
             <a href="./contact/" class="mobile-contact-btn hover-sound" aria-label="Contact"><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>Contact</span></a>
-            <button id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer" onclick="toggleMobileMenu(event)">
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer" onclick="window.toggleMobileMenu && toggleMobileMenu(event)">
                 <span class="mm-bars" aria-hidden="true"><i></i><i></i><i></i></span>
             </button>
         </div>
     </nav>
 
-    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop" onclick="closeMobileMenu(event)"></div>
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop" onclick="window.closeMobileMenu && closeMobileMenu(event)"></div>
     <div id="mobile-menu-drawer" class="mobile-menu-drawer">
         <a href="./index.html" class="drawer-brand" aria-label="Mehedi Hasan, home">
             <img src="./mehedi-logo.webp" alt="" width="36" height="36" decoding="async">
             <span><b>Mehedi Hasan</b><small>Full-stack &amp; AI engineer</small></span>
         </a>
-        <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu" onclick="closeMobileMenu(event)">
+        <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu" onclick="window.closeMobileMenu && closeMobileMenu(event)">
             <i class="fa-solid fa-xmark"></i>
         </button>
         <ul class="nav-links">
@@ -151,147 +151,6 @@
         <p class="drawer-copy">© 2026 Mehedi Hasan</p>
     </div>
 
-    <script>
-    function openMobileMenu() {
-        var d = document.getElementById('mobile-menu-drawer');
-        var b = document.getElementById('mobile-menu-backdrop');
-        if (d) d.classList.add('drawer-open');
-        if (b) b.classList.add('active');
-        document.body.classList.add('drawer-open');
-        var t = document.getElementById('mobile-menu-toggle');
-        if (t) { t.setAttribute('aria-expanded', 'true'); t.setAttribute('aria-label', 'Close menu'); }
-    }
-    function closeMobileMenu(e) {
-        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
-        if (e && e.stopPropagation) { e.stopPropagation(); }
-        var d = document.getElementById('mobile-menu-drawer');
-        var b = document.getElementById('mobile-menu-backdrop');
-        if (d) d.classList.remove('drawer-open');
-        if (b) b.classList.remove('active');
-        document.body.classList.remove('drawer-open');
-        var t = document.getElementById('mobile-menu-toggle');
-        if (t) { t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Open menu'); }
-    }
-    /* keep the menu button state in sync with the drawer, whichever script opened it */
-    (function () {
-        function sync() {
-            var d = document.getElementById('mobile-menu-drawer'), t = document.getElementById('mobile-menu-toggle');
-            if (!d || !t) return;
-            var open = d.classList.contains('drawer-open');
-            t.setAttribute('aria-expanded', open ? 'true' : 'false');
-            t.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-        }
-        function watch() {
-            var d = document.getElementById('mobile-menu-drawer');
-            if (d) new MutationObserver(sync).observe(d, { attributes: true, attributeFilter: ['class'] });
-            sync();
-        }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
-    })();
-    /* bottom tab bar: a pill that slides to the tapped tab; tapping the current tab scrolls to the top */
-    document.addEventListener('DOMContentLoaded', function () {
-        var bar = document.querySelector('.bottom-nav'); if (!bar) return;
-        var pill = bar.querySelector('.bn-pill');
-        function place(a, animate) {
-            if (!pill || !a) return;
-            var svg = a.querySelector('svg'); if (!svg) return;
-            var b = bar.getBoundingClientRect(), s = svg.getBoundingClientRect();
-            pill.style.transition = animate ? '' : 'none';
-            pill.style.transform = 'translate(' + (s.left - b.left + s.width / 2 - 28) + 'px,' + (s.top - b.top + s.height / 2 - 16) + 'px)';
-            pill.style.opacity = '1';
-        }
-        function current() { return bar.querySelector('a[aria-current="page"]'); }
-        function reset() {
-            bar.querySelectorAll('a.is-pending').forEach(function (x) { x.classList.remove('is-pending'); });
-            place(current(), false);
-        }
-        requestAnimationFrame(reset);
-        window.addEventListener('resize', reset);
-        window.addEventListener('orientationchange', reset);
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(reset);
-        window.addEventListener('load', reset);
-        /* any later change in the bar's size or the tabs' layout re-centres the pill under the active icon */
-        if ('ResizeObserver' in window) {
-            var rt = 0;
-            var ro = new ResizeObserver(function () { cancelAnimationFrame(rt); rt = requestAnimationFrame(function () { if (!bar.querySelector('a.is-pending')) place(current(), false); }); });
-            ro.observe(bar);
-            bar.querySelectorAll('a').forEach(function (x) { ro.observe(x); });
-        }
-        /* the page may come back from the back/forward cache with the tapped tab still pending */
-        window.addEventListener('pageshow', function (ev) { if (ev.persisted) reset(); });
-        /* press feedback: only a light haptic tick, no ripple or shading */
-        bar.addEventListener('pointerdown', function (e) {
-            if (!e.target.closest('a')) return;
-            if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
-        });
-        bar.addEventListener('click', function (e) {
-            var a = e.target.closest('a'); if (!a) return;
-            if (a.getAttribute('aria-current') === 'page') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-            /* visual feedback only; aria-current stays with the page that is actually shown */
-            a.classList.add('is-pending'); place(a, true);
-            showSkeleton();
-        });
-        /* while the next page loads, the content area shows placeholder cards; the header and tab bar stay put */
-        function showSkeleton() {
-            if (document.getElementById('page-skeleton')) return;
-            var sk = document.createElement('div');
-            sk.id = 'page-skeleton'; sk.setAttribute('aria-hidden', 'true');
-            sk.innerHTML = '<div class="sk-hero"><i class="sk-av"></i><i class="sk-l w60"></i><i class="sk-l w40"></i></div>'
-                + '<div class="sk-card"><i class="sk-l w80"></i><i class="sk-l w95"></i><i class="sk-l w70"></i></div>'
-                + '<div class="sk-card"><i class="sk-l w60"></i><i class="sk-l w90"></i><i class="sk-l w50"></i></div>'
-                + '<div class="sk-card"><i class="sk-l w75"></i><i class="sk-l w85"></i></div>';
-            document.body.appendChild(sk);
-            requestAnimationFrame(function () { sk.classList.add('is-on'); });
-        }
-        window.addEventListener('pageshow', function () { var s = document.getElementById('page-skeleton'); if (s) s.remove(); });
-    });
-    /* once per release: re-fetch the main pages so the browser drops any old copies it kept
-       (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
-    window.addEventListener('load', function () {
-        var RELEASE = '2026-10-13b';
-        try {
-            if (localStorage.getItem('pages_refreshed') === RELEASE) return;
-            /* first-time visitors have nothing stale to clear: mark it done and spend no bandwidth */
-            if (!localStorage.getItem('pages_refreshed') && !localStorage.getItem('greet:last') && !localStorage.getItem('mehedi_theme')) { localStorage.setItem('pages_refreshed', RELEASE); return; }
-        } catch (e) { return; }
-        var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
-        var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
-        var pages = ['', 'index.html', 'profile/', 'projects/', 'people/', 'contact/', 'library/',
-                     'library/skills/', 'library/bookmarks/', 'library/music/'];
-        var i = 0;
-        (function next() {
-            if (i >= pages.length) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }
-            var p = pages[i++];
-            var run = function () { fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}).then(next); };
-            if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 4000 }); else setTimeout(run, 400);
-        })();
-    });
-    /* phones: hide the header while scrolling down, bring it back when scrolling up */
-    (function () {
-        var last = window.scrollY, ticking = false, mq = window.matchMedia('(max-width: 768px)');
-        window.addEventListener('scroll', function () {
-            if (ticking) return; ticking = true;
-            requestAnimationFrame(function () {
-                var nav = document.querySelector('nav[aria-label="Main navigation"]'), y = window.scrollY;
-                if (nav && mq.matches && !document.body.classList.contains('drawer-open')) {
-                    if (y > last + 6 && y > 80) nav.classList.add('nav-hidden');
-                    else if (y < last - 6 || y <= 80) nav.classList.remove('nav-hidden');
-                }
-                last = y; ticking = false;
-            });
-        }, { passive: true });
-    })();
-    function toggleMobileMenu(e) {
-        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
-        if (e && e.stopPropagation) { e.stopPropagation(); }
-        var d = document.getElementById('mobile-menu-drawer');
-        if (d && d.classList.contains('drawer-open')) {
-            closeMobileMenu();
-        } else {
-            openMobileMenu();
-        }
-    }
-    </script>
 
     <header class="hero" id="home">
         <canvas id="particle-canvas" aria-hidden="true" width="762" height="484"></canvas>
@@ -1761,7 +1620,156 @@
     </div>
     <script src="./focus/focus.js?v=14" defer></script>
     <script src="./ai-orb-mascot.js?v=18" defer></script>
-    <script src="./script~9e1709.js?v=221" defer></script>
+    <script src="./script~9e1709.js?v=222" defer></script>
+
+    <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
+         placed above the hero it held the parser there, so the first frame showed the header without the hero -->
+    <script>
+    function openMobileMenu() {
+        var d = document.getElementById('mobile-menu-drawer');
+        var b = document.getElementById('mobile-menu-backdrop');
+        if (d) d.classList.add('drawer-open');
+        if (b) b.classList.add('active');
+        document.body.classList.add('drawer-open');
+        var t = document.getElementById('mobile-menu-toggle');
+        if (t) { t.setAttribute('aria-expanded', 'true'); t.setAttribute('aria-label', 'Close menu'); }
+    }
+    function closeMobileMenu(e) {
+        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
+        if (e && e.stopPropagation) { e.stopPropagation(); }
+        var d = document.getElementById('mobile-menu-drawer');
+        var b = document.getElementById('mobile-menu-backdrop');
+        if (d) d.classList.remove('drawer-open');
+        if (b) b.classList.remove('active');
+        document.body.classList.remove('drawer-open');
+        var t = document.getElementById('mobile-menu-toggle');
+        if (t) { t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Open menu'); }
+    }
+    /* keep the menu button state in sync with the drawer, whichever script opened it */
+    (function () {
+        function sync() {
+            var d = document.getElementById('mobile-menu-drawer'), t = document.getElementById('mobile-menu-toggle');
+            if (!d || !t) return;
+            var open = d.classList.contains('drawer-open');
+            t.setAttribute('aria-expanded', open ? 'true' : 'false');
+            t.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        }
+        function watch() {
+            var d = document.getElementById('mobile-menu-drawer');
+            if (d) new MutationObserver(sync).observe(d, { attributes: true, attributeFilter: ['class'] });
+            sync();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+    })();
+    /* bottom tab bar: a pill that slides to the tapped tab; tapping the current tab scrolls to the top */
+    document.addEventListener('DOMContentLoaded', function () {
+        var bar = document.querySelector('.bottom-nav'); if (!bar) return;
+        var pill = bar.querySelector('.bn-pill');
+        function place(a, animate) {
+            if (!pill || !a) return;
+            var svg = a.querySelector('svg'); if (!svg) return;
+            var b = bar.getBoundingClientRect(), s = svg.getBoundingClientRect();
+            pill.style.transition = animate ? '' : 'none';
+            pill.style.transform = 'translate(' + (s.left - b.left + s.width / 2 - 28) + 'px,' + (s.top - b.top + s.height / 2 - 16) + 'px)';
+            pill.style.opacity = '1';
+        }
+        function current() { return bar.querySelector('a[aria-current="page"]'); }
+        function reset() {
+            bar.querySelectorAll('a.is-pending').forEach(function (x) { x.classList.remove('is-pending'); });
+            place(current(), false);
+        }
+        requestAnimationFrame(reset);
+        window.addEventListener('resize', reset);
+        window.addEventListener('orientationchange', reset);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(reset);
+        window.addEventListener('load', reset);
+        /* any later change in the bar's size or the tabs' layout re-centres the pill under the active icon */
+        if ('ResizeObserver' in window) {
+            var rt = 0;
+            var ro = new ResizeObserver(function () { cancelAnimationFrame(rt); rt = requestAnimationFrame(function () { if (!bar.querySelector('a.is-pending')) place(current(), false); }); });
+            ro.observe(bar);
+            bar.querySelectorAll('a').forEach(function (x) { ro.observe(x); });
+        }
+        /* the page may come back from the back/forward cache with the tapped tab still pending */
+        window.addEventListener('pageshow', function (ev) { if (ev.persisted) reset(); });
+        /* press feedback: only a light haptic tick, no ripple or shading */
+        bar.addEventListener('pointerdown', function (e) {
+            if (!e.target.closest('a')) return;
+            if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
+        });
+        bar.addEventListener('click', function (e) {
+            var a = e.target.closest('a'); if (!a) return;
+            if (a.getAttribute('aria-current') === 'page') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+            /* visual feedback only; aria-current stays with the page that is actually shown */
+            a.classList.add('is-pending'); place(a, true);
+            showSkeleton();
+        });
+        /* while the next page loads, the content area shows placeholder cards; the header and tab bar stay put */
+        function showSkeleton() {
+            if (document.getElementById('page-skeleton')) return;
+            var sk = document.createElement('div');
+            sk.id = 'page-skeleton'; sk.setAttribute('aria-hidden', 'true');
+            sk.innerHTML = '<div class="sk-hero"><i class="sk-av"></i><i class="sk-l w60"></i><i class="sk-l w40"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w80"></i><i class="sk-l w95"></i><i class="sk-l w70"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w60"></i><i class="sk-l w90"></i><i class="sk-l w50"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w75"></i><i class="sk-l w85"></i></div>';
+            document.body.appendChild(sk);
+            requestAnimationFrame(function () { sk.classList.add('is-on'); });
+        }
+        window.addEventListener('pageshow', function () { var s = document.getElementById('page-skeleton'); if (s) s.remove(); });
+    });
+    /* once per release: re-fetch the main pages so the browser drops any old copies it kept
+       (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
+    /* who is a first-time visitor is read now, before the page's scripts run: the mascot saves its greeting (greet:last)
+       before load, and read at load every first visit looked like a returning one and refetched ten pages */
+    var RELEASE = '2026-10-13b', firstVisit = false, refreshed = false;
+    try {
+        refreshed = localStorage.getItem('pages_refreshed') === RELEASE;
+        firstVisit = !localStorage.getItem('pages_refreshed') && !localStorage.getItem('greet:last') && !localStorage.getItem('mehedi_theme');
+    } catch (e) { refreshed = true; }
+    window.addEventListener('load', function () {
+        if (refreshed) return;
+        /* first-time visitors have nothing stale to clear: mark it done and spend no bandwidth */
+        if (firstVisit) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }
+        var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
+        var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
+        var pages = ['', 'index.html', 'profile/', 'projects/', 'people/', 'contact/', 'library/',
+                     'library/skills/', 'library/bookmarks/', 'library/music/'];
+        var i = 0;
+        function next() {
+            if (i >= pages.length) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }
+            var p = pages[i++];
+            var run = function () { fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}).then(next); };
+            if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 4000 }); else setTimeout(run, 400);
+        }
+        setTimeout(next, 3000);   /* after the page has settled */
+    });
+    /* phones: hide the header while scrolling down, bring it back when scrolling up */
+    (function () {
+        var last = window.scrollY, ticking = false, mq = window.matchMedia('(max-width: 768px)');
+        window.addEventListener('scroll', function () {
+            if (ticking) return; ticking = true;
+            requestAnimationFrame(function () {
+                var nav = document.querySelector('nav[aria-label="Main navigation"]'), y = window.scrollY;
+                if (nav && mq.matches && !document.body.classList.contains('drawer-open')) {
+                    if (y > last + 6 && y > 80) nav.classList.add('nav-hidden');
+                    else if (y < last - 6 || y <= 80) nav.classList.remove('nav-hidden');
+                }
+                last = y; ticking = false;
+            });
+        }, { passive: true });
+    })();
+    function toggleMobileMenu(e) {
+        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
+        if (e && e.stopPropagation) { e.stopPropagation(); }
+        var d = document.getElementById('mobile-menu-drawer');
+        if (d && d.classList.contains('drawer-open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+    </script>
 
     <!-- Instant page changes: 3 s after the page has loaded (so they never compete with it), the main pages are
          prerendered in the background (Chrome, Edge); any other browser prefetches a link the moment it is touched or hovered -->
