@@ -18,6 +18,7 @@ const MAX_TURNS = 8;           // messages kept from the conversation
 const MAX_USER_CHARS = 600;    // per visitor message
 const MAX_BOT_CHARS = 1500;    // per earlier assistant message
 const KB_TTL_MS = 10 * 60 * 1000;
+const WAIT_MS = 10000;         // a model that has not started its answer by then is skipped (a busy free tier can hang)
 
 const FALLBACK_KB = `# Contact (/contact/)
 Mehedi Hasan, AI-native software engineer in Dhaka, Bangladesh. WhatsApp +880 1799-447594, email mehedihasan228.cse@gmail.com, GitHub github.com/MehediHasan228.`;
@@ -96,8 +97,9 @@ function providers(env) {
   const reasoning = env.REASONING_EFFORT || '';
   if (env.LLM_API_KEY) list.push({ name: 'main', base: env.LLM_BASE_URL, key: env.LLM_API_KEY, model: env.LLM_MODEL, reasoning });
   if (env.FREE_LLM_API_KEY) {
+    // its own reasoning setting: Flash Lite refuses "none" (400) and takes "minimal"
     list.push({ name: 'free', base: env.FREE_LLM_BASE_URL || env.LLM_BASE_URL, key: env.FREE_LLM_API_KEY,
-      model: env.FREE_LLM_MODEL || env.LLM_MODEL, reasoning });
+      model: env.FREE_LLM_MODEL || env.LLM_MODEL, reasoning: env.FREE_REASONING_EFFORT ?? reasoning });
   }
   if (env.AI && env.CF_AI_MODEL) list.push({ name: 'workers-ai', model: env.CF_AI_MODEL, binding: true });
   return list;
@@ -105,8 +107,11 @@ function providers(env) {
 
 /** An OpenAI-compatible API (Gemini, OmniRoute): its stream is passed on as it comes. */
 async function openAI(p, system, messages, maxTokens) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), WAIT_MS);   // only until the answer starts: the stream itself may run longer
   const res = await fetch(`${String(p.base).replace(/\/+$/, '')}/chat/completions`, {
     method: 'POST',
+    signal: ctrl.signal,
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${p.key}` },
     body: JSON.stringify({
       model: p.model,
@@ -117,6 +122,7 @@ async function openAI(p, system, messages, maxTokens) {
       messages: [{ role: 'system', content: system }, ...messages],
     }),
   }).catch((e) => ({ ok: false, status: 0, text: async () => String(e) }));
+  clearTimeout(timer);
   if (res.ok && res.body) return { body: res.body };
   return { status: res.status, detail: (await res.text().catch(() => '')).slice(0, 300) };
 }

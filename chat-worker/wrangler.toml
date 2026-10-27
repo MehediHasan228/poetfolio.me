@@ -15,7 +15,9 @@ MAX_OUTPUT_TOKENS = "700"
 # "none" skips Gemini's thinking step: faster, cheaper chat replies. Leave empty for providers without it.
 REASONING_EFFORT = "none"
 # the free-tier Gemini key (secret FREE_LLM_API_KEY, from a Google project with no billing) uses this model
-FREE_LLM_MODEL = "gemini-flash-latest"
+# Flash Lite: on the free tier it answers when Flash is busy (503), and its daily limit is higher
+FREE_LLM_MODEL = "gemini-flash-lite-latest"
+FREE_REASONING_EFFORT = "minimal"   # Flash Lite refuses "none"
 # Cloudflare's own model, tried last (free up to a daily allowance)
 CF_AI_MODEL = "@cf/meta/llama-4-scout-17b-16e-instruct"
 # The key is a secret, never put it here:  npx wrangler secret put LLM_API_KEY
