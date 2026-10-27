@@ -34,7 +34,8 @@ View profile
 ### Stack
 46 tools
 LLM features, multi-agent workflows and RAG
-OpenAI Claude Gemini LangGraph MCP +9 more
++9 more
+Tap a tool to ask my AI how I use it
 See every tool
 ### People
 11people

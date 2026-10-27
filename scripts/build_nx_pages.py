@@ -1328,6 +1328,9 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-block-title { margin: 0 0 12px; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink-2); }
 .nl-gap { margin-top: 36px; }
 .nl-block .nl-artist-head { margin-bottom: 12px; }
+/* the channel up on the stage leaves the cards below; the category filter cannot bring it back */
+.nl-page .is-up { display: none !important; }
+.nl-stage:focus:not(:focus-visible) { outline: none; }
 .nl-feat { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 16px; align-items: start; padding: 14px; margin-bottom: 14px;
   border-radius: 24px; background: var(--surface); border: 1px solid var(--line); }
 .nl-vids { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
@@ -4422,7 +4425,7 @@ def nl_player(first_index=0):
     av = {a["slug"]: a["avatar"] for a in m["artists"]}
     tracks = [dict(t, av=av.get(t["by"], "")) for t in m["tracks"]]
     t = tracks[first_index]
-    return (f'<div class="nl-player" data-nl-player data-tracks="{e(json.dumps(tracks, ensure_ascii=False))}">'
+    return (f'<div class="nl-player" data-nl-player>'
             f'<div class="nl-screen"><img class="nl-screen-thumb" src="{yt_thumb(t["id"], "hqdefault")}" alt="" fetchpriority="high">'
             f'<button type="button" class="nl-play" data-nl-play aria-label="Play">{nl_icon("play", 30)}</button><div class="nl-frame"></div></div>'
             f'<div class="nl-player-bar"><img class="nl-player-av" src="{t["av"]}" alt="" width="48" height="48">'
@@ -4452,14 +4455,30 @@ def nl_channel_card(c, big=False):
             f'{"<span class=\"nl-ghost nl-ch-visit\">" + nl_icon("yt", 15) + "Visit channel</span>" if big else nl_icon("out", 16)}</a>')
 
 
-def nl_featured(c):
-    return (f'<div class="nl-feat" data-cat="{e(c["cat"])}">{nl_channel_card(c, big=True)}'
+def ch_key(c):
+    return c.get("slug") or c["handle"].lstrip("@").lower()
+
+
+def nl_channels():
+    """Every channel Watch & Listen can play on its stage, An Nafee (the stage's own) first, with its tracks."""
+    m = LIB["music"]
+    a = m["artists"][0]
+    av = {x["slug"]: x["avatar"] for x in m["artists"]}
+    first = {"key": a["slug"], "name": a["name"], "url": a["channel"], "avatar": a["avatar"], "count": a["count"], "cat": "Quran",
+             "tracks": [{"id": x["id"], "title": x["title"], "sub": x["sub"], "ar": x.get("ar", ""), "av": av.get(x["by"], "")} for x in m["tracks"]]}
+    return [first] + [{"key": ch_key(c), "name": c["name"], "url": c["url"], "avatar": c["avatar"], "count": f'{len(c["videos"])} videos',
+                       "cat": c["cat"], "tracks": [{"id": v["id"], "title": v["title"], "sub": c["name"], "av": c["avatar"]} for v in c["videos"]]}
+                      for c in m["featured"] + m.get("learning", [])]
+
+
+def nl_featured(c, up=False):
+    return (f'<div class="nl-feat{" is-up" if up else ""}" data-cat="{e(c["cat"])}" data-ch="{ch_key(c)}">{nl_channel_card(c, big=True)}'
             f'<div class="nl-vids">{"".join(nl_video(v) for v in c["videos"])}</div></div>')
 
 
 def nl_shelf(c):
     """Compact course shelf: one slim header line, then a sideways-scrolling row of small videos."""
-    return (f'<div class="nl-shelf" data-cat="{e(c["cat"])}"><div class="nl-shelf-head">'
+    return (f'<div class="nl-shelf" data-cat="{e(c["cat"])}" data-ch="{ch_key(c)}"><div class="nl-shelf-head">'
             f'<img src="{c["avatar"]}" alt="" width="32" height="32" loading="lazy">'
             f'<div class="nl-shelf-id"><b>{e(c["name"])}</b><span>{e(c["why"])}</span></div>'
             f'<a class="nl-shelf-visit" href="{c["url"]}" target="_blank" rel="noopener noreferrer" aria-label="Visit {e(c["name"])} on YouTube">{nl_icon("yt", 14)}<span>Visit</span></a></div>'
@@ -4543,10 +4562,14 @@ def library_sub(key):
         chips = (f'<button type="button" data-nl-filter="All" class="is-active">{nl_icon("books", 15)}<span>All</span><b>{sum(count.values())}</b></button>'
                  + "".join(f'<button type="button" data-nl-filter="{e(k)}"><span>{e(k)}</span><b>{count[k]}</b></button>' for k in cats))
         a = d["artists"][0]
-        quran = (f'<div class="nl-block" data-cat="Quran"><div class="nl-artist-head"><h3><img src="{a["avatar"]}" alt="" width="32" height="32" loading="lazy">'
+        # the stage: the channel at the top, with its player and track list. A video played from a channel card brings
+        # that channel up, and An Nafee's card takes its place below (LIB_JS)
+        quran = (f'<div class="nl-block nl-stage" data-cat="Quran" data-stage tabindex="-1" '
+                 f'data-channels="{e(json.dumps(nl_channels(), ensure_ascii=False))}"><div class="nl-artist-head"><h3><img src="{a["avatar"]}" alt="" width="32" height="32" loading="lazy">'
                  f'{e(a["name"])}<span>{e(a["count"])}</span></h3><a href="{a["channel"]}" target="_blank" rel="noopener noreferrer">{nl_icon("yt", 16)}Channel</a></div>'
                  f'{nl_player()}<ol class="nl-tracks">{"".join(nl_track(i, t) for i, t in enumerate(d["tracks"]))}</ol></div>')
-        feats = "".join(nl_featured(x) for x in d["featured"])
+        nafee = dict(a, url=a["channel"], cat="Quran", videos=d["tracks"][:6])
+        feats = f'<div class="nl-feats" data-feats>{nl_featured(nafee, up=True)}{"".join(nl_featured(x) for x in d["featured"])}</div>'
         learning = (f'<div class="nl-block nl-learn" data-cat="Learning"><div class="nl-learn-head"><span class="nl-tile">{nl_icon("tabler:school", 20)}</span>'
                     f'<div><h3>Learning</h3><p>Courses and lectures that match my stack: LLMs, agents, backend and system design.</p></div></div>'
                     f'{"".join(nl_shelf(x) for x in d.get("learning", []))}</div>' if d.get("learning") else "")
@@ -4679,8 +4702,57 @@ LIB_JS = """<script>
            'allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
   }
   var player = document.querySelector("[data-nl-player]");
-  var tracks = player ? JSON.parse(player.getAttribute("data-tracks")) : [];
+  /* Watch & Listen's stage: the channel at the top, with this player and its track list. A video played from a channel
+     card brings that channel up, and the one there comes down: An Nafee's card takes the raised card's place in My top
+     channels (or the top of it, for a Learning channel); the others go back to their own place */
+  var stage = document.querySelector("[data-stage]");
+  var channels = stage ? JSON.parse(stage.getAttribute("data-channels")) : [];
+  var onStage = channels.length ? channels[0].key : "";
+  var tracks = channels.length ? channels[0].tracks : [];
   var cur = 0, playing = false;
+  var playIcon = stage ? stage.querySelector(".nl-tthumb > span").innerHTML : "";
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function channel(key) { return channels.filter(function (c) { return c.key === key; })[0]; }
+  function find(id) {
+    for (var k = 0; k < channels.length; k++) {
+      var i = channels[k].tracks.findIndex(function (x) { return x.id === id; });
+      if (i >= 0) return { ch: channels[k], i: i };
+    }
+    return null;
+  }
+  function raise(key) {
+    var ch = channel(key), up = document.querySelector('[data-ch="' + key + '"]');
+    if (!ch || !up || key === onStage) return;
+    var head = stage.querySelector(".nl-artist-head");
+    head.querySelector("h3").innerHTML = '<img src="' + esc(ch.avatar) + '" alt="" width="32" height="32">' + esc(ch.name) + "<span>" + esc(ch.count) + "</span>";
+    head.querySelector("a").href = ch.url;
+    stage.setAttribute("data-cat", ch.cat);
+    stage.querySelector(".nl-tracks").innerHTML = ch.tracks.map(function (x, i) {
+      return '<li><button type="button" data-track="' + i + '"><span class="nl-n">' + (i + 1) + '</span><span class="nl-tthumb">' +
+        '<img src="https://i.ytimg.com/vi/' + x.id + '/mqdefault.jpg" alt="" loading="lazy"><span>' + playIcon + '</span></span>' +
+        '<span class="nl-tmeta"><span>' + esc(x.title) + "</span><span>" + esc(x.sub) + "</span></span>" +
+        (x.ar ? '<span class="nl-ar" lang="ar" dir="rtl">' + esc(x.ar) + "</span>" : "") + "</button></li>";
+    }).join("");
+    tracks = ch.tracks;
+    var feats = document.querySelector("[data-feats]"), down = document.querySelector('[data-ch="' + onStage + '"]');
+    if (down) down.classList.remove("is-up");
+    up.classList.add("is-up");
+    var first = feats.querySelector('[data-ch="' + channels[0].key + '"]');
+    if (key !== channels[0].key) feats.insertBefore(first, up.parentNode === feats ? up : feats.firstChild);
+    onStage = key;
+    // rows that were hidden measured nothing: their position dots and edge fades are worked out again
+    [first, down].forEach(function (c) { if (c) c.querySelectorAll(".nl-vids, .nl-shelf-row").forEach(function (r) { r.dispatchEvent(new Event("scroll")); }); });
+  }
+  /* to the stage, clear of the page's top bars, so the video that just started is in view; from the keyboard, focus
+     follows (the card that was pressed has just gone) */
+  function toStage(keyboard) {
+    // the sticky bar's resting place, not where it is now: on phones the nav slides away while the page scrolls
+    var nav = document.querySelector("body > nav"), bar = document.querySelector(".sub-header-bar");
+    var cover = Math.max(nav ? nav.offsetHeight : 0, bar ? (parseFloat(getComputedStyle(bar).top) || 0) + bar.offsetHeight : 0);
+    var y = stage.getBoundingClientRect().top + scrollY - cover - 12;
+    scrollTo({ top: Math.max(0, y), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    if (keyboard) stage.focus({ preventScroll: true });
+  }
   function setTrack(i, play) {
     if (!player) return;
     cur = i; var t = tracks[i];
@@ -4713,6 +4785,8 @@ LIB_JS = """<script>
     var sync = function () {
       var st = dockApi.state();
       var at = st.track ? tracks.findIndex(function (x) { return x.id === st.track.id; }) : -1;
+      /* the dock plays another channel's video (back from another page): that channel is the one up on the stage */
+      if (st.open && st.track && at < 0) { var hit = find(st.track.id); if (hit) { raise(hit.ch.key); at = hit.i; } }
       var on = st.open && at >= 0;
       player.classList.toggle("is-docked", on);
       player.classList.toggle("is-dock-playing", on && st.playing);
@@ -4728,8 +4802,8 @@ LIB_JS = """<script>
     addEventListener("pagehide", function () { dockApi.unslot(screen); off(); });
     addEventListener("pageshow", function (ev) { if (ev.persisted) { off = dockApi.on(sync); dockApi.slot(screen); sync(); } });
     var asked = new URLSearchParams(location.search).get("play");
-    var want = asked ? tracks.findIndex(function (x) { return x.id === asked; }) : -1;
-    if (want >= 0) { setTrack(want, true); player.scrollIntoView({ block: "center" }); }
+    var want = asked ? find(asked) : null;
+    if (want) { raise(want.ch.key); setTrack(want.i, true); player.scrollIntoView({ block: "center" }); }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", followDock); else followDock();
   /* horizontal chip rows (tabs + bookmark filters) */
@@ -4806,7 +4880,16 @@ LIB_JS = """<script>
       return;
     }
     var vp = t.closest("[data-yt-play]");
-    if (vp) { var scr = vp.closest("[data-yt]"); scr.innerHTML = iframe(scr.getAttribute("data-yt")); scr.classList.add("is-playing"); return; }
+    if (vp) {
+      var scr = vp.closest("[data-yt]"), card = vp.closest("[data-ch]");
+      if (stage && card && channel(card.getAttribute("data-ch"))) {   /* on the stage's big player, not in the small card */
+        raise(card.getAttribute("data-ch"));
+        setTrack(Math.max(0, tracks.findIndex(function (x) { return x.id === scr.getAttribute("data-yt"); })), true);
+        toStage(ev.detail === 0);
+        return;
+      }
+      scr.innerHTML = iframe(scr.getAttribute("data-yt")); scr.classList.add("is-playing"); return;
+    }
     var tr = t.closest("[data-track]");
     if (tr) { setTrack(+tr.getAttribute("data-track"), true); return; }
     if (t.closest("[data-nl-play]")) { if (docked()) window.TubeDock.toggle(); else setTrack(cur, true); return; }
@@ -4888,11 +4971,12 @@ CSS_VER = "0"  # set in main() from the stylesheet content, so browsers never re
 # step with the pages it points to. build_pages.py places it; paths are from the site root.
 DASH_SHORT = {"SAWAB Bangladesh": "SAWAB", "Jibika Intelligic Ltd.": "Jibika", "Smart Software Limited": "Smart Software",
               "HBIZZ Group Company": "HBIZZ", "Tafseerul Quran Foundation (TQF)": "TQF"}
+DASH_TOOLS = 5   # tools the Stack tile shows per area
 DASH_AREA = {"Core stack": "Core", "AI & agents": "AI", "AI-assisted development": "AI dev",
              "Data & streaming": "Data", "Infra & observability": "Infra"}
 # the dashboard's script: reveals and counts once in view, runs the loops only while seen, and the projects,
 # stack, career and library interactions
-DASH_JS = '<script src="./dash.js?v=16" defer></script>'
+DASH_JS = '<script src="./dash.js?v=18" defer></script>'
 
 
 def home_dashboard():
@@ -4999,32 +5083,42 @@ def home_dashboard():
         ang = math.radians(-90 + i * 360 / len(areas))
         axes += f'<line x1="{cx}" y1="{cy}" x2="{cx + rad * math.cos(ang):.1f}" y2="{cy + rad * math.sin(ang):.1f}"/>'
         anchor = "middle" if abs(math.cos(ang)) < 0.3 else ("start" if math.cos(ang) > 0 else "end")
-        labels += (f'<text x="{cx + (rad + 14) * math.cos(ang):.1f}" y="{cy + (rad + 14) * math.sin(ang):.1f}" '
+        labels += (f'<text class="dash-radar-label" data-area="{i}" x="{cx + (rad + 14) * math.cos(ang):.1f}" y="{cy + (rad + 14) * math.sin(ang):.1f}" '
                    f'text-anchor="{anchor}">{e(name)} <tspan>{n}</tspan></text>')
     sweep = (f'<g class="dash-sweep"><path d="M{cx} {cy} L{cx} {cy - rad} A{rad} {rad} 0 0 1 '
              f'{cx + rad * math.sin(math.radians(40)):.1f} {cy - rad * math.cos(math.radians(40)):.1f} Z"/></g>')
     spokes = "".join(f'<line class="dash-spoke" data-area="{i}" x1="{cx}" y1="{cy}" '
                      f'x2="{cx + rad * math.cos(math.radians(-90 + i * 360 / len(areas))):.1f}" '
                      f'y2="{cy + rad * math.sin(math.radians(-90 + i * 360 / len(areas))):.1f}"/>' for i in range(len(areas)))
+    # a dot on the shape's corner for each area; the chosen area's glows
+    dots = "".join(f'<circle class="dash-vertex" data-area="{i}" r="3.5" '
+                   f'cx="{cx + rad * n / top * math.cos(math.radians(-90 + i * 360 / len(areas))):.1f}" '
+                   f'cy="{cy + rad * n / top * math.sin(math.radians(-90 + i * 360 / len(areas))):.1f}"/>' for i, (_, n) in enumerate(areas))
     radar = (f'<svg class="dash-radar" viewBox="0 0 260 196" role="img" aria-label="Tools per area: '
              + ", ".join(f"{e(nm)} {n}" for nm, n in areas) + f'">{grid}<g class="dash-radar-axes">{axes}</g>{sweep}'
-             f'<polygon class="dash-radar-shape" points="{poly(lambda i: areas[i][1] / top)}"/>{spokes}{labels}</svg>')
+             f'<polygon class="dash-radar-shape" points="{poly(lambda i: areas[i][1] / top)}"/>{spokes}{dots}{labels}</svg>')
     pick = max(range(len(areas)), key=lambda i: areas[i][1])
     area_btns = "".join(f'<button type="button" class="dash-area" data-area="{i}" aria-pressed="{str(i == pick).lower()}">'
                         f'{e(nm)} <b>{n}</b></button>' for i, (nm, n) in enumerate(areas))
+    # every area shows the same number of tools (its daily ones first, then the rest), and the panels share one place,
+    # so the tile keeps one height while the areas take turns
     panels = ""
     for i, (group, use, core, also) in enumerate(SKILLS):
-        chips = ""
-        for label, slug in core:   # the ones used daily; the rest are counted
+        chips, tools_all = "", core + also
+        shown, rest = tools_all[:DASH_TOOLS], tools_all[DASH_TOOLS:]
+        for label, slug in shown:
             src = icon_src(slug) if slug else None
             im = f'<img src="{root(src)}" alt="" width="14" height="14" loading="lazy" decoding="async">' if src else ""
-            chips += f'<span class="dash-tool">{im}{e(label)}</span>'
-        if also:
-            chips += f'<span class="dash-tool is-more" title="{e(", ".join(lbl for lbl, _ in also))}">+{len(also)} more</span>'
+            # a tool asks the site's AI how it is used (dash.js); the AI answers from the site's own pages
+            chips += (f'<button type="button" class="dash-tool" data-ask="{e(label)}" title="Ask my AI how I use {e(label)}">'
+                      f'{im}{e(label)}</button>')
+        if rest:
+            chips += f'<span class="dash-tool is-more" title="{e(", ".join(lbl for lbl, _ in rest))}">+{len(rest)} more</span>'
         panels += (f'<div class="dash-area-tools" data-area="{i}"' + ('' if i == pick else ' hidden') + '>'
                    f'<p>{e(use)}</p>{chips}</div>')
     stack = (f'<article class="dash-tile dash-stack">{head(ico("badge"), "Stack", f"{tools} tools")}{radar}'
-             f'<div class="dash-areas" role="group" aria-label="Areas of the stack">{area_btns}</div>{panels}'
+             f'<div class="dash-areas" role="group" aria-label="Areas of the stack">{area_btns}</div><div class="dash-area-panels">{panels}</div>'
+             f'<p class="dash-ask-hint"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>Tap a tool to ask my AI how I use it</p>'
              f'{more("./profile/", "See every tool")}</article>')
 
     # people: faces in orbit around the count
@@ -5043,7 +5137,8 @@ def home_dashboard():
     shelves = "".join(f'<li data-k="l{i}"><a href="./library/{lib_href(k)}/"><i class="l{i}"></i>{e(label)}<b>{counts[k]}</b></a></li>'
                       for i, (k, label) in enumerate(LIB_SUBS))
     # a small Watch & Listen player: the track shown is the last one played (dash.js), or the first; play opens the
-    # video in the tile (YouTube asks that it stays visible), and the arrows step through the tracks
+    # video in the tile (YouTube asks that it stays visible), and the arrows step through the tracks. Moving bars before
+    # the title say it plays; the words stay for screen readers
     avatars = {a["slug"]: a["avatar"] for a in LIB["music"]["artists"]}
     mini = [{"id": x["id"], "title": x["title"], "sub": x.get("sub", ""), "av": root(avatars.get(x.get("by"), ""))}
             for x in LIB["music"]["tracks"]]
@@ -5051,7 +5146,8 @@ def home_dashboard():
     listen = (f'<div class="dash-yt" data-yt-mini data-tracks="{e(json.dumps(mini, ensure_ascii=False))}">'
               f'<div class="dash-yt-screen" hidden></div><div class="dash-yt-bar">'
               f'<img data-yt-av src="{e(first["av"] or yt_thumb(first["id"]))}" alt="" width="46" height="46" loading="lazy" decoding="async">'
-              f'<span class="dash-np-text"><em data-yt-label>Up next</em><b data-yt-title>{e(first["title"])}</b>'
+              f'<span class="dash-np-text"><em data-yt-label>Up next</em><span class="dash-yt-line">'
+              f'<span class="dash-np-eq" aria-hidden="true"><i></i><i></i><i></i></span><b data-yt-title>{e(first["title"])}</b></span>'
               f'<span data-yt-sub>{e(first["sub"])}</span></span><span class="dash-yt-ctrl">'
               f'<button type="button" data-yt="prev" aria-label="Previous track"><i class="fa-solid fa-backward-step"></i></button>'
               f'<button type="button" data-yt="toggle" class="is-main" aria-label="Play"><i class="fa-solid fa-play"></i></button>'

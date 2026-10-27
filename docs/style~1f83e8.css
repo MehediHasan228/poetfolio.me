@@ -12669,9 +12669,8 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     box-shadow: inset 0 0 0 1px var(--pf-line);
 }
 .dash-yt-screen {
-    width: 100%;                     /* a set width: with aspect-ratio alone, the min-height would widen the box */
-    aspect-ratio: 16 / 9;
-    min-height: 200px;               /* YouTube's smallest player; a narrow tile shows the video letterboxed */
+    width: 100%;
+    aspect-ratio: 16 / 9;            /* the tile's width at 16:9, with no black bands (the owner's choice over YouTube's 200px) */
     border-radius: 14px 14px 0 0;   /* the card's corners, so the dock's video in it has them too */
     background: #000000;
 }
@@ -12687,16 +12686,46 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px 10px;
-    padding: 10px;
+    gap: 6px 10px;
+    padding: 9px 10px 10px;
 }
 .dash-yt-bar img {
     flex-shrink: 0;
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     object-fit: cover;
 }
+/* the state as moving bars before the title; the words ("Now playing") are kept for screen readers only */
+.dash-yt .dash-np-text em {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+.dash-np-text > .dash-yt-line {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: inherit;
+    color: inherit;
+}
+.dash-yt-line b { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.dash-np-eq {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: flex-end;
+    gap: 2px;
+    width: 12px;
+    height: 11px;
+    color: var(--pf-ink-3);
+}
+.dash-np-eq i { flex: 1; height: 35%; border-radius: 1px; background: currentColor; }
+.dash-np-eq i:nth-child(2) { height: 70%; }
+.dash-np-eq i:nth-child(3) { height: 50%; }
+.dash-yt.is-playing .dash-np-eq { color: var(--pf-brand); }
 .dash-yt-ctrl {
     display: flex;
     flex-basis: 100%;
@@ -12796,6 +12825,23 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     transition: stroke 0.2s ease;
 }
 .dash-spoke.is-on { stroke: var(--pf-brand); }
+.dash-vertex {
+    fill: var(--pf-surface);
+    stroke: rgba(var(--pf-brand-rgb), 0.55);
+    stroke-width: 1.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: fill 0.25s ease, stroke 0.25s ease, transform 0.25s ease;
+}
+.dash-vertex.is-on {
+    fill: var(--pf-brand);
+    stroke: var(--pf-brand);
+    transform: scale(1.35);
+    filter: drop-shadow(0 0 5px var(--pf-glow));
+}
+.dash-radar-label { cursor: pointer; transition: fill 0.2s ease; }
+.dash-radar-label.is-on { fill: var(--pf-brand); }
+.dash-radar-label.is-on tspan { fill: var(--pf-brand); }
 .dash-sweep path { fill: rgba(var(--pf-brand-rgb), 0.14); }
 .dash-sweep { transform-origin: 130px 98px; opacity: 0; }
 .dash-areas {
@@ -12805,6 +12851,8 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     margin-top: 6px;
 }
 .dash-area {
+    position: relative;
+    overflow: hidden;
     padding: 3px 10px;
     border: 0;
     border-radius: 999px;
@@ -12828,14 +12876,38 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.35);
 }
 .dash-area:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+/* the areas take turns: the chosen one's line fills, and when it is full dash.js picks the next */
+.dash-stack.is-auto .dash-area[aria-pressed="true"]::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 1px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    opacity: 0.6;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: dash-cycle 4s linear forwards;
+}
+@keyframes dash-cycle { to { transform: scaleX(1); } }
+#overview:not(.is-onscreen) .dash-area::after,
+.dash-stack:hover .dash-area::after,
+.dash-stack:has(:focus-visible) .dash-area::after { animation-play-state: paused !important; }
+/* the areas' panels share one grid cell: the tallest sets the height, so the tile does not jump as they take turns */
+.dash-area-panels {
+    display: grid;
+    margin-top: 12px;
+}
 .dash-area-tools {
     display: flex;
     flex-wrap: wrap;
+    align-content: start;
     gap: 5px;
-    margin-top: 12px;
-    animation: dash-pop 0.3s ease both;
+    grid-area: 1 / 1;
 }
-.dash-area-tools[hidden] { display: none; }
+.dash-area-tools[hidden] { display: flex; visibility: hidden; }
 .dash-tool.is-more {
     color: var(--pf-ink-3);
     background: none;
@@ -12862,6 +12934,28 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     width: 14px;
     height: 14px;
 }
+button.dash-tool {
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+button.dash-tool:hover {
+    color: var(--pf-brand);
+    background: rgba(var(--pf-brand-rgb), 0.1);
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.4);
+    transform: translateY(-1px);
+}
+button.dash-tool:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+.dash-ask-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 10px 0 0;
+    font-size: 11.5px;
+    color: var(--pf-ink-3);
+}
+.dash-ask-hint i { font-size: 11px; color: var(--pf-brand); }
 
 /* the status dot and the current role pulse */
 .dash-live i { position: relative; }
@@ -12894,7 +12988,11 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     animation: dash-eq 0.9s ease-in-out infinite alternate;
     animation-delay: calc(var(--i) * -0.11s);
 }
-.is-onscreen :is(.dash-yt.is-playing .dash-np-text em, .dash-focus.is-playing [data-fp-label])::before {
+.is-onscreen .dash-yt.is-playing .dash-np-eq i { animation: dash-np-eq 0.9s ease-in-out infinite; }
+.is-onscreen .dash-yt.is-playing .dash-np-eq i:nth-child(2) { animation-delay: -0.3s; }
+.is-onscreen .dash-yt.is-playing .dash-np-eq i:nth-child(3) { animation-delay: -0.6s; }
+@keyframes dash-np-eq { 0%, 100% { height: 25%; } 50% { height: 100%; } }
+.is-onscreen .dash-focus.is-playing [data-fp-label]::before {
     content: "";
     display: inline-block;
     width: 6px;

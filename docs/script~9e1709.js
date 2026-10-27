@@ -2337,6 +2337,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             },
             // the greeting's replies continue here with a real AI answer or the project discussion
             ask(q) { if (q) askAI(q); },
+            // for other parts of the page that ask a question (the home dashboard's tools)
+            open() { if (chatWidget.classList.contains('chat-collapsed')) toggleChat(); },
+            lang: () => lang(),
             discuss() { startFit(); }
         };
 

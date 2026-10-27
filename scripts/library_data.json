@@ -802,7 +802,9 @@
         "slug": "an-nafee",
         "avatar": "../uploads/library/channels/annafee_official.jpg",
         "count": "7 recitations",
-        "channel": "https://www.youtube.com/@AnNafee_Official"
+        "channel": "https://www.youtube.com/@AnNafee_Official",
+        "handle": "@AnNafee_Official",
+        "why": "Quran recitations from several reciters, with the Bangla meaning on screen."
       }
     ],
     "categories": [

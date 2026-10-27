@@ -1759,6 +1759,9 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-block-title { margin: 0 0 12px; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink-2); }
 .nl-gap { margin-top: 36px; }
 .nl-block .nl-artist-head { margin-bottom: 12px; }
+/* the channel up on the stage leaves the cards below; the category filter cannot bring it back */
+.nl-page .is-up { display: none !important; }
+.nl-stage:focus:not(:focus-visible) { outline: none; }
 .nl-feat { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 16px; align-items: start; padding: 14px; margin-bottom: 14px;
   border-radius: 24px; background: var(--surface); border: 1px solid var(--line); }
 .nl-vids { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }

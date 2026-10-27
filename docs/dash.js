@@ -153,23 +153,60 @@
         place();
     }
 
-    // stack: an area's button lights its spoke on the radar and lists its tools
+    // stack: an area's button (or its name on the radar) lights its spoke and corner and lists its tools. The areas take
+    // turns on their own: the chosen one's line fills (CSS), and when it is full the next is chosen. The line waits
+    // while the tile is hovered, has keyboard focus or is off screen, and for a while after the visitor picks one.
+    // A tool asks the site's AI how Mehedi uses it.
     const stackTile = s.querySelector('.dash-stack');
     if (stackTile) {
-        const btns = stackTile.querySelectorAll('.dash-area');
+        const btns = [...stackTile.querySelectorAll('.dash-area')];
         const show = (i, keep) => {
-            stackTile.querySelectorAll('.dash-spoke').forEach((l) => l.classList.toggle('is-on', l.dataset.area === i));
-            stackTile.querySelectorAll('.dash-area-tools').forEach((p) => { p.hidden = p.dataset.area !== i; });
+            stackTile.querySelectorAll('.dash-spoke, .dash-vertex, .dash-radar-label').forEach((l) => l.classList.toggle('is-on', l.dataset.area === i));
+            stackTile.querySelectorAll('.dash-area-tools').forEach((p) => {
+                const on = p.dataset.area === i;
+                if (on && p.hidden && !still) p.animate([{opacity: 0, transform: 'translateY(4px)'}, {opacity: 1, transform: 'none'}], {duration: 260, easing: 'ease-out'});
+                p.hidden = !on;
+            });
             if (keep) btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.area === i)));
         };
         const chosen = () => (stackTile.querySelector('.dash-area[aria-pressed="true"]') || btns[0]).dataset.area;
+        let quiet = 0;
+        const pick = (i) => {
+            show(i, true);
+            if (still) return;
+            stackTile.classList.remove('is-auto');
+            clearTimeout(quiet);
+            quiet = setTimeout(() => stackTile.classList.add('is-auto'), 8000);
+        };
         btns.forEach((b) => {
-            b.addEventListener('click', () => show(b.dataset.area, true));
+            b.addEventListener('click', () => pick(b.dataset.area));
             b.addEventListener('pointerenter', () => show(b.dataset.area, false));
             b.addEventListener('focus', () => show(b.dataset.area, false));
         });
         stackTile.querySelector('.dash-areas').addEventListener('pointerleave', () => show(chosen(), false));
+        stackTile.querySelectorAll('.dash-radar-label').forEach((l) => {
+            l.addEventListener('click', () => pick(l.dataset.area));
+            l.addEventListener('pointerenter', () => show(l.dataset.area, false));
+            l.addEventListener('pointerleave', () => show(chosen(), false));
+        });
+        stackTile.addEventListener('animationend', (e) => {
+            if (e.animationName !== 'dash-cycle') return;
+            const at = btns.findIndex((b) => b.dataset.area === chosen());
+            show(btns[(at + 1) % btns.length].dataset.area, true);
+        });
+        if (!still) stackTile.classList.add('is-auto');
         show(chosen(), false);
+
+        stackTile.addEventListener('click', (e) => {
+            const tool = e.target.closest('[data-ask]');
+            if (!tool) return;
+            const chat = window.MehediChat;
+            if (!chat || !chat.ask) { location.href = './stack/'; return; }
+            const name = tool.dataset.ask;
+            const q = chat.lang && chat.lang() === 'bn' ? 'মেহেদী তার কাজে ' + name + ' কীভাবে ব্যবহার করেন?' : 'How does Mehedi use ' + name + ' in his work?';
+            if (chat.open) chat.open();
+            setTimeout(() => chat.ask(q), 350);    /* once the chat has opened, as the greeting bubble does */
+        });
     }
 
     // focus: the Focus page's controls, run from here. The Focus player (focus/focus.js, deferred after this script) is

@@ -849,6 +849,9 @@
  * A page with its own screen (Watch & Listen's big player) hands it over with slot(): while that page is in view the
  * video sits in the screen, and it shrinks to the corner when the visitor moves on. It is always the same iframe, so
  * the track never restarts.
+ * In the corner the dock is the video alone; hovered (or focused, or on a touch screen) it shows a bar above (the
+ * track, open and close; dragged by it, it glides to the nearer side, at the height it was dropped, remembered) and one
+ * below (previous, play, next and the volume, remembered too).
  */
 (function () {
     'use strict';
@@ -863,9 +866,17 @@
     const ICON = {
         prev: '<i class="fa-solid fa-backward-step"></i>', next: '<i class="fa-solid fa-forward-step"></i>',
         play: '<i class="fa-solid fa-play"></i>', pause: '<i class="fa-solid fa-pause"></i>',
-        open: '<i class="fa-solid fa-arrow-up-right-from-square"></i>', close: '<i class="fa-solid fa-xmark"></i>'
+        open: '<i class="fa-solid fa-arrow-up-right-from-square"></i>', close: '<i class="fa-solid fa-xmark"></i>',
+        high: '<i class="fa-solid fa-volume-high"></i>', low: '<i class="fa-solid fa-volume-low"></i>', mute: '<i class="fa-solid fa-volume-xmark"></i>'
     };
     let tracks = [], index = 0, playing = false, dock = null, video = null;
+    const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+    const stored = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
+    /* where the visitor left the dock (a side and a height), and its volume */
+    let pos = stored('td:pos');
+    if (!pos || !/^[lr]$/.test(pos.side) || typeof pos.top !== 'number') pos = null;
+    const sv = stored('td:vol') || {};
+    let vol = typeof sv.v === 'number' ? Math.max(0, Math.min(100, Math.round(sv.v))) : 100, muted = !!sv.m, ready = false, setAt = 0;
     /* the screens pages lend (slots), each watched for moving, hiding (a filter) or showing again; the dock sits in
        slotEl, the one in view: mode is 'page' when it is in this document, 'over' when it is in the page in Focus's frame */
     const slots = new Map();
@@ -880,38 +891,70 @@
         const s = document.createElement('style');
         s.id = 'td-css';
         s.textContent = `
-#tube-dock { position: fixed; right: 16px; bottom: 88px; z-index: 2147483500; width: 360px; box-sizing: border-box; padding: 8px;
-  border-radius: 20px; color: var(--text-primary, #f8fafc); font: 600 13px/1.3 Poppins, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  background: color-mix(in srgb, var(--bg-color, #0b1120) 90%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary, #f8fafc) 12%, transparent), 0 24px 50px -20px rgba(0, 0, 0, .6);
+#tube-dock { position: fixed; right: 16px; bottom: 136px; z-index: 2147483500; width: 360px; box-sizing: border-box; border-radius: 16px;
+  color: var(--text-primary, #f8fafc); font: 600 13px/1.3 Poppins, system-ui, -apple-system, 'Segoe UI', sans-serif; background: #000;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text-primary, #f8fafc) 14%, transparent), 0 24px 50px -16px rgba(0, 0, 0, .65);
   animation: td-in .35s cubic-bezier(.2, .9, .3, 1.2) both; }
 #tube-dock * { box-sizing: border-box; }
-#tube-dock .td-screen { aspect-ratio: 16 / 9; min-height: 200px; overflow: hidden; border-radius: 13px; background: #000; }
+#tube-dock .td-screen { width: 100%; aspect-ratio: 16 / 9; min-height: 200px; overflow: hidden; border-radius: inherit; background: #000; }
 #tube-dock iframe { display: block; width: 100%; height: 100%; border: 0; }
-#tube-dock .td-bar { display: flex; align-items: center; gap: 6px; padding: 8px 2px 0; }
-#tube-dock .td-av { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
-#tube-dock .td-text { display: grid; flex: 1; min-width: 0; margin-left: 4px; }
-#tube-dock .td-text :is(em, b, span) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-#tube-dock .td-text em { font: 500 10.5px 'Fira Code', monospace; font-style: normal; color: var(--accent-1, #00f2fe); }
-#tube-dock .td-text b { font-size: 13px; }
-#tube-dock .td-text span { font-size: 11.5px; font-weight: 500; color: var(--text-secondary, #94a3b8); }
+/* the controls sit just outside the video (YouTube's rules keep other things off the player), shown while the dock is
+   hovered or has focus; at rest only the video shows */
+#tube-dock :is(.td-head, .td-bar) { position: absolute; left: 0; right: 0; opacity: 0; pointer-events: none;
+  transition: opacity .2s ease .35s, transform .2s ease .35s; }
+#tube-dock .td-head { bottom: 100%; padding-bottom: 6px; transform: translateY(5px); }
+#tube-dock .td-bar { top: 100%; padding-top: 6px; transform: translateY(-5px); }
+#tube-dock:is(.td-show, :hover, :focus-within, .td-drag) :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; transition-delay: 0s; }
+@media (hover: none) { #tube-dock :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; } }
+#tube-dock .td-pill { display: flex; align-items: center; gap: 2px; height: 42px; padding: 0 6px; border-radius: 14px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--text-primary, #f8fafc) 5%, transparent), transparent), var(--bg-color, #0b1120);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary, #f8fafc) 12%, transparent), 0 14px 30px -14px rgba(0, 0, 0, .55); }
+#tube-dock .td-head .td-pill { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
 #tube-dock :is(button, a) { display: grid; flex-shrink: 0; place-items: center; width: 30px; height: 30px; padding: 0; border: 0;
-  border-radius: 50%; font-size: 12px; color: var(--text-secondary, #94a3b8); text-decoration: none; cursor: pointer;
-  background: color-mix(in srgb, var(--text-primary, #f8fafc) 7%, transparent); }
-#tube-dock :is(button, a):hover { color: var(--accent-1, #00f2fe); }
+  border-radius: 50%; font-size: 12px; color: var(--text-secondary, #94a3b8); text-decoration: none; cursor: pointer; background: none; }
+#tube-dock :is(button, a):hover { color: var(--accent-1, #00f2fe); background: color-mix(in srgb, var(--text-primary, #f8fafc) 8%, transparent); }
 #tube-dock :is(button, a):focus-visible { outline: 2px solid var(--accent-1, #00f2fe); outline-offset: 2px; }
-#tube-dock .td-main { width: 36px; height: 36px; font-size: 13px; color: var(--accent-active-color, #0b1120);
+#tube-dock .td-grip { width: 20px; color: var(--text-secondary, #94a3b8); cursor: grab; }
+#tube-dock .td-grip:hover { background: none; }
+#tube-dock .td-grip::before { content: ""; width: 10px; height: 15px; opacity: .75;
+  background: radial-gradient(circle, currentColor 1.2px, transparent 1.6px) 0 0 / 5px 5px; }
+/* playing shows as moving bars beside the title; paused, they rest */
+#tube-dock .td-eq { display: inline-flex; flex-shrink: 0; align-items: flex-end; gap: 2px; width: 13px; height: 12px; margin: 0 6px 0 4px;
+  color: var(--text-secondary, #94a3b8); }
+#tube-dock .td-eq i { flex: 1; height: 35%; border-radius: 1px; background: currentColor; }
+#tube-dock .td-eq i:nth-child(2) { height: 70%; }
+#tube-dock .td-eq i:nth-child(3) { height: 50%; }
+#tube-dock.is-playing .td-eq { color: var(--accent-1, #00f2fe); }
+#tube-dock.is-playing .td-eq i { animation: td-eq .9s ease-in-out infinite; }
+#tube-dock.is-playing .td-eq i:nth-child(2) { animation-delay: -.3s; }
+#tube-dock.is-playing .td-eq i:nth-child(3) { animation-delay: -.6s; }
+#tube-dock .td-text { display: grid; flex: 1; min-width: 0; margin-right: 4px; line-height: 1.25; }
+#tube-dock .td-text :is(b, span) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#tube-dock .td-text b { font-size: 13px; }
+#tube-dock .td-text span { font-size: 11px; font-weight: 500; color: var(--text-secondary, #94a3b8); }
+#tube-dock .td-main { width: 34px; height: 34px; margin: 0 2px; font-size: 13px; color: var(--accent-active-color, #0b1120);
   background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 6px 16px -6px var(--accent-glow, rgba(0, 0, 0, .35)); }
-#tube-dock .td-main:hover { color: var(--accent-active-color, #0b1120); filter: brightness(1.06); }
-#tube-dock.td-slot { position: absolute; right: auto; bottom: auto; z-index: 50; padding: 0; overflow: hidden; background: #000;
-  box-shadow: none; animation: none; }
+#tube-dock .td-main:hover { color: var(--accent-active-color, #0b1120); background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe)); filter: brightness(1.06); }
+#tube-dock .td-vol { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+#tube-dock .td-range { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; margin: 0 6px 0 0; border-radius: 4px; cursor: pointer;
+  background: linear-gradient(90deg, var(--accent-1, #00f2fe) var(--v, 100%), color-mix(in srgb, var(--text-primary, #f8fafc) 18%, transparent) var(--v, 100%)); }
+#tube-dock .td-range::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border: 0; border-radius: 50%; background: #fff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1, #00f2fe) 35%, transparent); }
+#tube-dock .td-range::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: #fff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1, #00f2fe) 35%, transparent); }
+#tube-dock .td-range:focus-visible { outline: 2px solid var(--accent-1, #00f2fe); outline-offset: 5px; }
+#tube-dock.td-drag { cursor: grabbing; box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-1, #00f2fe) 45%, transparent), 0 34px 70px -20px rgba(0, 0, 0, .75); }
+#tube-dock.td-drag :is(.td-pill, .td-grip) { cursor: grabbing; }
+#tube-dock.td-drag iframe { pointer-events: none; }
+#tube-dock.td-slot { position: absolute; right: auto; bottom: auto; z-index: 50; overflow: hidden; box-shadow: none; animation: none; }
 #tube-dock.td-slot.td-over { position: fixed; z-index: 2147483500; }
 #tube-dock.td-slot .td-screen { height: 100%; min-height: 0; aspect-ratio: auto; border-radius: 0; }
-#tube-dock.td-slot .td-bar { display: none; }
+#tube-dock.td-slot :is(.td-head, .td-bar) { display: none; }
 @keyframes td-in { from { opacity: 0; transform: translateY(16px) scale(.96); } }
-@media (max-width: 767px) { #tube-dock { right: 12px; left: 12px; bottom: 84px; width: auto; } }
-@media (prefers-reduced-motion: reduce) { #tube-dock { animation: none; } }`;
+@keyframes td-eq { 0%, 100% { height: 25%; } 50% { height: 100%; } }
+@media (max-width: 767px) { #tube-dock { right: 12px; left: 12px; bottom: 132px; width: auto; } }
+@media (prefers-reduced-motion: reduce) { #tube-dock, #tube-dock .td-eq i { animation: none !important; } }`;
         document.head.appendChild(s);
     }
 
@@ -921,17 +964,35 @@
         dock.id = 'tube-dock';
         dock.setAttribute('role', 'region');
         dock.setAttribute('aria-label', 'Now playing from Watch & Listen');
-        dock.innerHTML = '<div class="td-screen"></div><div class="td-bar"><img class="td-av" alt="" width="34" height="34">' +
-            '<span class="td-text"><em>Now playing</em><b></b><span></span></span>' +
+        dock.innerHTML = '<div class="td-head"><div class="td-pill">' +
+            '<button type="button" class="td-grip" aria-label="Move the player (arrow keys)" title="Drag to move"></button>' +
+            '<span class="td-eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="td-text"><b></b><span></span></span>' +
+            '<a data-td="open" href="' + MUSIC_URL + '" aria-label="Open Watch & Listen" title="Open Watch & Listen">' + ICON.open + '</a>' +
+            '<button type="button" data-td="close" aria-label="Close the player" title="Close">' + ICON.close + '</button></div></div>' +
+            '<div class="td-screen"></div>' +
+            '<div class="td-bar"><div class="td-pill">' +
             '<button type="button" data-td="prev" aria-label="Previous track">' + ICON.prev + '</button>' +
             '<button type="button" data-td="toggle" class="td-main" aria-label="Pause">' + ICON.pause + '</button>' +
             '<button type="button" data-td="next" aria-label="Next track">' + ICON.next + '</button>' +
-            '<a data-td="open" href="' + MUSIC_URL + '" aria-label="Open Watch & Listen">' + ICON.open + '</a>' +
-            '<button type="button" data-td="close" aria-label="Close the player">' + ICON.close + '</button></div>';
+            '<span class="td-vol"><button type="button" data-td="mute" aria-label="Mute" aria-pressed="false">' + ICON.high + '</button>' +
+            '<input class="td-range" type="range" min="0" max="100" step="1" aria-label="Volume"></span></div></div>';
+        const head = dock.querySelector('.td-head .td-pill'), range = dock.querySelector('.td-range');
+        head.addEventListener('pointerdown', drag);
+        dock.querySelector('.td-grip').addEventListener('keydown', nudge);
+        range.addEventListener('input', () => {
+            vol = +range.value;
+            if (vol > 0) muted = false;
+            setVolume();
+        });
         dock.addEventListener('click', (e) => {
             const b = e.target.closest('[data-td]');
             if (!b) return;
             const act = b.dataset.td;
+            if (act === 'mute') {
+                if (muted || !vol) { muted = false; if (!vol) vol = 50; } else muted = true;
+                setVolume();
+                return;
+            }
             if (act === 'open') {
                 // with Focus's frame open, the page opens in it; otherwise Focus opens the frame for the link
                 const shell = document.getElementById('fp-shell');
@@ -941,8 +1002,109 @@
             api[act]();
         });
         document.body.appendChild(dock);
+        sound();
+        applyPos();
         place(true);
     }
+
+    /* volume: the row shows it, the player gets it, and it is kept for the next visit */
+    function sound() {
+        if (!dock) return;
+        const r = dock.querySelector('.td-range'), b = dock.querySelector('[data-td="mute"]'), shown = muted ? 0 : vol;
+        r.value = shown;
+        r.style.setProperty('--v', shown + '%');
+        r.setAttribute('aria-valuetext', muted ? 'Muted' : vol + '%');
+        b.innerHTML = muted || !vol ? ICON.mute : vol < 50 ? ICON.low : ICON.high;
+        b.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+        b.setAttribute('aria-pressed', String(muted));
+    }
+    const tell = () => { send('setVolume', [vol]); send(muted ? 'mute' : 'unMute'); setAt = Date.now(); };
+    function setVolume() { tell(); sound(); store('td:vol', { v: vol, m: muted }); }
+
+    /* the corner's place: the side and height the visitor left it at (on a phone it spans the width: the height only),
+       leaving room for the bars above and below the video */
+    const ABOVE = 56, BELOW = 60;
+    function applyPos() {
+        if (!dock || mode) return;
+        const s = dock.style;
+        if (!pos) { s.left = s.right = s.top = s.bottom = ''; return; }
+        s.top = Math.max(ABOVE, Math.min(pos.top, innerHeight - dock.offsetHeight - BELOW)) + 'px';
+        s.bottom = 'auto';
+        if (innerWidth <= 767) s.left = s.right = '';
+        else if (pos.side === 'l') { s.left = '16px'; s.right = 'auto'; }
+        else { s.right = '16px'; s.left = 'auto'; }
+    }
+    /* dragged by the top row (not its buttons); let go, it glides to the nearer side */
+    function drag(e) {
+        if (mode || e.button !== 0 || e.target.closest('a, input, button:not(.td-grip)')) return;
+        e.preventDefault();
+        const head = e.currentTarget, r = dock.getBoundingClientRect(), s = dock.style;
+        const dx = e.clientX - r.left, dy = e.clientY - r.top;
+        let moved = false;
+        head.setPointerCapture(e.pointerId);
+        const move = (ev) => {
+            if (!moved && Math.hypot(ev.clientX - e.clientX, ev.clientY - e.clientY) < 4) return;
+            if (!moved) { moved = true; dock.classList.add('td-drag'); s.width = r.width + 'px'; s.right = s.bottom = 'auto'; }
+            s.left = Math.max(4, Math.min(ev.clientX - dx, innerWidth - r.width - 4)) + 'px';
+            s.top = Math.max(ABOVE, Math.min(ev.clientY - dy, innerHeight - r.height - BELOW)) + 'px';
+        };
+        const up = () => {
+            head.removeEventListener('pointermove', move);
+            head.removeEventListener('pointerup', up);
+            head.removeEventListener('pointercancel', up);
+            if (!moved) return;
+            dock.classList.remove('td-drag');
+            const from = dock.getBoundingClientRect();
+            s.width = '';
+            pos = { side: from.left + from.width / 2 < innerWidth / 2 ? 'l' : 'r', top: Math.round(from.top) };
+            store('td:pos', pos);
+            applyPos();
+            flip(from);
+        };
+        head.addEventListener('pointermove', move);
+        head.addEventListener('pointerup', up);
+        head.addEventListener('pointercancel', up);
+    }
+    /* from the keyboard: the arrows send it to a side, to the top, or back down above the chat button */
+    function nudge(e) {
+        if (mode || !/^Arrow(Left|Right|Up|Down)$/.test(e.key)) return;
+        e.preventDefault();
+        const from = dock.getBoundingClientRect(), next = pos ? Object.assign({}, pos) : { side: 'r', top: from.top };
+        if (e.key === 'ArrowLeft') next.side = 'l';
+        if (e.key === 'ArrowRight') next.side = 'r';
+        if (e.key === 'ArrowUp') next.top = ABOVE;
+        if (e.key === 'ArrowDown') next.top = innerHeight - from.height - 136;
+        pos = next;
+        store('td:pos', pos);
+        applyPos();
+        flip(from);
+    }
+
+    /* hover cannot be seen over the video (YouTube's frame is another site's page: the pointer's moves go there), so the
+       bars show when the pointer comes near the dock and hide once it has moved away. The last move before the pointer
+       goes onto the video is a near one, so they stay while it is there. Pages in Focus's frame are watched too. */
+    let near = false, hideT = 0;
+    const watched = new WeakSet();
+    function nearness(e) {
+        if (!dock || mode) return;
+        const r = dock.getBoundingClientRect();
+        let x = e.clientX, y = e.clientY;
+        const view = e.view;
+        if (view && view !== window && view.frameElement) { const f = view.frameElement.getBoundingClientRect(); x += f.left; y += f.top; }
+        const m = near ? 24 : 40, above = near ? 56 : 0, below = near ? 60 : 0;     /* once shown, the bars count too */
+        if (x > r.left - m && x < r.right + m && y > r.top - m - above && y < r.bottom + m + below) {
+            clearTimeout(hideT); hideT = 0;
+            if (!near) { near = true; dock.classList.add('td-show'); }
+        } else if (near && !hideT) {
+            hideT = setTimeout(() => { hideT = 0; near = false; if (dock) dock.classList.remove('td-show'); }, 250);
+        }
+    }
+    function watchMoves(doc) {
+        if (!doc || watched.has(doc)) return;
+        watched.add(doc);
+        doc.addEventListener('pointermove', nearness, { passive: true });
+    }
+    watchMoves(document);
 
     /* the page whose content is in view: the one open in Focus's frame, or this one */
     function shown() {
@@ -967,6 +1129,12 @@
     }
     /* into the screen of the page in view, when it shows, otherwise the corner */
     function place(still) {
+        const shell = document.getElementById('fp-shell');
+        if (shell && !watched.has(shell)) {
+            watched.add(shell);
+            shell.addEventListener('load', () => { try { watchMoves(shell.contentDocument); } catch (e) {} });
+        }
+        try { if (shell) watchMoves(shell.contentDocument); } catch (e) {}
         slots.forEach((s, el) => { if (!el.ownerDocument.defaultView) takeBack(el); });     /* its page has closed */
         const on = !!dock && slots.size > 0;
         if (on !== !!tick) { clearInterval(tick); tick = on ? setInterval(place, 300) : 0; }   /* catches what no event reports, like a menu opening */
@@ -981,6 +1149,7 @@
         dock.classList.toggle('td-slot', !!m);
         dock.classList.toggle('td-over', m === 'over');
         dock.removeAttribute('style');
+        if (!m) applyPos();
         radius = m ? d.defaultView.getComputedStyle(slotEl).borderRadius : '';
         fit();
         if (!still) flip(from);
@@ -1018,17 +1187,14 @@
         ], { duration: 360, easing: 'cubic-bezier(.2, .8, .2, 1)' });
     }
     new MutationObserver(() => place()).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });   /* the frame opens or closes */
-    addEventListener('resize', () => place());
+    addEventListener('resize', () => { place(); applyPos(); });
 
     function render() {
         if (!dock) return;
         const t = tracks[index];
-        dock.querySelector('.td-text em').textContent = playing ? 'Now playing' : 'Paused';
+        dock.classList.toggle('is-playing', playing);
         dock.querySelector('.td-text b').textContent = t.title || '';
         dock.querySelector('.td-text span').textContent = t.sub || '';
-        const av = dock.querySelector('.td-av');
-        const src = t.av || 'https://i.ytimg.com/vi/' + t.id + '/mqdefault.jpg';
-        if (av.getAttribute('src') !== src) av.src = src;
         const toggle = dock.querySelector('[data-td="toggle"]');
         toggle.innerHTML = playing ? ICON.pause : ICON.play;
         toggle.setAttribute('aria-label', playing ? 'Pause' : 'Play');
@@ -1044,6 +1210,7 @@
             video.allow = 'autoplay; encrypted-media; picture-in-picture';
             video.allowFullscreen = true;
             video.src = YT + '/embed/' + t.id + '?autoplay=1&rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+            ready = false;
             // ask the player to report its state, so pausing in the video itself shows here, and an ended track moves on
             video.addEventListener('load', () => video && video.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'td' }), YT));
             dock.querySelector('.td-screen').appendChild(video);
@@ -1061,7 +1228,15 @@
         if (e.origin !== YT || !video || e.source !== video.contentWindow) return;
         let d;
         try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (err) { return; }
-        const ps = d && (d.event === 'onStateChange' ? d.info : d.info && d.info.playerState);
+        if (!d) return;
+        // once the player is ready it takes the kept volume; after that a change made in the video itself shows here
+        if (d.event === 'onReady') { tell(); setTimeout(() => { ready = true; }, 800); }
+        const info = d.info && typeof d.info === 'object' ? d.info : null;
+        if (ready && info && typeof info.volume === 'number' && Date.now() - setAt > 700) {
+            const v = Math.round(info.volume), m = !!info.muted;
+            if (v !== vol || m !== muted) { vol = v; muted = m; sound(); store('td:vol', { v: vol, m: muted }); }
+        }
+        const ps = d.event === 'onStateChange' ? d.info : info && info.playerState;
         if (typeof ps !== 'number') return;
         if (ps === 0) { api.next(); return; }            /* ended: the next track */
         if ((ps === 1 || ps === 2) && playing !== (ps === 1)) { playing = ps === 1; render(); emit(); }
@@ -1083,7 +1258,7 @@
         unslot(el) { takeBack(el); place(); },
         close() {
             if (!dock) return;
-            mode = ''; placed = null;
+            mode = ''; placed = null; near = false;
             dock.remove();
             dock = video = null;
             place();
