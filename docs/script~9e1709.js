@@ -2343,6 +2343,109 @@ document.addEventListener('DOMContentLoaded', async () => {
             discuss() { startFit(); }
         };
 
+        // When no AI answers (the Worker and the free service are both down, e.g. the Gemini credits run out), say so in
+        // the visitor's language, then give the sentences of the site's own knowledge file (the one the AI reads) that
+        // match the question, with a way to ask Mehedi himself. Small talk, contact and prices keep their set replies.
+        let siteSentences = null, siteProjects = [];
+        const OFF_STOP = new Set(("how does do did doing what which who whom whose why when where is are was were be been the a an and or of in on at " +
+            "to for with about from into his her he him she they them mehedi mehedi's you your yours use uses used using work works working " +
+            "can could would will tell me my please explain show give know hi hello hey thanks thank has have had any some").split(' '));
+        const ruleKey = (txt) => Object.keys(KNOWLEDGE_BASE).find((k) => KNOWLEDGE_BASE[k].keywords.some((re) => re.test(txt)));
+        // Bangla questions: their words point to the English ones the site is written in; tools are names (they lead)
+        const BN_WORDS = [
+            [/প্রজেক্ট|প্রকল্প/, 'projects'], [/অভিজ্ঞতা|কত বছর|কত দিন/, 'years experience'], [/দক্ষতা|স্কিল|পারেন/, 'skills stack'],
+            [/পড়াশোনা|পড়াশুনা|শিক্ষা|ডিগ্রি|বিশ্ববিদ্যালয়|ভার্সিটি|গ্র্যাজুয়েশন/, 'education university degree'],
+            [/চাকরি|কোম্পানি|অফিস|বর্তমানে|এখন কোথায়/, 'currently company role'], [/এনজিও/, 'NGO'], [/ভিডিও/, 'video'],
+            [/এআই|কৃত্রিম বুদ্ধিমত্তা/, 'AI'], [/এজেন্ট/, 'agents agentic'], [/ইআরপি/, 'ERP'], [/এইচআর/, 'HR HRM'], [/বেতন|পে-?রোল/, 'payroll'],
+            [/ভ্যাট|ট্যাক্স/, 'VAT tax'], [/মোবাইল|অ্যাপ/, 'mobile app'], [/ওয়েবসাইট|ওয়েব/, 'web platform'], [/ক্লাউড/, 'cloud'],
+            [/ডাটাবেস|ডেটাবেস/, 'database'], [/অটোমেশন|স্বয়ংক্রিয়/, 'automation'], [/ফ্রিল্যান্স|হায়ার|ভাড়া/, 'freelance contract'],
+            [/কোথায় থাকেন|ঠিকানা|শহর|দেশ/, 'Dhaka Bangladesh'], [/সার্টিফিকেট|সনদ|কোর্স/, 'certificate course'], [/গবেষণা|রিসার্চ/, 'research'],
+            [/ডিজাইন|আর্কিটেকচার/, 'architecture design'], [/নিরাপত্তা|সিকিউরিটি/, 'security'], [/হাজিরা|অ্যাটেনডেন্স/, 'attendance'],
+            [/রিয়্যাক্ট|রিঅ্যাক্ট/, 'React', 1], [/নেক্সট/, 'Next.js', 1], [/লারাভেল/, 'Laravel', 1], [/নেস্ট/, 'NestJS', 1], [/ফ্লাটার/, 'Flutter', 1],
+            [/ডকার/, 'Docker', 1], [/কাফকা/, 'Kafka', 1], [/রেডিস/, 'Redis', 1], [/পাইথন/, 'Python', 1], [/টাইপস্ক্রিপ্ট/, 'TypeScript', 1],
+            [/পোস্টগ্রে/, 'PostgreSQL', 1], [/জেমিনি/, 'Gemini', 1], [/ক্লড|ক্লদ/, 'Claude', 1], [/চ্যাটজিপিটি|ওপেনএআই/, 'OpenAI', 1],
+            [/ল্যাংগ্রাফ/, 'LangGraph', 1], [/ফ্র্যাপে|ফ্রাপে/, 'Frappe', 1], [/কুবারনেটিস/, 'Kubernetes', 1], [/এডব্লিউএস/, 'AWS', 1]
+        ];
+        const BN_HELLO = /সালাম|হ্যালো|হাই\b|কেমন আছেন|কেমন আছো|শুভ (সকাল|সন্ধ্যা|রাত্রি)/;
+        const BN_CONTACT = /যোগাযোগ|ফোন|নম্বর|ইমেইল|ই-মেইল|হোয়াটসঅ্যাপ|মেসেজ/;
+        const BN_PRICE = /দাম|খরচ|রেট|কত টাকা|প্রাইস|চার্জ/;
+        async function offlineReply(txt) {
+            const bn = /[ঀ-৿]/.test(txt) || lang() === 'bn';
+            const ask = `<div class="chat-actions"><a class="chat-action" href="${waHref((bn ? 'আসসালামু আলাইকুম, একটা প্রশ্ন ছিল: ' : 'Hi Mehedi, a question: ') + txt.slice(0, 400))}" target="_blank" rel="noopener">WhatsApp</a></div>`;
+            let key = ruleKey(txt);
+            if (BN_CONTACT.test(txt)) key = 'contact';
+            else if (BN_PRICE.test(txt)) key = 'services';
+            if (key === 'greetings' || BN_HELLO.test(txt)) {
+                return formatReply(bn ? 'ভালো আছি, ধন্যবাদ! আমার AI এই মুহূর্তে একটু বিরতিতে আছে, তবে আমার কাজ, প্রজেক্ট বা স্কিল নিয়ে জিজ্ঞেস করলে আমার সাইট থেকে উত্তর দিতে পারব।' :
+                    "Hi! My AI is taking a short break right now, but ask me about my work, projects or stack and I'll answer from my site.");
+            }
+            if (/^(smalltalk|contact|services)$/.test(key || '')) return formatReply(KNOWLEDGE_BASE[key].response);
+            const own = txt.match(/[A-Za-z0-9][A-Za-z0-9.+#-]*[A-Za-z0-9+#]|[A-Za-z0-9]/g) || [];
+            const mapped = [], mappedNames = [];
+            BN_WORDS.forEach(([re, en, name]) => { if (re.test(txt)) en.split(' ').forEach((w) => { mapped.push(w); if (name) mappedNames.push(w.toLowerCase()); }); });
+            const words = own.concat(mapped);
+            const terms = [...new Set(words.map((w) => w.toLowerCase()).filter((w) => w.length > 1 && !OFF_STOP.has(w)))];
+            // names (Kafka, MCP, Claude): capitalised past the first word, any Latin word in a Bangla question, or a tool
+            // named in Bangla
+            const names = new Set(own.filter((w, i) => /[\u0980-\u09FF]/.test(txt) || (i > 0 && /^[A-Z0-9]/.test(w)) || /[A-Z].*[A-Z]/.test(w))
+                .map((w) => w.toLowerCase()).concat(mappedNames).filter((w) => terms.includes(w)));
+            let hits = [];
+            if (terms.length) {
+                try {
+                    if (siteSentences === null) {
+                        // the knowledge file's prose, sentence by sentence, each with how much its page speaks for his own work
+                        // (Profile, Projects, the stack and the architecture count more than the Library and People, which
+                        // describe other people's work)
+                        const r = await fetch('/ai/knowledge.md');
+                        const text = r.ok ? await r.text() : '', seen = new Set();
+                        let weight = 1, inProjects = false, project = null;
+                        siteSentences = [];
+                        text.split(/\n+/).forEach((l) => {
+                            const h = l.match(/^#\s+(.*)/);
+                            if (h) { weight = /^(Profile|Projects|Tech stack|Architecture|Home)/.test(h[1]) ? 1.4 : /^(Library|People)/.test(h[1]) ? 0.5 : 1; inProjects = /^Projects/.test(h[1]); return; }
+                            // the Projects page: each ### heading is a project, the prose under it its description
+                            const ph = inProjects && l.match(/^###\s+(.*)/);
+                            if (ph) { project = { name: ph[1].trim(), desc: '' }; siteProjects.push(project); return; }
+                            if (project && !project.desc && /[.,:;]/.test(l)) project.desc = l.trim();
+                            if (/^\s*#/.test(l) || !/[.,:;]/.test(l) || l.trim().split(/\s+/).length < 8) return;   // prose, not headings or tag rows
+                            l.replace(/^\s*[-*]\s+/, '').split(/(?<=[.!?])\s+/).forEach((s) => {
+                                s = s.trim();
+                                if (s.length > 30 && s.length < 320 && !seen.has(s)) { seen.add(s); siteSentences.push({ s, weight }); }
+                            });
+                        });
+                    }
+                    const has = (s, w) => new RegExp('(^|[^a-z0-9])' + w.replace(/[.+#-]/g, '\\$&') + '([^a-z0-9]|$)', 'i').test(s);
+                    // a rare word (a tool's name) says more about the question than a common one ("projects")
+                    const idf = {};
+                    terms.forEach((w) => { const df = siteSentences.filter((x) => has(x.s, w)).length; idf[w] = df ? Math.log(1 + siteSentences.length / df) : 0; });
+                    // the key word must be there: the rarest name in the question, else its rarest word; words that stand
+                    // together in the question ("Claude Code")
+                    // count more when they stand together in the sentence too
+                    const pool = terms.filter((w) => idf[w] && names.has(w));
+                    const key = (pool.length ? pool : terms.filter((w) => idf[w])).sort((a, b) => idf[b] - idf[a])[0];
+                    const pairs = terms.slice(1).map((w, i) => terms[i] + ' ' + w);
+                    hits = key ? siteSentences.filter((x) => has(x.s, key)).map((x) => ({ s: x.s, score: x.weight * (
+                        terms.reduce((n, w) => n + (has(x.s, w) ? idf[w] : 0), 0) +
+                        pairs.reduce((n, pr) => n + (x.s.toLowerCase().includes(pr) ? 4 : 0), 0)) }))
+                        .sort((a, b) => b.score - a.score).slice(0, 2).map((x) => x.s) : [];
+                } catch (e) { hits = []; }
+            }
+            // a general question about projects (no tool named): the projects themselves, by name
+            if (siteProjects.length && !names.size && (terms.some((w) => /^(projects?|portfolio|products?)$/.test(w)) || /প্রজেক্ট|প্রকল্প/.test(txt))) {
+                const short = (d) => { let s = d.split(/:\s|\s\(/)[0].trim(); if (s.length > 80) s = s.slice(0, 80).replace(/[\s,]+\S*$/, '') + '…'; return s; };
+                const list = siteProjects.slice(0, 6).map((x) => '• **' + x.name + '**: ' + short(x.desc));
+                const lead = bn ? 'আমার AI এই মুহূর্তে একটু বিরতিতে আছে, তবে সাইট থেকে আমার কয়েকটা প্রজেক্ট:' : 'My AI is taking a short break right now, but here are some of my projects from the site:';
+                return formatReply(lead + '\n' + list.join('\n')) + ask.replace('</div>', `<a class="chat-action" href="/projects/">${bn ? 'সব প্রজেক্ট' : 'All projects'}</a></div>`);
+            }
+            if (hits.length) {
+                const lead = bn ? 'আমার AI এই মুহূর্তে একটু বিরতিতে আছে, তাই আমার সাইটে যা লেখা আছে তা থেকে বলছি:' : 'My AI is taking a short break right now, so here is what my site says:';
+                return formatReply(lead + '\n' + hits.map((h) => '• ' + h).join('\n')) + ask;
+            }
+            if (key) return formatReply(KNOWLEDGE_BASE[key].response);
+            return formatReply(bn ? 'আমার AI এই মুহূর্তে একটু বিরতিতে আছে। একটু পরে আবার জিজ্ঞেস করুন, অথবা সরাসরি আমাকে লিখুন:' :
+                'My AI is taking a short break right now. Please ask again in a little while, or write to me directly:') + ask;
+        }
+
         async function sendChat() {
             const txt = chatInput.value.trim();
             if (!txt || chatWidget.classList.contains('is-busy')) return;
@@ -2397,7 +2500,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // Secondary: Free Public AI Fallback (Direct Text Endpoint)
                     const past = history.slice(-4).map((m) => (m.r === 'user' ? 'User: ' : 'Assistant: ') + m.t.slice(0, 180)).join('\n');
                     const encodedPrompt = encodeURIComponent(CHAT_PROFILE + '\n\n' + (past ? past + '\n' : '') + 'User: ' + txt + '\nAssistant:');
-                    const secondaryResponse = await fetch(`https://text.pollinations.ai/${encodedPrompt}`);
+                    const secondaryResponse = await fetch(`https://text.pollinations.ai/${encodedPrompt}`, { signal: AbortSignal.timeout ? AbortSignal.timeout(7000) : undefined });
 
                     if (secondaryResponse.ok) {
                         let reply = await secondaryResponse.text();
@@ -2418,9 +2521,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 } catch (secondaryError) {
                     if (secondaryError === 'handled') return;
-                    // Tertiary: Hardcoded Rule-Based Fallback
-                    console.warn("[AI_CHAT] All APIs Offline. Reverting to Offline Rule-Based Protocol.");
-                    typingEl.innerHTML = formatReply(getBotResponse(txt));
+                    // Tertiary: the site's own words (offlineReply above)
+                    console.warn("[AI_CHAT] All APIs Offline. Answering from the site's knowledge file.");
+                    typingEl.innerHTML = await offlineReply(txt);
                     isSuccess = true;
                 }
             } finally {
