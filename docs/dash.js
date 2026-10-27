@@ -13,6 +13,14 @@
         } catch (e) {}
     };
     if (clock) { tick(); setInterval(tick, 30000); }
+    // and how far Dhaka (UTC+6 all year) is from the visitor: "3h ahead of you", "30m ahead of you", "same time as you"
+    const diff = s.querySelector('[data-dash-diff]');
+    if (diff) {
+        const mins = 360 + new Date().getTimezoneOffset(), a = Math.abs(mins), h = Math.floor(a / 60), m = a % 60;
+        diff.textContent = !mins ? 'same time as you'
+            : (h ? h + 'h' : '') + (h && m ? ' ' : '') + (m ? m + 'm' : '') + (mins > 0 ? ' ahead of you' : ' behind you');
+        diff.hidden = false;
+    }
 
     // every number in a figure counts up from zero together ("4 yrs 3 mos", "300+", "~50%")
     const countUp = (el) => {
@@ -285,6 +293,105 @@
             openText.textContent = session ? 'Open the Focus player' : 'Start a focus session';
         };
 
+        // the visualizer, here in the stage: the Focus page's Milkdrop presets (butterchurn, MIT), hearing the player's
+        // sounds and the radio. The library loads the first time it is switched on; it draws only while the stage is in
+        // view and the tab is shown; a double-click (double-tap) brings another, and it changes by itself every 3
+        // minutes. The last one is kept with the Focus page's, so either carries on where the other left it.
+        const stage = q('.dash-fp-stage'), vizBtn = box.querySelector('[data-fp-act="visual"]');
+        const VIZ_KEY = 'focus:viz', CDN = 'https://cdn.jsdelivr.net/npm/';
+        const coarse = matchMedia('(pointer: coarse)').matches;
+        let viz = null, vizLib = null, vizSet = {}, vizNames = [], vizOn = false, raf = 0, auto = 0, nameT = 0, inView = true;
+        let canvas = null, nameEl = null;
+        const hist = [];
+        const prefs = () => { try { return JSON.parse(localStorage.getItem(VIZ_KEY)) || {}; } catch (err) { return {}; } };
+        const keep = (o) => { try { localStorage.setItem(VIZ_KEY, JSON.stringify(Object.assign(prefs(), o))); } catch (err) {} };
+        const script = (src) => new Promise((ok, no) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = no; document.head.appendChild(el); });
+        const say = (text, err) => {
+            nameEl.textContent = text;
+            nameEl.classList.toggle('is-err', !!err);
+            nameEl.classList.add('is-on');
+            clearTimeout(nameT);
+            nameT = setTimeout(() => nameEl.classList.remove('is-on'), err ? 6000 : 3500);
+        };
+        const fitCanvas = () => {
+            if (!viz) return;
+            const r = Math.min(window.devicePixelRatio || 1, 1.5), w = Math.round(stage.clientWidth * r), h = Math.round(stage.clientHeight * r);
+            if (w && h && (canvas.width !== w || canvas.height !== h)) { canvas.width = w; canvas.height = h; try { viz.setRendererSize(w, h); } catch (err) {} }
+        };
+        const draw = () => {
+            if (!viz || !vizOn || !inView || document.hidden) { raf = 0; return; }
+            try { viz.render(); } catch (err) { setViz(false); return; }
+            raf = requestAnimationFrame(draw);
+        };
+        const loop = () => { cancelAnimationFrame(raf); raf = 0; draw(); };
+        const schedule = () => { clearTimeout(auto); if (vizOn && !still) auto = setTimeout(() => nextViz(5.7), 180000); };
+        const loadViz = (name, blend) => {
+            try { viz.loadPreset(vizSet[name], blend); keep({preset: name}); } catch (err) { return; }
+            say(name + (coarse ? ' · double-tap for another' : ' · double-click for another'));
+            schedule();
+        };
+        const nextViz = (blend) => {
+            if (!vizNames.length) return;
+            const recent = new Set(hist.slice(-24)), pool = vizNames.filter((n) => !recent.has(n)), from = pool.length ? pool : vizNames;
+            const name = from[Math.floor(Math.random() * from.length)];
+            hist.push(name);
+            loadViz(name, blend);
+        };
+        const startViz = async () => {
+            if (viz) return true;
+            if (!document.createElement('canvas').getContext('webgl2')) { say('The visualizer needs WebGL 2, which this browser does not offer.', true); return false; }
+            say('Loading the visualizer…');
+            try {
+                vizLib = vizLib || Promise.all([script(CDN + 'butterchurn@2.6.7/lib/butterchurn.min.js'), script(CDN + 'butterchurn-presets@2.4.7/lib/butterchurnPresets.min.js')]);
+                await vizLib;
+            } catch (err) { vizLib = null; say("The visualizer didn't load. Check the connection and try again.", true); return false; }
+            const bc = window.butterchurn.default || window.butterchurn, bp = window.butterchurnPresets.default || window.butterchurnPresets;
+            vizSet = bp.getPresets(); vizNames = Object.keys(vizSet);
+            const tap = fp.tap(), r = Math.min(window.devicePixelRatio || 1, 1.5);
+            canvas.width = Math.round(stage.clientWidth * r); canvas.height = Math.round(stage.clientHeight * r);
+            viz = bc.createVisualizer(tap.ctx, canvas, {width: canvas.width, height: canvas.height, pixelRatio: 1, textureRatio: 1});
+            viz.connectAudio(tap.node);
+            const last = prefs().preset;
+            if (last && vizSet[last]) { hist.push(last); loadViz(last, 0); } else nextViz(0);
+            return true;
+        };
+        const setViz = async (on) => {
+            if (on && !canvas) {
+                canvas = document.createElement('canvas');
+                canvas.className = 'dash-viz';
+                stage.prepend(canvas);
+                nameEl = document.createElement('span');
+                nameEl.className = 'dash-viz-name';
+                const full = document.createElement('a');
+                full.className = 'dash-viz-full';
+                full.href = './library/focus/#visual';
+                full.setAttribute('aria-label', 'The visualizer full screen, on the Focus page');
+                full.title = 'Full screen';
+                full.innerHTML = '<i class="fa-solid fa-expand" aria-hidden="true"></i>';
+                stage.append(nameEl, full);
+                if ('IntersectionObserver' in window) new IntersectionObserver((en) => { inView = en[0].isIntersecting; loop(); }).observe(stage);
+                if ('ResizeObserver' in window) new ResizeObserver(fitCanvas).observe(stage);
+                document.addEventListener('visibilitychange', loop);
+            }
+            stage.classList.toggle('is-viz', on);
+            vizBtn.setAttribute('aria-pressed', String(on));
+            if (on && !(await startViz())) { stage.classList.remove('is-viz'); vizBtn.setAttribute('aria-pressed', 'false'); return; }
+            vizOn = on;
+            if (on) { fitCanvas(); loop(); schedule(); } else { cancelAnimationFrame(raf); raf = 0; clearTimeout(auto); }
+        };
+        // another visual: a double-click, or a double-tap (two taps within 400 ms; the browser's own dblclick after a
+        // double-tap does not count twice)
+        let lastTap = -1e9, lastSwap = -1e9;
+        const swap = (t) => { if (t - lastSwap < 500) return; lastSwap = t; nextViz(2); };
+        stage.addEventListener('dblclick', (e) => {
+            if (!vizOn || e.target.closest('a, button')) return;
+            e.preventDefault(); swap(e.timeStamp);
+        });
+        stage.addEventListener('pointerup', (e) => {
+            if (!vizOn || e.pointerType === 'mouse' || e.target.closest('a, button')) return;
+            if (e.timeStamp - lastTap < 400) { lastTap = -1e9; swap(e.timeStamp); } else lastTap = e.timeStamp;
+        });
+
         box.addEventListener('click', (e) => {
             const act = e.target.closest('[data-fp-act]');
             if (!act) return;
@@ -295,6 +402,12 @@
                     if (isOn(st)) fp.pause();
                     else if (empty) fp.usePreset(select.value || (presets[0] && presets[0].id));   // starts playing
                     else fp.play();
+                } else if (act.dataset.fpAct === 'visual') {
+                    // the visuals move to the sound, so a silent player starts its mix as they come on
+                    const turnOn = !vizOn;
+                    if (turnOn && empty) fp.usePreset(select.value || (presets[0] && presets[0].id));
+                    else if (turnOn && !isOn(st)) fp.play();
+                    setViz(turnOn);
                 } else if (act.dataset.fpAct === 'prev') fp.prev();
                 else if (act.dataset.fpAct === 'next') fp.next();
                 else if (act.dataset.fpAct === 'shuffle') fp.shuffle();
@@ -366,13 +479,39 @@
             yt.querySelector('[data-yt-label]').textContent = state === 'playing' ? 'Now playing' : state === 'paused' ? 'Paused' : 'Up next';
             yt.classList.toggle('is-playing', state === 'playing');
             screen.hidden = dock ? !dock.state().open : mode === 'idle';
-            toggle.querySelector('i').className = 'fa-solid ' + (state === 'playing' ? 'fa-pause' : 'fa-play');
-            toggle.setAttribute('aria-label', state === 'playing' ? 'Pause' : 'Play');
+            // the track row steps aside only while the video really is in the screen: a black screen never stands alone
+            yt.classList.toggle('is-in', dock ? !!(dock.holds && dock.holds(screen)) : mode !== 'idle');
+            yt.querySelectorAll('[data-yt="toggle"]').forEach((b) => {
+                b.querySelector('i').className = 'fa-solid ' + (state === 'playing' ? 'fa-pause' : 'fa-play');
+                b.setAttribute('aria-label', state === 'playing' ? 'Pause' : 'Play');
+            });
+            // the strip's volume shows the dock's (one volume, wherever it is set)
+            const v = dock && dock.volume ? dock.volume() : null;
+            if (v) {
+                const level = v.muted ? 0 : v.level, mute = yt.querySelector('[data-yt="mute"]');
+                if (document.activeElement !== volRange) volRange.value = level;
+                volRange.style.setProperty('--v', level + '%');
+                mute.querySelector('i').className = 'fa-solid ' + (v.muted || !v.level ? 'fa-volume-xmark' : v.level < 50 ? 'fa-volume-low' : 'fa-volume-high');
+                mute.setAttribute('aria-label', v.muted ? 'Unmute' : 'Mute');
+                mute.setAttribute('aria-pressed', String(v.muted));
+            }
         };
+        // the strip under the video floats up while the pointer is on the card. Over the video itself (YouTube's frame)
+        // the page hears no pointer, so the last move before it decides: one on the card keeps the strip up
+        const volRange = yt.querySelector('[data-yt-vol]'), card = yt.closest('.dash-tile');
+        let farT = 0;
+        document.addEventListener('pointermove', (e) => {
+            if (!yt.classList.contains('is-in') || e.pointerType !== 'mouse') return;
+            const r = card.getBoundingClientRect(), on = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+            if (on) { clearTimeout(farT); farT = 0; yt.classList.add('is-near'); }
+            else if (!farT && yt.classList.contains('is-near')) farT = setTimeout(() => { farT = 0; yt.classList.remove('is-near'); }, 300);
+        }, {passive: true});
+        volRange.addEventListener('input', () => { if (dock && dock.setVolume) dock.setVolume(+volRange.value); });
         yt.addEventListener('click', (e) => {
             const b = e.target.closest('[data-yt]');
             if (!b) return;
             const act = b.dataset.yt;
+            if (act === 'mute') { if (dock && dock.volume) dock.setVolume(undefined, !dock.volume().muted); return; }
             if (dock) {
                 const open = dock.state().open;
                 if (act === 'toggle') {
@@ -397,6 +536,17 @@
         const useDock = () => { if (window.TubeDock) { dock = window.TubeDock; dock.on(show); dock.slot(screen); show(); } };
         if (window.TubeDock) useDock(); else addEventListener('DOMContentLoaded', useDock, {once: true});
     }
+
+    // the contact band's AI button opens the chat's project discussion (the AI weighs the visitor's brief against his
+    // real work); without the chat the link opens the contact page
+    const aiDiscuss = s.querySelector('[data-ai-discuss]');
+    if (aiDiscuss) aiDiscuss.addEventListener('click', (e) => {
+        const chat = window.MehediChat;
+        if (!chat || !chat.discuss) return;
+        e.preventDefault();
+        if (chat.open) chat.open();
+        setTimeout(() => chat.discuss(), 350);    /* once the chat has opened, as the greeting bubble does */
+    });
 
     // career and library: a legend row and its piece of the chart light each other
     s.querySelectorAll('.dash-career, .dash-library').forEach((tile) => {

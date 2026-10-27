@@ -568,9 +568,15 @@
             if (back && back.focus) back.focus({ preventScroll: true });
         }
         $('fx-view-close').addEventListener('click', closeView);
-        /* the player on other pages opens the focus view: with #view in the address, or by an event when this page is underneath the frame */
-        addEventListener('fp-view', () => openView(false));
-        if (location.hash === '#view') { history.replaceState(history.state, '', location.pathname + location.search); setTimeout(() => openView(false), 0); }
+        /* the player on other pages opens the focus view: with #view in the address, or by an event when this page is underneath the frame.
+           #visual (or the event's detail.viz) opens it with the visualizer on: the home dashboard's visualizer button */
+        const openFrom = (viz) => { openView(false); if (viz && !vizOn) vizToggle(true); };
+        addEventListener('fp-view', (e) => openFrom(!!(e.detail && e.detail.viz)));
+        if (location.hash === '#view' || location.hash === '#visual') {
+            const viz = location.hash === '#visual';
+            history.replaceState(history.state, '', location.pathname + location.search);
+            setTimeout(() => openFrom(viz), 0);
+        }
         $('fx-view-full').addEventListener('click', () => (document.fullscreenElement ? unfull() : fullscreen()));
         $('fx-view-play').addEventListener('click', toggleAll);
         $('fx-view-prev').addEventListener('click', () => FP.prev());

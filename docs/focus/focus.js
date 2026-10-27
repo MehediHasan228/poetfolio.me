@@ -768,6 +768,7 @@
     function backToHost(u, push) {
         closeShell(push);
         if (!push) history.replaceState(null, '', hostUrl);
+        if (IS_FOCUS && (u.hash === '#view' || u.hash === '#visual')) { dispatchEvent(new CustomEvent('fp-view', { detail: { viz: u.hash === '#visual' } })); return; }
         const el = u.hash && document.getElementById(decodeURIComponent(u.hash.slice(1)));
         if (el) el.scrollIntoView();
     }
@@ -1019,7 +1020,7 @@
         b.setAttribute('aria-pressed', String(muted));
     }
     const tell = () => { send('setVolume', [vol]); send(muted ? 'mute' : 'unMute'); setAt = Date.now(); };
-    function setVolume() { tell(); sound(); store('td:vol', { v: vol, m: muted }); }
+    function setVolume() { tell(); sound(); store('td:vol', { v: vol, m: muted }); emit(); }
 
     /* the corner's place: the side and height the visitor left it at (on a phone it spans the width: the height only),
        leaving room for the bars above and below the video */
@@ -1234,7 +1235,7 @@
         const info = d.info && typeof d.info === 'object' ? d.info : null;
         if (ready && info && typeof info.volume === 'number' && Date.now() - setAt > 700) {
             const v = Math.round(info.volume), m = !!info.muted;
-            if (v !== vol || m !== muted) { vol = v; muted = m; sound(); store('td:vol', { v: vol, m: muted }); }
+            if (v !== vol || m !== muted) { vol = v; muted = m; sound(); store('td:vol', { v: vol, m: muted }); emit(); }
         }
         const ps = d.event === 'onStateChange' ? d.info : info && info.playerState;
         if (typeof ps !== 'number') return;
@@ -1253,6 +1254,15 @@
         toggle() { if (!dock) return; send(playing ? 'pauseVideo' : 'playVideo'); playing = !playing; render(); emit(); },
         next() { if (dock) load(index + 1); },
         prev() { if (dock) load(index - 1); },
+        /* whether the video sits in el now, and shows (a page hides its own controls only then) */
+        holds: (el) => !!dock && !!mode && slotEl === el && dock.style.visibility !== 'hidden',
+        /* the volume, for a page's own controls: { level 0-100, muted }; set either or both */
+        volume: () => ({ level: vol, muted }),
+        setVolume(level, mute) {
+            if (typeof level === 'number') { vol = Math.max(0, Math.min(100, Math.round(level))); if (vol > 0) muted = false; }
+            if (typeof mute === 'boolean') { muted = mute; if (!mute && !vol) vol = 50; }
+            setVolume();
+        },
         /* el: a page's own screen for the video; that page lets it go with unslot() when it closes */
         slot(el) { lend(el); place(); },
         unslot(el) { takeBack(el); place(); },

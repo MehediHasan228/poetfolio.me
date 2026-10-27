@@ -2,12 +2,8 @@ Knowledge base for Mehedi Hasan's portfolio (https://mehedi.pro.bd). Generated f
 
 # Home (/)
 ## At a glance
-Available for work · Dhaka GMT+6
-4 yrs 3 mos of experience
-10 projects, 6 live
-300+ companies on Jibika Plexus
-~50% less manual work with LLMs
-46 tools in the stack
+Dhaka GMT+6
+4 yrs 3 mos of experience 10 projects, 6 live 300+ companies on Jibika Plexus ~50% less manual work with LLMs 46 tools in the stack
 ### Projects
 by status and kind
 6 /10live
@@ -54,15 +50,14 @@ Ready to play
 Focus Ambient sounds and Quran radio
 Ambient sounds, Quran radio and a focus timer that keep playing while you browse.
 Start a focus session
-Open to freelance & full-time
 ### Have an ERP, HR or AI project in mind?
 Tell me what you need. I work from Dhaka (GMT+6), remote-first.
-Message on WhatsApp Email me Contact form
+Message on WhatsApp Discuss with my AI Email me
+or use the contact form
 
 # Profile: experience, education, skills (/profile/)
 ## Mehedi Hasan
 AI-Native Software Engineer
-Open to freelance & full-time
 - Software Developer at SAWAB Bangladesh · 4+ yrs
 - Dhaka ·
 ## About
@@ -135,7 +130,7 @@ HBIZZ Group Company · Full-time ·Karwan Bazar, Dhaka
 - Enforced data security through access control, secure document handling and scheduled system backups.
 - Developed and maintained the corporate website (hbizz.com) on WordPress with cPanel hosting configuration and performance monitoring.
 WordPress cPanel IT support Security
-## Skills
+## Tools I use
 #### Core stack
 Web platforms, APIs and backend services
 TypeScript React Next.js Tailwind NestJS FastAPI Python PHP Laravel

@@ -114,7 +114,6 @@ html[data-sidebar="collapsed"] .round-btns { flex-direction: column; }
 .nx-hero .verified-badge, .nx-hero h2 .verified { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; flex-shrink: 0; }
 .nx-hero .verified-badge svg, .nx-hero h2 .verified { width: 26px; height: 26px; color: var(--brand); display: block; }
 .tagline { margin-top: 4px; font-size: 18px; }
-.pill-status { margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--link); background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .25); }
 .dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); flex-shrink: 0; }
 .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--brand); animation: ping 2s infinite; }
 @keyframes ping { 75%, 100% { transform: scale(2.6); opacity: 0; } }

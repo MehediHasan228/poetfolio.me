@@ -10652,12 +10652,16 @@ html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn
   font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.01em !important; text-transform: none !important; text-decoration: none !important;
   color: var(--accent-active-color, #0b1120) !important;
   background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0) 55%), var(--gradient-accent, var(--accent-1)) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 18px -6px var(--accent-glow, rgba(0,0,0,0.35)) !important;
+  box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 6px 18px -6px var(--accent-glow, rgba(0,0,0,0.35)) !important;
   transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, filter .2s ease !important;
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
   transform: translateY(-2px) !important; filter: brightness(1.06) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 12px 26px -8px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+  box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 12px 26px -8px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+}
+html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):active {
+  transform: translateY(1px) scale(0.99) !important;
+  box-shadow: var(--b3-press), 0 2px 8px -4px var(--accent-glow, rgba(0,0,0,0.4)) !important;
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) * { color: inherit !important; }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) svg { stroke: currentColor !important; }
@@ -10683,6 +10687,112 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .lib-cta, .btn-rai
 html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):focus-visible {
   outline: 2px solid var(--accent-1) !important; outline-offset: 3px !important;
 }
+
+/* ================= raised buttons: one 3D recipe ================= */
+/* Every filled button (the site button above, players' play buttons, the projects' arrows) wears the same face: a gloss on
+   the top half, a lit top edge, a darker bottom edge for thickness and its own glow; pressed, it sinks. The plain round
+   buttons beside them get the same idea, quieter. Each keeps its own colour; only the light and the edges are shared. */
+:root {
+    --b3-gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 55%);
+    --b3-rim: rgba(255, 255, 255, 0.5);
+    --b3-base: rgba(0, 0, 0, 0.2);
+    --b3-press: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 2px 6px rgba(0, 0, 0, 0.26);
+    --b3-soft-sheen: rgba(255, 255, 255, 0.05);
+    --b3-soft-rim: rgba(255, 255, 255, 0.09);
+    --b3-soft-base: rgba(0, 0, 0, 0.35);
+    --b3-soft-drop: 0 2px 4px -2px rgba(0, 0, 0, 0.45);
+}
+:root:is([data-theme="light"], [data-theme="mint"]) {
+    --b3-base: rgba(15, 23, 42, 0.18);
+    --b3-soft-sheen: rgba(255, 255, 255, 0.75);
+    --b3-soft-rim: rgba(255, 255, 255, 0.95);
+    --b3-soft-base: rgba(15, 23, 42, 0.12);
+    --b3-soft-drop: 0 2px 4px -2px rgba(15, 23, 42, 0.18);
+}
+
+/* filled */
+html :is(.dash-nav, .dash-fp-ctrl .is-main, .dash-yt-ctrl .is-main) {
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 6px 16px -6px var(--accent-glow, rgba(0, 0, 0, 0.35));
+}
+html :is(.dash-nav:hover:not(:disabled), .dash-fp-ctrl .is-main:hover, .dash-yt-ctrl .is-main:hover) {
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 12px 24px -8px var(--accent-glow, rgba(0, 0, 0, 0.4));
+}
+html :is(.dash-nav:active:not(:disabled), .dash-fp-ctrl .is-main:active, .dash-yt-ctrl .is-main:active) {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: var(--b3-press), 0 2px 6px -3px var(--accent-glow, rgba(0, 0, 0, 0.35));
+}
+html #fp-pill .fp-play {
+    background: var(--b3-gloss), var(--fp-grad);
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 8px 18px -8px rgba(var(--fp-acc-rgb), 0.8);
+}
+html #fp-pill .fp-play:hover {
+    background: var(--b3-gloss), var(--fp-grad);
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 0 0 4px rgba(var(--fp-acc-rgb), 0.16), 0 10px 22px -8px rgba(var(--fp-acc-rgb), 0.9);
+}
+html #fp-pill .fp-play:active { transform: translateY(1px) scale(0.96); box-shadow: var(--b3-press), 0 2px 6px -3px rgba(var(--fp-acc-rgb), 0.7); }
+html #tube-dock .td-main { box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 6px 16px -6px var(--accent-glow, rgba(0, 0, 0, 0.35)); }
+html #tube-dock .td-main:active { transform: translateY(1px) scale(0.96); box-shadow: var(--b3-press); }
+html .nx .fx-play {
+    background: var(--b3-gloss), var(--grad);
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -3px 0 var(--b3-base), 0 10px 24px -10px rgba(var(--brand-rgb), 0.75);
+}
+html .nx .fx-play:active { transform: translateY(1px) scale(0.97); box-shadow: var(--b3-press), 0 3px 8px -4px rgba(var(--brand-rgb), 0.6); }
+
+/* plain round buttons beside them */
+html :is(.dash-fp-ctrl > :not(.is-main), .dash-yt-ctrl button:not(.is-main)) {
+    background-image: linear-gradient(180deg, var(--b3-soft-sheen), transparent 65%);
+    box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 1px 0 var(--b3-soft-rim), inset 0 -1px 0 var(--b3-soft-base), var(--b3-soft-drop);
+    transition: color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+html :is(.dash-fp-ctrl > :not(.is-main), .dash-yt-ctrl button:not(.is-main)):hover {
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.45), inset 0 1px 0 var(--b3-soft-rim), inset 0 -1px 0 var(--b3-soft-base), var(--b3-soft-drop);
+}
+html :is(.dash-fp-ctrl > :not(.is-main), .dash-yt-ctrl button:not(.is-main)):active {
+    transform: translateY(1px);
+    box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 2px 4px rgba(0, 0, 0, 0.22);
+}
+html #fp-pill .fp-btn:not(.fp-play):not(.fp-x):not(.fp-ghost) {
+    background-image: linear-gradient(180deg, var(--b3-soft-sheen), transparent 65%);
+    box-shadow: inset 0 0 0 1px var(--fp-line), inset 0 1px 0 var(--b3-soft-rim), inset 0 -1px 0 var(--b3-soft-base), var(--b3-soft-drop);
+}
+html #fp-pill .fp-btn:not(.fp-play):not(.fp-x):not(.fp-ghost):active {
+    transform: translateY(1px);
+    box-shadow: inset 0 0 0 1px var(--fp-line), inset 0 2px 4px rgba(0, 0, 0, 0.22);
+}
+@media (prefers-reduced-motion: reduce) {
+    html :is(.dash-nav, .dash-fp-ctrl > *, .dash-yt-ctrl button, #fp-pill .fp-btn, #tube-dock .td-main, .nx .fx-play):active { transform: none; }
+}
+
+/* the floating controls (WhatsApp, sounds, theme) wear the soft raised face of the plain round buttons: a lit top edge,
+   a soft base and a shadow, lifting a little under the pointer and sinking when pressed. Their magnetic pull moves them
+   with transform (script~), so the lift and the press use translate, which adds to it. WhatsApp keeps its green. */
+html .ui-controls .control-btn {
+    color: var(--pf-brand) !important;
+    background: linear-gradient(180deg, var(--b3-soft-sheen), transparent 65%), var(--pf-surface) !important;
+    border: 0 !important;
+    box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 8px 18px -8px rgba(0, 0, 0, 0.5) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    transition: translate 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, color 0.2s ease;
+}
+html .ui-controls .control-btn:hover {
+    translate: 0 -2px;
+    color: var(--pf-brand) !important;
+    background: linear-gradient(180deg, var(--b3-soft-sheen), transparent 65%), var(--pf-surface) !important;
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.5), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 12px 22px -8px rgba(var(--pf-brand-rgb), 0.45) !important;
+}
+html .ui-controls .control-btn:active {
+    translate: 0 1px;
+    box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 2px 5px rgba(0, 0, 0, 0.25) !important;
+}
+html .ui-controls .control-btn.whatsapp-btn,
+html .ui-controls .control-btn.whatsapp-btn:hover { color: #25d366 !important; }
+html .ui-controls .control-btn.whatsapp-btn:hover {
+    box-shadow: inset 0 0 0 1px rgba(37, 211, 102, 0.55), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 12px 22px -8px rgba(37, 211, 102, 0.45) !important;
+}
+:root:is([data-theme="light"], [data-theme="mint"]) .ui-controls .control-btn.whatsapp-btn { color: #16a34a !important; }
+:root:is([data-theme="light"], [data-theme="mint"]) .ui-controls .control-btn { box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 8px 18px -8px rgba(15, 23, 42, 0.25) !important; }
+@media (prefers-reduced-motion: reduce) { html .ui-controls .control-btn:is(:hover, :active) { translate: none; } }
 
 /* ================= mobile header: 56px, glass, brand + compact contact + menu button ================= */
 nav[aria-label="Main navigation"] .brand-name { display: none; }
@@ -11793,23 +11903,29 @@ html body #about :is(.arch-tech-tag, .arch-matrix-tag) img { width: 16px; height
     margin: 0;
     padding: 0;
 }
+/* Dhaka's time as a chip: the time, how far it is from the visitor's, and a way down to the contact band */
 .dash-live {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin: 0;
+    padding: 6px 12px;
+    border-radius: 999px;
     font-family: 'Fira Code', monospace;
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--pf-ink-3);
+    text-decoration: none;
+    background: var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+    transition: color 0.2s ease, box-shadow 0.2s ease;
 }
-.dash-live i {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
-}
+.dash-live .fa-clock { font-size: 12px; color: var(--pf-brand); }
 .dash-live time { color: var(--pf-ink); }
+.dash-tz::before { content: "\00b7"; margin-right: 8px; }
+.dash-live-go { font-size: 10px; opacity: 0.45; transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease; }
+.dash-live:hover { color: var(--pf-ink-2); box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.45); }
+.dash-live:hover .dash-live-go { opacity: 1; color: var(--pf-brand); transform: translateX(2px); }
+.dash-live:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+#contact { scroll-margin-top: 100px; }
 .dash-grid {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -11929,11 +12045,41 @@ html body #about :is(.arch-tech-tag, .arch-matrix-tag) img { width: 16px; height
     padding: 18px 8px;
 }
 .dash-kpi {
+    position: relative;
     display: grid;
     gap: 4px;
     padding: 4px 20px;
     border-left: 1px solid var(--pf-line);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
 }
+/* each figure opens where it comes from: it lifts, and an arrow comes in from the left */
+.dash-kpi::before {
+    content: "";
+    position: absolute;
+    inset: -6px 6px;
+    z-index: -1;
+    border-radius: 12px;
+    background: rgba(var(--pf-brand-rgb), 0.08);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.dash-kpi:hover { transform: translateY(-2px); }
+.dash-kpi:hover::before { opacity: 1; }
+.dash-kpi-go {
+    position: absolute;
+    top: 10px;
+    right: 18px;
+    font-size: 12px;
+    color: var(--pf-brand);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.dash-kpi:is(:hover, :focus-visible) .dash-kpi-go { opacity: 1; transform: none; }
+.dash-kpi:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 4px; border-radius: 10px; }
+@media (prefers-reduced-motion: reduce) { .dash-kpi, .dash-kpi-go { transition: none; } .dash-kpi:hover { transform: none; } }
 .dash-kpi:first-child { border-left: 0; }
 .dash-kpi b {
     font-family: 'Fira Code', monospace;
@@ -12437,6 +12583,55 @@ html body #about :is(.arch-tech-tag, .arch-matrix-tag) img { width: 16px; height
     border-radius: 50%;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 10px 24px -8px rgba(0, 0, 0, 0.55);
 }
+/* the visualizer in the stage (dash.js): the visuals take the photo's place (a reciter's round portrait stays on them);
+   the preset's name shows for a moment at the top, and a corner button opens it full screen on the Focus page */
+.dash-fp-stage .dash-viz { position: absolute; inset: 0; display: none; width: 100%; height: 100%; background: #000; }
+.dash-fp-stage.is-viz { background: #000; touch-action: manipulation; }
+.dash-fp-stage.is-viz .dash-viz { display: block; }
+.dash-fp-stage.is-viz:not(.is-face) img,
+.dash-fp-stage.is-viz .dash-wave { display: none; }
+.dash-viz-name {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    max-width: calc(100% - 20px);
+    padding: 4px 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #fff;
+    background: rgba(8, 12, 24, 0.62);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.dash-fp-stage.is-face .dash-viz-name { max-width: calc(100% - 110px); }
+.dash-viz-name.is-on { opacity: 1; }
+.dash-viz-name.is-err { color: #fecaca; }
+.dash-viz-full {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 2;
+    display: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #fff;
+    text-decoration: none;
+    background: rgba(8, 12, 24, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+.dash-fp-stage.is-viz .dash-viz-full { display: grid; }
+.dash-viz-full:hover { background: rgba(8, 12, 24, 0.8); }
+.dash-viz-full:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+html .dash-fp-ctrl [data-fp-act="visual"][aria-pressed="true"] { color: var(--pf-brand); box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.55), inset 0 1px 0 var(--b3-soft-rim), var(--b3-soft-drop); }
 /* a shade from the foot keeps the white title readable on any photo */
 .dash-fp-stage::after {
     content: "";
@@ -12661,6 +12856,9 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
 }
 .dash-fp-ctrl .is-main:active,
 .dash-yt-ctrl .is-main:active { transform: scale(0.95); }
+/* the focus tile's five controls (visualizer, previous, play, next, shuffle) in a narrow tile, play in the middle */
+.dash-fp-ctrl { gap: 8px; }
+.dash-fp-ctrl > :not(.is-main) { width: 36px; height: 36px; font-size: 13px; }
 .dash-yt {
     overflow: hidden;
     margin-top: 14px;
@@ -12675,9 +12873,9 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     background: #000000;
 }
 .dash-yt-screen[hidden] { display: none; }
-/* while the video shows, the player is the video alone (YouTube's own controls work it); the track row with its play
-   button returns once it closes */
-.dash-yt-screen:not([hidden]) + .dash-yt-bar { display: none; }
+/* while the video is in the screen, the player is the video alone (YouTube's own controls work it); the track row with
+   its play button returns once it closes, or whenever the video is not there (dash.js sets .is-in) */
+.dash-yt.is-in .dash-yt-bar { display: none; }
 .dash-yt-screen iframe {
     display: block;
     width: 100%;
@@ -12699,6 +12897,54 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     border-radius: 50%;
     object-fit: cover;
 }
+/* while the video is in the tile, its controls float up under it when the pointer is on the card (dash.js sets
+   .is-near); a touch screen has no hover, so there they stay */
+.dash-yt-hud { display: none; }
+.dash-yt.is-in .dash-yt-hud { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.28s ease, opacity 0.2s ease; }
+.dash-yt.is-in:is(.is-near, :has(:focus-visible)) .dash-yt-hud { grid-template-rows: 1fr; opacity: 1; }   /* keyboard focus keeps it up; a mouse click does not */
+@media (hover: none) { .dash-yt.is-in .dash-yt-hud { grid-template-rows: 1fr; opacity: 1; } }
+.dash-yt-hud-in { min-height: 0; overflow: hidden; }
+.dash-yt-hud-in > * { margin: 0; }
+.dash-yt-hud-in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.dash-yt-hud .dash-yt-ctrl { flex-basis: auto; justify-content: flex-start; gap: 6px; padding: 9px 0 9px 9px; }
+.dash-yt-hud .dash-yt-ctrl button { width: 30px; height: 30px; font-size: 11px; }
+.dash-yt-hud .dash-yt-ctrl .is-main { width: 36px; height: 36px; font-size: 13px; }
+.dash-yt-vol { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: 4px; min-width: 0; padding-right: 10px; }
+.dash-yt-vol button {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    font-size: 12px;
+    color: var(--pf-ink-2);
+    background: none;
+    cursor: pointer;
+}
+.dash-yt-vol button:hover { color: var(--pf-brand); }
+.dash-yt-vol button:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+.dash-yt-vol input {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    min-width: 40px;
+    max-width: 90px;
+    height: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    background: linear-gradient(90deg, var(--pf-brand) var(--v, 100%), color-mix(in srgb, var(--pf-ink) 16%, transparent) var(--v, 100%));
+}
+.dash-yt-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(var(--pf-brand-rgb), 0.35); }
+.dash-yt-vol input::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(var(--pf-brand-rgb), 0.35); }
+.dash-yt-vol input:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 5px; }
 /* the state as moving bars before the title; the words ("Now playing") are kept for screen readers only */
 .dash-yt .dash-np-text em {
     position: absolute;
@@ -12756,35 +13002,33 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     gap: 20px 32px;
 }
 .dash-contact h3 {
-    margin: 12px 0 6px;
+    margin: 0 0 6px;
     font-size: 20px;
     font-weight: 600;
     color: var(--pf-ink);
 }
 .dash-contact .dash-text { margin: 0; }
-.dash-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--pf-brand);
-    background: rgba(var(--pf-brand-rgb), 0.14);
-    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.25);
-}
-.dash-status i {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-}
 .dash-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
+/* the ways to reach him, and the contact form as a quieter line under them */
+.dash-reach { display: grid; justify-items: end; gap: 10px; }
+.dash-alt {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--pf-ink-3);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.dash-alt i { font-size: 10px; transition: transform 0.2s ease; }
+.dash-alt:hover { color: var(--pf-brand); }
+.dash-alt:hover i { transform: translateX(2px); }
+.dash-alt:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 3px; border-radius: 4px; }
+@media (max-width: 900px) { .dash-reach { justify-items: start; } }
 
 /* the one reveal: as the dashboard comes into view each chart draws in (only when the script set .dash-wait) */
 .dash-wait .dash-ring-arc { stroke-dasharray: 0 var(--circ); }
@@ -12879,17 +13123,16 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.35);
 }
 .dash-area:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
-/* the areas take turns: the chosen one's line fills, and when it is full dash.js picks the next */
+/* the areas take turns: the chosen chip fills with the brand tint from the left, under its words, and when it is full
+   dash.js picks the next */
+.dash-area { isolation: isolate; }
 .dash-stack.is-auto .dash-area[aria-pressed="true"]::after {
     content: "";
     position: absolute;
-    left: 10px;
-    right: 10px;
-    bottom: 1px;
-    height: 2px;
-    border-radius: 2px;
-    background: currentColor;
-    opacity: 0.6;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(var(--pf-brand-rgb), 0.08), rgba(var(--pf-brand-rgb), 0.28));
     transform: scaleX(0);
     transform-origin: left;
     animation: dash-cycle 4s linear forwards;
@@ -12961,8 +13204,6 @@ button.dash-tool:focus-visible { outline: 2px solid var(--pf-brand); outline-off
 .dash-ask-hint i { font-size: 11px; color: var(--pf-brand); }
 
 /* the status dot and the current role pulse */
-.dash-live i { position: relative; }
-.dash-live i::after,
 .dash-seg.s3::after {
     content: "";
     position: absolute;
@@ -12970,7 +13211,6 @@ button.dash-tool:focus-visible { outline: 2px solid var(--pf-brand); outline-off
     border-radius: inherit;
     opacity: 0;
 }
-.dash-live i::after { background: #22c55e; }
 .dash-seg.s3::after { box-shadow: 0 0 14px 2px var(--pf-glow); }
 .dash-orbit:hover :is(.dash-orbit-ring, .dash-sat img) { animation-play-state: paused; }
 
@@ -13006,7 +13246,6 @@ button.dash-tool:focus-visible { outline: 2px solid var(--pf-brand); outline-off
     background: currentColor;
     animation: dash-glow 1.6s ease-in-out infinite;
 }
-.is-onscreen .dash-live i::after { animation: dash-ping 2s ease-out infinite; }
 .is-onscreen .dash-seg.s3::after { animation: dash-glow 2.4s ease-in-out infinite; }
 @keyframes dash-spin { to { transform: rotate(360deg); } }
 @keyframes dash-eq {
@@ -13016,10 +13255,6 @@ button.dash-tool:focus-visible { outline: 2px solid var(--pf-brand); outline-off
 @keyframes dash-breathe {
     from { transform: scaleY(0.78); }
     to { transform: scaleY(1); }
-}
-@keyframes dash-ping {
-    0% { opacity: 0.6; transform: scale(1); }
-    100% { opacity: 0; transform: scale(2.8); }
 }
 @keyframes dash-glow {
     0%, 100% { opacity: 0; }

@@ -973,6 +973,7 @@ body.nx-page[data-page="profile"] .nx .rail {
 /* Experience timeline on profile */
 .exp-modern { display: flex; flex-direction: column; gap: 0; margin-top: 16px; }
 .exp-item-modern { display: flex; gap: 24px; position: relative; text-align: left; }
+#experience, #tools, .exp-item-modern[id] { scroll-margin-top: 110px; }   /* links from the dashboard land clear of the top bar */
 .exp-timeline { display: flex; flex-direction: column; align-items: center; width: 48px; flex-shrink: 0; }
 .exp-logo-box { width: 48px; height: 48px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; position: relative; z-index: 2; }
 .status-dot { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; background: var(--brand); border: 2px solid var(--bg); border-radius: 50%; }
@@ -2646,7 +2647,6 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   border-color: #2563eb !important;
 }
 /* ===== Profile hero: name, role, status, two actions, one row of tools ===== */
-.nx .nx-hero .pill-status { margin-top: 14px; }
 .nx .nx-hero .facts { margin-top: 12px; font-size: 15px; }
 .nx .nx-hero .stack-rows { margin: 22px auto 0; max-width: 680px; }
 .nx .nx-hero .stack-row { margin: 0; justify-content: center; gap: 8px; }
@@ -4100,7 +4100,7 @@ def experience_html():
         stat_html = ""
         if stats:
             stat_html = '<div class="exp-stats">' + "".join(stat_card(*st) for st in stats) + "</div>"
-        items += (f'<article class="exp-item-modern">'
+        items += (f'<article class="exp-item-modern" id="{job_anchor(comp)}">'
                   f'<div class="exp-timeline">'
                   f'<div class="exp-logo-box">{company_mark(comp)}{now_dot}</div>'
                   f'<div class="exp-line"></div>'
@@ -4228,7 +4228,6 @@ def profile():
 <img class="avatar" src="../uploads/mehedi-avatar.jpg?v=1" alt="{NAME}" width="320" height="320" fetchpriority="high">
 <h1 class="nx-name">{NAME} <span class="verified-badge" title="Verified Profile" role="img" aria-label="Verified">{ico("badge","verified")}</span></h1>
 <p class="tagline">{TAGLINE}</p>
-<a class="pill-status" href="../contact/"><span class="dot"></span>Open to freelance &amp; full-time</a>
 <ul class="facts">
 <li>{ico("case")} {ROLE_NOW} &middot; 4+ yrs</li>
 <li>{ico("pin")} Dhaka <span class="t">&middot; <span data-time></span></span></li>
@@ -4249,10 +4248,10 @@ def profile():
   </button>
 </div>
 {profile_meta_widgets()}
-<h2 class="sec-title" style="margin-top:44px">{ico("case")} Experience</h2>
+<h2 class="sec-title" id="experience" style="margin-top:44px">{ico("case")} Experience</h2>
 <p class="exp-summary">{exp_summary}</p>
 <div class="exp-modern">{jobs}</div>
-<h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-code"></i> Skills</h2>
+<h2 class="sec-title" id="tools" style="margin-top:44px"><i class="fa-solid fa-code"></i> Tools I use</h2>
 <div class="sk-grid">{skills}</div>
 <h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-graduation-cap"></i> Education</h2>
 <div class="exp">{edu}</div>
@@ -4485,6 +4484,11 @@ def nl_shelf(c):
             f'<div class="nl-shelf-row">{"".join(nl_video(v) for v in c["videos"])}</div></div>')
 
 
+def job_anchor(company):
+    """The id of a job on the profile (exp-jibika-intelligic-ltd), for links from other pages."""
+    return "exp-" + re.sub(r"[^a-z0-9]+", "-", company.lower()).strip("-")[:40]
+
+
 def library():
     c = lib_counts()
     o = LIB["overview"]
@@ -4662,7 +4666,7 @@ def library_focus():
             f'{fa("circle-info")}<span>Credits</span>{fa("chevron-down fx-credits-arr")}</button></div>'
             f'<div class="fx-credits-body" id="fx-credits-body" hidden></div></div>'
             f'<div class="fx-dock" id="fx-dock"></div>'
-            f'</div>{LIB_JS}<script src="../focus/focus-page.js?v=35" defer></script>')
+            f'</div>{LIB_JS}<script src="../focus/focus-page.js?v=36" defer></script>')
     html_out = page("library/focus", "Focus · Library", "Ambient sounds, Quran radio and a focus timer that keep playing while you browse.",
                     "Library", body, "library", show_rail=False)
     return two_deep(html_out)
@@ -4976,7 +4980,7 @@ DASH_AREA = {"Core stack": "Core", "AI & agents": "AI", "AI-assisted development
              "Data & streaming": "Data", "Infra & observability": "Infra"}
 # the dashboard's script: reveals and counts once in view, runs the loops only while seen, and the projects,
 # stack, career and library interactions
-DASH_JS = '<script src="./dash.js?v=18" defer></script>'
+DASH_JS = '<script src="./dash.js?v=24" defer></script>'
 
 
 def home_dashboard():
@@ -5004,16 +5008,24 @@ def home_dashboard():
     live = sum(has_site(p[5]) for p in PROJECTS)
     tools = sum(len(core) + len(also) for _, _, core, also in SKILLS)
     bullets = " ".join(pt for j in JOBS for pt in j[5])
-    kpis = [(duration_label(first, now), "of experience"), (str(len(PROJECTS)), f"projects, {live} live")]
+    # each figure links to where it comes from: the experience, the projects, the job a figure is quoted from, the stack
+    def job_with(pattern):
+        for j in JOBS:
+            if re.search(pattern, " ".join(j[5])):
+                return f"./profile/#{job_anchor(j[1])}"
+        return "./profile/#experience"
+    kpis = [(duration_label(first, now), "of experience", "./profile/#experience"),
+            (str(len(PROJECTS)), f"projects, {live} live", "./projects/")]
     m = re.search(r"(\d[\d,]*\+) companies", bullets)
     if m:
-        kpis.append((m.group(1), "companies on Jibika Plexus"))
+        kpis.append((m.group(1), "companies on Jibika Plexus", job_with(re.escape(m.group(1)) + r" companies")))
     m = re.search(r"(~\d+%)", bullets)
     if m:
-        kpis.append((m.group(1), "less manual work with LLMs"))
-    kpis.append((str(tools), "tools in the stack"))
+        kpis.append((m.group(1), "less manual work with LLMs", job_with(re.escape(m.group(1)))))
+    kpis.append((str(tools), "tools in the stack", "./profile/#tools"))
     kpi_tile = ('<div class="dash-tile dash-kpis">' + "".join(
-        f'<div class="dash-kpi"><b>{e(v)}</b><span>{e(lbl)}</span></div>' for v, lbl in kpis) + '</div>')
+        f'<a class="dash-kpi" href="{href}"><b>{e(v)}</b><span>{e(lbl)}</span>'
+        f'<i class="fa-solid fa-arrow-right dash-kpi-go" aria-hidden="true"></i></a>' for v, lbl, href in kpis) + '</div>')
 
     # projects: live share as a ring, kinds as bars, and the first three
     circ = 2 * math.pi * 44
@@ -5119,7 +5131,7 @@ def home_dashboard():
     stack = (f'<article class="dash-tile dash-stack">{head(ico("badge"), "Stack", f"{tools} tools")}{radar}'
              f'<div class="dash-areas" role="group" aria-label="Areas of the stack">{area_btns}</div><div class="dash-area-panels">{panels}</div>'
              f'<p class="dash-ask-hint"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>Tap a tool to ask my AI how I use it</p>'
-             f'{more("./profile/", "See every tool")}</article>')
+             f'{more("./profile/#tools", "See every tool")}</article>')
 
     # people: faces in orbit around the count
     shown = PEOPLE[:8]
@@ -5152,7 +5164,14 @@ def home_dashboard():
               f'<button type="button" data-yt="prev" aria-label="Previous track"><i class="fa-solid fa-backward-step"></i></button>'
               f'<button type="button" data-yt="toggle" class="is-main" aria-label="Play"><i class="fa-solid fa-play"></i></button>'
               f'<button type="button" data-yt="next" aria-label="Next track"><i class="fa-solid fa-forward-step"></i></button>'
-              f'</span></div></div>')
+              f'</span></div>'
+              # while the video is in the tile: its controls, floating up under it when the pointer is on the card
+              f'<div class="dash-yt-hud"><div class="dash-yt-hud-in"><span class="dash-yt-ctrl">'
+              f'<button type="button" data-yt="prev" aria-label="Previous track"><i class="fa-solid fa-backward-step"></i></button>'
+              f'<button type="button" data-yt="toggle" class="is-main" aria-label="Pause"><i class="fa-solid fa-pause"></i></button>'
+              f'<button type="button" data-yt="next" aria-label="Next track"><i class="fa-solid fa-forward-step"></i></button></span>'
+              f'<span class="dash-yt-vol"><button type="button" data-yt="mute" aria-label="Mute" aria-pressed="false"><i class="fa-solid fa-volume-high"></i></button>'
+              f'<input type="range" min="0" max="100" step="1" value="100" data-yt-vol aria-label="Volume"></span></div></div></div>')
     library = (f'<article class="dash-tile dash-library">{head(ico("library"), "Library", f"{whole} items")}'
                f'<p class="dash-text">AI skills, bookmarks, and what I watch and listen to.</p>'
                f'<div class="dash-split" aria-hidden="true">{split}</div><ul class="dash-shelves">{shelves}</ul>'
@@ -5169,6 +5188,9 @@ def home_dashboard():
              f'<svg class="dash-wave" viewBox="0 0 212 60" aria-hidden="true">{wave}</svg>'
              f'<span class="dash-fp-info"><b data-fp-title>Focus</b><span data-fp-sub>Ambient sounds and Quran radio</span></span></div>'
              f'<div class="dash-fp" data-fp hidden><div class="dash-fp-ctrl">'
+             # the visualizer: Milkdrop visuals in the stage above, to the sound (dash.js)
+             f'<button type="button" data-fp-act="visual" aria-pressed="false" aria-label="Visualizer" title="Visualizer">'
+             f'<i class="fa-solid fa-wand-magic-sparkles"></i></button>'
              f'<button type="button" data-fp-act="prev" aria-label="Previous mix"><i class="fa-solid fa-backward-step"></i></button>'
              f'<button type="button" data-fp-act="toggle" class="is-main" aria-label="Play"><i class="fa-solid fa-play"></i></button>'
              f'<button type="button" data-fp-act="next" aria-label="Next mix"><i class="fa-solid fa-forward-step"></i></button>'
@@ -5188,17 +5210,22 @@ def home_dashboard():
              f'<a class="dash-btn" href="./library/focus/" data-fp-open>{nl_icon("play", 14)}<span>Start a focus session</span></a></article>')
 
     contact = (f'<article class="dash-tile dash-contact" id="contact"><div class="dash-contact-text">'
-               f'<span class="dash-status"><i></i>Open to freelance &amp; full-time</span>'
                f'<h3>Have an ERP, HR or AI project in mind?</h3>'
                f'<p class="dash-text">Tell me what you need. I work from Dhaka (GMT+6), remote-first.</p></div>'
-               f'<div class="dash-actions"><a class="dash-btn" href="{WA}" target="_blank" rel="noopener noreferrer">'
+               f'<div class="dash-reach"><div class="dash-actions"><a class="dash-btn" href="{WA}" target="_blank" rel="noopener noreferrer">'
                f'<i class="fa-brands fa-whatsapp"></i>Message on WhatsApp</a>'
-               f'<a class="dash-btn is-ghost" href="mailto:{MAIL}"><i class="fa-solid fa-envelope"></i>Email me</a>'
-               f'<a class="dash-btn is-ghost" href="./contact/">Contact form</a></div></article>')
+               # the chat's project discussion: the AI weighs the brief against his real work (dash.js; the contact page without it)
+               f'<a class="dash-btn is-ghost" href="./contact/" data-ai-discuss><i class="fa-solid fa-wand-magic-sparkles"></i>Discuss with my AI</a>'
+               f'<a class="dash-btn is-ghost" href="mailto:{MAIL}"><i class="fa-solid fa-envelope"></i>Email me</a></div>'
+               f'<a class="dash-alt" href="./contact/">or use the contact form <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div></article>')
 
     return (f'\n    <section id="overview" class="dash-section">'
             f'<div class="dash-top"><div class="section-title pf-title"><h2>{ico("home")}At a glance</h2></div>'
-            f'<p class="dash-live"><i></i>Available for work &middot; Dhaka <time data-dash-clock>GMT+6</time></p></div>'
+            # Dhaka's time, and how far it is from the visitor's (dash.js); it leads to the contact band, which says he is
+            # available
+            f'<a class="dash-live" href="#contact" title="The time in Dhaka. Get in touch">'
+            f'<i class="fa-solid fa-clock" aria-hidden="true"></i><span>Dhaka <time data-dash-clock>GMT+6</time></span>'
+            f'<span class="dash-tz" data-dash-diff hidden></span><i class="fa-solid fa-arrow-right dash-live-go" aria-hidden="true"></i></a></div>'
             f'<div class="dash-grid">{kpi_tile}{projects}{career}{stack}{people}{library}{focus}{contact}</div>'
             f'{DASH_JS}</section>\n')
 
