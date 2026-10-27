@@ -12671,10 +12671,13 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
 .dash-yt-screen {
     width: 100%;
     aspect-ratio: 16 / 9;            /* the tile's width at 16:9, with no black bands (the owner's choice over YouTube's 200px) */
-    border-radius: 14px 14px 0 0;   /* the card's corners, so the dock's video in it has them too */
+    border-radius: 14px;             /* the card's corners, so the dock's video in it has them too */
     background: #000000;
 }
 .dash-yt-screen[hidden] { display: none; }
+/* while the video shows, the player is the video alone (YouTube's own controls work it); the track row with its play
+   button returns once it closes */
+.dash-yt-screen:not([hidden]) + .dash-yt-bar { display: none; }
 .dash-yt-screen iframe {
     display: block;
     width: 100%;
