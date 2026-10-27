@@ -2216,7 +2216,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         + `<span class="chat-src-list" hidden>${srcs.map((p) => `<a href="${siteRoot() + p.replace(/^\//, '')}">${SITE_PAGES[p]}</a>`).join('')}</span></span>` : '');
                 last.appendChild(row);
             }
-            return [...new Set(tags.filter((t) => t[0] === 'next').map((t) => t[1]))].filter((q) => q.length > 3).slice(0, 2);
+            // one tag per question; some models put two in one tag, split by ";", "|" or ", What…"
+            return [...new Set(tags.filter((t) => t[0] === 'next').flatMap((t) => t[1].split(/\s*[;|]\s*|,\s+(?=[A-Z])/)).map((q) => q.trim()))]
+                .filter((q) => q.length > 3).slice(0, 2);
         }
         chatBody.addEventListener('click', (e) => {
             const b = e.target.closest('.chat-src-btn');
