@@ -231,29 +231,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.telemetry-card').forEach(el => telObserver.observe(el));
 
     /* ==========================================
-       3. CUSTOM TRAILING CURSOR
+       3. CURSOR FOLLOWER
     ========================================== */
-    const cursorDot = document.querySelector('.cursor-dot');
+    // The system cursor stays. On mouse devices a soft ring trails it: one animation-frame loop that stops once the ring
+    // has caught up. It grows around anything clickable, tightens while the button is down and steps aside over text
+    // fields; the checks are delegated, so links and buttons added later count too.
     const cursorOutline = document.querySelector('.cursor-outline');
-
-    if (cursorDot && cursorOutline) {
-        let rafPending = false;
-        window.addEventListener('mousemove', (e) => {
-            if (rafPending) return;
-            rafPending = true;
-            requestAnimationFrame(() => {
-                cursorDot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-                cursorOutline.animate({
-                    transform: `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
-                }, { duration: 400, fill: "forwards" });
-                rafPending = false;
-            });
-        });
-
-        document.querySelectorAll('a, button, input, textarea, select, .chat-header, .file, .mine-tile, .pos-item, .control-btn, .ai-dropzone, .filter-btn, .cli-header, .mines-header, .draggable-header, .mon-title').forEach(el => {
-            el.addEventListener('mouseenter', () => cursorOutline.classList.add('cursor-hover'));
-            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('cursor-hover'));
-        });
+    if (cursorOutline && matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const CLICKABLE = 'a[href], button, [role="button"], select, label, summary, .hover-sound';
+        const TEXT = 'input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]), textarea, [contenteditable="true"]';
+        let x = -100, y = -100, rx = x, ry = y, raf = 0;
+        const follow = () => {
+            rx += (x - rx) * 0.28;
+            ry += (y - ry) * 0.28;
+            cursorOutline.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+            raf = Math.abs(x - rx) + Math.abs(y - ry) > 0.2 ? requestAnimationFrame(follow) : 0;
+        };
+        window.addEventListener('pointermove', (e) => {
+            if (e.pointerType !== 'mouse') return;
+            x = e.clientX;
+            y = e.clientY;
+            if (!cursorOutline.classList.contains('is-on')) { rx = x; ry = y; cursorOutline.classList.add('is-on'); }
+            if (!raf) raf = requestAnimationFrame(follow);
+        }, { passive: true });
+        document.addEventListener('pointerover', (e) => {
+            const t = e.target instanceof Element ? e.target : null;
+            const text = !!(t && t.closest(TEXT));
+            cursorOutline.classList.toggle('is-text', text);
+            cursorOutline.classList.toggle('cursor-hover', !text && !!(t && t.closest(CLICKABLE)));
+        }, { passive: true });
+        window.addEventListener('pointerdown', () => cursorOutline.classList.add('is-down'), { passive: true });
+        window.addEventListener('pointerup', () => cursorOutline.classList.remove('is-down'), { passive: true });
+        document.documentElement.addEventListener('pointerleave', () => cursorOutline.classList.remove('is-on'));
+        window.addEventListener('blur', () => cursorOutline.classList.remove('is-on'));
     }
 
     /* ==========================================

@@ -1709,6 +1709,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-player { padding: 8px; border-radius: 28px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
   box-shadow: 0 24px 50px -32px color-mix(in srgb, var(--brand) 60%, transparent); }
 .nl-screen, .nl-ep-screen { position: relative; overflow: hidden; border-radius: 22px; background: #000; aspect-ratio: 16 / 9; }
+.nl-screen { width: 100%; min-height: 200px; }   /* YouTube's smallest player, on a phone too; the set width keeps the box from widening */
 .nl-screen-thumb, .nl-ep-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .nl-page .nl-play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 68px; height: 68px; border-radius: 50%; border: 0; cursor: pointer;
   display: grid; place-items: center; color: #fff !important; background: #ef233c !important; box-shadow: 0 10px 30px rgba(239, 35, 60, 0.45); transition: transform 0.2s ease; padding: 0; }
@@ -1727,6 +1728,8 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-eq i { width: 2px; background: var(--brand); animation: nl-eq 0.9s ease-in-out infinite; }
 .nl-eq i:nth-child(2) { animation-delay: 0.2s; } .nl-eq i:nth-child(3) { animation-delay: 0.4s; } .nl-eq i:nth-child(4) { animation-delay: 0.1s; }
 .nl-player.is-playing .nl-eq { display: inline-flex; }
+/* the track plays in the site's dock (TubeDock in focus/focus.js), which sits in this screen while the page is in view */
+.nl-player.is-docked.is-dock-playing .nl-eq { display: inline-flex; }
 @keyframes nl-eq { 0%, 100% { height: 3px; } 50% { height: 10px; } }
 .nl-player-title { font-size: 16.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nl-player-sub { display: flex; gap: 10px; font-size: 13.5px; color: var(--ink-3); }
@@ -3529,6 +3532,10 @@ html.fx-orb-away body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { opaci
 .nx .fx-search:focus-within { box-shadow: inset 0 0 0 2px var(--brand); }
 .nx .fx-search input { flex: 1; min-width: 0; height: 40px; border: 0; outline: 0; font: inherit; font-size: 14px; color: var(--ink); background: transparent; }
 .nx .fx-tools .fx-search { flex-shrink: 0; width: 210px; }
+/* the add-a-stream row: the link field takes the width, the Play button sits beside it */
+.nx .fx-paste { display: flex; align-items: center; gap: 10px; }
+.nx .fx-paste .fx-search { flex: 1; min-width: 0; }
+.nx .fx-paste .fx-btn { flex-shrink: 0; height: 40px; }
 .nx .fx-groups { display: flex; flex-direction: column; gap: 28px; margin-top: 18px; }
 .nx .fx-group { scroll-margin-top: 96px; }
 .nx .fx-group h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 15px; font-weight: 700; color: var(--ink); }

@@ -573,13 +573,17 @@
     const clock = (ms) => { const s = Math.ceil(ms / 1000); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
 
     const busy = () => playing || radioOn || T.running;
+    /* other players on the site (the YouTube dock below) keep pages loading in the frame while they play, without
+       showing this player's bar: alive() decides the frame, busy() the bar */
+    const keepers = new Set();
+    const alive = () => busy() || keepers.size > 0;
     const resumable = () => st.active && (Object.keys(st.mix).length > 0 || !!st.radio) && Date.now() - (st.at || 0) < 6 * 3600000;
 
     /* ---- the mini player, on every page while a session is on ---- */
     let pill = null, cssDone = false;
     function css() {
         if (cssDone) return; cssDone = true;
-        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=7', BASE).href;
+        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=8', BASE).href;
         document.head.appendChild(l);
     }
     /* the same player as the Focus page's bar: the photo, the name (it opens the mix: each layer's volume and ✕), the volume,
@@ -621,7 +625,7 @@
         const url = FOCUS_URL + (view ? '#view' : '');
         if (frame && IS_FOCUS) { closeShell(true); if (view) dispatchEvent(new Event('fp-view')); }
         else if (frame) frame.contentWindow.location.href = url;
-        else if (busy()) openShell(url, true);
+        else if (alive()) openShell(url, true);
         else location.href = url;
     }
     function subline() {
@@ -760,12 +764,19 @@
         render();
     }
     const wired = new WeakSet();
+    /* a link to the page under the frame shows that page again, at the section it names */
+    function backToHost(u, push) {
+        closeShell(push);
+        if (!push) history.replaceState(null, '', hostUrl);
+        const el = u.hash && document.getElementById(decodeURIComponent(u.hash.slice(1)));
+        if (el) el.scrollIntoView();
+    }
     function framed() {                       /* runs as soon as the framed page's own focus.js attaches, and again on load */
         if (!frame) return;
         let w, href;
         try { w = frame.contentWindow; href = w.location.href; } catch (e) { return; }
         if (href === 'about:blank') return;
-        if (IS_FOCUS && new URL(href).pathname === new URL(hostUrl).pathname) { closeShell(false); history.replaceState(null, '', hostUrl); return; }
+        if (new URL(href).pathname === new URL(hostUrl).pathname) { backToHost(new URL(href), false); return; }
         history.replaceState({ fpShell: 1 }, '', href);
         document.title = w.document.title;
         const onFocus = new URL(href).pathname.replace(/index\.html$/, '') === new URL(FOCUS_URL).pathname;
@@ -779,13 +790,13 @@
             if (!a || e.defaultPrevented) return;
             const u = new URL(a.href, d.baseURI);
             if (/^https?:$/.test(u.protocol) && u.origin !== location.origin && (!a.target || /^_(self|top|parent)$/.test(a.target))) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
-            else if (IS_FOCUS && u.origin === location.origin && u.pathname === new URL(hostUrl).pathname && !(e.metaKey || e.ctrlKey || e.shiftKey)) { e.preventDefault(); closeShell(true); }
+            else if (u.origin === location.origin && u.pathname === new URL(hostUrl).pathname && !(e.metaKey || e.ctrlKey || e.shiftKey)) { e.preventDefault(); backToHost(u, true); }
         });
         d.querySelectorAll('form[action]').forEach((f) => { try { if (new URL(f.action, d.baseURI).origin !== location.origin) f.target = '_top'; } catch (e) {} });
         render();
     }
     addEventListener('click', (e) => {          /* runs last, so links other scripts handle are left alone */
-        if (frame || !busy() || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (frame || !alive() || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         const a = e.target.closest && e.target.closest('a[href]');
         if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
         const u = new URL(a.href, location.href);
@@ -794,7 +805,7 @@
     });
     if (window.navigation && typeof navigation.addEventListener === 'function') {
         navigation.addEventListener('navigate', (e) => {   /* script-driven page changes (cards, the logo) */
-            if (frame || !busy() || !e.cancelable || e.destination.sameDocument || e.navigationType !== 'push' || e.formData || e.downloadRequest) return;
+            if (frame || !alive() || !e.cancelable || e.destination.sameDocument || e.navigationType !== 'push' || e.formData || e.downloadRequest) return;
             const u = new URL(e.destination.url);
             if (!pageLink(u)) return;
             e.preventDefault(); openShell(u.href, true);
@@ -823,7 +834,263 @@
         tap: () => { audio(); if (ctx.state !== 'running') ctx.resume(); return { ctx, node: master }; },     /* for the visualizer */
         startTimer, pauseTimer, resetTimer, setPhase, clock,
         on: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
+        keep: (id, on) => { if (on) keepers.add(id); else keepers.delete(id); },
         attach: (d) => { docs.add(d); if (frame && frame.contentDocument === d) framed(); emit(); }, detach: (d) => { docs.delete(d); }
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', emit); else emit();
+})();
+
+/**
+ * TubeDock: YouTube tracks from Watch & Listen (and the home dashboard) keep playing while the visitor moves around the
+ * site. The video plays in a small dock in the host page, the page that stays loaded while others open in Focus's
+ * frame over it (above); while the dock is open Focus keeps that frame in use, so links open in it. The video stays in
+ * view as YouTube's embed rules ask (no background play), and the controls drive it through the embed's messages
+ * (enablejsapi), so no YouTube script is loaded. Pages in the frame use the host's dock.
+ * A page with its own screen (Watch & Listen's big player) hands it over with slot(): while that page is in view the
+ * video sits in the screen, and it shrinks to the corner when the visitor moves on. It is always the same iframe, so
+ * the track never restarts.
+ */
+(function () {
+    'use strict';
+    if (window.TubeDock) return;
+    try {
+        const t = window.top;
+        if (t !== window && t.TubeDock) { window.TubeDock = t.TubeDock; return; }
+    } catch (e) { /* framed by another site: run on our own */ }
+
+    const YT = 'https://www.youtube-nocookie.com';
+    const MUSIC_URL = new URL('../library/watch-listen/', document.currentScript ? document.currentScript.src : location.href).href;
+    const ICON = {
+        prev: '<i class="fa-solid fa-backward-step"></i>', next: '<i class="fa-solid fa-forward-step"></i>',
+        play: '<i class="fa-solid fa-play"></i>', pause: '<i class="fa-solid fa-pause"></i>',
+        open: '<i class="fa-solid fa-arrow-up-right-from-square"></i>', close: '<i class="fa-solid fa-xmark"></i>'
+    };
+    let tracks = [], index = 0, playing = false, dock = null, video = null;
+    /* the screens pages lend (slots), each watched for moving, hiding (a filter) or showing again; the dock sits in
+       slotEl, the one in view: mode is 'page' when it is in this document, 'over' when it is in the page in Focus's frame */
+    const slots = new Map();
+    let slotEl = null, placed = null, mode = '', tick = 0, radius = '';
+    const listeners = new Set();
+    const emit = () => listeners.forEach((fn) => { try { fn(); } catch (e) { listeners.delete(fn); } });
+    const keep = (on) => { try { window.FocusPlayer.keep('tube', on); } catch (e) {} };
+    const send = (func, args) => { if (video) video.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: args || [] }), YT); };
+
+    function css() {
+        if (document.getElementById('td-css')) return;
+        const s = document.createElement('style');
+        s.id = 'td-css';
+        s.textContent = `
+#tube-dock { position: fixed; right: 16px; bottom: 88px; z-index: 2147483500; width: 360px; box-sizing: border-box; padding: 8px;
+  border-radius: 20px; color: var(--text-primary, #f8fafc); font: 600 13px/1.3 Poppins, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: color-mix(in srgb, var(--bg-color, #0b1120) 90%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary, #f8fafc) 12%, transparent), 0 24px 50px -20px rgba(0, 0, 0, .6);
+  animation: td-in .35s cubic-bezier(.2, .9, .3, 1.2) both; }
+#tube-dock * { box-sizing: border-box; }
+#tube-dock .td-screen { aspect-ratio: 16 / 9; min-height: 200px; overflow: hidden; border-radius: 13px; background: #000; }
+#tube-dock iframe { display: block; width: 100%; height: 100%; border: 0; }
+#tube-dock .td-bar { display: flex; align-items: center; gap: 6px; padding: 8px 2px 0; }
+#tube-dock .td-av { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+#tube-dock .td-text { display: grid; flex: 1; min-width: 0; margin-left: 4px; }
+#tube-dock .td-text :is(em, b, span) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#tube-dock .td-text em { font: 500 10.5px 'Fira Code', monospace; font-style: normal; color: var(--accent-1, #00f2fe); }
+#tube-dock .td-text b { font-size: 13px; }
+#tube-dock .td-text span { font-size: 11.5px; font-weight: 500; color: var(--text-secondary, #94a3b8); }
+#tube-dock :is(button, a) { display: grid; flex-shrink: 0; place-items: center; width: 30px; height: 30px; padding: 0; border: 0;
+  border-radius: 50%; font-size: 12px; color: var(--text-secondary, #94a3b8); text-decoration: none; cursor: pointer;
+  background: color-mix(in srgb, var(--text-primary, #f8fafc) 7%, transparent); }
+#tube-dock :is(button, a):hover { color: var(--accent-1, #00f2fe); }
+#tube-dock :is(button, a):focus-visible { outline: 2px solid var(--accent-1, #00f2fe); outline-offset: 2px; }
+#tube-dock .td-main { width: 36px; height: 36px; font-size: 13px; color: var(--accent-active-color, #0b1120);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 6px 16px -6px var(--accent-glow, rgba(0, 0, 0, .35)); }
+#tube-dock .td-main:hover { color: var(--accent-active-color, #0b1120); filter: brightness(1.06); }
+#tube-dock.td-slot { position: absolute; right: auto; bottom: auto; z-index: 50; padding: 0; overflow: hidden; background: #000;
+  box-shadow: none; animation: none; }
+#tube-dock.td-slot.td-over { position: fixed; z-index: 2147483500; }
+#tube-dock.td-slot .td-screen { height: 100%; min-height: 0; aspect-ratio: auto; border-radius: 0; }
+#tube-dock.td-slot .td-bar { display: none; }
+@keyframes td-in { from { opacity: 0; transform: translateY(16px) scale(.96); } }
+@media (max-width: 767px) { #tube-dock { right: 12px; left: 12px; bottom: 84px; width: auto; } }
+@media (prefers-reduced-motion: reduce) { #tube-dock { animation: none; } }`;
+        document.head.appendChild(s);
+    }
+
+    function build() {
+        css();
+        dock = document.createElement('div');
+        dock.id = 'tube-dock';
+        dock.setAttribute('role', 'region');
+        dock.setAttribute('aria-label', 'Now playing from Watch & Listen');
+        dock.innerHTML = '<div class="td-screen"></div><div class="td-bar"><img class="td-av" alt="" width="34" height="34">' +
+            '<span class="td-text"><em>Now playing</em><b></b><span></span></span>' +
+            '<button type="button" data-td="prev" aria-label="Previous track">' + ICON.prev + '</button>' +
+            '<button type="button" data-td="toggle" class="td-main" aria-label="Pause">' + ICON.pause + '</button>' +
+            '<button type="button" data-td="next" aria-label="Next track">' + ICON.next + '</button>' +
+            '<a data-td="open" href="' + MUSIC_URL + '" aria-label="Open Watch & Listen">' + ICON.open + '</a>' +
+            '<button type="button" data-td="close" aria-label="Close the player">' + ICON.close + '</button></div>';
+        dock.addEventListener('click', (e) => {
+            const b = e.target.closest('[data-td]');
+            if (!b) return;
+            const act = b.dataset.td;
+            if (act === 'open') {
+                // with Focus's frame open, the page opens in it; otherwise Focus opens the frame for the link
+                const shell = document.getElementById('fp-shell');
+                if (shell) { e.preventDefault(); shell.src = MUSIC_URL; }
+                return;
+            }
+            api[act]();
+        });
+        document.body.appendChild(dock);
+        place(true);
+    }
+
+    /* the page whose content is in view: the one open in Focus's frame, or this one */
+    function shown() {
+        const f = document.getElementById('fp-shell');
+        if (!f) return document;
+        try { return f.contentDocument; } catch (e) { return null; }
+    }
+    function lend(el) {
+        if (!el || slots.has(el)) return;
+        const win = el.ownerDocument.defaultView, onScroll = () => fit();
+        const ro = new win.ResizeObserver(() => place());          /* the observer of the screen's own page */
+        ro.observe(el); ro.observe(el.ownerDocument.body);
+        win.addEventListener('scroll', onScroll, { passive: true });
+        slots.set(el, { win, ro, onScroll });
+    }
+    function takeBack(el) {
+        const s = slots.get(el);
+        if (!s) return;
+        s.ro.disconnect();
+        try { s.win.removeEventListener('scroll', s.onScroll); } catch (e) {}
+        slots.delete(el);
+    }
+    /* into the screen of the page in view, when it shows, otherwise the corner */
+    function place(still) {
+        slots.forEach((s, el) => { if (!el.ownerDocument.defaultView) takeBack(el); });     /* its page has closed */
+        const on = !!dock && slots.size > 0;
+        if (on !== !!tick) { clearInterval(tick); tick = on ? setInterval(place, 300) : 0; }   /* catches what no event reports, like a menu opening */
+        if (!dock) return;
+        const d = shown();
+        slotEl = null;
+        slots.forEach((s, el) => { if (!slotEl && el.ownerDocument === d && el.offsetWidth) slotEl = el; });
+        const m = slotEl ? (d === document ? 'page' : 'over') : '';
+        if (m === mode && slotEl === placed) { fit(); return; }
+        const from = dock.getBoundingClientRect();
+        mode = m; placed = slotEl;
+        dock.classList.toggle('td-slot', !!m);
+        dock.classList.toggle('td-over', m === 'over');
+        dock.removeAttribute('style');
+        radius = m ? d.defaultView.getComputedStyle(slotEl).borderRadius : '';
+        fit();
+        if (!still) flip(from);
+        emit();
+    }
+    function fit() {
+        if (!mode || !slotEl || !slotEl.ownerDocument.defaultView) return;
+        const d = slotEl.ownerDocument, r = slotEl.getBoundingClientRect(), s = dock.style;
+        let x = r.left, y = r.top, covered = false;
+        if (mode === 'page') { x += scrollX; y += scrollY; }      /* in this page the dock scrolls with it, on its own */
+        else { const f = document.getElementById('fp-shell').getBoundingClientRect(); x += f.left; y += f.top; }
+        // the page's top bars stay over its content, so the video is cut where it passes under them
+        let cover = 0;
+        d.querySelectorAll('body > nav, .sub-header-bar').forEach((el) => { const b = el.getBoundingClientRect(); if (b.height) cover = Math.max(cover, b.bottom); });
+        const clip = Math.max(0, Math.min(r.height, cover - r.top));
+        if (mode === 'over') {
+            // above the whole frame, the video would cover what the page opens over its screen (a menu, the chat): it steps aside
+            const cy = Math.min((r.top + clip + r.bottom) / 2, d.defaultView.innerHeight - 1);
+            const hit = clip < r.height && cy > 0 ? d.elementFromPoint(r.left + r.width / 2, cy) : null;
+            covered = !!hit && !slotEl.contains(hit);
+        }
+        const set = (k, v) => { if (s[k] !== v) s[k] = v; };
+        set('left', x + 'px'); set('top', y + 'px'); set('width', r.width + 'px'); set('height', r.height + 'px');
+        set('borderRadius', radius);
+        set('clipPath', clip ? 'inset(' + clip + 'px 0 0 0)' : '');
+        set('visibility', covered ? 'hidden' : '');
+    }
+    /* between the screen and the corner the dock glides, so the eye follows the video */
+    function flip(from) {
+        const to = dock.getBoundingClientRect();
+        if (!from.width || !to.width || !dock.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        dock.animate([
+            { transformOrigin: '0 0', transform: 'translate(' + (from.left - to.left) + 'px, ' + (from.top - to.top) + 'px) scale(' + from.width / to.width + ', ' + from.height / to.height + ')' },
+            { transformOrigin: '0 0', transform: 'none' }
+        ], { duration: 360, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+    }
+    new MutationObserver(() => place()).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });   /* the frame opens or closes */
+    addEventListener('resize', () => place());
+
+    function render() {
+        if (!dock) return;
+        const t = tracks[index];
+        dock.querySelector('.td-text em').textContent = playing ? 'Now playing' : 'Paused';
+        dock.querySelector('.td-text b').textContent = t.title || '';
+        dock.querySelector('.td-text span').textContent = t.sub || '';
+        const av = dock.querySelector('.td-av');
+        const src = t.av || 'https://i.ytimg.com/vi/' + t.id + '/mqdefault.jpg';
+        if (av.getAttribute('src') !== src) av.src = src;
+        const toggle = dock.querySelector('[data-td="toggle"]');
+        toggle.innerHTML = playing ? ICON.pause : ICON.play;
+        toggle.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    }
+
+    function load(i) {
+        index = (i + tracks.length) % tracks.length;
+        const t = tracks[index];
+        if (!dock) build();
+        if (!video) {
+            video = document.createElement('iframe');
+            video.title = 'YouTube video player';
+            video.allow = 'autoplay; encrypted-media; picture-in-picture';
+            video.allowFullscreen = true;
+            video.src = YT + '/embed/' + t.id + '?autoplay=1&rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+            // ask the player to report its state, so pausing in the video itself shows here, and an ended track moves on
+            video.addEventListener('load', () => video && video.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'td' }), YT));
+            dock.querySelector('.td-screen').appendChild(video);
+        } else {
+            send('loadVideoById', [t.id]);
+        }
+        playing = true;
+        try { localStorage.setItem('lib:last', JSON.stringify({ id: t.id, title: t.title, sub: t.sub || '', at: Date.now() })); } catch (e) {}
+        keep(true);
+        render();
+        emit();
+    }
+
+    addEventListener('message', (e) => {
+        if (e.origin !== YT || !video || e.source !== video.contentWindow) return;
+        let d;
+        try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+        const ps = d && (d.event === 'onStateChange' ? d.info : d.info && d.info.playerState);
+        if (typeof ps !== 'number') return;
+        if (ps === 0) { api.next(); return; }            /* ended: the next track */
+        if ((ps === 1 || ps === 2) && playing !== (ps === 1)) { playing = ps === 1; render(); emit(); }
+    });
+
+    const api = window.TubeDock = {
+        host: true,
+        state: () => ({ tracks: tracks.slice(), index, track: dock ? tracks[index] : null, playing: !!dock && playing, open: !!dock, slotted: !!mode }),
+        /* list: [{ id, title, sub, av }] with av an absolute URL (the dock may sit in a page at another depth) */
+        play(list, i) {
+            if (list && list.length) tracks = list.map((x) => ({ id: String(x.id), title: x.title || '', sub: x.sub || '', av: x.av || '' }));
+            if (tracks.length) load(i || 0);
+        },
+        toggle() { if (!dock) return; send(playing ? 'pauseVideo' : 'playVideo'); playing = !playing; render(); emit(); },
+        next() { if (dock) load(index + 1); },
+        prev() { if (dock) load(index - 1); },
+        /* el: a page's own screen for the video; that page lets it go with unslot() when it closes */
+        slot(el) { lend(el); place(); },
+        unslot(el) { takeBack(el); place(); },
+        close() {
+            if (!dock) return;
+            mode = ''; placed = null;
+            dock.remove();
+            dock = video = null;
+            place();
+            playing = false;
+            keep(false);
+            emit();
+        },
+        on: (fn) => { listeners.add(fn); return () => listeners.delete(fn); }
+    };
 })();

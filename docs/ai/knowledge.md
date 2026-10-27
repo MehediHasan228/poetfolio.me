@@ -1,142 +1,62 @@
 Knowledge base for Mehedi Hasan's portfolio (https://mehedi.pro.bd). Generated from the site; each section names its page.
 
 # Home (/)
-## System Architecture
-### Autonomous AI & Agents
-Agentic SOTA
-Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.
-MCP LangGraph RAG Multi-Agent Systems OpenAI Claude Gemini Ollama
-### Distributed Backend
-Sub-15ms p99
-Clean-architecture NestJS microservices with PostgreSQL connection pools, distributed Redis locks & type-safe domain boundaries.
-NestJS PostgreSQL Redis TypeScript
-### Event Streaming
-Zero-Loss
-High-throughput asynchronous message bus via Apache Kafka, RabbitMQ enterprise queues & real-time Redis Pub/Sub.
-Kafka RabbitMQ Redis Pub/Sub
-### Cloud & Observability
-HA Cluster
-Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards & centralized ELK logging.
-Docker Kubernetes AWS Prometheus Grafana ELK
-#### AI Models
-Foundation SOTA
-Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.
-OpenAI Claude Gemini Qwen Llama Mistral DeepSeek
-#### AI Agents
-Autonomous Actors
-Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.
-Hermes agent OpenClaw Claude Code Codex Gemini CLI OpenCode Goose Aider
-#### AI IDE
-Next-Gen Editors
-Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.
-Cursor Windsurf GitHub Copilot Kiro Antigravity
-#### Agent Framework
-Multi-Agent Swarm
-Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.
-LangGraph LangChain CrewAI AutoGen PydanticAI
-#### Protocol / Tools
-Open Protocols
-Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.
-MCP A2A Function Calling Tool Use
-#### Local AI
-Edge & Private
-Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.
-Ollama LM Studio llama.cpp vLLM
-#### Automation
-Event Pipeline
-Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.
-n8n Zapier Make
-High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.
-#### RAG / Vector
-Dense Retrieval
-High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.
-Pinecone Chroma Qdrant Weaviate
-#### AI Database
-Storage & Vectors
-ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.
-PostgreSQL pgvector Supabase MongoDB
-#### Web AI
-Streaming Edge UI
-Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.
-Vercel AI SDK AI SDK OpenAI SDK
-#### Frontend
-Reactive Interface
-Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.
-React Next.js TypeScript Tailwind
-#### Backend
-Distributed Primitives
-Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.
-Node.js NestJS Express Python FastAPI
-#### Cloud
-Hyperscale Edge
-Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.
-Vercel AWS Google Cloud Cloudflare
-#### DevOps
-Containers & CD
-Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.
-Docker GitHub Actions Kubernetes
-#### Observability
-Tracing & Metrics
-End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.
-Prometheus Grafana ELK LangSmith Langfuse OpenTelemetry
-#### AI UI / Design
-Generative Scaffolding
-Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.
-v0 Lovable Bolt Google Stitch
-## Technical Arsenal
-mehedi_workspace - VS Code
-order_service.nest.ts
-EXPLORER
-main*
-TypeScript
-## Production Deployments
-Live Demo Access on request
-OPEN LIVE DEMO
-### SAWAB NGO ERP
-Live Demo 10 Modules
-Multi-organisation ERP & HRM for SAWAB and SAWAB Foundation: HR, ZKTeco attendance, payroll, NGOAB grants, micro-investment, accounts and procurement.
-Frappe / ERPNext Next.js 15 MariaDB Redis Docker
-Live Deployment GitHub Live
-VIEW REPOSITORY
-### Karbar ERP — BD Business Suite
-Production Suite Live Demo Code
-Complete business management ERP for Bangladesh: Accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), localized BD Payroll with TDS & tax slabs, Inventory, Sales, Purchases, and Project tracking with full Bangla interface.
-Laravel Filament 5 NBR Mushak BD Payroll Docker MySQL/PG
-sawabbd.org SSL Secure
-LAUNCH LIVE
-### SAWAB Bangladesh Platform
-Live Production
-High-performance production NGO portal for Education, Healthcare, WASH & Humanitarian Aid with donation pipelines and localized bilingual architecture.
-Node.js 22 PostgreSQL Docker ESBuild REST
-sawabfoundation.org.bd SSL Secure
-### SAWAB Foundation Portal
-Digital charity and zakat ecosystem for SAWAB Foundation, featuring automated zakat calculators, relief trackers, and instant donation integration.
-React 18 TypeScript Tailwind CSS Framer
-Next.js 14 • Studio GitHub Live
-### AI Video Making Engine
-Completed System 9:16 Virality AI
-Autonomous pipeline converting long-form podcasts/videos into high-impact 9:16 vertical shorts with Whisper STT, Bengali NLP, virality scoring & Next.js studio.
-FastAPI Next.js 14 Whisper FFmpeg LLM Scorer
-retune.so SSL Live
-LAUNCH CHAT
-### AI Chat Web App
-Live Web App
-Conversational AI web interface developed with React, NestJS, and WebSockets with streaming LLM completions and low latency message pipelines.
-React.js NestJS WebSockets LLM Stream
-Internal HRMS Microservices
-VIEW SYSTEM
-### HR & Payroll System
-In Development
-Web-based platform managing employee master records, payroll processing, tax deductions, attendance tracking, and compliance reporting.
-NestJS PostgreSQL RabbitMQ Docker
-Savora Hostel AI GitHub Live
-LAUNCH PLATFORM
-### AI Hostel Management
-Live Deployment GitHub
-AI-powered hostel mess and meal management platform featuring intelligent meal planning, pantry inventory tracking, automated recipe suggestions, and grocery optimization.
-React 19 Vite AI Rules Capacitor Firebase
-## Work With Me
-Pick what you need (optional), tell me a little about it, and I'll reply by email.
+## At a glance
+Available for work · Dhaka GMT+6
+4 yrs 3 mos of experience
+10 projects, 6 live
+300+ companies on Jibika Plexus
+~50% less manual work with LLMs
+46 tools in the stack
+### Projects
+by status and kind
+6 /10live
+- SAWAB NGO ERP Live demo ERP · Non-profit
+- Karbar ERP On GitHub ERP
+- SAWAB Bangladesh Platform Live Web · Non-profit
+- SAWAB Foundation Portal Live Web · Non-profit
+- AI Video Making Engine On GitHub AI
+- AI Chat Web App On GitHub AI · Web
+- HR & Payroll System On GitHub ERP
+- Savora: AI Hostel Management Live AI · Web
+- Tafseerul Quran Foundation Volunteer Web · Non-profit
+- HBIZZ Corporate Website Live Web
+See all 10 projects
+1 / 10
+### Career
+4 yrs 3 mos
+- SAWAB Software Developer 4 mos Now
+- Jibika Software Developer & AI Specialist 1 yr 6 mos
+- Smart Software ERP Developer 1 yr
+- HBIZZ Documentation & IT Executive 1 yr 5 mos
+- TQF Voluntary Web Developer 2 yrs 10 mos Now
+View profile
+### Stack
+46 tools
+LLM features, multi-agent workflows and RAG
+OpenAI Claude Gemini LangGraph MCP +9 more
+See every tool
+### People
+11people
+Builders and teachers I learn from, from Laravel to LangGraph.
+See all 11 people
+### Library
+100 items
+AI skills, bookmarks, and what I watch and listen to.
+- AI Skills 11
+- Bookmarks 44
+- Watch & Listen 45
+Up next Surah Ar-Rahman Omar Hisham Al Arabi
+Open the library
+### Focus
+Ready to play
+Focus Ambient sounds and Quran radio
+Ambient sounds, Quran radio and a focus timer that keep playing while you browse.
+Start a focus session
+Open to freelance & full-time
+### Have an ERP, HR or AI project in mind?
+Tell me what you need. I work from Dhaka (GMT+6), remote-first.
+Message on WhatsApp Email me Contact form
 
 # Profile: experience, education, skills (/profile/)
 ## Mehedi Hasan

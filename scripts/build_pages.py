@@ -153,8 +153,12 @@ def main() -> None:
 
     # ---- home: unchanged full page, only the top nav is swapped ----
     home = swap_nav(src, "./")
-    # the sandbox has its own page; the home page links to it instead of repeating it
-    home = re.sub(r'\s*<section id="archives".*?</section>', '', home, count=1, flags=re.S)
+    # the home page is a dashboard: under the hero, one tile per page in place of the pages' full sections
+    # (architecture, stack and sandbox still take theirs from this source; the others are built by build_nx_pages)
+    import build_nx_pages
+    for sid in ("about", "skills", "projects", "archives", "contact"):
+        home = re.sub(rf'\s*<section id="{sid}".*?</section>', '', home, count=1, flags=re.S)
+    home = home.replace("</header>", "</header>\n" + build_nx_pages.home_dashboard(), 1)
     tail_idx = home.index('<div style="text-align: center; padding-bottom: 2rem;">')
     home = home[:tail_idx] + "</main>\n\n    " + bottom_nav(None, prefix="./") + "\n" + home[tail_idx:]
     # the architecture tags' small logos sit just below the first screen, where Chrome's lazy loading (about 1250 px

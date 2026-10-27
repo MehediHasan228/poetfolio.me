@@ -54,7 +54,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=2">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=260">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=290">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -264,7 +264,7 @@
         <div class="cli-container">
             <div class="cli-header draggable-header">
                 <span>root@mehedi.pro:~</span>
-                <i class="fa-solid fa-xmark hover-sound" id="close-cli" style="cursor:none; color:#ef4444;"></i>
+                <i class="fa-solid fa-xmark hover-sound" id="close-cli" style="cursor:pointer; color:#ef4444;"></i>
             </div>
             <div class="cli-output" id="cli-output">
                 <div>Mehedi.pro OS v2.0.4 loaded.</div>
@@ -291,7 +291,7 @@
         </div>
         <div class="footer-egg" style="margin-top: 25px;">
             <button id="self-destruct-btn" class="hover-sound"
-                style="width: 12px; height: 12px; background: #ef4444; border: none; border-radius: 50%; cursor: none; box-shadow: 0 0 10px #ef4444;"
+                style="width: 12px; height: 12px; background: #ef4444; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px #ef4444;"
                 title="Initiate Self Destruct"></button>
         </div>
     </footer>
@@ -393,9 +393,9 @@
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../focus/focus.js?v=14" defer></script>
+    <script src="../focus/focus.js?v=17" defer></script>
     <script src="../ai-orb-mascot.js?v=18" defer></script>
-    <script src="../script~9e1709.js?v=234" defer></script>
+    <script src="../script~9e1709.js?v=235" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->
@@ -509,7 +509,7 @@
         var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
         var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
         var pages = ['', 'index.html', 'profile/', 'projects/', 'people/', 'contact/', 'library/',
-                     'library/skills/', 'library/bookmarks/', 'library/music/'];
+                     'library/skills/', 'library/bookmarks/', 'library/watch-listen/'];
         var i = 0;
         function next() {
             if (i >= pages.length) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }

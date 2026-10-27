@@ -113,7 +113,7 @@
 /* the page frame covers the page the sound started on; that page keeps playing underneath */
 #fp-shell { position: fixed; inset: 0; z-index: 2147483000; width: 100%; height: 100%; border: 0; background: var(--bg-color, #0b1120); }
 html.fp-shell-on, html.fp-shell-on body { overflow: hidden !important; }
-html.fp-shell-on body > :not(#fp-shell):not(#fp-pill):not(.cursor-dot):not(.cursor-outline) { visibility: hidden !important; }
+html.fp-shell-on body > :not(#fp-shell):not(#fp-pill):not(#tube-dock):not(.cursor-dot):not(.cursor-outline) { visibility: hidden !important; }
 /* the site's round cursor draws above the player; with the frame open, this page's cursor shows only over the player (the frame has its own) */
 html body .cursor-dot, html body .cursor-outline { z-index: 2147483647 !important; }
 html.fp-shell-on:not(.fp-over-pill) body > :is(.cursor-dot, .cursor-outline) { visibility: hidden !important; }

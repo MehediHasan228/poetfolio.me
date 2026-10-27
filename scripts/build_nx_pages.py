@@ -1278,6 +1278,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-player { padding: 8px; border-radius: 28px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
   box-shadow: 0 24px 50px -32px color-mix(in srgb, var(--brand) 60%, transparent); }
 .nl-screen, .nl-ep-screen { position: relative; overflow: hidden; border-radius: 22px; background: #000; aspect-ratio: 16 / 9; }
+.nl-screen { width: 100%; min-height: 200px; }   /* YouTube's smallest player, on a phone too; the set width keeps the box from widening */
 .nl-screen-thumb, .nl-ep-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .nl-page .nl-play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 68px; height: 68px; border-radius: 50%; border: 0; cursor: pointer;
   display: grid; place-items: center; color: #fff !important; background: #ef233c !important; box-shadow: 0 10px 30px rgba(239, 35, 60, 0.45); transition: transform 0.2s ease; padding: 0; }
@@ -1296,6 +1297,8 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-eq i { width: 2px; background: var(--brand); animation: nl-eq 0.9s ease-in-out infinite; }
 .nl-eq i:nth-child(2) { animation-delay: 0.2s; } .nl-eq i:nth-child(3) { animation-delay: 0.4s; } .nl-eq i:nth-child(4) { animation-delay: 0.1s; }
 .nl-player.is-playing .nl-eq { display: inline-flex; }
+/* the track plays in the site's dock (TubeDock in focus/focus.js), which sits in this screen while the page is in view */
+.nl-player.is-docked.is-dock-playing .nl-eq { display: inline-flex; }
 @keyframes nl-eq { 0%, 100% { height: 3px; } 50% { height: 10px; } }
 .nl-player-title { font-size: 16.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nl-player-sub { display: flex; gap: 10px; font-size: 13.5px; color: var(--ink-3); }
@@ -3098,6 +3101,10 @@ html.fx-orb-away body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { opaci
 .nx .fx-search:focus-within { box-shadow: inset 0 0 0 2px var(--brand); }
 .nx .fx-search input { flex: 1; min-width: 0; height: 40px; border: 0; outline: 0; font: inherit; font-size: 14px; color: var(--ink); background: transparent; }
 .nx .fx-tools .fx-search { flex-shrink: 0; width: 210px; }
+/* the add-a-stream row: the link field takes the width, the Play button sits beside it */
+.nx .fx-paste { display: flex; align-items: center; gap: 10px; }
+.nx .fx-paste .fx-search { flex: 1; min-width: 0; }
+.nx .fx-paste .fx-btn { flex-shrink: 0; height: 40px; }
 .nx .fx-groups { display: flex; flex-direction: column; gap: 28px; margin-top: 18px; }
 .nx .fx-group { scroll-margin-top: 96px; }
 .nx .fx-group h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 15px; font-weight: 700; color: var(--ink); }
@@ -4310,6 +4317,13 @@ def projects():
 # Content lives in scripts/library_data.json (copied from nahian.bd/library as a starting point; edit that file, then rebuild).
 LIB = json.loads((Path(__file__).resolve().parent / "library_data.json").read_text(encoding="utf-8"))
 LIB_SUBS = [("skills", "AI Skills"), ("bookmarks", "Bookmarks"), ("music", "Watch & Listen")]
+# a sub-page's address when it differs from its data key; the old addresses redirect (see main)
+LIB_SLUG = {"music": "watch-listen"}
+
+
+def lib_href(key):
+    return LIB_SLUG.get(key, key)
+
 LIB_SUB_ICON = {"skills": LIB["skills"]["icon"], "bookmarks": LIB["bookmarks"]["icon"],
                 "music": LIB["music"]["icon"]}
 NL_UI = {  # small UI glyphs not in the data file
@@ -4354,20 +4368,20 @@ def yt_thumb(vid, q="mqdefault"):
 
 
 def nl_head(key, title, sub, more=None, h="h2"):
-    link = (f'<a class="nl-seeall" href="../library/{key}/">See all {more}{nl_icon("right", 15)}</a>' if more else "")
+    link = (f'<a class="nl-seeall" href="../library/{lib_href(key)}/">See all {more}{nl_icon("right", 15)}</a>' if more else "")
     return (f'<div class="nl-head"><span class="nl-tile">{nl_icon(LIB_SUB_ICON[key], 20)}</span>'
             f'<div class="nl-head-text"><{h}>{e(title)}</{h}><p>{e(sub)}</p></div>{link}</div>')
 
 
 def nl_more(key, label):
-    return f'<a class="nl-more" href="../library/{key}/">{e(label)}{nl_icon("right", 15)}</a>'
+    return f'<a class="nl-more" href="../library/{lib_href(key)}/">{e(label)}{nl_icon("right", 15)}</a>'
 
 
 def nl_tabs(cur):
     c = lib_counts()
     items = [("", "All", "books", sum(c.values()))] + [(k, l, LIB_SUB_ICON[k], c[k]) for k, l in LIB_SUBS] + [("focus", "Focus", "wave", None)]
     lis = "".join(
-        f'<li><a href="../library/{k + "/" if k else ""}"{" class=\"is-active\" aria-current=\"page\"" if k == cur else ""}>'
+        f'<li><a href="../library/{lib_href(k) + "/" if k else ""}"{" class=\"is-active\" aria-current=\"page\"" if k == cur else ""}>'
         f'{nl_icon(ic, 16)}<span>{e(l)}</span>{f"<b>{n}</b>" if n is not None else ""}</a></li>' for k, l, ic, n in items)
     return f'<div class="nl-tabs" role="navigation" aria-label="Library sections"><ul>{lis}</ul></div>'
 
@@ -4412,7 +4426,7 @@ def nl_player(first_index=0):
             f'<div class="nl-screen"><img class="nl-screen-thumb" src="{yt_thumb(t["id"], "hqdefault")}" alt="" fetchpriority="high">'
             f'<button type="button" class="nl-play" data-nl-play aria-label="Play">{nl_icon("play", 30)}</button><div class="nl-frame"></div></div>'
             f'<div class="nl-player-bar"><img class="nl-player-av" src="{t["av"]}" alt="" width="48" height="48">'
-            f'<div class="nl-player-meta"><p class="nl-upnext"><span class="nl-eq"><i></i><i></i><i></i><i></i></span>Up next</p>'
+            f'<div class="nl-player-meta"><p class="nl-upnext"><span class="nl-eq"><i></i><i></i><i></i><i></i></span><span data-nl-label>Up next</span></p>'
             f'<p class="nl-player-title">{e(t["title"])}</p><p class="nl-player-sub"><span>{e(t["sub"])}</span><span lang="ar" dir="rtl">{e(t.get("ar", ""))}</span></p></div>'
             f'<div class="nl-player-ctrl"><button type="button" data-nl-prev aria-label="Previous">{nl_icon("prev", 16)}</button>'
             f'<button type="button" data-nl-next aria-label="Next">{nl_icon("next", 16)}</button></div></div></div>')
@@ -4457,7 +4471,7 @@ def library():
     o = LIB["overview"]
     secs = {s["title"]: s["sub"] for s in o["sections"]}
     stats = "".join(
-        f'<a class="nl-stat" href="../library/{k}/"><span class="nl-stat-ico">{nl_icon(LIB_SUB_ICON[k], 20)}</span><b>{c[k]}</b><span>{e(l)}</span></a>'
+        f'<a class="nl-stat" href="../library/{lib_href(k)}/"><span class="nl-stat-ico">{nl_icon(LIB_SUB_ICON[k], 20)}</span><b>{c[k]}</b><span>{e(l)}</span></a>'
         for k, l in LIB_SUBS)
     stats += (f'<a class="nl-stat nl-stat-focus" href="../library/focus/"><span class="nl-stat-ico">{nl_icon("wave", 20)}</span>'
               f'<b>Focus<i class="fx-live" aria-hidden="true"></i></b><span>Sounds &amp; a timer</span></a>')
@@ -4480,7 +4494,7 @@ def library():
             f'<div class="nl-ch-grid nl-ch-strip">{"".join(nl_channel_card(x) for x in LIB["music"]["featured"])}</div>'
             f'{nl_more("music", "Open Watch & Listen")}</div>'
             f'</div>{LIB_JS}')
-    return page("library", "Library", "AI skills, bookmarks and music I use, love and recommend.",
+    return page("library", "Library", "AI skills, bookmarks, and what I watch and listen to.",
                 "Library", body, "library")
 
 
@@ -4545,7 +4559,7 @@ def library_sub(key):
                    f'<div class="nl-learn-head nl-more-head" data-cat="All-only"><span class="nl-tile">{nl_icon("tabler:headphones", 20)}</span>'
                    f'<div><h3>More channels I follow</h3><p>Grouped by topic. Tap any channel to open it on YouTube.</p></div></div>{groups}')
     body = f'<div class="pad nl-page">{nl_tabs(key)}<div class="nl-section">{head}{content}</div></div>{LIB_JS}'
-    html_out = page(f"library/{key}", f"{title} · Library", d["intro"], "Library", body, "library")
+    html_out = page(f"library/{lib_href(key)}", f"{title} · Library", d["intro"], "Library", body, "library")
     if key == "music":   # the player's YouTube thumbnail is the page's largest paint: open the connection to its host early
         html_out = html_out.replace("</head>", '<link rel="preconnect" href="https://i.ytimg.com">\n</head>', 1)
     return two_deep(html_out)
@@ -4678,10 +4692,46 @@ LIB_JS = """<script>
     document.querySelectorAll("[data-track]").forEach(function (b) { b.classList.toggle("is-current", +b.getAttribute("data-track") === i); });
     if (play) {
       playing = true;
+      if (window.TubeDock) { window.TubeDock.play(dockTracks(), i); return; }   /* plays in this screen, and keeps playing on other pages */
       player.querySelector(".nl-frame").innerHTML = iframe(t.id);
       player.classList.add("is-playing");
+      try { localStorage.setItem("lib:last", JSON.stringify({ id: t.id, title: t.title, sub: t.sub || "", at: Date.now() })); } catch (e) {}
     }
   }
+  /* the dock sits in whichever page stays loaded, so its avatars need full addresses */
+  function dockTracks() {
+    return tracks.map(function (x) { return { id: x.id, title: x.title, sub: x.sub || "", av: x.av ? new URL(x.av, location.href).href : "" }; });
+  }
+  function docked() { return window.TubeDock && window.TubeDock.state().open; }
+  var playSvg = player ? player.querySelector("[data-nl-play]").innerHTML : "";
+  var pauseSvg = '<svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+  /* the dock's video sits in this screen while the page is in view; the big player follows the dock (its track, and
+     whether it plays); then a ?play=<video id> link starts that track */
+  function followDock() {
+    if (!player || !window.TubeDock) return;
+    var dockApi = window.TubeDock, screen = player.querySelector(".nl-screen"), label = player.querySelector("[data-nl-label]");
+    var sync = function () {
+      var st = dockApi.state();
+      var at = st.track ? tracks.findIndex(function (x) { return x.id === st.track.id; }) : -1;
+      var on = st.open && at >= 0;
+      player.classList.toggle("is-docked", on);
+      player.classList.toggle("is-dock-playing", on && st.playing);
+      player.querySelector("[data-nl-play]").innerHTML = on && st.playing ? pauseSvg : playSvg;
+      label.textContent = on ? (st.playing ? "Now playing" : "Paused") : "Up next";
+      if (on && at !== cur) setTrack(at, false);
+      playing = on && st.playing;
+    };
+    var off = dockApi.on(sync);
+    dockApi.slot(screen);
+    sync();
+    /* in Focus's frame the dock outlives this page: it lets go of the screen and stops listening when the page closes */
+    addEventListener("pagehide", function () { dockApi.unslot(screen); off(); });
+    addEventListener("pageshow", function (ev) { if (ev.persisted) { off = dockApi.on(sync); dockApi.slot(screen); sync(); } });
+    var asked = new URLSearchParams(location.search).get("play");
+    var want = asked ? tracks.findIndex(function (x) { return x.id === asked; }) : -1;
+    if (want >= 0) { setTrack(want, true); player.scrollIntoView({ block: "center" }); }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", followDock); else followDock();
   /* horizontal chip rows (tabs + bookmark filters) */
   var rows = document.querySelectorAll(".nl-chips, .nl-tabs ul, .nl-shelf-row, .nl-vids");
   function fade(row) {
@@ -4759,9 +4809,9 @@ LIB_JS = """<script>
     if (vp) { var scr = vp.closest("[data-yt]"); scr.innerHTML = iframe(scr.getAttribute("data-yt")); scr.classList.add("is-playing"); return; }
     var tr = t.closest("[data-track]");
     if (tr) { setTrack(+tr.getAttribute("data-track"), true); return; }
-    if (t.closest("[data-nl-play]")) { setTrack(cur, true); return; }
-    if (t.closest("[data-nl-prev]")) { setTrack((cur - 1 + tracks.length) % tracks.length, playing); return; }
-    if (t.closest("[data-nl-next]")) { setTrack((cur + 1) % tracks.length, playing); return; }
+    if (t.closest("[data-nl-play]")) { if (docked()) window.TubeDock.toggle(); else setTrack(cur, true); return; }
+    if (t.closest("[data-nl-prev]")) { if (docked()) window.TubeDock.prev(); else setTrack((cur - 1 + tracks.length) % tracks.length, playing); return; }
+    if (t.closest("[data-nl-next]")) { if (docked()) window.TubeDock.next(); else setTrack((cur + 1) % tracks.length, playing); return; }
   });
 })();
 </script>"""
@@ -4832,6 +4882,231 @@ def contact():
 CSS_VER = "0"  # set in main() from the stylesheet content, so browsers never reuse a stale copy
 
 
+# ------------------------------------------------------------------ HOME DASHBOARD
+# Under the home page's hero, a mission-control summary of every page: headline figures, then one tile per page whose
+# chart is drawn here from the same data as that page (projects, jobs, skills, people, library), so the home stays in
+# step with the pages it points to. build_pages.py places it; paths are from the site root.
+DASH_SHORT = {"SAWAB Bangladesh": "SAWAB", "Jibika Intelligic Ltd.": "Jibika", "Smart Software Limited": "Smart Software",
+              "HBIZZ Group Company": "HBIZZ", "Tafseerul Quran Foundation (TQF)": "TQF"}
+DASH_AREA = {"Core stack": "Core", "AI & agents": "AI", "AI-assisted development": "AI dev",
+             "Data & streaming": "Data", "Infra & observability": "Infra"}
+# the dashboard's script: reveals and counts once in view, runs the loops only while seen, and the projects,
+# stack, career and library interactions
+DASH_JS = '<script src="./dash.js?v=16" defer></script>'
+
+
+def home_dashboard():
+    import math
+
+    def root(path):  # these pages sit one level down; the home page is at the root
+        return "./" + path[3:] if path.startswith("../") else path
+
+    def head(icon_svg, title, meta=""):
+        meta = f'<span class="dash-meta">{meta}</span>' if meta else ""
+        return f'<div class="dash-head"><span class="dash-ico">{icon_svg}</span><h3>{e(title)}</h3>{meta}</div>'
+
+    def more(href, text):
+        return f'<a class="dash-more" href="{href}">{e(text)}{nl_icon("right", 15)}</a>'
+
+    def has_site(links):
+        return any(k == "link" for k, _ in links)
+
+    def month(ym):
+        return ym[0] * 12 + ym[1] - 1
+
+    # headline figures: experience and projects counted here, the Jibika figures read from its bullets
+    spans = [job_span(j[3]) for j in JOBS]
+    first, now = min(s for s, _ in spans), max(t for _, t in spans)
+    live = sum(has_site(p[5]) for p in PROJECTS)
+    tools = sum(len(core) + len(also) for _, _, core, also in SKILLS)
+    bullets = " ".join(pt for j in JOBS for pt in j[5])
+    kpis = [(duration_label(first, now), "of experience"), (str(len(PROJECTS)), f"projects, {live} live")]
+    m = re.search(r"(\d[\d,]*\+) companies", bullets)
+    if m:
+        kpis.append((m.group(1), "companies on Jibika Plexus"))
+    m = re.search(r"(~\d+%)", bullets)
+    if m:
+        kpis.append((m.group(1), "less manual work with LLMs"))
+    kpis.append((str(tools), "tools in the stack"))
+    kpi_tile = ('<div class="dash-tile dash-kpis">' + "".join(
+        f'<div class="dash-kpi"><b>{e(v)}</b><span>{e(lbl)}</span></div>' for v, lbl in kpis) + '</div>')
+
+    # projects: live share as a ring, kinds as bars, and the first three
+    circ = 2 * math.pi * 44
+    ring = (f'<div class="dash-ring"><svg viewBox="0 0 100 100" aria-hidden="true">'
+            f'<circle class="dash-ring-track" cx="50" cy="50" r="44"/>'
+            f'<circle class="dash-ring-arc" cx="50" cy="50" r="44" style="--arc:{circ * live / len(PROJECTS):.1f};--circ:{circ:.1f}"/>'
+            f'</svg><span><b>{live}<small>/{len(PROJECTS)}</small></b>live</span></div>')
+    kinds = Counter(k for p in PROJECTS for k in WORK_META.get(p[0], ("", None, []))[2])
+    bars = "".join(f'<li><button type="button" class="dash-bar" data-kind="{e(k)}" aria-pressed="false">'
+                   f'<span>{e(k)}</span><i><u style="--w:{n / len(PROJECTS) * 100:.0f}%"></u></i><b>{n}</b></button></li>'
+                   for k, n in kinds.most_common())
+    feats = ""
+    for idx, (title, desc, tags, icon, badge, links, img) in enumerate(PROJECTS):
+        kinds_of = " ".join(WORK_META.get(title, ("", None, []))[2])
+        small = img.replace(".webp", "-640.webp")
+        src = root(small if (DOCS / small[3:]).exists() else img)
+        status = badge or ("Live" if has_site(links) else "On GitHub")
+        feats += (f'<li data-kinds="{e(kinds_of)}"><a href="./projects/" tabindex="-1">'
+                  f'<img src="{src}" alt="" width="320" height="200" loading="lazy" decoding="async">'
+                  f'<span class="dash-glass"><b>{e(title)}</b><span class="dash-pill">{e(status)}</span>'
+                  f'<span class="dash-kinds">{e(" · ".join(WORK_META.get(title, ("", None, []))[2]))}</span></span></a></li>')
+    projects = (f'<article class="dash-tile dash-projects" id="projects">{head(ico("projects"), "Projects", "by status and kind")}'
+                f'<div class="dash-proj-chart">{ring}<ul class="dash-bars" aria-label="Projects by kind: choose one to see them">{bars}</ul></div>'
+                f'<ul class="dash-flow" tabindex="0" aria-roledescription="carousel" aria-label="All projects">{feats}</ul>'
+                f'<div class="dash-proj-foot">{more("./projects/", f"See all {len(PROJECTS)} projects")}'
+                f'<div class="dash-feat-nav"><span class="dash-feat-count" aria-live="polite">1 / {len(PROJECTS)}</span>'
+                f'<button type="button" class="dash-nav is-prev" data-dir="-1" aria-label="Previous projects">{nl_icon("right", 16)}</button>'
+                f'<button type="button" class="dash-nav" data-dir="1" aria-label="Next projects">{nl_icon("right", 16)}</button>'
+                f'</div></div></article>')
+
+    # career: each role on a timeline from the first job to now, full-time on one track and volunteering below
+    start, total = month(first), month(now) + 1 - month(first)
+
+    def seg(period, cls, label):
+        s, t = job_span(period)
+        left = (month(s) - start) / total * 100
+        width = (month(t) + 1 - month(s)) / total * 100
+        return f'<i class="dash-seg {cls}" data-k="{cls}" style="left:{left:.2f}%;width:{width:.2f}%" title="{e(label)}"></i>'
+
+    full = sorted((j for j in JOBS if j[4] == "Full-time"), key=lambda j: job_span(j[3]))
+    track = "".join(seg(j[3], f"s{i}", DASH_SHORT.get(j[1], j[1])) for i, j in enumerate(full))
+    vol = "".join(seg(j[3], "sv", DASH_SHORT.get(j[1], j[1])) for j in JOBS if j[4] == "Volunteer")
+    ticks = "".join(f'<span style="left:{(month((y, 1)) - start) / total * 100:.2f}%">{y}</span>'
+                    for y in range(first[0] + 1, now[0] + 1))
+    legend = ""
+    rows = [(f"s{i}", j) for i, j in enumerate(full)][::-1] + [("sv", j) for j in JOBS if j[4] == "Volunteer"]
+    for cls, (title, comp, place, period, kind, pts, chips) in rows:
+        s, t = job_span(period)
+        now_pill = '<span class="dash-pill">Now</span>' if period.endswith("Present") else ""
+        legend += (f'<li data-k="{cls}"><i class="{cls}"></i><span><b>{e(DASH_SHORT.get(comp, comp))}</b> {e(title)}</span>'
+                   f'<em>{e(duration_label(s, t))}</em>{now_pill}</li>')
+    career = (f'<article class="dash-tile dash-career">{head(ico("profile"), "Career", e(duration_label(first, now)))}'
+              f'<div class="dash-timeline" aria-hidden="true"><div class="dash-track">{track}</div>'
+              f'<div class="dash-track is-vol">{vol}</div><div class="dash-ticks">{ticks}</div></div>'
+              f'<ul class="dash-legend">{legend}</ul>{more("./profile/", "View profile")}</article>')
+
+    # stack: tools per area as a radar
+    areas = [(DASH_AREA.get(g, g), len(c) + len(a)) for g, _, c, a in SKILLS]
+    top, cx, cy, rad = max(n for _, n in areas), 130, 98, 62
+
+    def poly(scale):
+        return " ".join(f"{cx + rad * scale(i) * math.cos(math.radians(-90 + i * 360 / len(areas))):.1f},"
+                        f"{cy + rad * scale(i) * math.sin(math.radians(-90 + i * 360 / len(areas))):.1f}" for i in range(len(areas)))
+    grid = "".join(f'<polygon class="dash-radar-grid" points="{poly(lambda i, k=k: k)}"/>' for k in (1 / 3, 2 / 3, 1))
+    axes, labels = "", ""
+    for i, (name, n) in enumerate(areas):
+        ang = math.radians(-90 + i * 360 / len(areas))
+        axes += f'<line x1="{cx}" y1="{cy}" x2="{cx + rad * math.cos(ang):.1f}" y2="{cy + rad * math.sin(ang):.1f}"/>'
+        anchor = "middle" if abs(math.cos(ang)) < 0.3 else ("start" if math.cos(ang) > 0 else "end")
+        labels += (f'<text x="{cx + (rad + 14) * math.cos(ang):.1f}" y="{cy + (rad + 14) * math.sin(ang):.1f}" '
+                   f'text-anchor="{anchor}">{e(name)} <tspan>{n}</tspan></text>')
+    sweep = (f'<g class="dash-sweep"><path d="M{cx} {cy} L{cx} {cy - rad} A{rad} {rad} 0 0 1 '
+             f'{cx + rad * math.sin(math.radians(40)):.1f} {cy - rad * math.cos(math.radians(40)):.1f} Z"/></g>')
+    spokes = "".join(f'<line class="dash-spoke" data-area="{i}" x1="{cx}" y1="{cy}" '
+                     f'x2="{cx + rad * math.cos(math.radians(-90 + i * 360 / len(areas))):.1f}" '
+                     f'y2="{cy + rad * math.sin(math.radians(-90 + i * 360 / len(areas))):.1f}"/>' for i in range(len(areas)))
+    radar = (f'<svg class="dash-radar" viewBox="0 0 260 196" role="img" aria-label="Tools per area: '
+             + ", ".join(f"{e(nm)} {n}" for nm, n in areas) + f'">{grid}<g class="dash-radar-axes">{axes}</g>{sweep}'
+             f'<polygon class="dash-radar-shape" points="{poly(lambda i: areas[i][1] / top)}"/>{spokes}{labels}</svg>')
+    pick = max(range(len(areas)), key=lambda i: areas[i][1])
+    area_btns = "".join(f'<button type="button" class="dash-area" data-area="{i}" aria-pressed="{str(i == pick).lower()}">'
+                        f'{e(nm)} <b>{n}</b></button>' for i, (nm, n) in enumerate(areas))
+    panels = ""
+    for i, (group, use, core, also) in enumerate(SKILLS):
+        chips = ""
+        for label, slug in core:   # the ones used daily; the rest are counted
+            src = icon_src(slug) if slug else None
+            im = f'<img src="{root(src)}" alt="" width="14" height="14" loading="lazy" decoding="async">' if src else ""
+            chips += f'<span class="dash-tool">{im}{e(label)}</span>'
+        if also:
+            chips += f'<span class="dash-tool is-more" title="{e(", ".join(lbl for lbl, _ in also))}">+{len(also)} more</span>'
+        panels += (f'<div class="dash-area-tools" data-area="{i}"' + ('' if i == pick else ' hidden') + '>'
+                   f'<p>{e(use)}</p>{chips}</div>')
+    stack = (f'<article class="dash-tile dash-stack">{head(ico("badge"), "Stack", f"{tools} tools")}{radar}'
+             f'<div class="dash-areas" role="group" aria-label="Areas of the stack">{area_btns}</div>{panels}'
+             f'{more("./profile/", "See every tool")}</article>')
+
+    # people: faces in orbit around the count
+    shown = PEOPLE[:8]
+    orbit = "".join(f'<span class="dash-sat" style="--a:{i * 360 / len(shown):.0f}deg"><img src="{root(p[0])}" alt="" '
+                    f'width="34" height="34" loading="lazy" decoding="async" title="{e(p[1])}"></span>' for i, p in enumerate(shown))
+    people = (f'<article class="dash-tile dash-people">{head(ico("people"), "People")}'
+              f'<div class="dash-orbit"><div class="dash-orbit-ring">{orbit}</div><span class="dash-orbit-core"><b>{len(PEOPLE)}</b>people</span></div>'
+              f'<p class="dash-text">Builders and teachers I learn from, from Laravel to LangGraph.</p>'
+              f'{more("./people/", f"See all {len(PEOPLE)} people")}</article>')
+
+    # library: the three shelves as one split bar
+    counts = lib_counts()
+    whole = sum(counts.values())
+    split = "".join(f'<i class="l{i}" data-k="l{i}" style="--w:{counts[k] / whole * 100:.1f}%"></i>' for i, (k, _) in enumerate(LIB_SUBS))
+    shelves = "".join(f'<li data-k="l{i}"><a href="./library/{lib_href(k)}/"><i class="l{i}"></i>{e(label)}<b>{counts[k]}</b></a></li>'
+                      for i, (k, label) in enumerate(LIB_SUBS))
+    # a small Watch & Listen player: the track shown is the last one played (dash.js), or the first; play opens the
+    # video in the tile (YouTube asks that it stays visible), and the arrows step through the tracks
+    avatars = {a["slug"]: a["avatar"] for a in LIB["music"]["artists"]}
+    mini = [{"id": x["id"], "title": x["title"], "sub": x.get("sub", ""), "av": root(avatars.get(x.get("by"), ""))}
+            for x in LIB["music"]["tracks"]]
+    first = mini[0]
+    listen = (f'<div class="dash-yt" data-yt-mini data-tracks="{e(json.dumps(mini, ensure_ascii=False))}">'
+              f'<div class="dash-yt-screen" hidden></div><div class="dash-yt-bar">'
+              f'<img data-yt-av src="{e(first["av"] or yt_thumb(first["id"]))}" alt="" width="46" height="46" loading="lazy" decoding="async">'
+              f'<span class="dash-np-text"><em data-yt-label>Up next</em><b data-yt-title>{e(first["title"])}</b>'
+              f'<span data-yt-sub>{e(first["sub"])}</span></span><span class="dash-yt-ctrl">'
+              f'<button type="button" data-yt="prev" aria-label="Previous track"><i class="fa-solid fa-backward-step"></i></button>'
+              f'<button type="button" data-yt="toggle" class="is-main" aria-label="Play"><i class="fa-solid fa-play"></i></button>'
+              f'<button type="button" data-yt="next" aria-label="Next track"><i class="fa-solid fa-forward-step"></i></button>'
+              f'</span></div></div>')
+    library = (f'<article class="dash-tile dash-library">{head(ico("library"), "Library", f"{whole} items")}'
+               f'<p class="dash-text">AI skills, bookmarks, and what I watch and listen to.</p>'
+               f'<div class="dash-split" aria-hidden="true">{split}</div><ul class="dash-shelves">{shelves}</ul>'
+               f'{listen}{more("./library/", "Open the library")}</article>')
+
+    # focus
+    wave = "".join(f'<rect x="{i * 9}" y="{30 - h}" width="5" height="{2 * h}" rx="2.5" style="--i:{i}"/>'
+                   for i, h in enumerate((6, 12, 20, 14, 24, 18, 9, 16, 26, 20, 11, 22, 15, 8, 18, 24, 13, 7, 17, 21, 10, 14, 6, 11)))
+    # focus: the mix's scene as a stage (with the wave and a small presets chip on it), the Focus page's controls, and the
+    # way to the Focus page; dash.js runs them from the Focus player and fills in what plays
+    focus = (f'<article class="dash-tile dash-focus">'
+             f'{head(nl_icon("wave", 18), "Focus", '<span data-fp-label>Ready to play</span>')}'
+             f'<div class="dash-fp-stage"><img data-fp-art alt="" width="400" height="250" hidden>'
+             f'<svg class="dash-wave" viewBox="0 0 212 60" aria-hidden="true">{wave}</svg>'
+             f'<span class="dash-fp-info"><b data-fp-title>Focus</b><span data-fp-sub>Ambient sounds and Quran radio</span></span></div>'
+             f'<div class="dash-fp" data-fp hidden><div class="dash-fp-ctrl">'
+             f'<button type="button" data-fp-act="prev" aria-label="Previous mix"><i class="fa-solid fa-backward-step"></i></button>'
+             f'<button type="button" data-fp-act="toggle" class="is-main" aria-label="Play"><i class="fa-solid fa-play"></i></button>'
+             f'<button type="button" data-fp-act="next" aria-label="Next mix"><i class="fa-solid fa-forward-step"></i></button>'
+             f'<button type="button" data-fp-act="shuffle" aria-label="Shuffle: a surprise mix"><i class="fa-solid fa-shuffle"></i></button>'
+             f'</div><div class="dash-fp-picks">'
+             # each chip, while what it chose plays, gets an off button joined to it
+             f'<span class="dash-fp-pickwrap" data-pickwrap="mix"><label class="dash-fp-pick" data-pick="mix"><i class="fa-solid fa-layer-group"></i>'
+             f'<span>Presets</span><i class="fa-solid fa-chevron-down"></i><select data-fp-presets aria-label="Presets: ready-made mixes"></select></label>'
+             f'<button type="button" class="dash-fp-off" data-off="mix" aria-label="Turn the sounds off" title="Turn the sounds off" hidden>'
+             f'<i class="fa-solid fa-xmark"></i></button></span>'
+             f'<span class="dash-fp-pickwrap" data-pickwrap="radio"><label class="dash-fp-pick" data-pick="radio"><i class="fa-solid fa-tower-broadcast"></i>'
+             f'<span>Quran radio</span><i class="fa-solid fa-chevron-down"></i><select data-fp-radio aria-label="Quran radio: choose a reciter"></select></label>'
+             f'<button type="button" class="dash-fp-off" data-off="radio" aria-label="Turn the radio off" title="Turn the radio off" hidden>'
+             f'<i class="fa-solid fa-xmark"></i></button></span>'
+             f'</div></div>'
+             f'<p class="dash-text">Ambient sounds, Quran radio and a focus timer that keep playing while you browse.</p>'
+             f'<a class="dash-btn" href="./library/focus/" data-fp-open>{nl_icon("play", 14)}<span>Start a focus session</span></a></article>')
+
+    contact = (f'<article class="dash-tile dash-contact" id="contact"><div class="dash-contact-text">'
+               f'<span class="dash-status"><i></i>Open to freelance &amp; full-time</span>'
+               f'<h3>Have an ERP, HR or AI project in mind?</h3>'
+               f'<p class="dash-text">Tell me what you need. I work from Dhaka (GMT+6), remote-first.</p></div>'
+               f'<div class="dash-actions"><a class="dash-btn" href="{WA}" target="_blank" rel="noopener noreferrer">'
+               f'<i class="fa-brands fa-whatsapp"></i>Message on WhatsApp</a>'
+               f'<a class="dash-btn is-ghost" href="mailto:{MAIL}"><i class="fa-solid fa-envelope"></i>Email me</a>'
+               f'<a class="dash-btn is-ghost" href="./contact/">Contact form</a></div></article>')
+
+    return (f'\n    <section id="overview" class="dash-section">'
+            f'<div class="dash-top"><div class="section-title pf-title"><h2>{ico("home")}At a glance</h2></div>'
+            f'<p class="dash-live"><i></i>Available for work &middot; Dhaka <time data-dash-clock>GMT+6</time></p></div>'
+            f'<div class="dash-grid">{kpi_tile}{projects}{career}{stack}{people}{library}{focus}{contact}</div>'
+            f'{DASH_JS}</section>\n')
+
+
 def main():
     global CSS_VER
     css = scope_css((DOCS / "nx" / "nx.css").read_text(encoding="utf-8")) + SCOPED_FIX
@@ -4839,13 +5114,26 @@ def main():
     CSS_VER = hashlib.md5(css.encode("utf-8")).hexdigest()[:10]
     pages = [("profile", profile), ("projects", projects), ("people", people),
              ("contact", contact), ("library", library)]
-    pages += [(f"library/{k}", (lambda k=k: library_sub(k))) for k, _ in LIB_SUBS]
+    pages += [(f"library/{lib_href(k)}", (lambda k=k: library_sub(k))) for k, _ in LIB_SUBS]
     pages += [("library/focus", library_focus)]
     for slug, fn in pages:
         out = DOCS / slug / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(fn(), encoding="utf-8")
         print("wrote", out.relative_to(ROOT))
+    for old, new in LIB_SLUG.items():   # shared links to the old address keep working, ?play= included
+        out = DOCS / "library" / old / "index.html"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(redirect_page(f"../{new}/", f"{SITE}/library/{new}/", dict(LIB_SUBS)[old]), encoding="utf-8")
+        print("wrote", out.relative_to(ROOT), "(redirect)")
+
+
+def redirect_page(to, canonical, title):
+    return (f'<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8"><title>{e(title)} · Library | {NAME}</title>\n'
+            f'<meta name="robots" content="noindex"><link rel="canonical" href="{canonical}">\n'
+            f'<meta http-equiv="refresh" content="0; url={to}">\n'
+            f'<script>location.replace("{to}" + location.search + location.hash);</script></head>\n'
+            f'<body><p>This page has moved to <a href="{to}">{e(title)}</a>.</p></body></html>\n')
 
 
 if __name__ == "__main__":

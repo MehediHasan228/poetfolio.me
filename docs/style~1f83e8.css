@@ -186,74 +186,41 @@ html {
     }
 }
 
-/* --- CUSTOM TRAILING CURSOR --- */
-@media (min-width: 769px) {
-
-    body,
-    a,
-    button,
-    input,
-    textarea,
-    select,
-    .chat-header,
-    .mine-tile,
-    .file,
-    .pos-item,
-    .ai-dropzone,
-    .filter-btn,
-    .cli-header,
-    .mines-header,
-    .draggable-header {
-        cursor: none !important;
-    }
-}
-
-@media (max-width: 768px),
-(pointer: coarse) {
-
-    .cursor-dot,
-    .cursor-outline {
-        display: none !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-    }
-}
-
-.cursor-dot,
+/* --- CURSOR FOLLOWER: the system cursor stays (the text and pointer cursors, and the visitor's own cursor settings, all
+   work); on mouse devices a soft ring trails it, grows around anything clickable, tightens while the button is down and
+   steps aside over text fields (script~ section 3) --- */
+.cursor-dot { display: none !important; }
 .cursor-outline {
     position: fixed;
     top: 0;
     left: 0;
-    border-radius: 50%;
     z-index: 99999999 !important;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    border: 1.5px solid color-mix(in srgb, var(--accent-1, #00f2fe) 55%, transparent);
+    border-radius: 50%;
+    opacity: 0;
     pointer-events: none;
+    transition: opacity 0.25s ease, width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+        margin 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.25s ease, border-color 0.25s ease;
 }
-
-.cursor-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent-1);
-    box-shadow: 0 0 10px var(--accent-1);
-    margin-top: -4px;
-    margin-left: -4px;
+.cursor-outline.is-on { opacity: 1; }
+.cursor-outline.cursor-hover {
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    border-color: var(--accent-1, #00f2fe);
+    background-color: color-mix(in srgb, var(--accent-1, #00f2fe) 10%, transparent);
 }
-
-.cursor-outline {
-    width: 40px;
-    height: 40px;
-    border: 2px solid rgba(0, 242, 254, 0.5);
-    margin-top: -20px;
-    margin-left: -20px;
-    transition: width 0.2s, height 0.2s, background-color 0.2s;
+.cursor-outline.is-down {
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
 }
-
-.cursor-hover {
-    width: 60px;
-    height: 60px;
-    margin-top: -30px;
-    margin-left: -30px;
-    background-color: rgba(0, 242, 254, 0.1);
-    border-color: var(--accent-1);
+.cursor-outline.is-text { opacity: 0; }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .cursor-outline { display: none !important; }
 }
 
 /* --- DRAGGABLE WINDOWS --- */
@@ -555,7 +522,7 @@ nav {
     z-index: 1;
     position: relative;
     border: none;
-    cursor: none;
+    cursor: pointer;
 }
 
 .primary-btn {
@@ -10620,6 +10587,10 @@ body.light-mode .bottom-nav a[aria-current="page"] {
     outline: 2px solid var(--accent-1, #00f2fe) !important;
     outline-offset: 3px;
 }
+/* a bare field inside its pill or box (the dashboard's presets; Focus's search, stream-link, plan and sleep fields; the
+   terminal): the box shows the focus, so the field adds no second, square ring inside it (text fields and selects
+   match :focus-visible on a click too) */
+html :is(.dash-fp-pick, .fx-search, .fx-sleep, .cli-container) :is(input, select, textarea):focus-visible { outline: none !important; }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -10675,7 +10646,7 @@ body.light-mode .bottom-nav a[aria-current="page"] {
 @media (min-width: 1025px) { #mobile-menu-drawer .drawer-brand, #mobile-menu-drawer .drawer-copy { display: none; } }
 
 /* ================= button system: one primary and one secondary style, theme-aware ================= */
-html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) {
+html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) {
   display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important;
   padding: 10px 20px !important; border-radius: 999px !important; border: 1px solid transparent !important;
   font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.01em !important; text-transform: none !important; text-decoration: none !important;
@@ -10684,13 +10655,13 @@ html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-c
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 18px -6px var(--accent-glow, rgba(0,0,0,0.35)) !important;
   transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, filter .2s ease !important;
 }
-html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
+html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
   transform: translateY(-2px) !important; filter: brightness(1.06) !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 12px 26px -8px var(--accent-glow, rgba(0,0,0,0.4)) !important;
 }
-html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) * { color: inherit !important; }
-html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) svg { stroke: currentColor !important; }
-html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) {
+html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) * { color: inherit !important; }
+html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) svg { stroke: currentColor !important; }
+html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .dash-btn.is-ghost, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) {
   display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important;
   border-radius: 999px !important; border: 1px solid transparent !important;
   font-weight: 600 !important; text-transform: none !important; letter-spacing: 0.01em !important; text-decoration: none !important;
@@ -10702,9 +10673,9 @@ html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, color .2s ease !important;
 }
-html body :is(.btn.btn-secondary, .btn.secondary-btn, .nl-more):not(#_btn) { padding: 10px 20px !important; font-size: 14px !important; }
+html body :is(.btn.btn-secondary, .btn.secondary-btn, .dash-btn.is-ghost, .nl-more):not(#_btn) { padding: 10px 20px !important; font-size: 14px !important; }
 html body :is(.btn-rail-top, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) { padding: 7px 14px !important; font-size: 13px !important; }
-html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
+html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .dash-btn.is-ghost, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
   transform: translateY(-1px) !important; color: var(--accent-1) !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 3px color-mix(in srgb, var(--accent-1) 14%, transparent), 0 8px 20px -10px var(--accent-glow, rgba(0,0,0,0.4)) !important;
 }
@@ -11528,4 +11499,1474 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
 .hero-text-link { line-height: 1.5; }
 @media (min-width: 769px) {
     .hero-text-side h1 .gradient-text { vertical-align: top; }
+}
+
+/* ==========================================================================
+   Profile look on the home page: the same tokens as the profile (nx.css), so a
+   home section restyled with .pf-* or under #about reads like the profile page
+   ========================================================================== */
+:root {
+    --pf-surface: #101a2e;
+    --pf-surface-2: #17223a;
+    --pf-line: #1d2a45;
+    --pf-line-strong: #2b3b5e;
+    --pf-ink: #f8fafc;
+    --pf-ink-2: #cbd5e1;
+    --pf-ink-3: #94a3b8;
+    --pf-brand: #00f2fe;
+    --pf-brand-rgb: 0, 242, 254;
+    --pf-on-brand: #0b1120;
+    --pf-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.35);
+    /* raised cards: a close contact shadow, a mid one and a long soft one, so the edge stays clean */
+    --pf-lift: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 18px -8px rgba(0, 0, 0, 0.45), 0 24px 40px -22px rgba(0, 0, 0, 0.6);
+    --pf-glow: rgba(0, 242, 254, 0.35);
+    --pf-glass: rgba(8, 12, 24, 0.74);
+    --pf-glass-edge: rgba(255, 255, 255, 0.14);
+    --pf-glass-shine: rgba(255, 255, 255, 0.16);
+    --pf-glass-ink: #f8fafc;
+    --pf-glass-ink-2: rgba(226, 232, 240, 0.75);
+    --pf-edge: rgba(255, 255, 255, 0.05);
+}
+:root[data-theme="light"] {
+    --pf-surface: #ffffff;
+    --pf-surface-2: #f1f5f9;
+    --pf-line: #e2e8f0;
+    --pf-line-strong: #cbd5e1;
+    --pf-ink: #0f172a;
+    --pf-ink-2: #334155;
+    --pf-ink-3: #64748b;
+    --pf-brand: #2563eb;
+    --pf-brand-rgb: 37, 99, 235;
+    --pf-on-brand: #ffffff;
+    --pf-lift: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 18px -10px rgba(15, 23, 42, 0.14), 0 22px 36px -24px rgba(15, 23, 42, 0.2);
+    --pf-glow: rgba(37, 99, 235, 0.16);
+    --pf-glass: rgba(255, 255, 255, 0.86);
+    --pf-glass-edge: rgba(15, 23, 42, 0.08);
+    --pf-glass-shine: rgba(255, 255, 255, 0.6);
+    --pf-glass-ink: #0f172a;
+    --pf-glass-ink-2: #64748b;
+    --pf-edge: rgba(255, 255, 255, 0.9);
+    --pf-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04);
+}
+:root[data-theme="mint"] {
+    --pf-surface: #ffffff;
+    --pf-surface-2: #eaf6f0;
+    --pf-line: #d1fae5;
+    --pf-line-strong: #a7f3d0;
+    --pf-ink: #0f172a;
+    --pf-ink-2: #2d3748;
+    --pf-ink-3: #64748b;
+    --pf-brand: #10b981;
+    --pf-brand-rgb: 16, 185, 129;
+    --pf-on-brand: #ffffff;
+    --pf-lift: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 18px -10px rgba(4, 120, 87, 0.14), 0 22px 36px -24px rgba(4, 120, 87, 0.2);
+    --pf-glow: rgba(16, 185, 129, 0.18);
+    --pf-glass: rgba(255, 255, 255, 0.86);
+    --pf-glass-edge: rgba(4, 120, 87, 0.1);
+    --pf-glass-shine: rgba(255, 255, 255, 0.6);
+    --pf-glass-ink: #0f172a;
+    --pf-glass-ink-2: #64748b;
+    --pf-edge: rgba(255, 255, 255, 0.9);
+    --pf-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04);
+}
+:root[data-theme="cyberpunk"] {
+    --pf-surface: #130a10;
+    --pf-surface-2: #1e0f18;
+    --pf-line: #3a1824;
+    --pf-line-strong: #52202f;
+    --pf-ink: #fbbf24;
+    --pf-ink-2: #dcbf86;
+    --pf-ink-3: #a1a1aa;
+    --pf-brand: #f43f5e;
+    --pf-brand-rgb: 244, 63, 94;
+    --pf-on-brand: #ffffff;
+    --pf-glow: rgba(244, 63, 94, 0.35);
+    --pf-glass: rgba(19, 10, 16, 0.78);
+}
+:root[data-theme="god-mode"] {
+    --pf-brand: #00ff00;
+    --pf-brand-rgb: 0, 255, 0;
+    --pf-glow: rgba(0, 255, 0, 0.3);
+}
+
+/* section heading: the profile's .sec-title, left-aligned on the content's edge */
+.section-title.pf-title {
+    max-width: 1200px;
+    margin: 0 auto 1.6rem;
+    padding: 0 1rem;
+    text-align: left;
+}
+.pf-title h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: normal;
+    color: var(--pf-ink);
+}
+.pf-title h2 svg {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+}
+
+/* System Architecture in the profile's look */
+html #about .arch-infographic-wrap { font-family: 'Poppins', sans-serif; }
+
+/* filter: the profile's underline tabs */
+html body #about .arch-unified-filter-container {
+    justify-content: flex-start;
+    margin: 0 0 1.5rem;
+    border-bottom: 1px solid var(--pf-line);
+}
+html body #about .arch-unified-filters {
+    gap: 1.6rem;
+    padding: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+html body #about .arch-unified-filter-btn {
+    position: relative;
+    padding: 0.55rem 0 0.8rem;
+    gap: 0.45rem;
+    white-space: nowrap;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--pf-ink-3) !important;
+    background: none !important;
+    border-radius: 0;
+    box-shadow: none !important;
+    transform: none;
+}
+html body #about .arch-unified-filter-btn * { color: inherit !important; }
+html body #about .arch-unified-filter-btn i { display: none; }
+html body #about .arch-unified-filter-btn:hover { color: var(--pf-ink) !important; }
+html body #about .arch-unified-filter-btn.active { color: var(--pf-brand) !important; }
+html body #about .arch-unified-filter-btn.active::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--pf-brand);
+}
+html body #about .arch-unified-filter-btn .filter-count {
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--pf-surface-2) !important;
+    color: var(--pf-ink-3) !important;
+}
+html body #about .arch-unified-filter-btn.active .filter-count {
+    background: rgba(var(--pf-brand-rgb), 0.14) !important;
+    color: var(--pf-brand) !important;
+}
+
+/* cards: the profile's widget card */
+html body #about :is(.arch-pillar-card, .arch-matrix-card) {
+    border: 1px solid var(--pf-line) !important;
+    border-radius: 22px !important;
+    background: var(--pf-surface) !important;
+    box-shadow: var(--pf-shadow) !important;
+    backdrop-filter: none;
+}
+html body #about :is(.arch-pillar-card, .arch-matrix-card):hover {
+    transform: none;
+    border-color: var(--pf-line-strong) !important;
+}
+@media (min-width: 861px) {
+    html body #about :is(.arch-pillar-card, .arch-matrix-card) { padding: 22px 24px; }
+    /* equal columns whatever a card holds; a badge that does not fit drops below its title */
+    html body #about .arch-unified-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    html body #about .arch-matrix-card-header { flex-wrap: wrap; }
+}
+@media (min-width: 861px) and (max-width: 1200px) {
+    html body #about .arch-unified-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+html body #about :is(.arch-pillar-icon, .arch-matrix-cat-icon) {
+    width: 32px;
+    height: 32px;
+    border: 0 !important;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    color: var(--pf-brand) !important;
+    background: rgba(var(--pf-brand-rgb), 0.12) !important;
+}
+html body #about :is(.arch-pillar-title, .arch-matrix-cat-name) {
+    font-family: 'Poppins', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: normal;
+    color: var(--pf-ink) !important;
+}
+/* badges: the profile's status pill */
+html body #about :is(.arch-pillar-badge, .arch-matrix-badge) {
+    gap: 6px;
+    padding: 3px 10px;
+    border: 0 !important;
+    border-radius: 999px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: normal;
+    opacity: 1;
+    color: var(--pf-brand) !important;
+    background: rgba(var(--pf-brand-rgb), 0.14) !important;
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.25);
+}
+html body #about :is(.arch-pillar-badge, .arch-matrix-badge) i { display: none; }
+html body #about :is(.arch-pillar-badge, .arch-matrix-badge)::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+html body #about :is(.arch-pillar-desc, .arch-matrix-desc) {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: normal;
+    color: var(--pf-ink-3) !important;
+}
+/* tool tags: the profile's skill chip */
+html body #about :is(.arch-pillar-tags, .arch-matrix-tags) { gap: 6px; }
+html body #about :is(.arch-tech-tag, .arch-matrix-tag) {
+    gap: 6px;
+    padding: 3px 10px;
+    border: 0 !important;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pf-ink-2) !important;
+    background: var(--pf-surface-2) !important;
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+    transform: none;
+}
+html body #about :is(.arch-tech-tag, .arch-matrix-tag) img { width: 16px; height: 16px; }
+@media (max-width: 860px) {
+    .section-title.pf-title { padding: 0 24px; margin-bottom: 1.1rem; }
+    .pf-title h2 { font-size: 1.25rem; }
+    .pf-title h2 svg { width: 24px; height: 24px; }
+    html body #about .arch-unified-filter-container { margin: 0 24px 1rem; }
+    html body #about .arch-unified-filters { gap: 1.2rem; }
+    html body #about .arch-unified-filter-btn { font-size: 14px; }
+    html body #about .arch-unified-card.is-active { border-color: rgba(var(--pf-brand-rgb), 0.45) !important; }
+    html body #about :is(.arch-tech-tag, .arch-matrix-tag) { font-size: 12px; }
+}
+
+/* Home dashboard: under the hero, a mission-control summary of every page in the profile's look (the --pf-* tokens
+   above), with the hero's code face for figures; every chart is drawn from the site's data */
+.dash-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4.5rem 1rem 3rem;
+    font-family: 'Poppins', sans-serif;
+    color: var(--pf-ink);
+}
+.dash-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-bottom: 1.4rem;
+}
+.dash-section .section-title.pf-title {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+}
+.dash-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--pf-ink-3);
+}
+.dash-live i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+}
+.dash-live time { color: var(--pf-ink); }
+.dash-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 16px;
+}
+.dash-kpis,
+.dash-contact { grid-column: 1 / -1; }
+.dash-projects { grid-column: span 7; }
+.dash-career { grid-column: span 5; }
+.dash-stack,
+.dash-people,
+.dash-library,
+.dash-focus { grid-column: span 3; }
+
+.dash-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 22px 24px;
+    border: 1px solid var(--pf-line);
+    border-radius: 22px;
+    /* --mx/--my follow the pointer (dash.js), so a soft light sits under it */
+    background: radial-gradient(380px circle at var(--mx, -600px) var(--my, -600px), rgba(var(--pf-brand-rgb), 0.08), transparent 65%),
+        var(--pf-surface);
+    /* a faint lit top edge lifts the card off the page */
+    box-shadow: var(--pf-shadow), inset 0 1px 0 var(--pf-edge);
+}
+/* border spotlight: the part of the border near the pointer takes the brand colour and follows it (only the 1px ring
+   shows: the gradient is masked to the border box minus the padding box) */
+.dash-tile::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    padding: 1px;
+    border-radius: inherit;
+    background: radial-gradient(240px circle at var(--mx, -600px) var(--my, -600px), rgba(var(--pf-brand-rgb), 0.85), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.dash-tile:hover::before { opacity: 1; }
+.dash-tile ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.dash-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.dash-head h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--pf-ink);
+}
+.dash-ico {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--pf-brand);
+    background: rgba(var(--pf-brand-rgb), 0.12);
+}
+.dash-ico svg {
+    width: 18px;
+    height: 18px;
+}
+.dash-meta {
+    margin-left: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 12.5px;
+    color: var(--pf-ink-3);
+}
+.dash-text {
+    margin: 0 0 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--pf-ink-3);
+}
+.dash-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--pf-brand);
+    text-decoration: none;
+}
+.dash-more:hover { text-decoration: underline; }
+.dash-pill {
+    flex-shrink: 0;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--pf-brand);
+    background: rgba(var(--pf-brand-rgb), 0.14);
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.25);
+}
+
+/* headline figures */
+.dash-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    padding: 18px 8px;
+}
+.dash-kpi {
+    display: grid;
+    gap: 4px;
+    padding: 4px 20px;
+    border-left: 1px solid var(--pf-line);
+}
+.dash-kpi:first-child { border-left: 0; }
+.dash-kpi b {
+    font-family: 'Fira Code', monospace;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--pf-brand);
+    text-shadow: 0 0 18px var(--pf-glow);
+}
+.dash-kpi span {
+    font-size: 13px;
+    color: var(--pf-ink-3);
+}
+
+/* projects: ring for the live share, bars for kinds, then three thumbnails */
+.dash-proj-chart {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 18px;
+}
+.dash-ring {
+    position: relative;
+    flex-shrink: 0;
+    width: 128px;
+    height: 128px;
+}
+.dash-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+.dash-ring circle {
+    fill: none;
+    stroke-width: 9;
+}
+.dash-ring-track { stroke: var(--pf-surface-2); }
+.dash-ring-arc {
+    stroke: var(--pf-brand);
+    stroke-linecap: round;
+    stroke-dasharray: var(--arc) var(--circ);
+    filter: drop-shadow(0 0 6px var(--pf-glow));
+}
+.dash-ring span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    font-size: 12px;
+    color: var(--pf-ink-3);
+}
+.dash-ring b {
+    font-family: 'Fira Code', monospace;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--pf-ink);
+}
+.dash-ring small {
+    font-size: 15px;
+    color: var(--pf-ink-3);
+}
+.dash-bars {
+    display: grid;
+    flex: 1;
+    gap: 10px;
+    min-width: 0;
+}
+.dash-bar {
+    display: grid;
+    grid-template-columns: 86px 1fr 22px;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 3px 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 13px;
+    text-align: left;
+    color: var(--pf-ink-2);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.dash-bars i {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--pf-surface-2);
+    overflow: hidden;
+}
+.dash-bars u {
+    display: block;
+    width: var(--w);
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(var(--pf-brand-rgb), 0.55), var(--pf-brand));
+}
+.dash-bars b {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+    color: var(--pf-ink);
+}
+/* every project in a 3D coverflow (dash.js sets each card's --o, its place from the front card, and --d, its distance):
+   the front card faces you, the next ones turn away and sink back; cards further out are hidden */
+.dash-flow {
+    position: relative;
+    height: 238px;
+    margin: 2px -8px 0;
+    padding: 0;
+    overflow: hidden;
+    perspective: 1100px;
+    outline: none;
+    touch-action: pan-y;
+    /* the cards at the sides fade out at the tile's edges */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+.dash-flow:focus-visible { box-shadow: 0 0 0 2px rgba(var(--pf-brand-rgb), 0.6); border-radius: 18px; }
+.dash-flow li {
+    --o: 0;
+    --d: 0;
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    width: 46%;
+    z-index: calc(10 - var(--d));
+    opacity: calc(1 - var(--d) * 0.28);
+    transform: translateX(calc(-50% + var(--o) * 64%)) translateZ(calc(var(--d) * -150px)) rotateY(calc(var(--o) * -38deg));
+    transition: transform 0.7s cubic-bezier(0.22, 0.9, 0.24, 1), opacity 0.5s ease;
+    will-change: transform;
+}
+.dash-flow li.is-far {
+    opacity: 0;
+    pointer-events: none;
+}
+.dash-flow li[hidden] { display: none; }
+.dash-flow a {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 16px;
+    color: inherit;
+    text-decoration: none;
+    background: var(--pf-surface-2);
+    box-shadow: var(--pf-lift), 0 0 0 1px var(--pf-glass-edge);
+    transition: box-shadow 0.5s ease;
+    cursor: pointer;
+}
+.dash-flow li.is-front a {
+    box-shadow: var(--pf-lift), 0 0 0 1px rgba(var(--pf-brand-rgb), 0.5), 0 14px 34px -14px var(--pf-glow);
+}
+.dash-flow img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
+    object-position: top;
+}
+/* the glass panel: no backdrop blur (slow without a GPU), a clear gradient with a lit edge instead */
+.dash-glass {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 5px 8px;
+    justify-items: start;
+    padding: 8px 11px;
+    border-radius: 12px;
+    background: linear-gradient(160deg, var(--pf-glass-shine), transparent 55%), var(--pf-glass);
+    box-shadow: inset 0 1px 0 var(--pf-glass-shine), inset 0 0 0 1px var(--pf-glass-edge), 0 6px 16px -10px rgba(0, 0, 0, 0.35);
+}
+.dash-glass b {
+    grid-column: 1 / -1;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--pf-glass-ink);
+}
+.dash-glass .dash-kinds {
+    overflow: hidden;
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 11.5px;
+    color: var(--pf-glass-ink-2);
+}
+.dash-flow li:not(.is-front) .dash-glass :is(.dash-pill, .dash-kinds) { display: none; }
+.dash-proj-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+}
+.dash-proj-foot .dash-more { margin-top: 0; }
+.dash-feat-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 16px;
+}
+.dash-feat-count {
+    min-width: 64px;
+    font-family: 'Fira Code', monospace;
+    font-size: 12.5px;
+    text-align: right;
+    color: var(--pf-ink-3);
+}
+.dash-nav {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    /* the site button's face (the button system above), made round */
+    color: var(--accent-active-color, #0b1120);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 6px 18px -6px var(--accent-glow, rgba(0, 0, 0, 0.35));
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, filter 0.2s ease;
+    cursor: pointer;
+}
+.dash-nav:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 26px -8px var(--accent-glow, rgba(0, 0, 0, 0.4));
+}
+.dash-nav:active:not(:disabled) { transform: scale(0.94); }
+.dash-nav:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+.dash-nav.is-prev svg { transform: scaleX(-1); }
+.dash-nav:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+
+/* career: the roles on a timeline */
+.dash-timeline {
+    position: relative;
+    margin: 6px 0 22px;
+}
+.dash-track {
+    position: relative;
+    height: 14px;
+    border-radius: 7px;
+    background: var(--pf-surface-2);
+}
+.dash-track.is-vol {
+    height: 6px;
+    margin-top: 10px;
+}
+.dash-seg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 7px;
+    box-shadow: 0 0 0 2px var(--pf-surface);
+    transform-origin: left center;
+}
+.s0 { background: rgba(var(--pf-brand-rgb), 0.3); }
+.s1 { background: rgba(var(--pf-brand-rgb), 0.5); }
+.s2 { background: rgba(var(--pf-brand-rgb), 0.72); }
+.s3 {
+    background: var(--pf-brand);
+    box-shadow: 0 0 0 2px var(--pf-surface), 0 0 12px var(--pf-glow);
+}
+.sv { background: repeating-linear-gradient(90deg, rgba(var(--pf-brand-rgb), 0.55) 0 6px, transparent 6px 10px); }
+.dash-ticks {
+    position: relative;
+    height: 18px;
+    margin-top: 14px;
+}
+.dash-ticks span {
+    position: absolute;
+    transform: translateX(-50%);
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--pf-ink-3);
+}
+.dash-ticks span::before {
+    content: "";
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    height: 26px;
+    border-left: 1px dashed var(--pf-line-strong);
+}
+.dash-legend {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+}
+.dash-legend li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--pf-ink-3);
+}
+.dash-legend li > i {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+.dash-legend li > span:not(.dash-pill) {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.dash-legend b {
+    font-weight: 600;
+    color: var(--pf-ink);
+}
+.dash-legend em {
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    font-style: normal;
+    white-space: nowrap;
+}
+
+/* stack: tools per area as a radar */
+.dash-radar {
+    width: 100%;
+    height: auto;
+    margin: -4px 0 0;
+    overflow: visible;
+}
+.dash-radar-grid {
+    fill: none;
+    stroke: var(--pf-line-strong);
+    stroke-width: 1;
+}
+.dash-radar-axes line {
+    stroke: var(--pf-line);
+    stroke-width: 1;
+}
+.dash-radar-shape {
+    fill: rgba(var(--pf-brand-rgb), 0.18);
+    stroke: var(--pf-brand);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px var(--pf-glow));
+    transform-origin: 130px 98px;
+}
+.dash-radar text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    fill: var(--pf-ink-3);
+    dominant-baseline: middle;
+}
+.dash-radar tspan {
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    fill: var(--pf-ink);
+}
+
+/* people: faces in orbit around the count */
+.dash-orbit {
+    position: relative;
+    width: 204px;
+    height: 204px;
+    margin: 0 auto 14px;
+}
+.dash-orbit::before {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    border: 1px dashed rgba(var(--pf-brand-rgb), 0.4);
+    border-radius: 50%;
+}
+.dash-orbit-ring {
+    position: absolute;
+    inset: 0;
+}
+.dash-sat {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    transform: rotate(var(--a)) translate(84px) rotate(calc(-1 * var(--a)));
+}
+.dash-sat img {
+    display: block;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 2px var(--pf-surface), 0 0 0 3px rgba(var(--pf-brand-rgb), 0.35);
+}
+.dash-orbit-core {
+    position: absolute;
+    inset: 58px;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 12px;
+    color: var(--pf-ink-3);
+    background: rgba(var(--pf-brand-rgb), 0.08);
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.3);
+}
+.dash-orbit b {
+    font-family: 'Fira Code', monospace;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--pf-brand);
+}
+.dash-people .dash-text { text-align: center; }
+
+/* library: the shelves as one split bar */
+.dash-split {
+    display: flex;
+    gap: 3px;
+    height: 12px;
+    margin-bottom: 16px;
+}
+.dash-split i {
+    width: var(--w);
+    border-radius: 4px;
+    transform-origin: left center;
+}
+.l0 { background: var(--pf-brand); }
+.l1 { background: rgba(var(--pf-brand-rgb), 0.6); }
+.l2 { background: rgba(var(--pf-brand-rgb), 0.32); }
+.dash-shelves {
+    display: grid;
+    gap: 8px;
+}
+.dash-shelves a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--pf-ink);
+    text-decoration: none;
+    background: var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+}
+.dash-shelves a:hover { box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.45); }
+.dash-shelves a > i {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+.dash-shelves b {
+    margin-left: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pf-ink-3);
+}
+
+/* focus: the mix's scene is the stage; the wave, a small presets chip and what plays sit on it */
+.dash-fp-stage {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border-radius: 16px;
+    background: radial-gradient(120% 90% at 20% 10%, rgba(var(--pf-brand-rgb), 0.35), transparent 60%), var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+}
+.dash-fp-stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: dash-pop 0.4s ease both;
+}
+.dash-fp-stage img[hidden] { display: none; }
+/* while the radio leads: the reciter's portrait as a round photo in the corner, on a brand-tinted stage */
+.dash-fp-stage.is-face {
+    background: radial-gradient(110% 100% at 85% 0%, rgba(var(--pf-brand-rgb), 0.5), transparent 62%),
+        linear-gradient(160deg, var(--pf-surface-2), color-mix(in srgb, var(--pf-brand) 22%, var(--pf-surface-2)));
+}
+.dash-fp-stage.is-face img {
+    inset: auto;
+    top: 14px;
+    right: 14px;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 10px 24px -8px rgba(0, 0, 0, 0.55);
+}
+/* a shade from the foot keeps the white title readable on any photo */
+.dash-fp-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(4, 8, 18, 0.35) 0%, transparent 34%, transparent 46%, rgba(4, 8, 18, 0.82) 100%);
+    pointer-events: none;
+}
+.dash-fp-stage .dash-wave {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1;
+    width: 92px;
+    height: 26px;
+    margin: 0;
+    fill: #ffffff;
+    opacity: 0.9;
+}
+.dash-fp-info {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    left: 12px;
+    z-index: 1;
+    display: grid;
+    gap: 1px;
+}
+.dash-fp-info b,
+.dash-fp-info span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.dash-fp-info b {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+}
+.dash-fp-info span {
+    font-size: 12.5px;
+    color: rgba(241, 245, 249, 0.82);
+}
+/* the presets and the Quran radio: two small chips under the controls; each select lies over its chip, so a tap opens
+   the list, and a chip takes the brand tint while what it chose is playing */
+.dash-fp-picks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+.dash-fp-pickwrap { position: relative; display: inline-flex; }
+/* on: the off button takes the chevron's place, so the chip keeps its width */
+.dash-fp-pickwrap.is-on .dash-fp-pick i:last-of-type { visibility: hidden; }
+.dash-fp-off {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 23px;
+    padding: 0 2px 0 0;
+    border: 0;
+    border-radius: 0 999px 999px 0;
+    font-size: 11px;
+    color: var(--pf-brand);
+    background: transparent;
+    box-shadow: inset 1px 0 0 rgba(var(--pf-brand-rgb), 0.35);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.dash-fp-off[hidden] { display: none; }
+.dash-fp-off:hover {
+    color: var(--pf-on-brand);
+    background: var(--pf-brand);
+}
+.dash-fp-off:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+.dash-fp-pick {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--pf-ink-2);
+    background: var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+    cursor: pointer;
+    transition: color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.dash-fp-pick:hover { color: var(--pf-brand); box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.45); }
+.dash-fp-pick:focus-within { box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.55), 0 0 0 3px rgba(var(--pf-brand-rgb), 0.18); }
+.dash-fp-pick.is-active {
+    color: var(--pf-brand);
+    background: rgba(var(--pf-brand-rgb), 0.12);
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.35);
+}
+.dash-fp-pick i { font-size: 11px; }
+.dash-fp-pick i:last-of-type { font-size: 9px; opacity: 0.7; }
+.dash-fp-pick select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+:root:not([data-theme="light"]):not([data-theme="mint"]) .dash-fp-pick select { color-scheme: dark; }
+.dash-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--pf-on-brand);
+    background: var(--pf-brand);
+    box-shadow: 0 6px 18px -6px var(--pf-glow);
+}
+.dash-btn:hover { filter: brightness(1.08); }
+.dash-btn.is-ghost {
+    color: var(--pf-ink);
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--pf-line-strong);
+}
+.dash-focus .dash-text { margin: 0 0 14px; font-size: 13px; }
+.dash-focus.is-playing [data-fp-label] { color: var(--pf-brand); }
+.dash-focus .dash-btn {
+    align-self: stretch;
+    margin-top: auto;
+}
+
+/* listening: the Focus page's controls and a small Watch & Listen player (dash.js runs both); the main buttons wear
+   the site button's face, the others are quiet rounds */
+.dash-np-text {
+    display: grid;
+    flex: 1;
+    gap: 1px;
+    min-width: 0;
+}
+.dash-np-text em {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    font-style: normal;
+    color: var(--pf-brand);
+}
+.dash-np-text em,
+.dash-np-text b,
+.dash-np-text > span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.dash-np-text b {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--pf-ink);
+}
+.dash-np-text > span {
+    font-size: 12px;
+    color: var(--pf-ink-3);
+}
+.dash-fp { margin: 14px 0 12px; }
+.dash-fp[hidden] { display: none !important; }
+/* the fallback link, hidden once the player runs: stronger than the button system's display rule */
+html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
+.dash-fp-ctrl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.dash-fp-ctrl > *,
+.dash-yt-ctrl button {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    font-size: 14px;
+    color: var(--pf-ink-2);
+    text-decoration: none;
+    background: var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+}
+.dash-fp-ctrl > *:hover,
+.dash-yt-ctrl button:hover {
+    color: var(--pf-brand);
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.45);
+}
+.dash-fp-ctrl > :is(button, a):focus-visible,
+.dash-yt-ctrl button:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+.dash-fp-ctrl .is-main,
+.dash-yt-ctrl .is-main {
+    width: 50px;
+    height: 50px;
+    font-size: 17px;
+    color: var(--accent-active-color, #0b1120);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 8px 20px -8px var(--accent-glow, rgba(0, 0, 0, 0.35));
+}
+.dash-fp-ctrl .is-main:hover,
+.dash-yt-ctrl .is-main:hover {
+    color: var(--accent-active-color, #0b1120);
+    transform: translateY(-1px) scale(1.04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 24px -8px var(--accent-glow, rgba(0, 0, 0, 0.4));
+}
+.dash-fp-ctrl .is-main:active,
+.dash-yt-ctrl .is-main:active { transform: scale(0.95); }
+.dash-yt {
+    overflow: hidden;
+    margin-top: 14px;
+    border-radius: 14px;
+    background: var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+}
+.dash-yt-screen {
+    width: 100%;                     /* a set width: with aspect-ratio alone, the min-height would widen the box */
+    aspect-ratio: 16 / 9;
+    min-height: 200px;               /* YouTube's smallest player; a narrow tile shows the video letterboxed */
+    border-radius: 14px 14px 0 0;   /* the card's corners, so the dock's video in it has them too */
+    background: #000000;
+}
+.dash-yt-screen[hidden] { display: none; }
+.dash-yt-screen iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+/* the track on one line, the controls centred on the next, so a narrow tile keeps the whole title */
+.dash-yt-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    padding: 10px;
+}
+.dash-yt-bar img {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.dash-yt-ctrl {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.dash-yt-ctrl button {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+}
+.dash-yt-ctrl .is-main {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+}
+
+/* contact: a band across the foot of the grid */
+.dash-contact {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 32px;
+}
+.dash-contact h3 {
+    margin: 12px 0 6px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--pf-ink);
+}
+.dash-contact .dash-text { margin: 0; }
+.dash-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pf-brand);
+    background: rgba(var(--pf-brand-rgb), 0.14);
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.25);
+}
+.dash-status i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+.dash-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* the one reveal: as the dashboard comes into view each chart draws in (only when the script set .dash-wait) */
+.dash-wait .dash-ring-arc { stroke-dasharray: 0 var(--circ); }
+.dash-wait :is(.dash-bars u, .dash-seg, .dash-split i) { transform: scaleX(0); }
+.dash-wait .dash-bars u { transform-origin: left center; }
+.dash-wait .dash-radar-shape { transform: scale(0.2); opacity: 0; }
+.dash-wait .dash-sat img { opacity: 0; }
+.dash-in .dash-ring-arc { stroke-dasharray: var(--arc) var(--circ); transition: stroke-dasharray 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.dash-in :is(.dash-bars u, .dash-seg, .dash-split i) { transform: none; transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s; }
+.dash-in .dash-radar-shape { transform: none; opacity: 1; transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s, opacity 0.4s ease 0.2s; }
+.dash-in .dash-sat img { opacity: 1; transition: opacity 0.5s ease 0.3s; }
+
+/* projects: the kind bars are buttons that filter the thumbnails */
+.dash-bar:hover span,
+.dash-bar[aria-pressed="true"] span { color: var(--pf-brand); }
+.dash-bar[aria-pressed="true"] u { box-shadow: 0 0 10px var(--pf-glow); }
+.dash-bar:focus-visible {
+    outline: 2px solid var(--pf-brand);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+.is-filtered .dash-bar[aria-pressed="false"] { opacity: 0.45; }
+@keyframes dash-pop {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* career and library: a hovered legend row and its piece of the chart stand out, the rest dim */
+.dash-seg,
+.dash-legend li,
+.dash-split i,
+.dash-shelves li { transition: opacity 0.2s ease; }
+.is-picking :is(.dash-seg, .dash-legend li, .dash-split i, .dash-shelves li):not(.is-hl) { opacity: 0.35; }
+.dash-legend li { cursor: default; }
+
+/* stack: the area buttons, the lit spoke and the area's tools */
+.dash-spoke {
+    stroke: transparent;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    transition: stroke 0.2s ease;
+}
+.dash-spoke.is-on { stroke: var(--pf-brand); }
+.dash-sweep path { fill: rgba(var(--pf-brand-rgb), 0.14); }
+.dash-sweep { transform-origin: 130px 98px; opacity: 0; }
+.dash-areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+.dash-area {
+    padding: 3px 10px;
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pf-ink-3);
+    background: var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+    cursor: pointer;
+}
+.dash-area b {
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    color: var(--pf-ink-2);
+}
+.dash-area:hover,
+.dash-area[aria-pressed="true"] {
+    color: var(--pf-brand);
+    background: rgba(var(--pf-brand-rgb), 0.12);
+    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.35);
+}
+.dash-area:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 2px; }
+.dash-area-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 12px;
+    animation: dash-pop 0.3s ease both;
+}
+.dash-area-tools[hidden] { display: none; }
+.dash-tool.is-more {
+    color: var(--pf-ink-3);
+    background: none;
+}
+.dash-area-tools p {
+    flex-basis: 100%;
+    margin: 0 0 4px;
+    font-size: 12.5px;
+    color: var(--pf-ink-3);
+}
+.dash-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pf-ink-2);
+    background: var(--pf-surface-2);
+    box-shadow: inset 0 0 0 1px var(--pf-line);
+}
+.dash-tool img {
+    width: 14px;
+    height: 14px;
+}
+
+/* the status dot and the current role pulse */
+.dash-live i { position: relative; }
+.dash-live i::after,
+.dash-seg.s3::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+}
+.dash-live i::after { background: #22c55e; }
+.dash-seg.s3::after { box-shadow: 0 0 14px 2px var(--pf-glow); }
+.dash-orbit:hover :is(.dash-orbit-ring, .dash-sat img) { animation-play-state: paused; }
+
+/* the loops: only while the dashboard is on screen (dash.js sets .is-onscreen, never with reduced motion) */
+.is-onscreen .dash-sweep {
+    opacity: 1;
+    animation: dash-spin 6s linear infinite;
+}
+.is-onscreen .dash-orbit-ring { animation: dash-spin 60s linear infinite; }
+.is-onscreen .dash-sat img { animation: dash-spin 60s linear infinite reverse; }
+.is-onscreen .dash-wave rect {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: dash-breathe 2.8s ease-in-out infinite alternate;
+    animation-delay: calc(var(--i) * -0.2s);
+}
+.is-onscreen .dash-focus.is-playing .dash-wave rect {
+    animation: dash-eq 0.9s ease-in-out infinite alternate;
+    animation-delay: calc(var(--i) * -0.11s);
+}
+.is-onscreen :is(.dash-yt.is-playing .dash-np-text em, .dash-focus.is-playing [data-fp-label])::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+    border-radius: 50%;
+    vertical-align: 1px;
+    background: currentColor;
+    animation: dash-glow 1.6s ease-in-out infinite;
+}
+.is-onscreen .dash-live i::after { animation: dash-ping 2s ease-out infinite; }
+.is-onscreen .dash-seg.s3::after { animation: dash-glow 2.4s ease-in-out infinite; }
+@keyframes dash-spin { to { transform: rotate(360deg); } }
+@keyframes dash-eq {
+    from { transform: scaleY(0.35); }
+    to { transform: scaleY(1); }
+}
+@keyframes dash-breathe {
+    from { transform: scaleY(0.78); }
+    to { transform: scaleY(1); }
+}
+@keyframes dash-ping {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 0; transform: scale(2.8); }
+}
+@keyframes dash-glow {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .dash-flow li { transition: none; }
+    .dash-section *,
+    .dash-section *::after { animation: none !important; transition: none !important; }
+}
+
+@media (max-width: 1100px) {
+    .dash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dash-flow { height: 264px; }
+    .dash-flow li { width: 36%; }
+    .dash-projects,
+    .dash-career { grid-column: 1 / -1; }
+    .dash-stack,
+    .dash-people,
+    .dash-library,
+    .dash-focus { grid-column: span 1; }
+}
+@media (max-width: 680px) {
+    .dash-section { padding: 2.5rem 16px 2rem; }
+    .dash-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    .dash-tile {
+        padding: 18px;
+        border-radius: 18px;
+    }
+    .dash-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 0;
+        padding: 16px 4px;
+    }
+    .dash-kpi { padding: 2px 14px; }
+    .dash-kpi:nth-child(odd) { border-left: 0; }
+    .dash-kpi b { font-size: 20px; }
+    .dash-proj-chart {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+    }
+    .dash-ring { align-self: center; }
+    .dash-flow { height: 178px; margin: 2px -4px 0; }
+    .dash-flow li { width: 64%; transform: translateX(calc(-50% + var(--o) * 52%)) translateZ(calc(var(--d) * -150px)) rotateY(calc(var(--o) * -34deg)); }
+    .dash-actions,
+    .dash-actions .dash-btn { width: 100%; }
 }
