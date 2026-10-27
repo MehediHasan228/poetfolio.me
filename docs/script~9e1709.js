@@ -1983,13 +1983,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         function startFit() {
             if (chatWidget.classList.contains('is-busy')) return;
             const t = T[lang()];
-            if (fitMode) { chatInput.focus({ preventScroll: true }); return; }
+            // the box is focused for a mouse only, as when the chat opens: on a phone the keyboard would cover the steps
+            // and the examples; the visitor taps the box (or an example) when ready
+            const typeHere = () => { if (window.matchMedia('(pointer: fine)').matches) chatInput.focus({ preventScroll: true }); };
+            if (fitMode) { typeHere(); return; }
             beginThread(); markUsed('fit');
             setProject(true);
             const msg = appendMsg(`<p class="chat-fit-ask">${TARGET}<span>${esc(t.fitAsk)}</span></p><ol class="chat-steps">${t.steps.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`, 'bot', true);
             settle(msg); remember('bot', msg.innerHTML, t.fitAsk);
             followUps();
-            chatInput.focus({ preventScroll: true });
+            typeHere();
             const mascot = getMascot();
             if (mascot) mascot.triggerReaction('happy', 1200);
         }
