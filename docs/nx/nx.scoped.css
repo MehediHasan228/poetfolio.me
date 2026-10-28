@@ -7,15 +7,6 @@
     --cov-0: #062a3a; --cov-1: #0aa5c0; --cov-2: #2f7de0; --cov-3: #00f2fe;
     --pc-1: #1ab6e8; --pc-2: #1565a8; --pc-3: #06182e;
 }
-[data-theme="cyberpunk"] .nx {
-    --bg: #09090b; --surface: #130a10; --surface-2: #1e0f18; --surface-3: #2b1521;
-    --ink: #fbbf24; --ink-2: #dcbf86; --ink-3: #a1a1aa;
-    --line: #3a1824; --line-strong: #52202f;
-    --brand-rgb: 244, 63, 94; --brand: #f43f5e; --link: #fb7185; --on-brand: #ffffff;
-    --grad: linear-gradient(135deg, #f43f5e 0%, #eab308 100%);
-    --cov-0: #3a0a1a; --cov-1: #f43f5e; --cov-2: #eab308; --cov-3: #ec4899;
-    --pc-1: #f43f5e; --pc-2: #a3173b; --pc-3: #2a0813;
-}
 [data-theme="light"] .nx {
     --bg: #f8fafc; --surface: #ffffff; --surface-2: #f1f5f9; --surface-3: #e2e8f0;
     --ink: #0f172a; --ink-2: #334155; --ink-3: #64748b;
@@ -648,17 +639,6 @@
   --slats-color: #2563eb;
   --slats-glint: #ffffff;
 }
-.nx [data-theme="cyberpunk"] {
-  --cover-1: #f43f5e;
-  --cover-2: #eab308;
-  --cover-3: #ec4899;
-  --cover-4: #fb7185;
-  --cover-5: #f59e0b;
-  --cover-6: #e11d48;
-  --slats-bg: #09090b;
-  --slats-color: #f43f5e;
-  --slats-glint: #fef08a;
-}
 .nx [data-theme="mint"] {
   --cover-1: #a7f3d0;
   --cover-2: #6ee7b7;
@@ -1191,26 +1171,6 @@ body.nx-page[data-page="profile"] .nx .rail {
   --slats-bg: #f8fafc;
   --slats-color: #2563eb;
   --slats-glint: #ffffff;
-}
-[data-theme="cyberpunk"] {
-  --bg: #09090b;
-  --surface: #130a10;
-  --surface-2: #1e0f18;
-  --surface-3: #2b1521;
-  --ink: #fbbf24;
-  --ink-2: #dcbf86;
-  --ink-3: #a1a1aa;
-  --line: #3a1824;
-  --line-strong: #52202f;
-  --cover-1: #f43f5e;
-  --cover-2: #eab308;
-  --cover-3: #ec4899;
-  --cover-4: #fb7185;
-  --cover-5: #f59e0b;
-  --cover-6: #e11d48;
-  --slats-bg: #09090b;
-  --slats-color: #f43f5e;
-  --slats-glint: #fef08a;
 }
 [data-theme="mint"] {
   --bg: #f4faf7;
@@ -2204,7 +2164,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 .nx .pill.ai:nth-child(4) { animation-delay: 2.4s; }
 .nx .pill.ai:nth-child(5) { animation-delay: 3.2s; }
 
-:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .pill.ai {
+:is([data-theme="dark"], [data-theme="god-mode"]) .nx .pill.ai {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, color-mix(in srgb, var(--c) 16%, rgba(15, 23, 42, 0.78)) 100%);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 46%, transparent), 0 2px 10px -2px color-mix(in srgb, var(--c) 25%, transparent);
   color: #f8fafc;
@@ -2648,29 +2608,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   --aurora-daypart: #334155;
 }
 
-/* --- 3. CYBERPUNK THEME (Neon Rose Pink, Magenta & Cyber Gold) --- */
-[data-theme="cyberpunk"],
-:root[data-theme="cyberpunk"] {
-  --color-brand-300: #fb7185;
-  --color-brand-400: #f43f5e;
-  --cover-base-1: #16060f;
-  --cover-base-2: #120409;
-  --cover-1: #f43f5e;
-  --cover-2: #eab308;
-  --cover-3: #ec4899;
-  --cover-4: #fb7185;
-  --cover-5: #f59e0b;
-  --cover-6: #be123c;
-  --aurora-frost: rgba(22, 6, 15, 0.55);
-  --aurora-border: linear-gradient(150deg, rgba(255, 255, 255, 0.28), color-mix(in srgb, #f43f5e 50%, transparent) 30%, transparent 55%, color-mix(in srgb, #eab308 50%, transparent));
-  --aurora-title: #fbbf24;
-  --aurora-label: #fda4af;
-  --aurora-ico: #f43f5e;
-  --aurora-tz: #a1a1aa;
-  --aurora-daypart: #dcbf86;
-}
-
-/* --- 4. MINT THEME (Nahian.bd Emerald & Pine Signature) --- */
+/* --- 3. MINT THEME (Nahian.bd Emerald & Pine Signature) --- */
 [data-theme="mint"],
 :root[data-theme="mint"] {
   --color-brand-300: #34d399;
@@ -2692,7 +2630,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   --aurora-daypart: #334155;
 }
 
-/* --- 5. GOD-MODE THEME (Matrix Phosphor Green & Pure Cyber Black) --- */
+/* --- 4. GOD-MODE THEME (Matrix Phosphor Green & Pure Cyber Black) --- */
 [data-theme="god-mode"],
 :root[data-theme="god-mode"] {
   --color-brand-300: #4ade80;
@@ -3110,12 +3048,12 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   animation-duration: 1.6s;
 }
 @keyframes ultraTurn { to { --ultra-a: 360deg; } }
-:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .nx-hero .ask-chip.ultra {
+:is([data-theme="dark"], [data-theme="god-mode"]) .nx .nx-hero .ask-chip.ultra {
   background:
     linear-gradient(color-mix(in srgb, var(--c) 16%, #0b1120), color-mix(in srgb, var(--c) 16%, #0b1120)) padding-box,
     conic-gradient(from var(--ultra-a), var(--soft) 0deg, var(--soft) 200deg, var(--c) 270deg, color-mix(in srgb, var(--c) 45%, #fff) 300deg, var(--soft) 360deg) border-box;
 }
-:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .nx-hero .ask-chip.ultra img[src*="ollama"] { filter: invert(1); }
+:is([data-theme="dark"], [data-theme="god-mode"]) .nx .nx-hero .ask-chip.ultra img[src*="ollama"] { filter: invert(1); }
 @media (prefers-reduced-motion: reduce) { .nx .nx-hero .ask-chip.ultra { animation: none; } }
 .nx .nx-hero .pill-more { color: var(--link) !important; font-weight: 600 !important; background: transparent !important; box-shadow: inset 0 0 0 1px var(--line) !important; }
 /* where I use it: one floating tip shared by all chips (pointer devices) */
@@ -3147,7 +3085,7 @@ body .share-title { margin: 0 0 10px; font-size: 13px; font-weight: 700; color: 
 body .share-link { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 10px; border-radius: 12px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
 body .share-link span { flex: 1; min-width: 0; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 body .share-copy { flex-shrink: 0; border: 0; border-radius: 9px; padding: 6px 10px; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: #fff; background: var(--accent-1, #2563eb); }
-:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) body .share-copy { color: #04121a; }
+:is([data-theme="dark"], [data-theme="god-mode"]) body .share-copy { color: #04121a; }
 body .share-copy.is-done { background: #10b981; }
 body .share-nets { margin-top: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 body .share-nets a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 12px; font-size: 11px; color: var(--ink-2); text-decoration: none; transition: background .2s ease, color .2s ease; }
@@ -3184,9 +3122,9 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
 .nx .work2-status.is-live { --s: #16a34a; }
 .nx .work2-status.is-dev { --s: #d97706; }
 .nx .work2-status.is-vol { --s: #db2777; }
-:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-live { --s: #4ade80; }
-:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-dev { --s: #fbbf24; }
-:is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .work2-status.is-vol { --s: #f472b6; }
+:is([data-theme="dark"], [data-theme="god-mode"]) .nx .work2-status.is-live { --s: #4ade80; }
+:is([data-theme="dark"], [data-theme="god-mode"]) .nx .work2-status.is-dev { --s: #fbbf24; }
+:is([data-theme="dark"], [data-theme="god-mode"]) .nx .work2-status.is-vol { --s: #f472b6; }
 .nx .work2-impact { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
 .nx .work2-foot { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 .nx .work2-acts { display: flex; gap: 6px; }
@@ -3242,7 +3180,6 @@ body.nx-page[data-page="profile"] .nx .rail-top {
 html body.nx-page[data-page="profile"] .nx .cover-banner-wrap { background: var(--bg) !important; }
 html[data-theme="light"] body.nx-page .nx .cover-banner-wrap { background: #f8fafc !important; }
 html[data-theme="mint"] body.nx-page .nx .cover-banner-wrap { background: #f4faf7 !important; }
-html[data-theme="cyberpunk"] body.nx-page .nx .cover-banner-wrap { background: #09090b !important; }
 html[data-theme="god-mode"] body.nx-page .nx .cover-banner-wrap { background: #000 !important; }
 html body.nx-page[data-page="profile"] .nx .cover-banner-wrap .cover,
 html body.nx-page[data-page="profile"] .nx .cover-banner-wrap .cover-gradient-vignette { display: none !important; }
@@ -3653,10 +3590,6 @@ html.fx-orb-away body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { opaci
 /* the focus view: its own .nx root on <body>, so it covers the header and the floating buttons */
 .nx.fx-view { position: fixed; inset: 0; z-index: 2147482000; isolation: isolate; display: flex; overflow: hidden; color: #fff; background: #000; animation: fx-fade .35s ease both; }
 /* Ensure native cursor is ALWAYS clearly visible and clickable in focus view and fullscreen mode */
-html.fx-view-on .cursor-dot,
-html.fx-view-on .cursor-outline {
-  display: none !important;
-}
 html.fx-view-on,
 html.fx-view-on body,
 html.fx-view-on body *,
@@ -3716,9 +3649,6 @@ html body .nx.fx-view:not(#_v) { position: fixed; z-index: 2147482000; margin: 0
 .nx .fx-fades { transition: opacity .7s ease; }
 .nx.fx-view[data-idle] .fx-fades { opacity: 0; }
 html.fx-view-on, html.fx-view-on body { overflow: hidden !important; }
-/* the site's round cursor stays visible over the focus view, and rests with the controls when the view goes idle */
-html.fx-view-on body .cursor-dot, html.fx-view-on body .cursor-outline { z-index: 2147483647 !important; }
-html.fx-view-on:has(.fx-view[data-idle]) body :is(.cursor-dot, .cursor-outline) { opacity: 0 !important; }
 
 /* sleep timer, in the timer strip */
 .nx .fx-sleep { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 999px; font-size: 13px; color: var(--ink-2);

@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme (the retired cyberpunk
+         theme opens as dark) -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t==="cyberpunk")t="dark";if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
@@ -54,7 +55,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=1ce0c2905c">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=ea0c3335b9">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -82,21 +83,17 @@
 </head>
 
 <body class="subpage" data-page="architecture">
-    <div class="scroll-progress" id="scroll-progress"></div>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
     <div class="ui-controls">
-        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn magnetic-element"
+        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
             aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <button id="sound-toggler" class="control-btn sound-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
+        <button id="sound-toggler" class="control-btn sound-btn" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
                 class="fa-solid fa-volume-high"></i></button>
-        <button id="theme-toggler" class="control-btn theme-btn magnetic-element" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
+        <button id="theme-toggler" class="control-btn theme-btn" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
                 class="fa-solid fa-palette"></i></button>
     </div>
 
     <nav aria-label="Main navigation">
-        <a href="../" class="logo-link glitch-hover">
+        <a href="../" class="logo-link">
             <picture>
                 <source srcset="../mehedi-logo.webp" type="image/webp">
                 <img src="../mehedi-logo.png" alt="Mehedi Hasan - AI Automation Expert Logo" class="site-logo" width="50" height="50" loading="eager">
@@ -105,14 +102,12 @@
         </a>
 
         <ul class="nav-links">
-            <li><a href="../profile/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
-            <li><a href="../projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
-            <li><a href="../people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
-            <li><a href="../contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="../profile/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../projects/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../people/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../contact/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
             <li class="nav-sep" aria-hidden="true"></li>
-            <li><a href="../library/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
-            <li><a href="../index.html" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i
-                        class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+            <li><a href="../library/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
         </ul>
 
         <div class="mobile-header-right">
@@ -133,13 +128,13 @@
             <i class="fa-solid fa-xmark"></i>
         </button>
         <ul class="nav-links">
-            <li><a href="../profile/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
-            <li><a href="../projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
-            <li><a href="../people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
-            <li><a href="../contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="../profile/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../projects/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../people/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../contact/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
             <li class="nav-sep" aria-hidden="true"></li>
-            <li><a href="../library/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
-            </ul>
+            <li><a href="../library/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
+        </ul>
         <div class="drawer-controls">
             <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
                 aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -185,7 +180,7 @@
             <!-- Unified Architecture Grid (Pillars & Stack View) -->
             <div class="arch-unified-grid" id="archUnifiedGrid">
                 <!-- 4 Core Foundational Architecture Pillars -->
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #a855f7;"><i class="fa-solid fa-brain"></i></div>
@@ -206,7 +201,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: var(--accent-1);"><i class="fa-solid fa-server"></i></div>
@@ -223,7 +218,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #f59e0b;"><i class="fa-solid fa-network-wired"></i></div>
@@ -239,7 +234,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #38bdf8;"><i class="fa-solid fa-cloud"></i></div>
@@ -258,7 +253,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-models">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-models">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #a855f718; color: #a855f7; border: 1px solid #a855f735;">
@@ -273,7 +268,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/openai.svg" alt="OpenAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/claude.svg" alt="Claude" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/gemini.svg" alt="Gemini" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/qwen.svg" alt="Qwen" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Qwen</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/meta.svg" alt="Llama" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Llama</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/mistral.svg" alt="Mistral" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Mistral</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/deepseek.svg" alt="DeepSeek" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> DeepSeek</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-agents">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-agents">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #00f2fe18; color: #00f2fe; border: 1px solid #00f2fe35;">
@@ -288,7 +283,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/hermis.svg" alt="Hermes agent" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Hermes agent</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/openclaw.svg" alt="OpenClaw" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenClaw</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/claudecode.svg" alt="Claude Code" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude Code</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/codex.svg" alt="Codex" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Codex</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/geminicli.svg" alt="Gemini CLI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini CLI</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/opencode.svg" alt="OpenCode" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenCode</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/goose.svg" alt="Goose" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Goose</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/aider.svg" alt="Aider" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Aider</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-ide">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-ide">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #38bdf818; color: #38bdf8; border: 1px solid #38bdf835;">
@@ -303,7 +298,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/cursor.svg" alt="Cursor" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Cursor</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/windsurf.svg" alt="Windsurf" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Windsurf</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/githubcopilot.svg" alt="GitHub Copilot" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> GitHub Copilot</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/kiro.svg" alt="Kiro" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kiro</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/antigravity.svg" alt="Antigravity" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Antigravity</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-agent-framework">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-agent-framework">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #10b98118; color: #10b981; border: 1px solid #10b98135;">
@@ -318,7 +313,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/langgraph.svg" alt="LangGraph" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangGraph</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/langchain.svg" alt="LangChain" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangChain</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/crewai.svg" alt="CrewAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> CrewAI</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/autogen.svg" alt="AutoGen" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> AutoGen</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/pydantic.svg" alt="PydanticAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PydanticAI</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-protocol-tools">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-protocol-tools">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #f59e0b18; color: #f59e0b; border: 1px solid #f59e0b35;">
@@ -333,7 +328,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/mcp.svg" alt="MCP" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> MCP</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-arrows-split-up-and-left" style="color:#06b6d4;"></i> A2A</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-terminal" style="color:#10b981;"></i> Function Calling</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-toolbox" style="color:#f59e0b;"></i> Tool Use</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-local-ai">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-local-ai">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #ec489918; color: #ec4899; border: 1px solid #ec489935;">
@@ -348,7 +343,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/ollama.svg" alt="Ollama" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Ollama</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/lmstudio.svg" alt="LM Studio" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LM Studio</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-gears" style="color:#f97316;"></i> llama.cpp</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-bolt-lightning" style="color:#a855f7;"></i> vLLM</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-automation">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-automation">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #ea580c18; color: #ea580c; border: 1px solid #ea580c35;">
@@ -363,7 +358,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/n8n.svg" alt="n8n" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> n8n</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/zapier.svg" alt="Zapier" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Zapier</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/make.svg" alt="Make" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Make</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-event-streaming">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-event-streaming">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #f59e0b18; color: #f59e0b; border: 1px solid #f59e0b35;">
@@ -378,7 +373,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/apachekafka.svg" alt="Kafka" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kafka</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/rabbitmq.svg" alt="RabbitMQ" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> RabbitMQ</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/redis.svg" alt="Redis Pub/Sub" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Redis Pub/Sub</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-rag-vector">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-rag-vector">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #06b6d418; color: #06b6d4; border: 1px solid #06b6d435;">
@@ -393,7 +388,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/pinecone.svg" alt="Pinecone" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Pinecone</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/chroma.svg" alt="Chroma" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Chroma</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/qdrant.svg" alt="Qdrant" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Qdrant</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/weaviate.svg" alt="Weaviate" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Weaviate</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-ai-database">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-ai-database">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #33679118; color: #336791; border: 1px solid #33679135;">
@@ -408,7 +403,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/postgresql.svg" alt="PostgreSQL" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PostgreSQL</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/pgvector.svg" alt="pgvector" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> pgvector</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/supabase.svg" alt="Supabase" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Supabase</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/mongodb.svg" alt="MongoDB" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> MongoDB</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-web-ai">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="fullstack" id="matrix-card-web-ai">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #14b8a618; color: #14b8a6; border: 1px solid #14b8a635;">
@@ -423,7 +418,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/vercel.svg" alt="Vercel AI SDK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Vercel AI SDK</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-cubes" style="color:#06b6d4;"></i> AI SDK</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/openai.svg" alt="OpenAI SDK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI SDK</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-frontend">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="fullstack" id="matrix-card-frontend">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #61dafb18; color: #61dafb; border: 1px solid #61dafb35;">
@@ -438,7 +433,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/react.svg" alt="React" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> React</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/nextjs.svg" alt="Next.js" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Next.js</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/typescript.svg" alt="TypeScript" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> TypeScript</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/tailwind.svg" alt="Tailwind" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Tailwind</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-backend">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="fullstack" id="matrix-card-backend">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #22c55e18; color: #22c55e; border: 1px solid #22c55e35;">
@@ -453,7 +448,7 @@
                         <span class="arch-matrix-tag hover-sound"><i class="fa-brands fa-node-js" style="color:#68a063;"></i> Node.js</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/nestjs.svg" alt="NestJS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> NestJS</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/express.svg" alt="Express" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Express</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/python.svg" alt="Python" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Python</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/fastapi.svg" alt="FastAPI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> FastAPI</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-cloud">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="cloud-devops" id="matrix-card-cloud">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #ff990018; color: #ff9900; border: 1px solid #ff990035;">
@@ -468,7 +463,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/vercel.svg" alt="Vercel" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Vercel</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/aws.svg" alt="AWS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> AWS</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/googlecloud.svg" alt="Google Cloud" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Google Cloud</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/cloudflare.svg" alt="Cloudflare" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Cloudflare</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-devops">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="cloud-devops" id="matrix-card-devops">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #326ce518; color: #326ce5; border: 1px solid #326ce535;">
@@ -483,7 +478,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/docker.svg" alt="Docker" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Docker</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/githubactions.svg" alt="GitHub Actions" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> GitHub Actions</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/kubernetes.svg" alt="Kubernetes" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kubernetes</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-observability">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="cloud-devops" id="matrix-card-observability">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #f43f5e18; color: #f43f5e; border: 1px solid #f43f5e35;">
@@ -498,7 +493,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/prometheus.svg" alt="Prometheus" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Prometheus</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/grafana.svg" alt="Grafana" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Grafana</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/elastic.svg" alt="ELK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> ELK</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-magnifying-glass-chart" style="color:#f59e0b;"></i> LangSmith</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-fire-flame-curved" style="color:#ea580c;"></i> Langfuse</span><span class="arch-matrix-tag hover-sound"><img src="../uploads/brand-icons/opentelemetry.svg" alt="OpenTelemetry" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenTelemetry</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-ui-design">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-ui-design">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #d946ef18; color: #d946ef; border: 1px solid #d946ef35;">
@@ -522,27 +517,12 @@
 <div style="text-align: center; padding-bottom: 2rem;">
     </div>
 
-    <div id="mines-overlay" class="hidden-overlay">
-        <div class="mines-container">
-            <div class="mines-header draggable-header">
-                <h3>System Diagnostic <span style="color:var(--accent-1);">(Find 3 Safe Nodes)</span></h3>
-                <span id="close-mines" class="hover-sound"><i class="fa-solid fa-xmark"></i></span>
-            </div>
-            <div class="mines-grid" id="mines-grid"></div>
-            <div class="mines-status" id="mines-status">Awaiting input...</div>
-            <div id="promo-code-box"
-                style="display:none; margin-top:1rem; padding:1rem; background: rgba(74, 222, 128, 0.2); border: 1px dashed #4ade80; color: #4ade80; border-radius: 8px; font-weight: bold; font-size: 1.1rem;">
-                Congrats </div>
-            <button id="reset-mines" class="btn primary-btn full-width-btn hover-sound"
-                style="margin-top: 1rem; display:none;">Reboot System</button>
-        </div>
-    </div>
-
-    <div id="cli-terminal" class="hidden-overlay" style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
+    <!-- the terminal is an easter egg: the ` / ~ key or the footer's Terminal button opens it; closed, it is inert -->
+    <div id="cli-terminal" class="hidden-overlay" role="dialog" aria-modal="true" aria-label="Terminal" inert style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
         <div class="cli-container">
             <div class="cli-header draggable-header">
                 <span>root@mehedi.pro:~</span>
-                <i class="fa-solid fa-xmark hover-sound" id="close-cli" style="cursor:pointer; color:#ef4444;"></i>
+                <button type="button" class="hover-sound" id="close-cli" aria-label="Close terminal" style="cursor:pointer; color:#ef4444; background:none; border:0; padding:0; font-size:inherit;"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="cli-output" id="cli-output">
                 <div>Mehedi.pro OS v2.0.4 loaded.</div>
@@ -555,10 +535,6 @@
         </div>
     </div>
 
-    <div id="easter-egg-overlay" class="hidden-overlay">
-        <div id="hack-terminal"><span class="hack-cursor"></span></div>
-    </div>
-
     <footer>
         <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
         <div class="footer-copy" style="margin-top: 12px;">
@@ -567,10 +543,8 @@
                     src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
                     alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
         </div>
-        <div class="footer-egg" style="margin-top: 25px;">
-            <button id="self-destruct-btn" class="hover-sound"
-                style="width: 12px; height: 12px; background: #ef4444; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px #ef4444;"
-                title="Initiate Self Destruct"></button>
+        <div class="footer-egg">
+            <button type="button" class="footer-cli hover-sound" data-cli-open>Terminal</button>
         </div>
     </footer>
     <!-- ==========================================
@@ -664,16 +638,16 @@
         </div>
         <div class="chat-input-area">
             <textarea aria-label="Message the AI assistant" id="chat-input" rows="1" placeholder="Ask about projects, stack, hiring…" autocomplete="off" enterkeyhint="send" maxlength="500"></textarea>
-            <button id="voice-btn" class="magnetic-element hover-sound"
+            <button id="voice-btn" class="hover-sound"
                 style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:pointer;"
                 title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
-            <button id="chat-send" class="magnetic-element hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
+            <button id="chat-send" class="hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../focus/focus.js?v=478271bb78" defer></script>
+    <script src="../focus/focus.js?v=a2c75ce8f0" defer></script>
     <script src="../ai-orb-mascot.js?v=02d49c6932" defer></script>
-    <script src="../script~9e1709.js?v=b971878142" defer></script>
+    <script src="../script~9e1709.js?v=4dff873c31" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

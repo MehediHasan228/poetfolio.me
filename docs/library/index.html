@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme (the retired cyberpunk
+         theme opens as dark) -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t==="cyberpunk")t="dark";if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
@@ -54,29 +55,25 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=1ce0c2905c">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=ea0c3335b9">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
-<link rel="stylesheet" href="../nx/nx.scoped.css?v=c28661984b">
+<link rel="stylesheet" href="../nx/nx.scoped.css?v=70dd5d1d85">
 </head>
 
 <body class="subpage nx-page" data-page="library">
-    <div class="scroll-progress" id="scroll-progress"></div>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
     <div class="ui-controls">
-        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn magnetic-element"
+        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
             aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <button id="sound-toggler" class="control-btn sound-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
+        <button id="sound-toggler" class="control-btn sound-btn" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
                 class="fa-solid fa-volume-high"></i></button>
-        <button id="theme-toggler" class="control-btn theme-btn magnetic-element" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
+        <button id="theme-toggler" class="control-btn theme-btn" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
                 class="fa-solid fa-palette"></i></button>
     </div>
 
     <nav aria-label="Main navigation">
-        <a href="../" class="logo-link glitch-hover">
+        <a href="../" class="logo-link">
             <picture>
                 <source srcset="../mehedi-logo.webp" type="image/webp">
                 <img src="../mehedi-logo.png" alt="Mehedi Hasan - AI Automation Expert Logo" class="site-logo" width="50" height="50" loading="eager">
@@ -85,13 +82,12 @@
         </a>
 
         <ul class="nav-links">
-            <li><a href="../profile/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
-            <li><a href="../projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
-            <li><a href="../people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
-            <li><a href="../contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="../profile/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../projects/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../people/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../contact/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
             <li class="nav-sep" aria-hidden="true"></li>
-            <li><a href="../library/" class="active magnetic-element hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
-            <li><a href="../" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+            <li><a href="../library/" class="active hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
         </ul>
 
         <div class="mobile-header-right">
@@ -112,13 +108,13 @@
             <i class="fa-solid fa-xmark"></i>
         </button>
         <ul class="nav-links">
-            <li><a href="../profile/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
-            <li><a href="../projects/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
-            <li><a href="../people/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
-            <li><a href="../contact/" class="magnetic-element hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li><a href="../profile/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../projects/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../people/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../contact/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
             <li class="nav-sep" aria-hidden="true"></li>
-            <li><a href="../library/" class="active magnetic-element hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
-            </ul>
+            <li><a href="../library/" class="active hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
+        </ul>
         <div class="drawer-controls">
             <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
                 aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -434,7 +430,7 @@ document.addEventListener("pointermove", function (ev) {
 <div class="bottom-nav" role="navigation" aria-label="Quick navigation"><span class="bn-pill" aria-hidden="true"></span><a href="../"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="bn-label">Home</span></a><a href="../profile/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg></span><span class="bn-label">Profile</span></a><a href="../people/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span><span class="bn-label">People</span></a><a href="../library/" aria-current="page"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg></span><span class="bn-label">Library</span></a></div>
 </div>
 <script src="../nx/nx.js?v=de4ecf6d26"></script>
-<script src="../nx/proj-dots.js?v=fc0faf8946"></script>
+<script src="../nx/proj-dots.js?v=1a44f523ec"></script>
 
 <script>
 (function () {
@@ -482,27 +478,12 @@ document.addEventListener("pointermove", function (ev) {
 <div style="text-align: center; padding-bottom: 2rem; display: none;">
     </div>
 
-    <div id="mines-overlay" class="hidden-overlay">
-        <div class="mines-container">
-            <div class="mines-header draggable-header">
-                <h3>System Diagnostic <span style="color:var(--accent-1);">(Find 3 Safe Nodes)</span></h3>
-                <span id="close-mines" class="hover-sound"><i class="fa-solid fa-xmark"></i></span>
-            </div>
-            <div class="mines-grid" id="mines-grid"></div>
-            <div class="mines-status" id="mines-status">Awaiting input...</div>
-            <div id="promo-code-box"
-                style="display:none; margin-top:1rem; padding:1rem; background: rgba(74, 222, 128, 0.2); border: 1px dashed #4ade80; color: #4ade80; border-radius: 8px; font-weight: bold; font-size: 1.1rem;">
-                Congrats </div>
-            <button id="reset-mines" class="btn primary-btn full-width-btn hover-sound"
-                style="margin-top: 1rem; display:none;">Reboot System</button>
-        </div>
-    </div>
-
-    <div id="cli-terminal" class="hidden-overlay" style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
+    <!-- the terminal is an easter egg: the ` / ~ key or the footer's Terminal button opens it; closed, it is inert -->
+    <div id="cli-terminal" class="hidden-overlay" role="dialog" aria-modal="true" aria-label="Terminal" inert style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
         <div class="cli-container">
             <div class="cli-header draggable-header">
                 <span>root@mehedi.pro:~</span>
-                <i class="fa-solid fa-xmark hover-sound" id="close-cli" style="cursor:pointer; color:#ef4444;"></i>
+                <button type="button" class="hover-sound" id="close-cli" aria-label="Close terminal" style="cursor:pointer; color:#ef4444; background:none; border:0; padding:0; font-size:inherit;"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="cli-output" id="cli-output">
                 <div>Mehedi.pro OS v2.0.4 loaded.</div>
@@ -515,10 +496,6 @@ document.addEventListener("pointermove", function (ev) {
         </div>
     </div>
 
-    <div id="easter-egg-overlay" class="hidden-overlay">
-        <div id="hack-terminal"><span class="hack-cursor"></span></div>
-    </div>
-
     <footer>
         <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
         <div class="footer-copy" style="margin-top: 12px;">
@@ -527,10 +504,8 @@ document.addEventListener("pointermove", function (ev) {
                     src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
                     alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
         </div>
-        <div class="footer-egg" style="margin-top: 25px;">
-            <button id="self-destruct-btn" class="hover-sound"
-                style="width: 12px; height: 12px; background: #ef4444; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px #ef4444;"
-                title="Initiate Self Destruct"></button>
+        <div class="footer-egg">
+            <button type="button" class="footer-cli hover-sound" data-cli-open>Terminal</button>
         </div>
     </footer>
     <!-- ==========================================
@@ -624,16 +599,16 @@ document.addEventListener("pointermove", function (ev) {
         </div>
         <div class="chat-input-area">
             <textarea aria-label="Message the AI assistant" id="chat-input" rows="1" placeholder="Ask about projects, stack, hiring…" autocomplete="off" enterkeyhint="send" maxlength="500"></textarea>
-            <button id="voice-btn" class="magnetic-element hover-sound"
+            <button id="voice-btn" class="hover-sound"
                 style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:pointer;"
                 title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
-            <button id="chat-send" class="magnetic-element hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
+            <button id="chat-send" class="hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../focus/focus.js?v=478271bb78" defer></script>
+    <script src="../focus/focus.js?v=a2c75ce8f0" defer></script>
     <script src="../ai-orb-mascot.js?v=02d49c6932" defer></script>
-    <script src="../script~9e1709.js?v=b971878142" defer></script>
+    <script src="../script~9e1709.js?v=4dff873c31" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

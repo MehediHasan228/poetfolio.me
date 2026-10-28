@@ -145,58 +145,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    function playCinematicShockwaveSound() {
-        if (isMuted) return;
-        if (!audioCtx) audioCtx = new AudioContext();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const t = audioCtx.currentTime;
-
-        try {
-            // 1. Cinematic sub-acoustic pulse (warm spatial impulse)
-            const subOsc = audioCtx.createOscillator();
-            const subGain = audioCtx.createGain();
-            subOsc.type = 'sine';
-            subOsc.frequency.setValueAtTime(68, t);
-            subOsc.frequency.exponentialRampToValueAtTime(36, t + 0.28);
-            subGain.gain.setValueAtTime(0.06, t);
-            subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-            subOsc.connect(subGain);
-            subGain.connect(audioCtx.destination);
-            subOsc.start(t);
-            subOsc.stop(t + 0.3);
-
-            // 2. High-tech sci-fi fluid water wave sweep (resonant, organic)
-            const waveOsc = audioCtx.createOscillator();
-            const waveGain = audioCtx.createGain();
-            waveOsc.type = 'sine';
-            waveOsc.frequency.setValueAtTime(340, t);
-            waveOsc.frequency.exponentialRampToValueAtTime(720, t + 0.07);
-            waveOsc.frequency.exponentialRampToValueAtTime(260, t + 0.36);
-            waveGain.gain.setValueAtTime(0.045, t);
-            waveGain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
-            waveOsc.connect(waveGain);
-            waveGain.connect(audioCtx.destination);
-            waveOsc.start(t);
-            waveOsc.stop(t + 0.38);
-
-            // 3. Sci-fi crystalline harmonic shimmer (holographic water chime)
-            const chimeOsc = audioCtx.createOscillator();
-            const chimeGain = audioCtx.createGain();
-            chimeOsc.type = 'sine';
-            chimeOsc.frequency.setValueAtTime(960, t + 0.04);
-            chimeOsc.frequency.exponentialRampToValueAtTime(620, t + 0.35);
-            chimeGain.gain.setValueAtTime(0.016, t + 0.04);
-            chimeGain.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
-            chimeOsc.connect(chimeGain);
-            chimeGain.connect(audioCtx.destination);
-            chimeOsc.start(t + 0.04);
-            chimeOsc.stop(t + 0.42);
-        } catch (err) {
-            console.warn('Audio synthesis notice:', err);
-        }
-    }
-
     document.querySelectorAll('.hover-sound, a, button').forEach(el => {
         el.addEventListener('mouseenter', () => playSound('hover'));
         el.addEventListener('click', () => playSound('click'));
@@ -229,42 +177,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, { threshold: 0.3 });
 
     document.querySelectorAll('.telemetry-card').forEach(el => telObserver.observe(el));
-
-    /* ==========================================
-       3. CURSOR FOLLOWER
-    ========================================== */
-    // The system cursor stays. On mouse devices a soft ring trails it: one animation-frame loop that stops once the ring
-    // has caught up. It grows around anything clickable, tightens while the button is down and steps aside over text
-    // fields; the checks are delegated, so links and buttons added later count too.
-    const cursorOutline = document.querySelector('.cursor-outline');
-    if (cursorOutline && matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const CLICKABLE = 'a[href], button, [role="button"], select, label, summary, .hover-sound';
-        const TEXT = 'input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]), textarea, [contenteditable="true"]';
-        let x = -100, y = -100, rx = x, ry = y, raf = 0;
-        const follow = () => {
-            rx += (x - rx) * 0.28;
-            ry += (y - ry) * 0.28;
-            cursorOutline.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
-            raf = Math.abs(x - rx) + Math.abs(y - ry) > 0.2 ? requestAnimationFrame(follow) : 0;
-        };
-        window.addEventListener('pointermove', (e) => {
-            if (e.pointerType !== 'mouse') return;
-            x = e.clientX;
-            y = e.clientY;
-            if (!cursorOutline.classList.contains('is-on')) { rx = x; ry = y; cursorOutline.classList.add('is-on'); }
-            if (!raf) raf = requestAnimationFrame(follow);
-        }, { passive: true });
-        document.addEventListener('pointerover', (e) => {
-            const t = e.target instanceof Element ? e.target : null;
-            const text = !!(t && t.closest(TEXT));
-            cursorOutline.classList.toggle('is-text', text);
-            cursorOutline.classList.toggle('cursor-hover', !text && !!(t && t.closest(CLICKABLE)));
-        }, { passive: true });
-        window.addEventListener('pointerdown', () => cursorOutline.classList.add('is-down'), { passive: true });
-        window.addEventListener('pointerup', () => cursorOutline.classList.remove('is-down'), { passive: true });
-        document.documentElement.addEventListener('pointerleave', () => cursorOutline.classList.remove('is-on'));
-        window.addEventListener('blur', () => cursorOutline.classList.remove('is-on'));
-    }
 
     /* ==========================================
        4. DRAGGABLE WINDOWS OS LOGIC (UPGRADED)
@@ -345,7 +257,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     makeDraggable(document.querySelector('.cli-container'), document.querySelector('.cli-header'));
-    makeDraggable(document.querySelector('.mines-container'), document.querySelector('.mines-header'));
     makeDraggable(document.getElementById('sys-monitor'), document.querySelector('#sys-monitor .mon-title'));
     
     function makeVerticalEdgeDraggable(element, handles) {
@@ -478,22 +389,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* ==========================================
-       5. MAGNETIC ELEMENTS & 3D TILT
+       5. 3D TILT
     ========================================== */
-    if (!PREFERS_REDUCED_MOTION) document.querySelectorAll('.magnetic-element').forEach(el => {
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
-            const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-            el.style.transform = `translate(${x}px, ${y}px)`;
-            el.style.transition = 'none';
-        });
-        el.addEventListener('mouseleave', () => {
-            el.style.transform = `translate(0px, 0px)`;
-            el.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        });
-    });
-
     document.querySelectorAll('.tilt-card').forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
@@ -507,7 +404,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     /* ==========================================
-       5.1 APPLE CINEMATIC 3D DEPTH CONTROLLER (PARALLAX + GYROSCOPE + DYNAMIC LIGHTING)
+       5.1 APPLE CINEMATIC 3D DEPTH CONTROLLER (PARALLAX + GYROSCOPE)
     ========================================== */
     function initCinematicDepth() {
         const cards = document.querySelectorAll('.cinematic-depth-card');
@@ -518,65 +415,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             const heroSection = card.closest('header.hero') || document.querySelector('header.hero') || document.body;
             const bgLayer = card.querySelector('.layer-bg');
             const subject = card.querySelector('.layer-subject');
-            const frontArmyLayer = card.querySelector('.layer-army-front') || card.querySelector('.layer-tools');
-            const midArmyLayer = card.querySelector('.layer-army-mid');
-            const rearArmyLayer = card.querySelector('.layer-army-rear') || card.querySelector('.layer-models');
-            const glare = card.querySelector('.layer-glare');
-            const rimLight = card.querySelector('.layer-rimlight');
-
-            // Tag army units unambiguously as flank-left or flank-right
-            card.querySelectorAll('.army-unit-wrap').forEach(el => {
-                if (/\br[123]-l\d+\b/.test(el.className)) el.classList.add('flank-left');
-                if (/\br[123]-r\d+\b/.test(el.className)) el.classList.add('flank-right');
-            });
 
             // Physics state
-            let currentCardRotX = 0;
             let currentCardRotY = 0;
             let currentSubjX = 0;
-            let currentSubjY = 0;
             let currentIntensity = 0;
 
-            let targetCardRotX = 0;
             let targetCardRotY = 0;
             let targetSubjX = 0;
-            let targetSubjY = 0;
             let targetIntensity = 0;
-
-            let currentNormX = 0;
-            let currentNormY = 0;
-            let targetNormX = 0;
-            let targetNormY = 0;
 
             let isDirectHover = false;
             let isHeroActive = false;
             let isGyroActive = false;
-            let isScrollDeployed = false;
-            let isDeploymentUnlocked = false;
-            let lastGyroGamma = null;
-            let isShakingActive = false;
-            let shakeEndTimer = null;
-            let lastShakeTime = 0;
-            let baseBeta = null;
             let baseGamma = null;
-            let lastAccX = null, lastAccY = null, lastAccZ = null;
             let rafId = null;
 
             // Maximum values (Apple spatial depth standards: pure horizontal 3D depth, locked vertically)
-            const MAX_ROTATION_X = 2.4;
             const MAX_ROTATION_Y = 2.4; // degrees (subtle, natural iPhone stereoscopic horizontal rotation)
             const MAX_SUBJECT_SHIFT = 6.0; // px (pure horizontal spatial depth drift)
 
             function render() {
                 // Spring / Lerp smoothing
                 const factor = isGyroActive ? 0.12 : 0.085;
-                currentCardRotX += (targetCardRotX - currentCardRotX) * factor;
                 currentCardRotY += (targetCardRotY - currentCardRotY) * factor;
                 currentSubjX += (targetSubjX - currentSubjX) * factor;
-                currentSubjY += (targetSubjY - currentSubjY) * factor;
                 currentIntensity += (targetIntensity - currentIntensity) * factor;
-                currentNormX += (targetNormX - currentNormX) * factor;
-                currentNormY += (targetNormY - currentNormY) * factor;
 
                 // 1. Subtle horizontal card angle (Pure left-right 3D without any vertical stretch)
                 card.style.transform = `perspective(1200px) rotateY(${currentCardRotY.toFixed(2)}deg)`;
@@ -591,24 +455,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     subject.style.transform = `translate3d(${currentSubjX.toFixed(2)}px, 0px, 0)`;
                 }
 
-                // 4. Multi-Depth Spatial Layers Shift (Rank 1 moves faster, Rank 3 moves deeper in perspective)
-                if (frontArmyLayer) {
-                    frontArmyLayer.style.transform = `translate3d(${(currentSubjX * 0.95).toFixed(2)}px, 0px, 0)`;
-                }
-                if (midArmyLayer) {
-                    midArmyLayer.style.transform = `translate3d(${(currentSubjX * 0.55).toFixed(2)}px, 0px, 0)`;
-                }
-                if (rearArmyLayer) {
-                    rearArmyLayer.style.transform = `translate3d(${(currentSubjX * 0.20).toFixed(2)}px, 0px, 0)`;
-                }
-
-
-
                 // Check motion settle
-                const isMoving = Math.abs(targetCardRotX - currentCardRotX) > 0.02 ||
-                                 Math.abs(targetCardRotY - currentCardRotY) > 0.02 ||
+                const isMoving = Math.abs(targetCardRotY - currentCardRotY) > 0.02 ||
                                  Math.abs(targetSubjX - currentSubjX) > 0.05 ||
-                                 Math.abs(targetSubjY - currentSubjY) > 0.05 ||
                                  Math.abs(targetIntensity - currentIntensity) > 0.02;
 
                 if (isHeroActive || isGyroActive || isMoving) {
@@ -625,489 +474,86 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            function computeTargets(clientX, clientY, directHover) {
+            function computeTargets(clientX, directHover) {
                 const rect = card.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
 
                 // Normalized -1 to 1 based on card size with smooth bounds
-                const rawNormX = (clientX - centerX) / (rect.width / 2);
-                const rawNormY = (clientY - centerY) / (rect.height / 2);
-                targetNormX = Math.max(-1, Math.min(1, rawNormX));
-                targetNormY = Math.max(-1, Math.min(1, rawNormY));
+                const normX = Math.max(-1, Math.min(1, (clientX - centerX) / (rect.width / 2)));
 
                 // Direct hover gets full intensity (1.0), ambient hero motion gets refined subtle intensity (0.38)
                 isDirectHover = directHover;
                 targetIntensity = directHover ? 1.0 : 0.38;
 
-                targetCardRotX = 0;
-                targetCardRotY = targetNormX * MAX_ROTATION_Y * targetIntensity;
-                targetSubjX = targetNormX * MAX_SUBJECT_SHIFT * targetIntensity;
-                // Vertical shift locked to 0 so the photo never shifts or grows downwards
-                targetSubjY = 0;
+                targetCardRotY = normX * MAX_ROTATION_Y * targetIntensity;
+                targetSubjX = normX * MAX_SUBJECT_SHIFT * targetIntensity;
 
                 isHeroActive = true;
                 startRender();
             }
 
             function resetTargets() {
-                targetCardRotX = 0;
                 targetCardRotY = 0;
                 targetSubjX = 0;
-                targetSubjY = 0;
-                targetNormX = 0;
-                targetNormY = 0;
                 targetIntensity = 0;
                 isDirectHover = false;
                 isHeroActive = false;
                 startRender();
             }
 
-            let isShockwaveRunning = false;
-
-            function triggerCinematicShockwave(clientX, clientY) {
-                if (isShockwaveRunning) return;
-                isShockwaveRunning = true;
-
-                // 1. Synthesize audio
-                if (typeof playCinematicShockwaveSound === 'function') {
-                    playCinematicShockwaveSound();
-                }
-
-                // 2. Lock both flanks visible with shockwave impulse
-                card.classList.add('is-active', 'is-shockwave-active');
-                card.setAttribute('data-active-flank', 'all');
-
-                const rect = card.getBoundingClientRect();
-                const clickX = (clientX && clientX > 0) ? (clientX - rect.left) : (rect.width / 2);
-                const clickY = (clientY && clientY > 0) ? (clientY - rect.top) : (rect.height / 2);
-
-                card.style.setProperty('--wave-cx', `${clickX}px`);
-                card.style.setProperty('--wave-cy', `${clickY}px`);
-
-                // Staggered Sci-Fi Water Wave for all cyber-units on both flanks (পানির ঢেউ)
-                const units = card.querySelectorAll('.cyber-unit');
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const maxDist = Math.hypot(centerX, centerY);
-
-                units.forEach(unit => {
-                    const uRect = unit.getBoundingClientRect();
-                    const uX = (uRect.left + uRect.width / 2) - rect.left;
-                    const uY = (uRect.top + uRect.height / 2) - rect.top;
-
-                    // Calculate radial distance from wave origin
-                    const dist = Math.hypot(uX - clickX, uY - clickY);
-                    // Wave propagation speed: expands smoothly outwards (0 to ~400ms delay)
-                    const rippleDelay = Math.max(0.04, (dist / maxDist) * 0.42);
-
-                    setTimeout(() => {
-                        unit.classList.remove('ripple-wave-active');
-                        void unit.offsetWidth; // Force reflow
-                        unit.classList.add('ripple-wave-active');
-                    }, rippleDelay * 1000);
-
-                    setTimeout(() => {
-                        unit.classList.remove('ripple-wave-active');
-                    }, (rippleDelay + 1.0) * 1000);
-                });
-
-                // Cleanup wave state
-                setTimeout(() => {
-                    card.classList.remove('is-shockwave-active');
-                    isShockwaveRunning = false;
-                    if (!card.matches(':hover') && !wrapper.matches(':hover')) {
-                        card.classList.remove('is-active');
-                        card.removeAttribute('data-active-flank');
-                    }
-                }, 1250);
-            }
-
-            function updateActiveFlank(clientX) {
-                if (isShockwaveRunning) return;
-                const rect = card.getBoundingClientRect();
-                if (!rect.width) return;
-                const ratioX = (clientX - rect.left) / rect.width;
-                if (ratioX < 0.36) {
-                    card.setAttribute('data-active-flank', 'left');
-                } else if (ratioX > 0.64) {
-                    card.setAttribute('data-active-flank', 'right');
-                } else {
-                    card.setAttribute('data-active-flank', 'all');
-                }
-            }
-
-            // 1. Direct Card Hover (Full Cinematic Inspection & Spatial Badges Reveal)
-            wrapper.addEventListener('mouseenter', (e) => {
-                card.classList.add('is-active');
-                updateActiveFlank(e.clientX);
-            });
-
+            // 1. Direct card hover: full parallax (the photo sharpens with CSS :hover)
             wrapper.addEventListener('mousemove', (e) => {
                 e.stopPropagation();
-                computeTargets(e.clientX, e.clientY, true);
-                updateActiveFlank(e.clientX);
+                computeTargets(e.clientX, true);
             });
 
             wrapper.addEventListener('mouseleave', () => {
-                if (isShockwaveRunning) return;
                 isDirectHover = false;
-                if (isScrollDeployed) {
-                    card.classList.add('is-active', 'is-scroll-deployed');
-                    card.setAttribute('data-active-flank', 'all');
-                    targetIntensity = 0.55;
-                } else {
-                    card.classList.remove('is-active');
-                    card.removeAttribute('data-active-flank');
-                    targetIntensity = 0.38;
-                }
+                targetIntensity = 0.38;
                 startRender();
             });
 
-            // 2. Cinematic Shockwave & Sci-Fi Water Ripple on Center Click / Tap
-            wrapper.addEventListener('click', (e) => {
-                if (e.target.closest('.unit-popup') || e.target.closest('a') || e.target.closest('button')) return;
-                const rect = card.getBoundingClientRect();
-                if (!rect.width) return;
-                const ratioX = (e.clientX - rect.left) / rect.width;
-
-                const isCenterZone = ratioX >= 0.28 && ratioX <= 0.72;
-                const isBothFlanksActive = card.getAttribute('data-active-flank') === 'all';
-
-                if (isCenterZone || isBothFlanksActive) {
-                    triggerCinematicShockwave(e.clientX, e.clientY);
-                }
-            });
-
-            // 3. Smart Tooltip Collision Prevention & Viewport Clamping (Guaranteed visible bounds on desktop)
-            card.querySelectorAll('.cyber-unit').forEach(unit => {
-                unit.addEventListener('mouseenter', () => {
-                    if (window.innerWidth <= 768) return; // Mobile uses vertical above/below positioning!
-                    const popup = unit.querySelector('.unit-popup');
-                    if (!popup) return;
-                    requestAnimationFrame(() => {
-                        const r = popup.getBoundingClientRect();
-                        const pad = 12;
-                        let dx = 0;
-                        if (r.right > window.innerWidth - pad) {
-                            dx = (window.innerWidth - pad) - r.right;
-                        } else if (r.left < pad) {
-                            dx = pad - r.left;
-                        }
-                        if (dx !== 0) {
-                            popup.style.setProperty('transform', `translateY(-50%) translateX(${dx}px) scale(1)`, 'important');
-                        }
-                    });
-                });
-                unit.addEventListener('mouseleave', () => {
-                    const popup = unit.querySelector('.unit-popup');
-                    if (popup) popup.style.transform = '';
-                });
-
-                // Mobile touch / tap to inspect unit popup (toggles popup above/below unit)
-                unit.addEventListener('click', (e) => {
-                    if (window.innerWidth <= 768) {
-                        e.stopPropagation();
-                        const wasActive = unit.classList.contains('popup-active');
-                        card.querySelectorAll('.cyber-unit.popup-active').forEach(u => u.classList.remove('popup-active'));
-                        if (!wasActive) {
-                            unit.classList.add('popup-active');
-                        }
-                    }
-                });
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.cyber-unit')) {
-                    card.querySelectorAll('.cyber-unit.popup-active').forEach(u => u.classList.remove('popup-active'));
-                }
-            });
-
+            // 2. Ambient parallax while the mouse moves anywhere over the hero
             if (heroSection) {
                 heroSection.addEventListener('mousemove', (e) => {
                     if (!isDirectHover) {
-                        computeTargets(e.clientX, e.clientY, false);
+                        computeTargets(e.clientX, false);
                     }
                 });
 
-                heroSection.addEventListener('mouseleave', () => {
-                    if (isScrollDeployed) {
-                        card.classList.add('is-active', 'is-scroll-deployed');
-                        card.setAttribute('data-active-flank', 'all');
-                    } else {
-                        card.classList.remove('is-active');
-                        card.removeAttribute('data-active-flank');
-                        resetTargets();
-                    }
-                });
+                heroSection.addEventListener('mouseleave', resetTargets);
             }
 
-            // 4. Auto-Reveal on Scroll (স্ক্রল বা টাচ করার পরে লোগো আনলক হবে)
-            function handleHeroScroll() {
-                if (!card || isShakingActive) return;
+            // 3. Mobile touch (drag & pan)
+            const onTouch = (e) => {
+                if (e.touches && e.touches[0]) computeTargets(e.touches[0].clientX, true);
+            };
+            wrapper.addEventListener('touchstart', onTouch, { passive: true });
+            wrapper.addEventListener('touchmove', onTouch, { passive: true });
+            wrapper.addEventListener('touchend', resetTargets);
 
-                const rect = card.getBoundingClientRect();
-                const winHeight = window.innerHeight || document.documentElement.clientHeight;
-                const scrollY = window.scrollY || window.pageYOffset;
-                const isMobile = window.innerWidth <= 860;
-
-                // Check if hero card is currently in viewport
-                const isHeroVisible = rect.top < winHeight * 0.92 && rect.bottom > winHeight * 0.08;
-
-                if (scrollY > 25 && isHeroVisible) {
-                    isDeploymentUnlocked = true;
-                    if (!isScrollDeployed) {
-                        isScrollDeployed = true;
-                        // Scroll reveals the floating logos on mobile too (not only desktop)
-                        card.classList.add('is-active', 'is-scroll-deployed');
-                        if (!isDirectHover) {
-                            card.setAttribute('data-active-flank', 'all');
-                        }
-                    }
-                    if (!isDirectHover && !isGyroActive) {
-                        // Subtle reactive tilt & dynamic 3D depth shift as user scrolls down
-                        const scrollProgress = Math.min(1, (scrollY - 20) / 280);
-                        targetCardRotX = -scrollProgress * 6.5;
-                        targetIntensity = 0.50 + scrollProgress * 0.35;
-                        startRender();
-                    }
-                } else if (scrollY <= 15) {
-                    if (isScrollDeployed) {
-                        isScrollDeployed = false;
-                        card.classList.remove('is-scroll-deployed');
-                        if (!isDirectHover && !isGyroActive) {
-                            card.classList.remove('is-active');
-                            card.removeAttribute('data-active-flank');
-                            resetTargets();
-                        }
-                    }
-                } else if (!isHeroVisible && isScrollDeployed) {
-                    // Out of screen view: silently reset so it re-deploys cleanly on scroll back
-                    isScrollDeployed = false;
-                    card.classList.remove('is-scroll-deployed');
-                    if (!isDirectHover && !isGyroActive) {
-                        card.classList.remove('is-active');
-                        card.removeAttribute('data-active-flank');
-                        resetTargets();
-                    }
-                }
-            }
-
-            window.addEventListener('scroll', handleHeroScroll, { passive: true });
-            // Global touch anywhere on page unlocks flank deployment
-            window.addEventListener('touchstart', () => {
-                isDeploymentUnlocked = true;
-            }, { passive: true });
-            // Initial run in case loaded midway, with the next frame: its measuring would lay the page out inside the start-up task
-            requestAnimationFrame(handleHeroScroll);
-
-            // 5. Mobile Touch Events (Drag & Pan Interaction)
-            wrapper.addEventListener('touchstart', (e) => {
-                isDeploymentUnlocked = true;
-                if (e.touches && e.touches[0]) {
-                    computeTargets(e.touches[0].clientX, e.touches[0].clientY, true);
-                    const rect = card.getBoundingClientRect();
-                    const ratioX = (e.touches[0].clientX - rect.left) / rect.width;
-                    if (ratioX < 0.46) {
-                        card.setAttribute('data-active-flank', 'left');
-                        card.classList.add('is-active');
-                    } else if (ratioX > 0.54) {
-                        card.setAttribute('data-active-flank', 'right');
-                        card.classList.add('is-active');
-                    } else {
-                        card.removeAttribute('data-active-flank');
-                        card.classList.remove('is-active');
-                    }
-                }
-            }, { passive: true });
-
-            wrapper.addEventListener('touchmove', (e) => {
-                isDeploymentUnlocked = true;
-                if (e.touches && e.touches[0]) {
-                    computeTargets(e.touches[0].clientX, e.touches[0].clientY, true);
-                    const rect = card.getBoundingClientRect();
-                    const ratioX = (e.touches[0].clientX - rect.left) / rect.width;
-                    if (ratioX < 0.46) {
-                        card.setAttribute('data-active-flank', 'left');
-                        card.classList.add('is-active');
-                    } else if (ratioX > 0.54) {
-                        card.setAttribute('data-active-flank', 'right');
-                        card.classList.add('is-active');
-                    } else {
-                        card.removeAttribute('data-active-flank');
-                        card.classList.remove('is-active');
-                    }
-                }
-            }, { passive: true });
-
-            wrapper.addEventListener('touchend', () => {
-                if (isShockwaveRunning) return;
-                const isMobile = window.innerWidth <= 860;
-                if (isMobile) {
-                    if (baseGamma !== null && lastGyroGamma !== null && isDeploymentUnlocked) {
-                        const currentDeltaGamma = lastGyroGamma - baseGamma;
-                        if (currentDeltaGamma > 3.5) {
-                            card.setAttribute('data-active-flank', 'right');
-                            card.classList.add('is-active');
-                        } else if (currentDeltaGamma < -3.5) {
-                            card.setAttribute('data-active-flank', 'left');
-                            card.classList.add('is-active');
-                        } else if (isScrollDeployed) {
-                            card.setAttribute('data-active-flank', 'all');
-                            card.classList.add('is-active', 'is-scroll-deployed');
-                        } else {
-                            card.removeAttribute('data-active-flank');
-                            card.classList.remove('is-active');
-                        }
-                    } else if (isScrollDeployed) {
-                        card.setAttribute('data-active-flank', 'all');
-                        card.classList.add('is-active', 'is-scroll-deployed');
-                    } else {
-                        card.removeAttribute('data-active-flank');
-                        card.classList.remove('is-active');
-                    }
-                    resetTargets();
-                } else if (isScrollDeployed) {
-                    card.classList.add('is-active', 'is-scroll-deployed');
-                    card.setAttribute('data-active-flank', 'all');
-                } else {
-                    card.classList.remove('is-active');
-                    card.removeAttribute('data-active-flank');
-                    resetTargets();
-                }
-            });
-
-            // 5. Mobile Gyroscope 3D Tilt & Kinetic Shake Surge (iPhone & Android)
+            // 4. Mobile gyroscope 3D tilt (iPhone & Android)
             function handleOrientation(e) {
                 if (e.beta === null || e.gamma === null) return;
                 isGyroActive = true;
-                lastGyroGamma = e.gamma;
 
                 // Dynamic baseline drift: smoothly adapts to user hand posture
-                if (baseBeta === null) {
-                    baseBeta = e.beta;
+                if (baseGamma === null) {
                     baseGamma = e.gamma;
                 } else {
-                    baseBeta += (e.beta - baseBeta) * 0.015;
                     baseGamma += (e.gamma - baseGamma) * 0.015;
                 }
 
-                const deltaGamma = e.gamma - baseGamma;
-                const deltaBeta = e.beta - baseBeta;
-
                 // Responsive tilt mapping (-18 to +18 degrees = full 3D range)
-                targetNormX = Math.max(-1, Math.min(1, deltaGamma / 18));
-                targetNormY = Math.max(-1, Math.min(1, deltaBeta / 18));
-                targetIntensity = Math.min(1.0, Math.sqrt(targetNormX * targetNormX + targetNormY * targetNormY) * 1.25);
-
-                targetCardRotX = -targetNormY * (MAX_ROTATION_X * 1.25);
-                targetCardRotY = targetNormX * (MAX_ROTATION_Y * 1.25);
-                targetSubjX = targetNormX * (MAX_SUBJECT_SHIFT * 1.35);
-                targetSubjY = targetNormY * (MAX_SUBJECT_SHIFT * 1.35);
-
-                // Highlight flank according to phone tilt direction
-                if (!isShakingActive && !isDirectHover) {
-                    const isMobile = window.innerWidth <= 860;
-                    if (!isDeploymentUnlocked) {
-                        // Locked on initial open: ONLY 3D photo vibe, no logos on either side
-                        card.removeAttribute('data-active-flank');
-                        card.classList.remove('is-active');
-                    } else if (isMobile) {
-                        // Unlocked after scroll or touch:
-                        // Tilt phone RIGHT -> ONLY right logos emerge, left side completely empty
-                        // Tilt phone LEFT -> ONLY left logos emerge, right side completely empty
-                        // Neutral posture -> both flanks tucked behind and empty
-                        if (deltaGamma > 3.5) {
-                            card.setAttribute('data-active-flank', 'right');
-                            card.classList.add('is-active');
-                        } else if (deltaGamma < -3.5) {
-                            card.setAttribute('data-active-flank', 'left');
-                            card.classList.add('is-active');
-                        } else if (isScrollDeployed) {
-                            card.setAttribute('data-active-flank', 'all');
-                            card.classList.add('is-active');
-                        } else {
-                            card.removeAttribute('data-active-flank');
-                            card.classList.remove('is-active');
-                        }
-                    } else {
-                        if (deltaGamma < -6) {
-                            card.setAttribute('data-active-flank', 'left');
-                            card.classList.add('is-active');
-                        } else if (deltaGamma > 6) {
-                            card.setAttribute('data-active-flank', 'right');
-                            card.classList.add('is-active');
-                        } else if (isScrollDeployed) {
-                            card.setAttribute('data-active-flank', 'all');
-                            card.classList.add('is-active');
-                        } else {
-                            card.removeAttribute('data-active-flank');
-                            card.classList.remove('is-active');
-                        }
-                    }
-                }
+                const normX = Math.max(-1, Math.min(1, (e.gamma - baseGamma) / 18));
+                targetCardRotY = normX * (MAX_ROTATION_Y * 1.25);
+                targetSubjX = normX * (MAX_SUBJECT_SHIFT * 1.35);
 
                 startRender();
             }
 
-            // 5. Kinetic Mobile Shake Detection (ঝাঁকালে লোগো ভেসে উঠে কাঁপতে থাকবে)
-            function handleMotion(e) {
-                const acc = e.accelerationIncludingGravity || e.acceleration;
-                if (!acc) return;
-                const x = acc.x || 0;
-                const y = acc.y || 0;
-                const z = acc.z || 0;
-
-                if (lastAccX === null) {
-                    lastAccX = x; lastAccY = y; lastAccZ = z;
-                    return;
-                }
-
-                const deltaX = Math.abs(x - lastAccX);
-                const deltaY = Math.abs(y - lastAccY);
-                const deltaZ = Math.abs(z - lastAccZ);
-                const shakeForce = deltaX + deltaY + deltaZ;
-
-                // Threshold for vigorous shake
-                if (shakeForce > 21) {
-                    const now = Date.now();
-                    if (now - lastShakeTime > 120) {
-                        lastShakeTime = now;
-                        triggerKineticShake(shakeForce);
-                    }
-                }
-
-                lastAccX = x; lastAccY = y; lastAccZ = z;
-            }
-
-            function triggerKineticShake(force) {
-                if (!isShakingActive) {
-                    isShakingActive = true;
-                    card.classList.add('is-kinetic-shaking');
-                    card.classList.add('is-active');
-                    card.setAttribute('data-active-flank', 'all');
-
-                    // Subtle mobile haptic vibration if supported
-                    if (navigator.vibrate) {
-                        try { navigator.vibrate([40, 30, 50]); } catch(err) {}
-                    }
-                    if (typeof playSound === 'function') {
-                        playSound('hover');
-                    }
-                }
-
-                // Shake persists while shaking + settles 2.2 seconds after stopping
-                if (shakeEndTimer) clearTimeout(shakeEndTimer);
-                shakeEndTimer = setTimeout(() => {
-                    isShakingActive = false;
-                    card.classList.remove('is-kinetic-shaking');
-                    card.classList.remove('is-active');
-                    card.removeAttribute('data-active-flank');
-                }, 2200);
-            }
-
-            // Enable Orientation and Motion Sensors (iOS permission + Android automatic)
-            function initMotionAndGyro() {
+            // Enable the orientation sensor (iOS asks permission, Android needs none)
+            function initGyro() {
                 if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                     DeviceOrientationEvent.requestPermission().then(res => {
                         if (res === 'granted') {
@@ -1117,81 +563,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (window.DeviceOrientationEvent) {
                     window.addEventListener('deviceorientation', handleOrientation, { passive: true });
                 }
-
-                if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                    DeviceMotionEvent.requestPermission().then(res => {
-                        if (res === 'granted') {
-                            window.addEventListener('devicemotion', handleMotion, { passive: true });
-                        }
-                    }).catch(() => {});
-                } else if (window.DeviceMotionEvent) {
-                    window.addEventListener('devicemotion', handleMotion, { passive: true });
-                }
             }
 
             // Bind sensor permissions to user gesture
-            document.addEventListener('touchstart', initMotionAndGyro, { once: true, passive: true });
-            document.addEventListener('click', initMotionAndGyro, { once: true, passive: true });
+            document.addEventListener('touchstart', initGyro, { once: true, passive: true });
+            document.addEventListener('click', initGyro, { once: true, passive: true });
         });
     }
 
     initCinematicDepth();
-
-    // The portrait card's 35 tool logos (data-src) only show once the card is hovered or opened, so they load 3 s after
-    // the page has, or the moment the card is touched, instead of alongside the first screen.
-    const depthCard = document.getElementById('hero-depth-container');
-    if (depthCard) {
-        const loadLogos = () => depthCard.querySelectorAll('img[data-src]').forEach((img) => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
-        ['pointerenter', 'touchstart', 'focusin'].forEach((t) => depthCard.addEventListener(t, loadLogos, { once: true, passive: true }));
-        const whenIdle = () => setTimeout(() => ('requestIdleCallback' in window ? requestIdleCallback(loadLogos, { timeout: 2000 }) : loadLogos()), 3000);
-        if (document.readyState === 'complete') whenIdle();
-        else window.addEventListener('load', whenIdle, { once: true });
-    }
-
-    /* ==========================================
-       6. MATRIX DECRYPTION EFFECT
-    ========================================== */
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*0123456789";
-
-    function decryptText(element) {
-        if (element.dataset.decrypted === "true") return;
-        element.dataset.decrypted = "true";
-
-        let iterations = 0;
-        const finalValue = element.dataset.value;
-        const originalHTML = element.innerHTML;
-
-        const interval = setInterval(() => {
-            element.innerText = finalValue.split("")
-                .map((letter, index) => {
-                    if (index < iterations) return finalValue[index];
-                    return letters[Math.floor(Math.random() * letters.length)];
-                })
-                .join("");
-
-            if (iterations >= finalValue.length) {
-                clearInterval(interval);
-                element.innerHTML = originalHTML;
-            }
-            iterations += 1 / 3;
-            if (iterations % 1 === 0) playSound('type');
-        }, 30);
-    }
-
-    const decryptObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) decryptText(entry.target);
-        });
-    }, { threshold: 0.8 });
-
-    document.querySelectorAll('.decrypt-text').forEach(el => {
-        // The hero heading is the first big thing painted (the page's LCP), so it reads plainly on load and decrypts on mouse hover.
-        if (el.closest('#home')) {
-            el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') decryptText(el); });
-            return;
-        }
-        decryptObserver.observe(el);
-    });
 
     /* ==========================================
        7. LIVE SERVER & CLIENT TELEMETRY COCKPIT
@@ -1433,26 +813,62 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* ==========================================
-       8. FULL CLI HACKER TERMINAL
+       8. CLI TERMINAL (EASTER EGG)
     ========================================== */
-    const cliToggle = document.getElementById('cli-toggle');
+    // Opened with the ` / ~ key (outside text fields) or the footer's Terminal button. Closed, the overlay is inert, so Tab
+    // never lands in it; open, focus goes to the prompt and stays inside, and Esc hands it back to whatever had it.
     const cliTerminal = document.getElementById('cli-terminal');
     const cliClose = document.getElementById('close-cli');
     const cliInput = document.getElementById('cli-input');
     const cliOutput = document.getElementById('cli-output');
 
-    if (cliToggle && cliTerminal) {
-        cliToggle.addEventListener('click', (e) => {
-            e.preventDefault();
+    if (cliTerminal && cliInput) {
+        let cliReturnFocus = null;
+        const openCli = () => {
+            if (cliTerminal.classList.contains('active')) return;
+            cliReturnFocus = document.activeElement;
+            cliTerminal.removeAttribute('inert');
             cliTerminal.classList.add('active');
-            cliInput.focus();
+            cliInput.focus({ preventScroll: true });
             playSound('success');
-        });
+        };
+        const closeCli = () => {
+            if (!cliTerminal.classList.contains('active')) return;
+            cliTerminal.classList.remove('active');
+            cliTerminal.setAttribute('inert', '');
+            if (cliReturnFocus && cliReturnFocus.isConnected && cliReturnFocus !== document.body) cliReturnFocus.focus({ preventScroll: true });
+            else cliInput.blur();
+            cliReturnFocus = null;
+        };
 
-        cliClose.addEventListener('click', () => cliTerminal.classList.remove('active'));
+        document.addEventListener('click', (e) => {
+            if (e.target instanceof Element && e.target.closest('[data-cli-open]')) openCli();
+        });
+        document.addEventListener('keydown', (e) => {
+            if ((e.key !== '`' && e.key !== '~') || e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+            if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+            e.preventDefault();   // the key only opens the terminal; it isn't typed into the prompt
+            openCli();
+        });
+        // while it is open, Esc and Tab are the terminal's wherever focus has drifted (a click on the backdrop); caught
+        // on the way down, so the chat and the menu, which close on Esc too, never see it
+        document.addEventListener('keydown', (e) => {
+            if (!cliTerminal.classList.contains('active')) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                closeCli();
+            } else if (e.key === 'Tab' && cliClose) {
+                // the prompt and the close button are the only stops, so Tab moves between them
+                e.preventDefault();
+                (document.activeElement === cliInput ? cliClose : cliInput).focus();
+            }
+        }, true);
+        cliTerminal.addEventListener('click', (e) => { if (e.target === cliTerminal) closeCli(); });   // the backdrop
+        if (cliClose) cliClose.addEventListener('click', closeCli);
 
         const cliCommands = {
-            'help': 'Available commands: help, about, skills, projects, clear, exit, vault, solarsmash, hw-scan, deep-dive',
+            'help': 'Available commands: help, about, skills, projects, clear, exit, vault, solarsmash, hw-scan',
             'about': 'I am a Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect with 4+ years of production experience building intelligent web systems, distributed microservices (NestJS, Postgres, Kafka, Redis), and autonomous LLM workflows.',
             'skills': 'Languages: PHP, JavaScript, SQL, Liquid.\nFrameworks: Tailwind, Laravel.\nTools: Git, VS Code, Cloudflare, openclaw, Antigravity, claude.',
             'projects': 'Accessing secure database... Use the GUI interface on the main portal to view VIP projects.',
@@ -1463,24 +879,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         cliInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !cliInput.readOnly) {   // read-only while hw-scan runs
                 const val = cliInput.value.trim().toLowerCase();
                 cliInput.value = '';
                 playSound('type');
 
-                cliOutput.innerHTML += `<div><span class="sys">root@mehedi.pro:~$</span> ${val}</div>`;
+                const echo = document.createElement('div');   // what was typed goes in as text, never as markup
+                echo.innerHTML = '<span class="sys">root@mehedi.pro:~$</span> ';
+                echo.append(val);
+                cliOutput.append(echo);
 
                 if (val === 'clear') {
                     cliOutput.innerHTML = '';
                 } else if (val === 'exit') {
-                    cliTerminal.classList.remove('active');
-                } else if (val === 'deep-dive') {
-                    deepDiveMode = !deepDiveMode;
-                    cliOutput.innerHTML += `<div style="color:var(--accent-1); margin-top:5px;">[SYSTEM] Deep Dive Matrix mode ${deepDiveMode ? 'ACTIVATED' : 'DEACTIVATED'}.</div>`;
-                    updateClearance(4);
+                    closeCli();
                 } else if (val === 'hw-scan') {
                     cliOutput.innerHTML += `<div style="color:var(--accent-1); margin-top:5px;">[SYSTEM] Commencing Hardware Diagnostic...</div>`;
-                    cliInput.disabled = true;
+                    cliInput.readOnly = true;   // not disabled: the prompt keeps focus, so Esc and Tab still work
 
                     const frames = [
                         "[||........] Scanning Antenna Arrays...",
@@ -1499,7 +914,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             fIdx++;
                         } else {
                             clearInterval(scanInt);
-                            cliInput.disabled = false;
+                            cliInput.readOnly = false;
                             cliInput.focus();
                             playSound('success');
                             updateClearance(3);
@@ -1510,7 +925,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     cliOutput.innerHTML += `<div style="color:#d4d4d4;">${cliCommands[val].replace(/\n/g, '<br>')}</div>`;
                     if (val === 'vault') updateClearance(2);
                 } else if (val !== '') {
-                    cliOutput.innerHTML += `<div class="err">bash: ${val}: command not found</div>`;
+                    const err = document.createElement('div');
+                    err.className = 'err';
+                    err.textContent = `bash: ${val}: command not found`;
+                    cliOutput.append(err);
                 }
 
                 cliOutput.scrollTop = cliOutput.scrollHeight;
@@ -2672,10 +2090,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     /* ==========================================
-       10. D-I-P HACK & KONAMI GOD MODE
+       10. KONAMI GOD MODE
     ========================================== */
 
-    let sCode = ['d', 'i', 'p'], sPos = 0;
     const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     let konamiIndex = 0;
 
@@ -2687,66 +2104,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 konamiIndex = 0;
             }
         } else { konamiIndex = 0; }
-
-        if (e.key.toLowerCase() === sCode[sPos]) {
-            sPos++;
-            if (sPos === 3) {
-                const over = document.getElementById('easter-egg-overlay');
-                const term = document.getElementById('hack-terminal');
-                over.classList.add('active');
-                term.innerHTML = '<span class="hack-cursor"></span>';
-
-                const lines = ["INITIATING OVERRIDE...", "BYPASSING FIREWALL...", "USER IDENTIFIED: MEHEDI", "ROOT ACCESS GRANTED."];
-                let lIdx = 0;
-
-                function printLine() {
-                    if (lIdx < lines.length) {
-                        const l = document.createElement('div');
-                        l.textContent = "> " + lines[lIdx];
-                        term.insertBefore(l, term.querySelector('.hack-cursor'));
-                        lIdx++;
-                        playSound('type');
-                        setTimeout(printLine, Math.random() * 300 + 100);
-                    } else {
-                        setTimeout(() => {
-                            over.style.background = "#4ade80";
-                            term.style.color = "#000";
-                            playSound('success');
-                            updateClearance(4);
-                        }, 600);
-                        setTimeout(() => {
-                            over.classList.remove('active');
-                            setTimeout(() => {
-                                over.style.background = "rgba(0,0,0,0.95)";
-                                term.style.color = "#4ade80";
-                                term.innerHTML = '<span class="hack-cursor"></span>';
-                            }, 500);
-                        }, 2800);
-                    }
-                }
-                setTimeout(printLine, 400);
-                sPos = 0;
-            }
-        } else { sPos = 0; }
     });
 
     function activateGodMode() {
         playSound('success');
         document.documentElement.setAttribute('data-theme', 'god-mode');
         localStorage.setItem('mehedi_theme', 'god-mode');
-        if (typeof initParticles === 'function') initParticles();
         updateClearance(2);
 
         setTimeout(() => { alert("/// GOD MODE ACTIVATED /// \nHardware limits bypassed. Root access simulated."); }, 300);
     }
 
     /* ==========================================
-       11. THEME SWITCHER & DEEP DIVE MATRIX
+       11. THEME SWITCHER
     ========================================== */
     const themeBtn = document.getElementById('theme-toggler');
-    const themes = ['dark', 'cyberpunk', 'light', 'mint', 'god-mode'];
+    const themes = ['dark', 'light', 'mint', 'god-mode'];
 
     let savedTheme = localStorage.getItem('mehedi_theme') || 'dark';
+    // the cyberpunk theme is retired: a visitor who saved it gets dark
+    if (savedTheme === 'cyberpunk') { savedTheme = 'dark'; localStorage.setItem('mehedi_theme', savedTheme); }
     document.documentElement.setAttribute('data-theme', savedTheme);
     let cTheme = themes.indexOf(savedTheme) !== -1 ? themes.indexOf(savedTheme) : 0;
 
@@ -2757,7 +2134,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         do { idx = (idx + 1) % themes.length; } while (themes[idx] === 'god-mode');
         document.documentElement.setAttribute('data-theme', themes[idx]);
         localStorage.setItem('mehedi_theme', themes[idx]);
-        if (typeof initParticles === 'function') initParticles();
     }
 
     document.addEventListener('click', (e) => {
@@ -2767,121 +2143,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             cycleTheme();
         }
     });
-
-    const canvas = document.getElementById('particle-canvas');
-    let ctx, pArray;
-    let mouse = { x: null, y: null, radius: 150 };
-
-    let deepDiveMode = false;
-    let matrixDrops = [];
-    let matrixFontSize = 16;
-    let matrixColumns = 0;
-
-    if (canvas) {
-        ctx = canvas.getContext('2d');
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX; mouse.y = e.clientY;
-        });
-
-        window.addEventListener('mouseout', () => {
-            mouse.x = null; mouse.y = null;
-        });
-
-        function initMatrix() {
-            matrixColumns = Math.floor(canvas.width / matrixFontSize);
-            matrixDrops = [];
-            for (let x = 0; x < matrixColumns; x++) matrixDrops[x] = 1;
-        }
-
-        // keep: the dots drawn as the page parsed (the hero-net script in the head) start moving from where they are
-        function initParticles(keep) {
-            if (keep && window.heroParticles && canvas.width === innerWidth && canvas.height === innerHeight) {
-                pArray = window.heroParticles;
-                initMatrix();
-                return true;
-            }
-            canvas.width = innerWidth;
-            canvas.height = innerHeight;
-            pArray = [];
-            initMatrix();
-            const col = getComputedStyle(document.documentElement).getPropertyValue('--particle-color').trim() || '#00f2fe';
-
-            for (let i = 0; i < (innerWidth * innerHeight) / 9000; i++) {
-                pArray.push({
-                    x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-                    dx: (Math.random() - 0.5) * 1.5, dy: (Math.random() - 0.5) * 1.5,
-                    s: Math.random() * 2 + 1, col: col
-                });
-            }
-        }
-
-        window.addEventListener('resize', () => initParticles());
-
-        let particlesOn = false, heroInView = true, particleFrame = 0;
-        // Phones draw every other frame (~30 fps) and move twice as far each time: the same drift at half the work.
-        const PARTICLE_STEP = matchMedia('(pointer: coarse)').matches ? 2 : 1;
-
-        function animateParticles() {
-            // Reduced motion: draw a single static frame instead of looping. The loop also rests while the hero is scrolled away.
-            particlesOn = !PREFERS_REDUCED_MOTION && heroInView;
-            if (particlesOn) requestAnimationFrame(animateParticles);
-            if (particlesOn && ++particleFrame % PARTICLE_STEP) return;
-
-            if (deepDiveMode) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#0f0';
-                ctx.font = matrixFontSize + 'px "Fira Code", monospace';
-
-                for (let i = 0; i < matrixDrops.length; i++) {
-                    const text = String.fromCharCode(0x30A0 + Math.random() * 96);
-                    ctx.fillText(text, i * matrixFontSize, matrixDrops[i] * matrixFontSize);
-                    if (matrixDrops[i] * matrixFontSize > canvas.height && Math.random() > 0.975) matrixDrops[i] = 0;
-                    matrixDrops[i]++;
-                }
-            } else {
-                pArray.forEach(p => {
-                    if (p.x >= canvas.width) { p.x = canvas.width; p.dx *= -1; }
-                    else if (p.x <= 0) { p.x = 0; p.dx *= -1; }
-                    if (p.y >= canvas.height) { p.y = canvas.height; p.dy *= -1; }
-                    else if (p.y <= 0) { p.y = 0; p.dy *= -1; }
-
-                    if (mouse.x != null && mouse.y != null) {
-                        let dx = mouse.x - p.x; let dy = mouse.y - p.y;
-                        let distance = Math.sqrt(dx * dx + dy * dy);
-                        if (distance < mouse.radius) {
-                            const forceDirectionX = dx / distance;
-                            const forceDirectionY = dy / distance;
-                            const force = (mouse.radius - distance) / mouse.radius;
-                            p.x -= forceDirectionX * force * 5;
-                            p.y -= forceDirectionY * force * 5;
-                        }
-                    }
-
-                    p.dx *= 0.98; p.dy *= 0.98;
-                    if (Math.abs(p.dx) < 0.3) p.dx = p.dx > 0 ? 0.3 : -0.3;
-                    if (Math.abs(p.dy) < 0.3) p.dy = p.dy > 0 ? 0.3 : -0.3;
-
-                    p.x += p.dx * PARTICLE_STEP; p.y += p.dy * PARTICLE_STEP;
-                });
-                drawParticleNet(ctx, pArray);
-            }
-        }
-
-        // The page paints first: the particles start once the browser is idle, and rest while the hero is off screen.
-        // The first still frame was drawn with the hero; it is drawn here only if the window changed size since.
-        if (!initParticles(true)) { heroInView = false; animateParticles(); heroInView = true; }
-        const startParticles = () => {
-            animateParticles();
-            new IntersectionObserver(([entry]) => {
-                heroInView = entry.isIntersecting;
-                if (heroInView && !particlesOn) animateParticles();
-            }).observe(canvas);
-        };
-        if ('requestIdleCallback' in window) requestIdleCallback(startParticles, { timeout: 3000 });
-        else setTimeout(startParticles, 1200);
-    }
 
     /* ==========================================
        12. VS CODE IDE LOGIC (DYNAMIC REFACTOR)
@@ -3239,78 +2500,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderArsenal();
 
     /* ==========================================
-       13. TYPEWRITER EFFECT
-    ========================================== */
-    const tArr = [
-        { prefix: "I am an", text: "AI-Native Software Engineer" },
-        { prefix: "I am an", text: "LLM Integration Specialist" },
-        { prefix: "I am an", text: "Autonomous Agent Developer" },
-        { prefix: "I am a", text: "Full-Stack System Architect" }
-    ];
-    let tIdx = 0, cIdx = 0;
-    const typingSpan = document.querySelector(".typing-text");
-    const prefixSpan = document.querySelector(".prefix-text");
-
-    if (typingSpan) {
-        // The subtitle keeps the height of its tallest phrase (some wrap to two lines), so the centred hero never jumps
-        // while phrases type and erase. Measured again once the fonts are in and when the width changes.
-        const subtitle = typingSpan.closest('h2');
-        let subtitleW = 0;   // the width it was measured at (read with the measuring: innerWidth lays the page out)
-        const reserveSubtitle = () => {
-            if (!subtitle) return;
-            subtitleW = innerWidth;
-            const was = [prefixSpan ? prefixSpan.textContent : '', typingSpan.textContent];
-            subtitle.style.minHeight = '';
-            let tallest = 0;
-            tArr.forEach((it) => {
-                if (prefixSpan) prefixSpan.textContent = it.prefix;
-                typingSpan.textContent = it.text;
-                tallest = Math.max(tallest, subtitle.offsetHeight);
-            });
-            if (prefixSpan) prefixSpan.textContent = was[0];
-            typingSpan.textContent = was[1];
-            subtitle.style.minHeight = tallest + 'px';
-        };
-        // Measured with the next frame (the stylesheet holds the height until then): measuring here would lay the page out
-        // inside the start-up task, and the fonts may already be in, which runs the .then before this task ends.
-        let reserveQueued = false;
-        const reserveSoon = () => {
-            if (reserveQueued) return;
-            reserveQueued = true;
-            requestAnimationFrame(() => { reserveQueued = false; reserveSubtitle(); });
-        };
-        reserveSoon();
-        // fonts.ready is read with the frame too: the getter brings style and layout up to date
-        if (document.fonts) requestAnimationFrame(() => document.fonts.ready.then(reserveSoon));
-        window.addEventListener('resize', () => { if (innerWidth !== subtitleW) reserveSubtitle(); });
-
-        function type() {
-            const currentItem = tArr[tIdx];
-            if (prefixSpan) {
-                prefixSpan.textContent = currentItem.prefix;
-            }
-
-            if (cIdx < currentItem.text.length) {
-                typingSpan.textContent += currentItem.text.charAt(cIdx);
-                cIdx++; setTimeout(type, 100);
-            } else { setTimeout(erase, 2000); }
-        }
-        function erase() {
-            const currentItem = tArr[tIdx];
-            if (cIdx > 0) {
-                typingSpan.textContent = currentItem.text.substring(0, cIdx - 1);
-                cIdx--; setTimeout(erase, 50);
-            } else {
-                tIdx = (tIdx + 1) % tArr.length; setTimeout(type, 500);
-            }
-        }
-        // The first phrase comes written in the page, so the hero reads complete from the first paint; the typing
-        // cycle takes over after 5 s (typed in from empty, the title kept changing the first screen for seconds).
-        if (typingSpan.textContent === tArr[0].text) { cIdx = tArr[0].text.length; setTimeout(erase, 5000); }
-        else setTimeout(type, 1000);
-    }
-
-    /* ==========================================
        14. INTERACTIVE POS CHECKOUT TERMINAL
     ========================================== */
     const posItems = document.querySelectorAll('.pos-item');
@@ -3411,38 +2600,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 });
             });
-        });
-    }
-
-    /* ==========================================
-       16. SELF DESTRUCT MELTDOWN SEQUENCE
-    ========================================== */
-    const sdBtn = document.getElementById('self-destruct-btn');
-    if (sdBtn) {
-        sdBtn.addEventListener('click', () => {
-            playSound('error');
-            document.body.classList.add('meltdown-active');
-
-            const overlay = document.createElement('div');
-            overlay.className = 'meltdown-overlay';
-            document.body.appendChild(overlay);
-
-            let count = 5;
-            const cDown = document.createElement('div');
-            cDown.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15rem;color:white;z-index:9999999999;font-family:'Fira Code', monospace;font-weight:bold; text-shadow: 0 0 50px red;";
-            document.body.appendChild(cDown);
-
-            const int = setInterval(() => {
-                cDown.innerText = count;
-                if (count > 0) playSound('click');
-                if (count === 0) {
-                    clearInterval(int);
-                    document.body.innerHTML = '';
-                    document.body.style.backgroundColor = '#000';
-                    setTimeout(() => { location.reload(); }, 1000);
-                }
-                count--;
-            }, 1000);
         });
     }
 
@@ -3698,107 +2855,6 @@ Server: Cloudflare Edge Network Routing
     }
 
     /* ==========================================
-       19. DIAGNOSTIC PROTOCOL (MINES GAME)
-    ========================================== */
-    const launchMinesBtn = document.getElementById('launch-mines-btn');
-    const minesOverlay = document.getElementById('mines-overlay');
-    const closeMines = document.getElementById('close-mines');
-    const minesGrid = document.getElementById('mines-grid');
-    const minesStatus = document.getElementById('mines-status');
-    const promoBox = document.getElementById('promo-code-box');
-    const resetMinesBtn = document.getElementById('reset-mines');
-
-    if (launchMinesBtn && minesOverlay) {
-        let safeClicks = 0;
-        const totalSafeNeeded = 3;
-        const totalTiles = 25;
-        const mineCount = 5;
-        let isGameOver = false;
-
-        function initMinesGame() {
-            minesGrid.innerHTML = '';
-            minesStatus.innerText = "Awaiting input...";
-            minesStatus.style.color = "var(--text-secondary)";
-            promoBox.style.display = "none";
-            resetMinesBtn.style.display = "none";
-            safeClicks = 0;
-            isGameOver = false;
-
-            // Generate tiles array
-            let tiles = Array(totalTiles).fill('safe');
-            for (let i = 0; i < mineCount; i++) {
-                tiles[i] = 'mine';
-            }
-            // Shuffle
-            tiles.sort(() => Math.random() - 0.5);
-
-            for (let i = 0; i < totalTiles; i++) {
-                const tile = document.createElement('div');
-                tile.className = 'mine-tile hover-sound';
-                tile.dataset.type = tiles[i];
-
-                tile.addEventListener('click', () => {
-                    if (isGameOver || tile.classList.contains('revealed-safe')) return;
-
-                    if (tile.dataset.type === 'mine') {
-                        if (typeof playSound === 'function') playSound('error');
-                        tile.classList.add('revealed-mine');
-                        tile.innerHTML = '<i class="fa-solid fa-bomb"></i>';
-                        minesStatus.innerText = "CRITICAL FAILURE. SYSTEM COMPROMISED.";
-                        minesStatus.style.color = "#ef4444";
-                        isGameOver = true;
-                        resetMinesBtn.style.display = "block";
-                        revealAllMines();
-                    } else {
-                        if (typeof playSound === 'function') playSound('click');
-                        tile.classList.add('revealed-safe');
-                        tile.innerHTML = '<i class="fa-solid fa-gem"></i>';
-                        safeClicks++;
-
-                        if (safeClicks >= totalSafeNeeded) {
-                            if (typeof playSound === 'function') playSound('success');
-                            minesStatus.innerText = "DIAGNOSTIC PASSED. REWARD UNLOCKED.";
-                            minesStatus.style.color = "#4ade80";
-                            promoBox.style.display = "block";
-                            isGameOver = true;
-                            resetMinesBtn.style.display = "block";
-                            if (clearance < 2) updateClearance(2);
-                        } else {
-                            minesStatus.innerText = `Nodes Secured: ${safeClicks} / ${totalSafeNeeded}`;
-                        }
-                    }
-                });
-                minesGrid.appendChild(tile);
-            }
-        }
-
-        function revealAllMines() {
-            document.querySelectorAll('.mine-tile').forEach(t => {
-                if (t.dataset.type === 'mine' && !t.classList.contains('revealed-mine')) {
-                    t.style.background = "rgba(239, 68, 68, 0.5)";
-                    t.innerHTML = '<i class="fa-solid fa-bomb"></i>';
-                }
-            });
-        }
-
-        launchMinesBtn.addEventListener('click', () => {
-            if (typeof playSound === 'function') playSound('success');
-            minesOverlay.classList.add('active');
-            initMinesGame();
-        });
-
-        closeMines.addEventListener('click', () => {
-            if (typeof playSound === 'function') playSound('click');
-            minesOverlay.classList.remove('active');
-        });
-
-        resetMinesBtn.addEventListener('click', () => {
-            if (typeof playSound === 'function') playSound('click');
-            initMinesGame();
-        });
-    }
-
-    /* ==========================================
        20. CLEAN URL SMOOTH SCROLLING
     ========================================== */
 // 1. Handle in-page smooth scrolling without mutating URL
@@ -3806,7 +2862,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
 
-        // Let the terminal toggle or empty hashes act normally
+        // Let empty hashes act normally
         if (!targetId || targetId === '#') return;
 
         const targetElement = document.querySelector(targetId);
@@ -4341,53 +3397,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     })();
 
     // ==========================================
-    // 25. SMART SCI-FI SRE LIVE TELEMETRY TICKER
-    // ==========================================
-    const terminalTicker = document.getElementById('terminal-ticker');
-    if (terminalTicker) {
-        const telemetryPool = [
-            { tag: 'SAWAB', tagClass: 'tag-rag', msg: 'NGO ERP on Frappe + Next.js: <b class="metric-hl">10 modules</b>, live demo' },
-            { tag: 'JIBIKA', tagClass: 'tag-ai', msg: 'AI in HR &amp; payroll software used by <b class="metric-hl">300+ companies</b> • ~50% less manual work' },
-            { tag: 'KARBAR', tagClass: 'tag-stream', msg: 'ERP for Bangladesh: NBR VAT (Mushak 6.3, 6.5, 9.1), payroll &amp; TDS' },
-            { tag: 'FLUTTER', tagClass: 'tag-sre', msg: 'Mobile app with NID OCR onboarding and GPS duty tracking' },
-            { tag: 'AI VIDEO', tagClass: 'tag-sota', msg: 'FastAPI + Whisper pipeline that turns long videos into <b class="metric-hl">9:16</b> clips' },
-            { tag: 'DAILY', tagClass: 'tag-ai', msg: 'Claude, OpenAI, Ollama, LangGraph and MCP in my everyday workflow' },
-            { tag: 'TQF', tagClass: 'tag-rag', msg: 'Volunteer: keeping tqfbd.org fast and secure for a national non-profit' }
-        ];
-
-        let poolIndex = 0;
-        const formatTime = () => '$';
-        poolIndex = terminalTicker.children.length;   // the first highlights are already on the page
-
-        // Periodic live stream insertion
-        setInterval(() => {
-            if (document.hidden) return; // Save resources when tab is backgrounded
-            const logItem = telemetryPool[poolIndex % telemetryPool.length];
-            poolIndex++;
-
-            const p = document.createElement('p');
-            p.className = 'log-line';
-            p.style.opacity = '0';
-            p.style.transform = 'translateY(-6px)';
-            p.innerHTML = `<span class="log-time">${formatTime()}</span> <span class="log-tag ${logItem.tagClass}">${logItem.tag}</span> <span class="log-msg">${logItem.msg}</span>`;
-
-            terminalTicker.insertBefore(p, terminalTicker.firstChild);
-
-            // Animate in
-            requestAnimationFrame(() => {
-                p.style.transition = 'all 0.4s ease';
-                p.style.opacity = '1';
-                p.style.transform = 'translateY(0)';
-            });
-
-            // Keep exactly the three lines the box shows
-            while (terminalTicker.children.length > 3) {
-                terminalTicker.removeChild(terminalTicker.lastChild);
-            }
-        }, 4500);
-    }
-
-    // ==========================================
     // 26. MOBILE APP CAROUSEL SLIDERS & TABS (ARCH, ETHICAL & DEEP TECH)
     // ==========================================
     function setupMobileAppCarousel(gridSelector, cardSelector, tabContainerSelector, dotContainerSelector) {
@@ -4553,14 +3562,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     } else tagIcons.forEach(showTagIcon);
 
     // Animations that loop forever cost a style pass every frame even off screen (the live dots far down the page, cover
-    // blobs). After load each one rests while its element is off screen (.anim-rest in the stylesheet). The portrait
-    // card's own loops are paused by the stylesheet until the card is opened.
+    // blobs). After load each one rests while its element is off screen (.anim-rest in the stylesheet).
     const restAnimations = () => {
         if (!('IntersectionObserver' in window) || !document.getAnimations) return;
         const looping = new Set();
         document.getAnimations().forEach((a) => {
             const el = a.effect && a.effect.target;
-            if (!(a instanceof CSSAnimation) || !el || el.closest('.cinematic-depth-card')) return;
+            if (!(a instanceof CSSAnimation) || !el) return;
             if (a.effect.getComputedTiming().iterations === Infinity) looping.add(el);
         });
         const restObserver = new IntersectionObserver((entries) => {

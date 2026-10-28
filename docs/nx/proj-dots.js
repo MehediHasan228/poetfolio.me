@@ -17,14 +17,6 @@
         maxAlpha: 0.85
       };
     }
-    if (theme === 'cyberpunk') {
-      return {
-        base: [244, 63, 94],       // #f43f5e neon rose
-        crest: [254, 240, 138],    // #fef08a yellow
-        dimAlpha: 0.25,
-        maxAlpha: 0.95
-      };
-    }
     if (theme === 'mint') {
       return {
         base: [16, 185, 129],       // #10b981 emerald

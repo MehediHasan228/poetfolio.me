@@ -16,7 +16,6 @@
     --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
     --accent-glow: rgba(0, 242, 254, 0.4);
     --accent-active-color: #0b1120;
-    --particle-color: #00f2fe;
     /* Apple Spatial Liquid Glass (Pure Transparent Crystal with Cyan Edge Glow) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 242, 254, 0.10) 100%);
     --spatial-glass-border: rgba(255, 255, 255, 0.42);
@@ -41,38 +40,12 @@
     --accent-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
     --accent-glow: rgba(37, 99, 235, 0.35);
     --accent-active-color: #ffffff;
-    --particle-color: #94a3b8;
     /* Apple Spatial Liquid Glass (Pure Transparent Crystal with Royal Blue Rim) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.20) 50%, rgba(37, 99, 235, 0.10) 100%);
     --spatial-glass-border: rgba(37, 99, 235, 0.42);
     --spatial-glass-glow: rgba(37, 99, 235, 0.35);
     --spatial-glass-highlight: rgba(255, 255, 255, 0.95);
     --spatial-glass-specular: rgba(255, 255, 255, 0.95);
-}
-
-:root[data-theme="cyberpunk"] {
-    --bg-color: #09090b;
-    --card-bg: rgba(20, 0, 10, 0.7);
-    --text-primary: #fbbf24;
-    --text-secondary: #a1a1aa;
-    --accent-1: #f43f5e;
-    --accent-1-rgb: 244, 63, 94;
-    --accent-2: #eab308;
-    --accent-2-rgb: 234, 179, 8;
-    --accent-3: #ec4899;
-    --accent-3-rgb: 236, 72, 153;
-    --accent-rgb: 244, 63, 94;
-    --gradient-accent: linear-gradient(135deg, #f43f5e 0%, #eab308 100%);
-    --accent-gradient: linear-gradient(135deg, #f43f5e 0%, #eab308 100%);
-    --accent-glow: rgba(244, 63, 94, 0.45);
-    --accent-active-color: #ffffff;
-    --particle-color: #f43f5e;
-    /* Apple Spatial Liquid Glass (Pure Transparent Glass with Neon Rose Rim) */
-    --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(244, 63, 94, 0.08) 50%, rgba(234, 179, 8, 0.10) 100%);
-    --spatial-glass-border: rgba(244, 63, 94, 0.50);
-    --spatial-glass-glow: rgba(244, 63, 94, 0.45);
-    --spatial-glass-highlight: rgba(254, 205, 211, 0.70);
-    --spatial-glass-specular: rgba(255, 255, 255, 0.90);
 }
 
 :root[data-theme="mint"] {
@@ -91,7 +64,6 @@
     --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
     --accent-glow: rgba(16, 185, 129, 0.35);
     --accent-active-color: #ffffff;
-    --particle-color: #10b981;
     /* Apple Spatial Liquid Glass (Mint / Emerald Rim) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.20) 50%, rgba(16, 185, 129, 0.10) 100%);
     --spatial-glass-border: rgba(16, 185, 129, 0.42);
@@ -116,7 +88,6 @@
     --accent-gradient: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
     --accent-glow: rgba(0, 255, 0, 0.45);
     --accent-active-color: #000000;
-    --particle-color: #00ff00;
     /* Apple Spatial Liquid Glass (Pure Transparent Glass with Matrix Green Rim) */
     --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(0, 255, 0, 0.08) 50%, rgba(0, 255, 0, 0.14) 100%);
     --spatial-glass-border: rgba(0, 255, 0, 0.55);
@@ -142,85 +113,6 @@ body {
 
 html {
     scroll-behavior: smooth;
-}
-
-/* --- CYBERPUNK GLITCH EFFECT --- */
-.glitch-hover {
-    position: relative;
-    display: inline-block;
-    transition: all 0.2s ease;
-}
-
-.glitch-hover:hover {
-    animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-    color: var(--accent-1);
-}
-
-@keyframes glitch-anim {
-    0% {
-        transform: translate(0)
-    }
-
-    20% {
-        transform: translate(-2px, 2px);
-        text-shadow: 2px 0 #ff00c1, -2px 0 #00fff9;
-    }
-
-    40% {
-        transform: translate(-2px, -2px);
-        text-shadow: -2px 0 #ff00c1, 2px 0 #00fff9;
-    }
-
-    60% {
-        transform: translate(2px, 2px);
-        text-shadow: 2px 0 #ff00c1, -2px 0 #00fff9;
-    }
-
-    80% {
-        transform: translate(2px, -2px);
-        text-shadow: -2px 0 #ff00c1, 2px 0 #00fff9;
-    }
-
-    100% {
-        transform: translate(0)
-    }
-}
-
-/* --- CURSOR FOLLOWER: the system cursor stays (the text and pointer cursors, and the visitor's own cursor settings, all
-   work); on mouse devices a soft ring trails it, grows around anything clickable, tightens while the button is down and
-   steps aside over text fields (script~ section 3) --- */
-.cursor-dot { display: none !important; }
-.cursor-outline {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 99999999 !important;
-    width: 32px;
-    height: 32px;
-    margin: -16px 0 0 -16px;
-    border: 1.5px solid color-mix(in srgb, var(--accent-1, #00f2fe) 55%, transparent);
-    border-radius: 50%;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease, width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
-        margin 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.25s ease, border-color 0.25s ease;
-}
-.cursor-outline.is-on { opacity: 1; }
-.cursor-outline.cursor-hover {
-    width: 46px;
-    height: 46px;
-    margin: -23px 0 0 -23px;
-    border-color: var(--accent-1, #00f2fe);
-    background-color: color-mix(in srgb, var(--accent-1, #00f2fe) 10%, transparent);
-}
-.cursor-outline.is-down {
-    width: 24px;
-    height: 24px;
-    margin: -12px 0 0 -12px;
-}
-.cursor-outline.is-text { opacity: 0; }
-@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
-    .cursor-outline { display: none !important; }
 }
 
 /* --- DRAGGABLE WINDOWS --- */
@@ -413,13 +305,6 @@ html {
     color: var(--accent-1);
 }
 
-.cursor {
-    display: inline-block;
-    width: 3px;
-    background-color: var(--accent-1);
-    animation: blink 0.8s infinite;
-}
-
 @keyframes blink {
 
     0%,
@@ -486,6 +371,7 @@ nav {
 }
 
 .logo-link {
+    position: relative;
     display: inline-block;
     text-decoration: none;
     cursor: pointer !important;
@@ -751,7 +637,7 @@ section {
     -webkit-backface-visibility: hidden;
 }
 
-/* Layer 1: Background - iPhone Portrait depth: subtle soft blur when quiet, 100% crystal-clear when logos deploy */
+/* Layer 1: Background - iPhone Portrait depth: subtle soft blur when quiet, 100% crystal-clear on hover */
 .cinematic-layer.layer-bg {
     z-index: 1;
     border-radius: 26px;
@@ -769,7 +655,7 @@ section {
     border-radius: 26px;
     transform: scale(1.02);
     transform-origin: center center;
-    /* Soft portrait bokeh when no logos are present */
+    /* Soft portrait bokeh at rest */
     filter: blur(2px) contrast(1.02);
     transition: filter 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -785,883 +671,12 @@ section {
     z-index: 2;
 }
 
-/* 100% CLEAR and sharp when tech army logos appear */
-.hero-image-wrapper:hover .cinematic-layer.layer-bg img,
-.cinematic-depth-card.is-active .cinematic-layer.layer-bg img,
-.cinematic-depth-card[data-active-flank] .cinematic-layer.layer-bg img {
+/* 100% CLEAR and sharp while the portrait is hovered */
+.hero-image-wrapper:hover .cinematic-layer.layer-bg img {
     filter: blur(0px) contrast(1);
 }
 
-/* ==========================================================================
-   COMMANDER TACTICAL GRID & NEURAL LINK FIELD
-   ========================================================================== */
-.cinematic-layer.layer-tactical-grid {
-    z-index: 2;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hero-image-wrapper:hover .layer-tactical-grid,
-.cinematic-depth-card:hover .layer-tactical-grid,
-.cinematic-depth-card.is-active .layer-tactical-grid {
-    opacity: 0.85;
-}
-
-.tactical-grid-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.tactical-arc {
-    fill: none;
-    stroke: rgba(0, 242, 254, 0.22);
-    stroke-width: 1.2px;
-    stroke-dasharray: 6 10;
-    animation: tacticalArcRotate 24s linear infinite;
-    transform-origin: 527px 550px;
-}
-
-.arc-2 {
-    stroke: rgba(79, 172, 254, 0.28);
-    stroke-width: 1px;
-    stroke-dasharray: 12 8;
-    animation-duration: 36s;
-    animation-direction: reverse;
-}
-
-.arc-3 {
-    stroke: rgba(0, 242, 254, 0.16);
-    stroke-width: 0.8px;
-    stroke-dasharray: 4 14;
-    animation-duration: 48s;
-}
-
-@keyframes tacticalArcRotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.cmd-line {
-    fill: none;
-    stroke: rgba(0, 242, 254, 0.35);
-    stroke-width: 1.2px;
-    stroke-dasharray: 8 6;
-    animation: cmdPulseStream 2s ease-in-out infinite alternate;
-}
-
-.cmd-line-l2, .cmd-line-r2 {
-    stroke: rgba(79, 172, 254, 0.25);
-    stroke-width: 0.9px;
-    animation-delay: -1s;
-}
-
-@keyframes cmdPulseStream {
-    0% { stroke-opacity: 0.2; stroke-dashoffset: 0; }
-    100% { stroke-opacity: 0.65; stroke-dashoffset: 28; }
-}
-
-/* ==========================================================================
-   CYBER ARMY FORMATION (3 RANKS: FRONT SHARP, MID SOFT, REAR BOKEH)
-   ========================================================================== */
-.cinematic-layer.layer-army {
-    overflow: visible;
-    pointer-events: none;
-}
-
-.cinematic-layer.layer-army:hover,
-.cinematic-layer.layer-army:has(.cyber-unit:hover) {
-    z-index: 25 !important;
-}
-
-.layer-army-rear {
-    z-index: 3;
-}
-
-.layer-army-mid {
-    z-index: 4;
-}
-
-.layer-army-front {
-    z-index: 5;
-}
-
-.army-unit-wrap:hover,
-.army-unit-wrap:has(.cyber-unit:hover) {
-    z-index: 2500 !important;
-}
-
-/* Common unit wrapper for spring deployment (Hidden at rest, springs forth on photo hover) */
-.army-unit-wrap {
-    position: absolute;
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 50%;
-    transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1),
-                opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0.42s ease;
-}
-
-/* Left wing retracted resting state: tucked smoothly behind Commander */
-.flank-left,
-[class*="r1-l"], [class*="r2-l"], [class*="r3-l"] {
-    transform: translate3d(24px, 14px, 0) scale(0.52);
-}
-
-/* Right wing retracted resting state: tucked smoothly behind Commander */
-.flank-right,
-[class*="r1-r"], [class*="r2-r"], [class*="r3-r"] {
-    transform: translate3d(-24px, 14px, 0) scale(0.52);
-}
-
-/* Flank-Aware Tactical Deployment:
-   - When cursor is on right flank: ONLY right wing deploys! Left wing stays tucked behind.
-   - When cursor is on left flank: ONLY left wing deploys! Right wing stays tucked behind.
-   - When hovering HUD console badge or master state: both flanks deploy.
-*/
-
-/* Left Wing Deployment */
-.cinematic-depth-card[data-active-flank="left"] .flank-left,
-.cinematic-depth-card[data-active-flank="all"] .flank-left,
-.cinematic-depth-card:has(.flank-left:hover) .flank-left,
-.cinematic-depth-card[data-active-flank="left"] [class*="r1-l"],
-.cinematic-depth-card[data-active-flank="left"] [class*="r2-l"],
-.cinematic-depth-card[data-active-flank="left"] [class*="r3-l"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r1-l"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r2-l"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r3-l"] {
-    visibility: visible;
-    pointer-events: auto;
-    transform: translate3d(0, 0, 0) scale(1);
-}
-
-.cinematic-depth-card[data-active-flank="left"] [class*="r1-l"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r1-l"],
-.cinematic-depth-card:has([class*="r1-l"]:hover) [class*="r1-l"] {
-    opacity: 1;
-}
-
-.cinematic-depth-card[data-active-flank="left"] [class*="r2-l"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r2-l"],
-.cinematic-depth-card:has([class*="r2-l"]:hover) [class*="r2-l"] {
-    opacity: 0.88;
-}
-
-.cinematic-depth-card[data-active-flank="left"] [class*="r3-l"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r3-l"],
-.cinematic-depth-card:has([class*="r3-l"]:hover) [class*="r3-l"] {
-    opacity: 0.68;
-}
-
-/* Right Wing Deployment */
-.cinematic-depth-card[data-active-flank="right"] .flank-right,
-.cinematic-depth-card[data-active-flank="all"] .flank-right,
-.cinematic-depth-card:has(.flank-right:hover) .flank-right,
-.cinematic-depth-card[data-active-flank="right"] [class*="r1-r"],
-.cinematic-depth-card[data-active-flank="right"] [class*="r2-r"],
-.cinematic-depth-card[data-active-flank="right"] [class*="r3-r"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r1-r"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r2-r"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r3-r"] {
-    visibility: visible;
-    pointer-events: auto;
-    transform: translate3d(0, 0, 0) scale(1);
-}
-
-.cinematic-depth-card[data-active-flank="right"] [class*="r1-r"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r1-r"],
-.cinematic-depth-card:has([class*="r1-r"]:hover) [class*="r1-r"] {
-    opacity: 1;
-}
-
-.cinematic-depth-card[data-active-flank="right"] [class*="r2-r"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r2-r"],
-.cinematic-depth-card:has([class*="r2-r"]:hover) [class*="r2-r"] {
-    opacity: 0.88;
-}
-
-.cinematic-depth-card[data-active-flank="right"] [class*="r3-r"],
-.cinematic-depth-card[data-active-flank="all"] [class*="r3-r"],
-.cinematic-depth-card:has([class*="r3-r"]:hover) [class*="r3-r"] {
-    opacity: 0.68;
-}
-
-/* STRICT FLANK ISOLATION: When one flank is active, the opposite flank MUST remain completely hidden and empty */
-.cinematic-depth-card[data-active-flank="right"] .flank-left,
-.cinematic-depth-card[data-active-flank="right"] [class*="r1-l"],
-.cinematic-depth-card[data-active-flank="right"] [class*="r2-l"],
-.cinematic-depth-card[data-active-flank="right"] [class*="r3-l"] {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    transform: translate3d(24px, 14px, 0) scale(0.52) !important;
-}
-
-.cinematic-depth-card[data-active-flank="left"] .flank-right,
-.cinematic-depth-card[data-active-flank="left"] [class*="r1-r"],
-.cinematic-depth-card[data-active-flank="left"] [class*="r2-r"],
-.cinematic-depth-card[data-active-flank="left"] [class*="r3-r"] {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    transform: translate3d(-24px, 14px, 0) scale(0.52) !important;
-}
-
-/* STRICT RESTING STATE: If no flank is active (initial load / neutral), all units stay tucked behind and completely hidden */
-.cinematic-depth-card:not([data-active-flank="left"]):not([data-active-flank="right"]):not([data-active-flank="all"]) .army-unit-wrap {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-}
-
-/* Neural command lines flank isolation */
-.cinematic-depth-card[data-active-flank="right"] .cmd-line-l1,
-.cinematic-depth-card[data-active-flank="right"] .cmd-line-l2 {
-    opacity: 0 !important;
-    visibility: hidden !important;
-}
-
-.cinematic-depth-card[data-active-flank="left"] .cmd-line-r1,
-.cinematic-depth-card[data-active-flank="left"] .cmd-line-r2 {
-    opacity: 0 !important;
-    visibility: hidden !important;
-}
-
-.cinematic-depth-card:not([data-active-flank="left"]):not([data-active-flank="right"]):not([data-active-flank="all"]) .cmd-line {
-    opacity: 0 !important;
-    visibility: hidden !important;
-}
-
-/* Base Cyber Army Escort Unit - Apple Spatial 3D Liquid Glass Orb */
-.cyber-unit {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-    background: radial-gradient(circle at 35% 30%, rgba(35, 48, 78, 0.94) 0%, rgba(13, 20, 38, 0.97) 100%);
-    border: 1.5px solid rgba(255, 255, 255, 0.38);
-    backdrop-filter: blur(16px) saturate(200%);
-    -webkit-backdrop-filter: blur(16px) saturate(200%);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65),
-                inset 0 1.5px 2px 0 var(--spatial-glass-specular),
-                inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.55);
-    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.28s ease,
-                border-color 0.28s ease,
-                background 0.35s ease,
-                filter 0.28s ease,
-                opacity 0.28s ease;
-    animation: spatialBadgeFloat 5s ease-in-out infinite alternate;
-}
-
-/* Apple-style Curved Top Reflection Sheen */
-.cyber-unit::before {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 15%;
-    right: 15%;
-    height: 42%;
-    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.08) 80%, transparent 100%);
-    pointer-events: none;
-    z-index: 2;
-}
-
-/* Floating 3D Brand Logo inside glass with high-contrast shadow & luminous rim */
-.cyber-unit img {
-    position: relative;
-    display: block;
-    object-fit: contain;
-    pointer-events: none;
-    z-index: 1;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.30)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.85));
-    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* ==========================================================================
-   RANK 1: FRONTLINE VANGUARD (Razor Sharp, Foreground Generals, Z=4)
-   ========================================================================== */
-.unit-rank-1,
-.unit-r1 {
-    width: 38px;
-    height: 38px;
-    filter: none;
-    border: 1px solid rgba(0, 242, 254, 0.55);
-    background: radial-gradient(circle at 35% 30%, rgba(30, 42, 70, 0.94) 0%, rgba(10, 16, 32, 0.98) 100%);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.75), inset 0 1.5px 2px rgba(255, 255, 255, 0.40);
-}
-
-.unit-rank-1 img,
-.unit-r1 img {
-    width: 24px;
-    height: 24px;
-}
-
-/* Left Shoulder Frontline Positions (100% razor sharp, vanguard staggered echelon flanking shoulders) */
-.r1-l1 { top: 16%; left: 21%; z-index: 4; }
-.r1-l2 { top: 22%; left: 14%; z-index: 4; }
-.r1-l3 { top: 28%; left: 20%; z-index: 4; }
-.r1-l4 { top: 34%; left: 13%; z-index: 4; }
-.r1-l5 { top: 40%; left: 19%; z-index: 4; }
-.r1-l6 { top: 46%; left: 12%; z-index: 4; }
-
-/* Right Shoulder Frontline Positions (100% razor sharp, vanguard staggered echelon flanking shoulders) */
-.r1-r1 { top: 16%; right: 21%; z-index: 4; }
-.r1-r2 { top: 22%; right: 14%; z-index: 4; }
-.r1-r3 { top: 28%; right: 20%; z-index: 4; }
-.r1-r4 { top: 34%; right: 13%; z-index: 4; }
-.r1-r5 { top: 40%; right: 19%; z-index: 4; }
-.r1-r6 { top: 46%; right: 12%; z-index: 4; }
-
-/* Cascading spring delays for Rank 1 */
-.hero-image-wrapper:hover .r1-l1, .hero-image-wrapper:hover .r1-r1,
-.cinematic-depth-card:hover .r1-l1, .cinematic-depth-card:hover .r1-r1,
-.cinematic-depth-card.is-active .r1-l1, .cinematic-depth-card.is-active .r1-r1 { transition-delay: 0.04s; }
-
-.hero-image-wrapper:hover .r1-l2, .hero-image-wrapper:hover .r1-r2,
-.cinematic-depth-card:hover .r1-l2, .cinematic-depth-card:hover .r1-r2,
-.cinematic-depth-card.is-active .r1-l2, .cinematic-depth-card.is-active .r1-r2 { transition-delay: 0.07s; }
-
-.hero-image-wrapper:hover .r1-l3, .hero-image-wrapper:hover .r1-r3,
-.cinematic-depth-card:hover .r1-l3, .cinematic-depth-card:hover .r1-r3,
-.cinematic-depth-card.is-active .r1-l3, .cinematic-depth-card.is-active .r1-r3 { transition-delay: 0.10s; }
-
-.hero-image-wrapper:hover .r1-l4, .hero-image-wrapper:hover .r1-r4,
-.cinematic-depth-card:hover .r1-l4, .cinematic-depth-card:hover .r1-r4,
-.cinematic-depth-card.is-active .r1-l4, .cinematic-depth-card.is-active .r1-r4 { transition-delay: 0.13s; }
-
-.hero-image-wrapper:hover .r1-l5, .hero-image-wrapper:hover .r1-r5,
-.cinematic-depth-card:hover .r1-l5, .cinematic-depth-card:hover .r1-r5,
-.cinematic-depth-card.is-active .r1-l5, .cinematic-depth-card.is-active .r1-r5 { transition-delay: 0.16s; }
-
-.hero-image-wrapper:hover .r1-l6, .hero-image-wrapper:hover .r1-r6,
-.cinematic-depth-card:hover .r1-l6, .cinematic-depth-card:hover .r1-r6,
-.cinematic-depth-card.is-active .r1-l6, .cinematic-depth-card.is-active .r1-r6 { transition-delay: 0.19s; }
-
-/* ==========================================================================
-   RANK 2: TACTICAL SQUADRON (Soft Midfield Depth, Mild Blur ~1.3px, Z=3)
-   ========================================================================== */
-.unit-rank-2,
-.unit-r2 {
-    width: 32px;
-    height: 32px;
-    filter: none;
-    border: 1px solid rgba(255, 255, 255, 0.30);
-    background: radial-gradient(circle at 35% 30%, rgba(24, 34, 58, 0.92) 0%, rgba(9, 14, 28, 0.96) 100%);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.30);
-}
-
-.unit-rank-2 img,
-.unit-r2 img {
-    width: 19px;
-    height: 19px;
-}
-
-/* Left Tactical Escort Positions (Midfield echelon) */
-.r2-l1 { top: 9%;  left: 21%; z-index: 3; }
-.r2-l2 { top: 13%; left: 12%; z-index: 3; }
-.r2-l3 { top: 19%; left: 7%;  z-index: 3; }
-.r2-l4 { top: 26%; left: 6%;  z-index: 3; }
-.r2-l5 { top: 33%; left: 7%;  z-index: 3; }
-.r2-l6 { top: 39%; left: 6%;  z-index: 3; }
-
-/* Right Tactical Escort Positions (Midfield echelon) */
-.r2-r1 { top: 9%;  right: 21%; z-index: 3; }
-.r2-r2 { top: 13%; right: 12%; z-index: 3; }
-.r2-r3 { top: 19%; right: 7%;  z-index: 3; }
-.r2-r4 { top: 26%; right: 6%;  z-index: 3; }
-.r2-r5 { top: 33%; right: 7%;  z-index: 3; }
-.r2-r6 { top: 39%; right: 6%;  z-index: 3; }
-.r2-r7 { top: 45%; right: 7%;  z-index: 3; }
-
-/* Cascading spring delays for Rank 2 */
-.hero-image-wrapper:hover .r2-l1, .hero-image-wrapper:hover .r2-r1,
-.cinematic-depth-card:hover .r2-l1, .cinematic-depth-card:hover .r2-r1,
-.cinematic-depth-card.is-active .r2-l1, .cinematic-depth-card.is-active .r2-r1 { transition-delay: 0.08s; }
-
-.hero-image-wrapper:hover .r2-l2, .hero-image-wrapper:hover .r2-r2,
-.cinematic-depth-card:hover .r2-l2, .cinematic-depth-card:hover .r2-r2,
-.cinematic-depth-card.is-active .r2-l2, .cinematic-depth-card.is-active .r2-r2 { transition-delay: 0.11s; }
-
-.hero-image-wrapper:hover .r2-l3, .hero-image-wrapper:hover .r2-r3,
-.cinematic-depth-card:hover .r2-l3, .cinematic-depth-card:hover .r2-r3,
-.cinematic-depth-card.is-active .r2-l3, .cinematic-depth-card.is-active .r2-r3 { transition-delay: 0.14s; }
-
-.hero-image-wrapper:hover .r2-l4, .hero-image-wrapper:hover .r2-r4,
-.cinematic-depth-card:hover .r2-l4, .cinematic-depth-card:hover .r2-r4,
-.cinematic-depth-card.is-active .r2-l4, .cinematic-depth-card.is-active .r2-r4 { transition-delay: 0.17s; }
-
-.hero-image-wrapper:hover .r2-l5, .hero-image-wrapper:hover .r2-r5,
-.cinematic-depth-card:hover .r2-l5, .cinematic-depth-card:hover .r2-r5,
-.cinematic-depth-card.is-active .r2-l5, .cinematic-depth-card.is-active .r2-r5 { transition-delay: 0.20s; }
-
-.hero-image-wrapper:hover .r2-l6, .hero-image-wrapper:hover .r2-r6,
-.cinematic-depth-card:hover .r2-l6, .cinematic-depth-card:hover .r2-r6,
-.cinematic-depth-card.is-active .r2-l6, .cinematic-depth-card.is-active .r2-r6 { transition-delay: 0.23s; }
-
-.hero-image-wrapper:hover .r2-l7, .hero-image-wrapper:hover .r2-r7,
-.cinematic-depth-card:hover .r2-l7, .cinematic-depth-card:hover .r2-r7,
-.cinematic-depth-card.is-active .r2-l7, .cinematic-depth-card.is-active .r2-r7 { transition-delay: 0.26s; }
-
-/* ==========================================================================
-   RANK 3: REAR STRATEGIC FLEET (Cinematic Bokeh Blur ~2.6px, Atmospheric, Z=2)
-   ========================================================================== */
-.unit-rank-3,
-.unit-r3 {
-    width: 28px;
-    height: 28px;
-    filter: none;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: radial-gradient(circle at 35% 30%, rgba(22, 30, 52, 0.90) 0%, rgba(8, 13, 24, 0.95) 100%);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.60), inset 0 1px 1px rgba(255, 255, 255, 0.25);
-}
-
-.unit-rank-3 img,
-.unit-r3 img {
-    width: 16px;
-    height: 16px;
-}
-
-/* Left Horizon Strategic Positions (Crown arch & outermost perimeter) */
-.r3-l1 { top: 3.5%; left: 21%; z-index: 2; }
-.r3-l2 { top: 4%;   left: 12%; z-index: 2; }
-.r3-l3 { top: 6.5%; left: 5%;  z-index: 2; }
-.r3-l4 { top: 12%;  left: 1.5%; z-index: 2; }
-.r3-l5 { top: 19%;  left: 1%;  z-index: 2; }
-
-/* Right Horizon Strategic Positions (Crown arch & outermost perimeter) */
-.r3-r1 { top: 3.5%; right: 21%; z-index: 2; }
-.r3-r2 { top: 4%;   right: 12%; z-index: 2; }
-.r3-r3 { top: 6.5%; right: 5%;  z-index: 2; }
-.r3-r4 { top: 12%;  right: 1.5%; z-index: 2; }
-.r3-r5 { top: 19%;  right: 1%;  z-index: 2; }
-
-/* Cascading spring delays for Rank 3 */
-.hero-image-wrapper:hover .r3-l1, .hero-image-wrapper:hover .r3-r1,
-.cinematic-depth-card:hover .r3-l1, .cinematic-depth-card:hover .r3-r1,
-.cinematic-depth-card.is-active .r3-l1, .cinematic-depth-card.is-active .r3-r1 { transition-delay: 0.12s; }
-
-.hero-image-wrapper:hover .r3-l2, .hero-image-wrapper:hover .r3-r2,
-.cinematic-depth-card:hover .r3-l2, .cinematic-depth-card:hover .r3-r2,
-.cinematic-depth-card.is-active .r3-l2, .cinematic-depth-card.is-active .r3-r2 { transition-delay: 0.15s; }
-
-.hero-image-wrapper:hover .r3-l3, .hero-image-wrapper:hover .r3-r3,
-.cinematic-depth-card:hover .r3-l3, .cinematic-depth-card:hover .r3-r3,
-.cinematic-depth-card.is-active .r3-l3, .cinematic-depth-card.is-active .r3-r3 { transition-delay: 0.18s; }
-
-.hero-image-wrapper:hover .r3-l4, .hero-image-wrapper:hover .r3-r4,
-.cinematic-depth-card:hover .r3-l4, .cinematic-depth-card:hover .r3-r4,
-.cinematic-depth-card.is-active .r3-l4, .cinematic-depth-card.is-active .r3-r4 { transition-delay: 0.21s; }
-
-.hero-image-wrapper:hover .r3-l5, .hero-image-wrapper:hover .r3-r5,
-.cinematic-depth-card:hover .r3-l5, .cinematic-depth-card:hover .r3-r5,
-.cinematic-depth-card.is-active .r3-l5, .cinematic-depth-card.is-active .r3-r5 { transition-delay: 0.24s; }
-
-/* ==========================================================================
-/* ==========================================================================
-   SPATIAL POPUP TOOLTIPS (Theme-Aware, High-Legibility HUD Badge)
-   ========================================================================== */
-.unit-popup {
-    position: absolute;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    z-index: 6000;
-    display: grid;
-    grid-template-areas: 
-        "tag title"
-        "desc desc";
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    column-gap: 6px;
-    row-gap: 3px;
-    width: max-content;
-    min-width: 150px;
-    max-width: 250px;
-    box-sizing: border-box;
-    padding: 7px 10px;
-    white-space: normal;
-    background: rgba(9, 14, 26, 0.95);
-    backdrop-filter: blur(20px) saturate(190%);
-    -webkit-backdrop-filter: blur(20px) saturate(190%);
-    border: 1px solid rgba(var(--accent-1-rgb), 0.70);
-    border-radius: 8px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.90), 0 0 16px rgba(var(--accent-1-rgb), 0.40);
-    transition: opacity 0.20s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.20s cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0.20s ease;
-    text-align: left;
-}
-
-:root:is([data-theme="light"], [data-theme="mint"]) .unit-popup {
-    background: rgba(255, 255, 255, 0.96);
-    border-color: rgba(var(--accent-1-rgb), 0.55);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15), 0 0 16px rgba(var(--accent-1-rgb), 0.25);
-}
-
-.popup-tag {
-    grid-area: tag;
-    display: inline-block;
-    font-size: 7.5px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--accent-1);
-    background: rgba(var(--accent-1-rgb), 0.18);
-    border: 1px solid rgba(var(--accent-1-rgb), 0.40);
-    padding: 1.5px 5px;
-    border-radius: 3.5px;
-    line-height: 1.2;
-    margin: 0;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-:root:is([data-theme="light"], [data-theme="mint"]) .popup-tag {
-    color: var(--accent-1);
-    background: rgba(var(--accent-1-rgb), 0.12);
-    border-color: rgba(var(--accent-1-rgb), 0.30);
-}
-
-.popup-title {
-    grid-area: title;
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1.25;
-    letter-spacing: 0.2px;
-    margin: 0;
-    min-width: 0;
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: break-word;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .popup-title,
-:root:is([data-theme="light"], [data-theme="mint"]) .popup-title {
-    color: #0f172a !important;
-}
-
-.popup-desc {
-    grid-area: desc;
-    display: block;
-    font-size: 8.5px;
-    line-height: 1.35;
-    color: rgba(226, 232, 240, 0.95);
-    font-weight: 400;
-    margin: 0;
-    min-width: 0;
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: break-word;
-}
-
-.popup-desc::before {
-    content: "• ";
-    margin-right: 2px;
-    color: var(--accent-1);
-    font-weight: bold;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .popup-desc,
-:root:is([data-theme="light"], [data-theme="mint"]) .popup-desc {
-    color: #1e293b !important;
-}
-:is([data-theme="light"], [data-theme="mint"]) .popup-desc::before,
-:root:is([data-theme="light"], [data-theme="mint"]) .popup-desc::before {
-    color: var(--accent-1);
-}
-
-/* Positioning: OUTWARD FLANK ANCHOR (Strictly Away from Face)
-   - Left Flank: Popups anchor to the OUTER LEFT of the icon into wide open hero space.
-   - Right Flank: Popups anchor to the OUTER RIGHT of the icon into the balanced window margin.
-   - Center/Face zone is 100% protected and NEVER touched by any popup.
-*/
-
-/* Left Flank Units: Expand to OUTER LEFT */
-.flank-left .unit-popup,
-[class*="r1-l"] .unit-popup,
-[class*="r2-l"] .unit-popup,
-[class*="r3-l"] .unit-popup {
-    right: calc(100% + 10px) !important;
-    left: auto !important;
-    top: 50% !important;
-    bottom: auto !important;
-    transform: translateY(-50%) translateX(6px) scale(0.95);
-    transform-origin: right center !important;
-}
-
-/* Right Flank Units: Expand to OUTER RIGHT */
-.flank-right .unit-popup,
-[class*="r1-r"] .unit-popup,
-[class*="r2-r"] .unit-popup,
-[class*="r3-r"] .unit-popup {
-    left: calc(100% + 10px) !important;
-    right: auto !important;
-    top: 50% !important;
-    bottom: auto !important;
-    transform: translateY(-50%) translateX(-6px) scale(0.95);
-    transform-origin: left center !important;
-}
-
-/* Crown top units maintain horizontal outward direction */
-.r3-l1 .unit-popup, .r3-l2 .unit-popup {
-    right: calc(100% + 10px) !important;
-    left: auto !important;
-    top: 50% !important;
-    bottom: auto !important;
-    transform: translateY(-50%) translateX(6px) scale(0.95);
-    transform-origin: right center !important;
-}
-
-.r3-r1 .unit-popup, .r3-r2 .unit-popup {
-    left: calc(100% + 10px) !important;
-    right: auto !important;
-    top: 50% !important;
-    bottom: auto !important;
-    transform: translateY(-50%) translateX(-6px) scale(0.95);
-    transform-origin: left center !important;
-}
-
-/* Focus and Blur Logic:
-   When ANY unit is hovered:
-   1. All other units on the card dim down smoothly (opacity 0.35, no blur).
-   2. The hovered unit scales up to 1.10x, gains theme-matching reticle & glow.
-   3. The multi-line HUD popup appears crisply at full scale(1) in outer space.
-*/
-.cinematic-depth-card:has(.cyber-unit:hover) .cyber-unit:not(:hover) {
-    opacity: 0.35 !important;
-    filter: none !important;
-    transform: scale(0.92) !important;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.cyber-unit:hover {
-    transform: scale(1.10) !important;
-    filter: none !important;
-    opacity: 1 !important;
-    z-index: 4000 !important;
-    border-color: var(--accent-1) !important;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85), inset 0 1.5px 1.5px 0 var(--spatial-glass-specular) !important;
-    background: rgba(15, 23, 42, 0.96) !important;
-}
-
-.cyber-unit:hover img {
-    transform: scale(1.08) !important;
-    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.90)) !important;
-}
-
-/* Tactical Target Lock Reticle (Theme-Aware Rotating Dashed Ring) */
-.cyber-unit:hover::after {
-    content: '';
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    border: 1px dashed var(--accent-1);
-    animation: targetReticleSpin 4s linear infinite;
-    pointer-events: none;
-    z-index: 3;
-}
-
-@keyframes targetReticleSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* On hover: popup opens with scale(1) and clear text */
-.cyber-unit:hover .unit-popup {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: translateY(-50%) translateX(0) scale(1) !important;
-}
-
-.r3-l1 .cyber-unit:hover .unit-popup,
-.r3-l2 .cyber-unit:hover .unit-popup,
-.r3-r1 .cyber-unit:hover .unit-popup,
-.r3-r2 .cyber-unit:hover .unit-popup {
-    transform: translateY(-50%) translateX(0) scale(1) !important;
-}
-
-/* Clean Crisp Brand Accents with Specular Lighting for all Brands */
-.unit-openai { border-color: rgba(16, 185, 129, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(16, 185, 129, 0.40); }
-.unit-claude { border-color: rgba(217, 119, 87, 0.95); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 12px rgba(217, 119, 87, 0.50); }
-.unit-gemini { border-color: rgba(192, 132, 252, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(192, 132, 252, 0.40); }
-.unit-deepseek { border-color: rgba(96, 165, 250, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(96, 165, 250, 0.40); }
-.unit-qwen { border-color: rgba(167, 139, 250, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(167, 139, 250, 0.40); }
-.unit-llama, .unit-meta { border-color: rgba(56, 189, 248, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(56, 189, 248, 0.40); }
-.unit-claudecode, .unit-githubcopilot, .unit-copilot { border-color: rgba(168, 85, 247, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(168, 85, 247, 0.40); }
-.unit-codex { border-color: rgba(16, 185, 129, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(16, 185, 129, 0.40); }
-.unit-cursor { border-color: rgba(255, 255, 255, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.40); }
-.unit-mistral { border-color: rgba(255, 112, 0, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 112, 0, 0.40); }
-.unit-openclaw { border-color: rgba(255, 75, 75, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 75, 75, 0.40); }
-.unit-opencode { border-color: rgba(56, 189, 248, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(56, 189, 248, 0.40); }
-.unit-ollama { border-color: rgba(255, 255, 255, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.40); }
-.unit-mcp { border-color: rgba(0, 242, 254, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(0, 242, 254, 0.40); }
-.unit-langgraph { border-color: rgba(0, 229, 255, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(0, 229, 255, 0.40); }
-.unit-langchain { border-color: rgba(46, 204, 113, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(46, 204, 113, 0.40); }
-.unit-crewai { border-color: rgba(255, 90, 95, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 90, 95, 0.40); }
-.unit-n8n { border-color: rgba(234, 75, 113, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(234, 75, 113, 0.40); }
-.unit-postgresql { border-color: rgba(96, 165, 250, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(96, 165, 250, 0.40); }
-.unit-pinecone { border-color: rgba(0, 229, 153, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(0, 229, 153, 0.40); }
-.unit-supabase { border-color: rgba(63, 207, 142, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(63, 207, 142, 0.40); }
-.unit-nextjs { border-color: rgba(255, 255, 255, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.40); }
-.unit-react { border-color: rgba(97, 218, 251, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(97, 218, 251, 0.40); }
-.unit-typescript { border-color: rgba(59, 130, 246, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(59, 130, 246, 0.40); }
-.unit-python { border-color: rgba(56, 189, 248, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(56, 189, 248, 0.40); }
-.unit-docker { border-color: rgba(56, 189, 248, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(56, 189, 248, 0.40); }
-.unit-github { border-color: rgba(255, 255, 255, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.40); }
-.unit-fastapi { border-color: rgba(20, 184, 166, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(20, 184, 166, 0.40); }
-.unit-huggingface { border-color: rgba(255, 210, 30, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 210, 30, 0.40); }
-.unit-aws { border-color: rgba(255, 153, 0, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 153, 0, 0.40); }
-.unit-kubernetes { border-color: rgba(59, 130, 246, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(59, 130, 246, 0.40); }
-.unit-antigravity { border-color: rgba(0, 242, 254, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(0, 242, 254, 0.40); }
-.unit-llamaindex { border-color: rgba(192, 132, 252, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(192, 132, 252, 0.40); }
-.unit-redis { border-color: rgba(255, 75, 75, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 75, 75, 0.40); }
-.unit-vercel { border-color: rgba(255, 255, 255, 0.90); box-shadow: 0 4px 14px rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.40); }
-
-/* Floating Micro-Animation */
-@keyframes spatialBadgeFloat {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(-3px); }
-}
-
-.r1-l2 .cyber-unit, .r1-r2 .cyber-unit { animation-delay: -1.2s; }
-.r1-l3 .cyber-unit, .r1-r3 .cyber-unit { animation-delay: -2.4s; }
-.r1-l4 .cyber-unit, .r1-r4 .cyber-unit { animation-delay: -3.6s; }
-.r2-l2 .cyber-unit, .r2-r2 .cyber-unit { animation-delay: -1.5s; }
-.r2-l4 .cyber-unit, .r2-r4 .cyber-unit { animation-delay: -3.0s; }
-.r3-l2 .cyber-unit, .r3-r2 .cyber-unit { animation-delay: -2.0s; }
-.r3-l4 .cyber-unit, .r3-r4 .cyber-unit { animation-delay: -4.0s; }
-
-/* ==========================================================================
-   MOBILE GYRO & KINETIC SHAKE SURGE (মোবাইল ঝাঁকানি ও ৩ডি ফ্লোটিং ভাইব)
-   When vigorously shaken or tilted, badges float up and jitter with clean depth
-   ========================================================================== */
-
-/* Scroll-Driven Auto Reveal (যখন ছবির উপর কার্সর না নিয়ে স্ক্রল করা শুরু হয়) */
-.cinematic-depth-card.is-scroll-deployed {
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75) !important;
-}
-
-.cinematic-depth-card.is-scroll-deployed .cyber-unit {
-    filter: none;
-}
-
-.cinematic-depth-card.is-kinetic-shaking {
-    box-shadow: 0 0 35px rgba(0, 242, 254, 0.35) !important;
-}
-
-.cinematic-depth-card.is-kinetic-shaking .cyber-unit {
-    animation: cyberBadgeKineticShake 0.4s ease-in-out infinite alternate !important;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85),
-                inset 0 1.5px 1.5px 0 var(--spatial-glass-specular) !important;
-    filter: brightness(1.10) !important;
-    z-index: 10 !important;
-}
-
-@keyframes cyberBadgeKineticShake {
-    0% {
-        transform: translateY(-14px) scale(1.18) rotate(-4deg);
-    }
-    25% {
-        transform: translateY(-20px) scale(1.24) rotate(4deg);
-    }
-    50% {
-        transform: translateY(-12px) scale(1.15) rotate(-3deg);
-    }
-    75% {
-        transform: translateY(-22px) scale(1.26) rotate(5deg);
-    }
-    100% {
-        transform: translateY(-16px) scale(1.20) rotate(-2deg);
-    }
-}
-
-.cinematic-depth-card.is-kinetic-shaking .r1-l1 .cyber-unit { animation-delay: 0.02s !important; }
-.cinematic-depth-card.is-kinetic-shaking .r1-r1 .cyber-unit { animation-delay: 0.06s !important; }
-.cinematic-depth-card.is-kinetic-shaking .r1-l2 .cyber-unit { animation-delay: 0.10s !important; }
-.cinematic-depth-card.is-kinetic-shaking .r1-r2 .cyber-unit { animation-delay: 0.14s !important; }
-.cinematic-depth-card.is-kinetic-shaking .r2-l1 .cyber-unit { animation-delay: 0.18s !important; }
-.cinematic-depth-card.is-kinetic-shaking .r2-r1 .cyber-unit { animation-delay: 0.22s !important; }
-.cinematic-depth-card.is-kinetic-shaking .r3-l1 .cyber-unit { animation-delay: 0.26s !important; }
-.cinematic-depth-card.is-kinetic-shaking .r3-r1 .cyber-unit { animation-delay: 0.30s !important; }
-
-
-/* ==========================================================================
-   SCI-FI FLUID WAVE ANIMATIONS (সাইফাই পানির ঢেউ এনিমেশন)
-   Elegant sci-fi hydrodynamic ripples with concentric energy crests
-   ========================================================================== */
-.cinematic-depth-card[data-active-flank="all"] {
-    cursor: pointer;
-}
-
-/* When wave triggered on photo click (Clean 3D Fluid Motion - NO circular outline rings) */
-.cinematic-depth-card.is-shockwave-active {
-    animation: sciFiCardFluidWave 1.05s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-/* Fluid 3D Wave Motion on Card (পানির ঢেউয়ের মতো 3D বক্রতা ও আলোড়ন) */
-@keyframes sciFiCardFluidWave {
-    0% {
-        transform: perspective(1200px) translateY(0px) rotateX(0deg) scale(1);
-    }
-    22% {
-        transform: perspective(1200px) translateY(-7px) rotateX(2deg) scale(1.02);
-    }
-    55% {
-        transform: perspective(1200px) translateY(4px) rotateX(-1.5deg) scale(0.988);
-    }
-    78% {
-        transform: perspective(1200px) translateY(-2px) rotateX(0.6deg) scale(1.006);
-    }
-    100% {
-        transform: perspective(1200px) translateY(0px) rotateX(0deg) scale(1);
-    }
-}
-
-/* Flank Icons Sci-Fi Water Wave (পানির ঢেউয়ের মতো ওঠা-নামা ও হাইটেক ক্রিস্ট গ্লো) */
-.cyber-unit.ripple-wave-active {
-    animation: sciFiIconWaterWave 0.92s cubic-bezier(0.25, 1.15, 0.45, 1) forwards !important;
-}
-
-@keyframes sciFiIconWaterWave {
-    0% {
-        transform: translateY(0px) scale(1);
-        border-color: rgba(var(--accent-1-rgb), 0.25);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-    }
-    28% {
-        transform: translateY(-14px) scale(1.15);
-        border-color: rgba(var(--accent-1-rgb), 0.85);
-        box-shadow: 0 10px 22px rgba(var(--accent-1-rgb), 0.45), 0 0 14px rgba(var(--accent-1-rgb), 0.3);
-    }
-    58% {
-        transform: translateY(6px) scale(0.96);
-        border-color: rgba(var(--accent-1-rgb), 0.35);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-    }
-    80% {
-        transform: translateY(-2px) scale(1.02);
-        border-color: rgba(var(--accent-1-rgb), 0.5);
-    }
-    100% {
-        transform: translateY(0px) scale(1);
-        border-color: rgba(var(--accent-1-rgb), 0.25);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-    }
-}
-
-/* Layer 4: Subject (Foreground Cutout - In Front of Badges & Shoulders with Razor Sharp Resolution) */
+/* Layer 2: Subject (Foreground Cutout with Razor Sharp Resolution) */
 .cinematic-layer.layer-subject {
     z-index: 6;
     border-radius: 26px;
@@ -1710,27 +725,6 @@ section {
     50% {
         transform: translateY(-15px);
     }
-}
-
-#particle-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.scroll-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 4px;
-    background: linear-gradient(to right, var(--accent-1), var(--accent-3));
-    z-index: 100000;
-    width: 0%;
-    box-shadow: 0 0 10px var(--accent-1);
 }
 
 /* --- TERMINAL FEED & FILTERS --- */
@@ -3136,29 +2130,6 @@ section {
     --grok-eye-bottom: var(--orb-eye-bot);
 }
 
-[data-theme="cyberpunk"] {
-    --orb-stop-highlight: #fff1f2;
-    --orb-stop-bright: #fb7185;
-    --orb-stop-primary: #e11d48;
-    --orb-stop-deep: #881337;
-    --orb-stop-dark: #400516;
-    --orb-stop-rim: #ff0055;
-    --orb-glow-color: #ff0055;
-    --orb-shadow-color: rgba(0, 0, 0, 0.85);
-    --orb-eye-top: #2a0512;
-    --orb-eye-bot: #0a0104;
-    --orb-eye-shadow: rgba(255, 0, 85, 0.4);
-
-    --grok-3d-highlight: var(--orb-stop-highlight);
-    --grok-3d-mid: #ffe4e6;
-    --grok-3d-base: var(--orb-stop-bright);
-    --grok-3d-shadow: var(--orb-stop-primary);
-    --grok-3d-rim: var(--orb-stop-rim);
-    --grok-3d-drop-shadow: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 20px rgba(255, 0, 85, 0.7));
-    --grok-eye-top: var(--orb-eye-top);
-    --grok-eye-bottom: var(--orb-eye-bot);
-}
-
 [data-theme="god-mode"] {
     --orb-stop-highlight: #f0fdf4;
     --orb-stop-bright: #4ade80;
@@ -3589,29 +2560,6 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
 }
 
 /* --- Theme Adaptations for Speech Bubble --- */
-[data-theme="cyberpunk"] .ai-orb-speech-bubble {
-    background: rgba(24, 4, 14, 0.95) !important;
-    border-color: var(--accent-1, #f43f5e) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 22px rgba(244, 63, 94, 0.4) !important;
-}
-[data-theme="cyberpunk"] .ai-orb-bubble-arrow {
-    background: rgba(24, 4, 14, 0.95) !important;
-    border-color: var(--accent-1, #f43f5e) !important;
-}
-[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary {
-    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
-    color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 2px 10px rgba(244, 63, 94, 0.4) !important;
-}
-[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary span {
-    color: #ffffff !important;
-}
-[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary svg,
-[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary .ch-bubble {
-    stroke: #ffffff !important;
-    color: #ffffff !important;
-}
 
 [data-theme="god-mode"] .ai-orb-speech-bubble {
     background: rgba(2, 18, 6, 0.96) !important;
@@ -4140,93 +3088,6 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
 
 
 /* --- OVERLAYS & TERMINALS --- */
-#mines-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    z-index: 999999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-}
-
-#mines-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.mines-container {
-    background: #1e293b;
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid var(--accent-1);
-    width: 400px;
-    max-width: 90%;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
-}
-
-.mines-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.mines-header h3 {
-    margin: 0;
-    color: white;
-    font-size: 1.2rem;
-}
-
-#close-mines {
-    color: #ef4444;
-    font-size: 1.5rem;
-}
-
-.mines-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-bottom: 1.5rem;
-}
-
-.mine-tile {
-    background: #334155;
-    height: 50px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    transition: background 0.2s, transform 0.1s;
-}
-
-.mine-tile:hover {
-    background: #475569;
-    transform: scale(1.05);
-}
-
-.mine-tile.revealed-safe {
-    background: #10b981;
-    pointer-events: none;
-}
-
-.mine-tile.revealed-mine {
-    background: #ef4444;
-    pointer-events: none;
-}
-
-.mines-status {
-    color: var(--text-secondary);
-    font-family: 'Fira Code', monospace;
-}
 
 .cli-container {
     width: 100%;
@@ -4293,55 +3154,6 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     outline: none;
 }
 
-#easter-egg-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 999999;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 3rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s, background-color 0.2s;
-    font-family: 'Fira Code', monospace;
-    color: #4ade80;
-    font-size: 1.2rem;
-    overflow: hidden;
-    text-shadow: 0 0 8px rgba(74, 222, 128, 0.8);
-}
-
-#easter-egg-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-#hack-terminal {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    width: 100%;
-}
-
-#hack-terminal div {
-    margin-bottom: 0.5rem;
-}
-
-.hack-cursor {
-    display: inline-block;
-    width: 12px;
-    height: 1.2rem;
-    background: #4ade80;
-    animation: blink 0.5s infinite;
-    vertical-align: bottom;
-    margin-left: 5px;
-    box-shadow: 0 0 8px #4ade80;
-}
-
 .hidden-overlay {
     position: fixed;
     top: 0;
@@ -4362,83 +3174,6 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
 .hidden-overlay.active {
     opacity: 1;
     pointer-events: all;
-}
-
-/* --- SELF DESTRUCT MELTDOWN SEQUENCE --- */
-@keyframes meltdownShake {
-    0% {
-        transform: translate(2px, 2px) rotate(0deg);
-    }
-
-    10% {
-        transform: translate(-2px, -3px) rotate(-1deg);
-    }
-
-    20% {
-        transform: translate(-4px, 0px) rotate(1deg);
-    }
-
-    30% {
-        transform: translate(4px, 3px) rotate(0deg);
-    }
-
-    40% {
-        transform: translate(2px, -2px) rotate(1deg);
-    }
-
-    50% {
-        transform: translate(-2px, 3px) rotate(-1deg);
-    }
-
-    60% {
-        transform: translate(-4px, 2px) rotate(0deg);
-    }
-
-    70% {
-        transform: translate(4px, 2px) rotate(-1deg);
-    }
-
-    80% {
-        transform: translate(-2px, -2px) rotate(1deg);
-    }
-
-    90% {
-        transform: translate(2px, 3px) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(2px, -3px) rotate(-1deg);
-    }
-}
-
-.meltdown-active {
-    animation: meltdownShake 0.4s infinite;
-    background-color: #200 !important;
-    color: #f00 !important;
-}
-
-.meltdown-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 0, 0, 0.25);
-    z-index: 999999998;
-    pointer-events: none;
-    mix-blend-mode: color-burn;
-    animation: flashWarning 0.8s infinite alternate;
-}
-
-@keyframes flashWarning {
-    from {
-        opacity: 0.3;
-    }
-
-    to {
-        opacity: 1;
-        background: rgba(255, 0, 0, 0.5);
-    }
 }
 
 .alert {
@@ -6275,9 +5010,6 @@ footer {
 
 /* --- FALLBACKS --- */
 @media (max-width: 1024px) {
-    .cursor-dot, .cursor-outline {
-        display: none !important;
-    }
     * {
         cursor: auto !important;
     }
@@ -6467,132 +5199,6 @@ footer {
 
     .decrypt-text { word-break: break-word; }
 
-    /* Mobile Popups: Position ABOVE or BELOW icon (never over face), fully responsive multi-line */
-    .unit-popup {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 3px !important;
-        width: max-content !important;
-        min-width: 140px !important;
-        max-width: min(220px, calc(100vw - 36px)) !important;
-        box-sizing: border-box !important;
-        padding: 7px 10px !important;
-        white-space: normal !important;
-        border-radius: 8px !important;
-        z-index: 9999 !important;
-    }
-
-    .popup-tag {
-        font-size: 7px !important;
-        padding: 1.5px 5px !important;
-        margin-bottom: 1px !important;
-        white-space: nowrap !important;
-        align-self: flex-start !important;
-    }
-
-    .popup-title {
-        font-size: 11px !important;
-        line-height: 1.25 !important;
-        white-space: normal !important;
-        word-break: normal !important;
-        overflow-wrap: break-word !important;
-        width: 100% !important;
-        color: #ffffff !important;
-    }
-
-    .popup-desc {
-        font-size: 8.5px !important;
-        line-height: 1.35 !important;
-        white-space: normal !important;
-        word-break: normal !important;
-        overflow-wrap: break-word !important;
-        width: 100% !important;
-    }
-
-    /* Mobile Light Theme Popup Contrast Fix (সব লেখা পরিষ্কার ও স্পষ্ট) */
-    :is([data-theme="light"], [data-theme="mint"]) .unit-popup,
-    :root:is([data-theme="light"], [data-theme="mint"]) .unit-popup {
-        background: rgba(255, 255, 255, 0.98) !important;
-        border-color: rgba(var(--accent-1-rgb), 0.65) !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16), 0 0 14px rgba(var(--accent-1-rgb), 0.25) !important;
-    }
-
-    :is([data-theme="light"], [data-theme="mint"]) .popup-title,
-    :root:is([data-theme="light"], [data-theme="mint"]) .popup-title {
-        color: #0f172a !important; /* Deep dark navy for 100% crisp legibility */
-        font-weight: 700 !important;
-    }
-
-    :is([data-theme="light"], [data-theme="mint"]) .popup-desc,
-    :root:is([data-theme="light"], [data-theme="mint"]) .popup-desc {
-        color: #1e293b !important; /* Rich dark slate */
-        font-weight: 500 !important;
-    }
-
-    :is([data-theme="light"], [data-theme="mint"]) .popup-tag,
-    :root:is([data-theme="light"], [data-theme="mint"]) .popup-tag {
-        color: var(--accent-1) !important;
-        background: rgba(var(--accent-1-rgb), 0.12) !important;
-        border-color: rgba(var(--accent-1-rgb), 0.35) !important;
-        font-weight: 800 !important;
-    }
-
-    /* Left Flank Units: Anchor Above by default, Left-aligned */
-    .flank-left .unit-popup,
-    [class*="r1-l"] .unit-popup,
-    [class*="r2-l"] .unit-popup,
-    [class*="r3-l"] .unit-popup {
-        left: 0 !important;
-        right: auto !important;
-        bottom: calc(100% + 8px) !important;
-        top: auto !important;
-        transform: translateY(4px) scale(0.96) !important;
-        transform-origin: left bottom !important;
-    }
-
-    /* Right Flank Units: Anchor Above by default, Right-aligned */
-    .flank-right .unit-popup,
-    [class*="r1-r"] .unit-popup,
-    [class*="r2-r"] .unit-popup,
-    [class*="r3-r"] .unit-popup {
-        right: 0 !important;
-        left: auto !important;
-        bottom: calc(100% + 8px) !important;
-        top: auto !important;
-        transform: translateY(4px) scale(0.96) !important;
-        transform-origin: right bottom !important;
-    }
-
-    /* Crown / Upper Units (top <= 20%): Anchor BELOW icon so they don't clip off the top */
-    .r3-l1 .unit-popup, .r3-l2 .unit-popup, .r3-l3 .unit-popup, .r3-l4 .unit-popup,
-    .r2-l1 .unit-popup, .r2-l2 .unit-popup, .r2-l3 .unit-popup,
-    .r1-l1 .unit-popup {
-        bottom: auto !important;
-        top: calc(100% + 8px) !important;
-        transform: translateY(-4px) scale(0.96) !important;
-        transform-origin: left top !important;
-    }
-
-    .r3-r1 .unit-popup, .r3-r2 .unit-popup, .r3-r3 .unit-popup, .r3-r4 .unit-popup,
-    .r2-r1 .unit-popup, .r2-r2 .unit-popup, .r2-r3 .unit-popup,
-    .r1-r1 .unit-popup {
-        bottom: auto !important;
-        top: calc(100% + 8px) !important;
-        transform: translateY(-4px) scale(0.96) !important;
-        transform-origin: right top !important;
-    }
-
-    /* Active / Tap / Hover state on Mobile */
-    .cyber-unit:hover .unit-popup,
-    .cyber-unit:focus-within .unit-popup,
-    .cyber-unit.popup-active .unit-popup {
-        opacity: 1 !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-        transform: translateY(0) scale(1) !important;
-    }
-
     section { padding: 2.2rem 5% 1.8rem; }
 
     /* IDE: Full-width, minimal sidebar */
@@ -6692,11 +5298,6 @@ footer {
     .cli-prompt { font-size: 0.75rem; }
     #cli-input { font-size: 0.8rem; }
     .cli-output { font-size: 0.8rem; }
-
-    /* Mines/Diagnostic Overlay */
-    .mines-container { width: 95%; padding: 1.5rem 1rem; }
-    .mines-grid { gap: 6px; }
-    .mine-tile { height: 42px; font-size: 1.2rem; }
 
     /* UI Controls Placement: vertical stack on bottom-left (উপরে নিচে) */
     .ui-controls {
@@ -8033,34 +6634,6 @@ footer {
     box-shadow: 0 0 6px rgba(16, 185, 129, 0.55), 0 0 12px rgba(16, 185, 129, 0.3) !important;
 }
 
-/* Cyberpunk Theme (Crimson Red & Neon Rose) */
-[data-theme="cyberpunk"] .lb-toggle {
-    background: linear-gradient(135deg, rgba(32, 6, 16, 0.98) 0%, rgba(20, 4, 10, 0.98) 60%, rgba(10, 2, 6, 1) 100%) !important;
-    border-top: 1.5px solid rgba(244, 63, 94, 0.85) !important;
-    border-left: 1.5px solid rgba(244, 63, 94, 0.65) !important;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.9) !important;
-    border-right: none !important;
-    box-shadow: -6px 0 20px rgba(0, 0, 0, 0.8),
-                -2px 0 14px rgba(244, 63, 94, 0.45),
-                inset 1px 1px 1.5px rgba(255, 255, 255, 0.25),
-                inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.8) !important;
-}
-
-[data-theme="cyberpunk"] .lb-toggle::before {
-    background: #ff1e56 !important;
-    box-shadow: 0 0 8px #ff1e56, 0 0 12px rgba(244, 63, 94, 0.85) !important;
-}
-
-[data-theme="cyberpunk"] .lb-toggle::after {
-    display: none !important;
-}
-
-[data-theme="cyberpunk"] .lb-telemetry-bars .lb-bar,
-[data-theme="cyberpunk"] .lb-title-telemetry .lb-title-bar {
-    background: linear-gradient(180deg, #ff1e56 0%, #f43f5e 50%, #be123c 100%) !important;
-    box-shadow: 0 0 8px rgba(244, 63, 94, 0.9), 0 0 16px rgba(255, 30, 86, 0.5) !important;
-}
-
 /* God Mode Theme (Matrix Neon Green) */
 [data-theme="god-mode"] .lb-toggle {
     background: linear-gradient(135deg, rgba(4, 24, 8, 0.98) 0%, rgba(2, 16, 4, 0.98) 60%, rgba(0, 8, 2, 1) 100%) !important;
@@ -8121,17 +6694,6 @@ footer {
     color: #0f172a !important;
 }
 
-/* Cyberpunk Theme */
-[data-theme="cyberpunk"] .term-prompt {
-    color: #f43f5e !important;
-}
-[data-theme="cyberpunk"] .term-protocol {
-    color: #f43f5e !important;
-}
-[data-theme="cyberpunk"] .term-host {
-    color: #fbbf24 !important;
-}
-
 /* God-Mode Theme */
 [data-theme="god-mode"] .term-prompt,
 [data-theme="god-mode"] .term-protocol,
@@ -8158,16 +6720,6 @@ footer {
     border: 1px solid #cbd5e1 !important;
     color: #0f172a !important;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* Cyberpunk Theme */
-[data-theme="cyberpunk"] .sys-monitor {
-    background: rgba(20, 0, 10, 0.92) !important;
-    border: 1px solid rgba(244, 63, 94, 0.4) !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(244, 63, 94, 0.15) !important;
-}
-[data-theme="cyberpunk"] .mon-title {
-    color: #f43f5e !important;
 }
 
 /* =========================================================
@@ -8309,7 +6861,6 @@ footer {
 
 @media (max-width: 768px) {
     :is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget.chat-collapsed,
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed,
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed {
         background: transparent !important;
         border: none !important;
@@ -8319,7 +6870,6 @@ footer {
     }
 
     :is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget.chat-collapsed *,
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed *,
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed * {
         background: transparent !important;
         border: none !important;
@@ -8396,46 +6946,6 @@ footer {
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
 }
 
-/* Cyberpunk Theme Chat Widget */
-[data-theme="cyberpunk"] #ai-chat-widget {
-    background: rgba(20, 0, 10, 0.95) !important;
-    border: 1px solid rgba(244, 63, 94, 0.5) !important;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7), 0 0 20px rgba(244, 63, 94, 0.2) !important;
-}
-
-[data-theme="cyberpunk"] .chat-header {
-    background: linear-gradient(110deg, rgba(20, 0, 10, 0.95), rgba(40, 5, 20, 0.95)) !important;
-    border-bottom: 1px solid rgba(244, 63, 94, 0.4) !important;
-    color: #ffffff !important;
-}
-
-@media (min-width: 769px) {
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed {
-        background: rgba(20, 0, 10, 0.9) !important;
-        border: 1px solid rgba(244, 63, 94, 0.6) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 22px rgba(244, 63, 94, 0.35) !important;
-    }
-
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed:hover {
-        border-color: #ff0055 !important;
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 0, 85, 0.6) !important;
-    }
-
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed .chat-header {
-        background: transparent !important;
-        color: #ffffff !important;
-    }
-
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed .chat-header-title {
-        color: #f43f5e !important;
-        font-weight: 700 !important;
-    }
-
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed #chat-toggle-icon {
-        color: #f43f5e !important;
-    }
-}
-
 /* God Mode Theme Chat Widget Desktop Pill */
 @media (min-width: 769px) {
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed {
@@ -8456,34 +6966,6 @@ footer {
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed #chat-toggle-icon {
         color: #00ff00 !important;
     }
-}
-
-[data-theme="cyberpunk"] .chat-header i,
-[data-theme="cyberpunk"] .chat-header span,
-[data-theme="cyberpunk"] #chat-toggle-icon {
-    color: #f43f5e !important;
-}
-
-[data-theme="cyberpunk"] .bot-msg {
-    background: rgba(244, 63, 94, 0.1) !important;
-    color: #f1f5f9 !important;
-    border: 1px solid rgba(244, 63, 94, 0.3) !important;
-}
-
-[data-theme="cyberpunk"] .chat-input-area {
-    background: rgba(10, 0, 5, 0.8) !important;
-    border-top: 1px solid rgba(244, 63, 94, 0.3) !important;
-}
-
-[data-theme="cyberpunk"] #chat-input {
-    background: rgba(20, 0, 10, 0.8) !important;
-    border: 1px solid rgba(244, 63, 94, 0.4) !important;
-    color: #fbbf24 !important;
-}
-
-[data-theme="cyberpunk"] #chat-send {
-    background: #f43f5e !important;
-    color: #000000 !important;
 }
 
 /* ==========================================
@@ -8729,51 +7211,6 @@ footer {
     background: #f1f5f9 !important;
     border-color: #2563eb !important;
     color: #1d4ed8 !important;
-}
-
-/* Cyberpunk Theme Overrides */
-[data-theme="cyberpunk"] .cyber-overlay-btn {
-    background: #f43f5e !important;
-    box-shadow: 0 4px 18px rgba(244, 63, 94, 0.5) !important;
-}
-
-[data-theme="cyberpunk"] .project-preview-link:hover .cyber-overlay-btn {
-    background: #e11d48 !important;
-    box-shadow: 0 8px 25px rgba(244, 63, 94, 0.8) !important;
-}
-
-/* Cyberpunk Active Tabs & Buttons (Desktop, Tablet, Mobile) */
-[data-theme="cyberpunk"] .arch-unified-filter-btn.active {
-    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
-    color: #09090b !important;
-    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
-}
-
-[data-theme="cyberpunk"] .arch-tab-btn.active {
-    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
-    color: #09090b !important;
-    border-color: #f43f5e !important;
-    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important;
-}
-
-[data-theme="cyberpunk"] .radar-tab.active,
-[data-theme="cyberpunk"] .lb-content .radar-tab.active {
-    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
-    color: #09090b !important;
-    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
-}
-
-[data-theme="cyberpunk"] .radar-subtab.active {
-    background: rgba(244, 63, 94, 0.2) !important;
-    border-color: #f43f5e !important;
-    color: #f43f5e !important;
-    box-shadow: 0 0 10px rgba(244, 63, 94, 0.35) !important;
-}
-
-[data-theme="cyberpunk"] .rank-pill.rank-1 {
-    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
-    color: #09090b !important;
-    box-shadow: 0 0 20px rgba(244, 63, 94, 0.5) !important;
 }
 
 /* Blueprint Badge Styling */
@@ -9563,9 +8000,6 @@ footer {
     100% { stroke-dashoffset: -100; opacity: 0.4; }
 }
 
-/* Cyberpunk: rose + gold (theme gradient pair) instead of two pinks */
-[data-theme="cyberpunk"] .terminal-live-badge.is-pulse { --pulse-b: var(--accent-2); }
-
 /* Light theme: royal blue + cyan, softer glow on white */
 :is([data-theme="light"], [data-theme="mint"]) .terminal-live-badge.is-pulse { --pulse-b: #06b6d4; }
 :is([data-theme="light"], [data-theme="mint"]) .term-pulse-base.term-pulse-a { opacity: 0.18; }
@@ -9686,10 +8120,6 @@ footer {
     html:is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget.chat-collapsed::before {
         background-image: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%);
     }
-    html[data-theme="cyberpunk"]:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
-        --pill-glass: rgba(30, 4, 16, 0.55);
-        --pill-depth: rgba(0, 0, 0, 0.6);
-    }
     html[data-theme="god-mode"]:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
         --pill-glass: rgba(0, 20, 4, 0.58);
         --pill-depth: rgba(0, 0, 0, 0.7);
@@ -9774,7 +8204,6 @@ html:is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget {
     --chat-sub: #64748b;
     --chat-hair: rgba(15, 23, 42, 0.08);
 }
-html[data-theme="cyberpunk"] #ai-chat-widget { --chat-user-fg: #1a0610; --chat-bot-bg: rgba(255, 255, 255, 0.05); }
 html[data-theme="god-mode"] #ai-chat-widget { --chat-user-fg: #021206; }
 
 /* Header: title + subtitle (subtitle only when expanded) */
@@ -9883,12 +8312,10 @@ html #ai-chat-widget #chat-send:hover { transform: translateY(-1px) scale(1.04);
 html #ai-chat-widget { --chip-fg: #e8fbff; --chip-ico: var(--accent-1); --action-fg: var(--accent-1); }
 html[data-theme="light"] #ai-chat-widget { --chip-fg: #0f172a; --chip-ico: #2563eb; --action-fg: #1d4ed8; }
 html[data-theme="mint"] #ai-chat-widget { --chip-fg: #0f172a; --chip-ico: #059669; --action-fg: #047857; }
-html[data-theme="cyberpunk"] #ai-chat-widget { --chip-fg: #ffeab0; --chip-ico: #fbbf24; --action-fg: #fcd34d; --chat-sub: rgba(255, 226, 170, 0.72); }
 html[data-theme="god-mode"] #ai-chat-widget { --chip-fg: #c8ffd4; --chip-ico: #4ade80; --action-fg: #86efac; }
 
 html #ai-chat-widget .chat-action { color: var(--action-fg); }
 html #ai-chat-widget .chat-action:hover { color: var(--chat-user-fg); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); }
-html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 
 
 /* ===== Separate pages: page hero + home explore grid ===== */
@@ -10200,26 +8627,6 @@ body.light-mode .bottom-nav a[aria-current="page"] {
     color: #0b1120 !important;
 }
 
-[data-theme="cyberpunk"] .control-btn {
-    background: rgba(24, 4, 16, 0.92) !important;
-    border: 1px solid rgba(244, 63, 94, 0.5) !important;
-    color: #f43f5e !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(244, 63, 94, 0.3) !important;
-}
-[data-theme="cyberpunk"] .control-btn:hover {
-    background: #f43f5e !important;
-    color: #ffffff !important;
-    box-shadow: 0 6px 20px rgba(244, 63, 94, 0.7) !important;
-}
-[data-theme="cyberpunk"] .control-btn.whatsapp-btn {
-    color: #22c55e !important;
-    border-color: rgba(34, 197, 94, 0.5) !important;
-}
-[data-theme="cyberpunk"] .control-btn.whatsapp-btn:hover {
-    background: #22c55e !important;
-    color: #09090b !important;
-}
-
 [data-theme="god-mode"] .control-btn {
     background: rgba(0, 20, 0, 0.92) !important;
     border: 1px solid rgba(0, 255, 0, 0.5) !important;
@@ -10467,20 +8874,10 @@ body.light-mode .bottom-nav a[aria-current="page"] {
         border-left: 1px solid rgba(16, 185, 129, 0.25) !important;
         box-shadow: -15px 0 45px rgba(5, 150, 105, 0.08), inset 1px 0 0 rgba(255, 255, 255, 0.95) !important;
     }
-    [data-theme="cyberpunk"] .mobile-menu-drawer {
-        background: linear-gradient(145deg, rgba(244, 63, 94, 0.14) 0%, rgba(20, 5, 15, 0.55) 100%) !important;
-        border-left: 1px solid rgba(244, 63, 94, 0.45) !important;
-        box-shadow: -15px 0 45px rgba(244, 63, 94, 0.2), inset 1px 0 0 rgba(255, 255, 255, 0.18) !important;
-    }
     [data-theme="god-mode"] .mobile-menu-drawer {
         background: linear-gradient(145deg, rgba(0, 255, 0, 0.08) 0%, rgba(0, 15, 0, 0.58) 100%) !important;
         border-left: 1px solid rgba(0, 255, 0, 0.4) !important;
         box-shadow: -15px 0 45px rgba(0, 255, 0, 0.18), inset 1px 0 0 rgba(0, 255, 0, 0.3) !important;
-    }
-
-    .mobile-menu-drawer .nav-links #cli-toggle,
-    .mobile-menu-drawer .nav-links a#cli-toggle {
-        display: none !important;
     }
     
     .mobile-menu-drawer .nav-links {
@@ -10563,7 +8960,6 @@ body.light-mode .bottom-nav a[aria-current="page"] {
     html:is(*, [data-theme]) #ai-chat-widget.chat-collapsed,
     [data-theme="light"] #ai-chat-widget.chat-collapsed,
     [data-theme="mint"] #ai-chat-widget.chat-collapsed,
-    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed,
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed {
         background: transparent !important;
         border: none !important;
@@ -10600,7 +8996,23 @@ html :is(.dash-fp-pick, .fx-search, .fx-sleep, .cli-container) :is(input, select
     }
 }
 
-/* phones: the bottom nav is the footer, so the copyright line and the self-destruct dot are hidden */
+/* the footer's Terminal button opens the CLI easter egg; it reads like the footer's small print */
+.footer-egg { margin-top: 20px; }
+.footer-cli {
+    padding: 2px 6px;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    font: inherit;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.footer-cli:hover, .footer-cli:focus-visible { color: var(--accent-1); }
+
+/* phones: the bottom nav is the footer, so the copyright line and the Terminal button are hidden */
 @media (max-width: 767px) {
     footer .footer-copy, footer .footer-egg { display: none; }
 }
@@ -10764,8 +9176,7 @@ html #fp-pill .fp-btn:not(.fp-play):not(.fp-x):not(.fp-ghost):active {
 }
 
 /* the floating controls (WhatsApp, sounds, theme) wear the soft raised face of the plain round buttons: a lit top edge,
-   a soft base and a shadow, lifting a little under the pointer and sinking when pressed. Their magnetic pull moves them
-   with transform (script~), so the lift and the press use translate, which adds to it. WhatsApp keeps its green. */
+   a soft base and a shadow, lifting a little under the pointer and sinking when pressed. WhatsApp keeps its green. */
 html .ui-controls .control-btn {
     color: var(--pf-brand) !important;
     background: linear-gradient(180deg, var(--b3-soft-sheen), transparent 65%), var(--pf-surface) !important;
@@ -11367,7 +9778,6 @@ html { --leak-1: var(--accent-1-rgb, 0, 242, 254); --leak-2: var(--accent-2-rgb,
        --leak-a: .40; --leak-b: .34; --leak-c: .28; --grain: .10; }
 html[data-theme="light"]     { --leak-3: 139, 92, 246;  --leak-a: .42; --leak-b: .34; --leak-c: .36; --grain: .07; }
 html[data-theme="mint"]      { --leak-3: 45, 212, 191;  --leak-a: .42; --leak-b: .32; --leak-c: .34; --grain: .07; }
-html[data-theme="cyberpunk"] { --leak-3: 168, 85, 247;  --leak-a: .26; --leak-b: .16; --leak-c: .22; }
 html[data-theme="god-mode"]  { --leak-3: 0, 180, 90;    --leak-a: .20; --leak-b: .14; --leak-c: .12; }
 html::before, html::after, body::after { content: ""; position: fixed; z-index: -1; pointer-events: none; }
 /* AURORA — two bands of light ribbons sway slowly across the top of every page. The bands are soft from their own
@@ -11422,16 +9832,12 @@ html body .nx:not(#_bg) { background: transparent !important; }
 @media print { html::before, html::after, body::before, body::after { display: none; } }
 
 /* Hero name gradient follows every theme (the dark one used to leak into the others) */
-html[data-theme="cyberpunk"] .gradient-text {
-    background: linear-gradient(135deg, #f43f5e 0%, #fb7185 45%, #eab308 100%) !important;
-    -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;
-}
 html[data-theme="god-mode"] .gradient-text {
     background: linear-gradient(135deg, #00ff00 0%, #4ade80 50%, #a3e635 100%) !important;
     -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;
 }
 
-/* The particle network fades out behind the hero text so the lines never cross the words */
+/* A soft pool of the page colour sits behind the hero text and the portrait */
 .hero .hero-text-side { position: relative; isolation: isolate; }
 .hero .hero-text-side::before {
     content: ""; position: absolute; z-index: -1; pointer-events: none;
@@ -11470,7 +9876,6 @@ html:not([data-theme]) body #ai-chat-widget.chat-expanded:not(#_ai) {
     backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
 }
 html[data-theme="god-mode"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(0,255,0,.05), transparent 30%), #030803 !important; }
-html[data-theme="cyberpunk"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(244,63,94,.07), transparent 30%), #12040a !important; backdrop-filter: none !important; }
 /* the user's own bubble stays fully visible at the top edge instead of fading into the header */
 html #ai-chat-widget.chat-expanded .chat-body { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; }
 
@@ -11533,7 +9938,6 @@ html body .bottom-nav { view-transition-name: tabbar; }
 
 /* Skeleton: a dark version and a light version, matched to the theme */
 #page-skeleton { --sk: rgba(148, 163, 184, .14); --sk-hi: rgba(148, 163, 184, .28); background: #0b1120; }
-html[data-theme="cyberpunk"] #page-skeleton { background: #09090b; --sk: rgba(244, 63, 94, .12); --sk-hi: rgba(244, 63, 94, .24); }
 html[data-theme="god-mode"] #page-skeleton { background: #000; --sk: rgba(0, 255, 0, .10); --sk-hi: rgba(0, 255, 0, .20); }
 html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton { --sk: #e2e8f0; --sk-hi: #f1f5f9; background: #f8fafc; }
 html[data-theme="mint"] #page-skeleton { --sk: #dcefe6; --sk-hi: #eef8f3; background: #f4faf7; }
@@ -11555,17 +9959,20 @@ html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton .sk-card { bac
    before the hero has painted. So snapping starts with the visitor's first touch, wheel or key (html.snap-ready, set in script~). */
 html:not(.snap-ready) :is(.arch-unified-grid, .arch-pillars-grid, .arch-pipeline-strip, .archives-grid, .projects-grid, .deeptech-mobile-tabs) { scroll-snap-type: none !important; }
 
-/* Animations only where they can be seen. The portrait card's badges, arcs and command lines are invisible until the card
-   is hovered or opened, so they wait until then; anything else that loops forever rests while it is off screen
-   (.anim-rest, set by script~ after load). Every running animation costs the page a style pass each frame. */
-.cinematic-depth-card:not(:hover):not(.is-active):not([data-active-flank]) :is(.cyber-unit, .tactical-arc, .cmd-line) { animation-play-state: paused; }
+/* Animations only where they can be seen: anything that loops forever rests while it is off screen (.anim-rest, set by
+   script~ after load). Every running animation costs the page a style pass each frame. */
 .anim-rest, .anim-rest::before, .anim-rest::after { animation-play-state: paused !important; }
 
-/* The typed subtitle holds the height of its longest phrase from the first paint (script~ checks it again once the fonts
-   are in): two lines on desktop and on the narrowest phones, where the longer phrases wrap; the centred hero never jumps.
-   On desktop the height is set outright, so a fallback font that wraps differently cannot change it either. */
+/* The subtitle holds its height from the first paint: two lines on desktop and on the narrowest phones, where it can
+   wrap; the centred hero never jumps. On desktop the height is set outright, so a fallback font that wraps differently
+   cannot change it either. */
 @media (min-width: 769px) { html body .hero-text-side h2:not(#_h) { min-height: 3em; height: 3em; } }
 @media (max-width: 380px) { html body .hero-text-side h2:not(#_h) { min-height: 3.2em; } }
+/* The other roles, as one quiet line under the subtitle, in the body font (preloaded, so it doesn't re-wrap when fonts
+   land); its height is held like the subtitle's: one line on desktop, two on phones, where it wraps. On phones it tucks
+   into the gaps around it, so the buttons stay above the tab bar. */
+html body .hero-text-side .hero-roles { margin: 0.35rem 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); text-wrap: balance; min-height: 1.5em; }
+@media (max-width: 768px) { html body .hero-text-side .hero-roles { margin: -0.55rem 0 -0.45rem; font-size: 0.75rem; line-height: 1.4; min-height: 2.8em; } }
 
 /* Loops that ran on the main thread every frame now run on the GPU (each forced a layout pass, which also slows the
    page's Speed Index). The mascot's idle breathing moves from its SVG group to the <svg> box: the same motion
@@ -11678,20 +10085,6 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     --pf-glass-ink-2: #64748b;
     --pf-edge: rgba(255, 255, 255, 0.9);
     --pf-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04);
-}
-:root[data-theme="cyberpunk"] {
-    --pf-surface: #130a10;
-    --pf-surface-2: #1e0f18;
-    --pf-line: #3a1824;
-    --pf-line-strong: #52202f;
-    --pf-ink: #fbbf24;
-    --pf-ink-2: #dcbf86;
-    --pf-ink-3: #a1a1aa;
-    --pf-brand: #f43f5e;
-    --pf-brand-rgb: 244, 63, 94;
-    --pf-on-brand: #ffffff;
-    --pf-glow: rgba(244, 63, 94, 0.35);
-    --pf-glass: rgba(19, 10, 16, 0.78);
 }
 :root[data-theme="god-mode"] {
     --pf-brand: #00ff00;

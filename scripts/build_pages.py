@@ -58,17 +58,15 @@ NAV_ITEMS = [("profile", "Profile"), ("projects", "Projects"), ("people", "Peopl
 
 
 def swap_nav(html: str, prefix: str) -> str:
-    """Top nav = Profile, Projects, People, Contact, Library (+ terminal toggle)."""
-    m = re.search(r'<ul class="nav-links">(.*?)</ul>', html, re.S)
-    cli = re.search(r'<li><a href="[^"]*" id="cli-toggle".*?</li>', m.group(1), re.S).group(0)
-    cls = 'class="magnetic-element hover-sound nav-link-item"'
+    """Top nav = Profile, Projects, People, Contact, Library."""
+    cls = 'class="hover-sound nav-link-item"'
     items = "".join(f'<li><a href="{prefix}{k}/" {cls}>{ico(k)} <span>{l}</span></a></li>\n            ' for k, l in NAV_ITEMS)
     # Library sits in its own group below a divider (shown in the mobile drawer)
     items += '<li class="nav-sep" aria-hidden="true"></li>\n            '
     items += f'<li><a href="{prefix}library/" {cls}>{ico("books")} <span>Library</span></a></li>\n            '
 
-    nav_inner = "\n            " + items + cli + "\n        "
-    return dedupe_cli(re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S))
+    nav_inner = "\n            " + items.rstrip() + "\n        "
+    return re.sub(r'<ul class="nav-links">.*?</ul>', f'<ul class="nav-links">{nav_inner}</ul>', html, flags=re.S)
 
 
 def section(src: str, sid: str) -> str:
@@ -94,15 +92,6 @@ PERSON_LD = """<script type="application/ld+json">
 """
 
 
-def dedupe_cli(html: str) -> str:
-    """Keep only the first #cli-toggle (the drawer copy is hidden by CSS and duplicated the id)."""
-    pat = re.compile(r'<li><a href="[^"]*" id="cli-toggle".*?</li>\s*', re.S)
-    hits = list(pat.finditer(html))
-    for m in reversed(hits[1:]):
-        html = html[:m.start()] + html[m.end():]
-    return html
-
-
 def set_meta(head: str, slug: str, title: str, desc: str, prefix: str) -> str:
     url = f"{SITE}/{slug}/" if slug else f"{SITE}/"
     head = re.sub(r"<title>.*?</title>", f"<title>{title} | Mehedi Hasan</title>", head, flags=re.S)
@@ -119,9 +108,7 @@ def main() -> None:
     src = SRC.read_text(encoding="utf-8").replace("\r\n", "\n")
     head_end = src.index("<body>")
     head = src[:head_end]
-    # the hero's particle canvas is on the home page only, so is the script that draws its first frame
-    head = re.sub(r'\s*<script id="hero-net">.*?</script>', "", head, flags=re.S)
-    # and so are the desktop font preloads for the hero
+    # the desktop font preloads for the hero are on the home page only
     head = re.sub(r'\n\s*<!-- Home, desktop:.*?-->', "", head, flags=re.S)
     head = re.sub(r'\n\s*<link[^>]*\bdata-home\b[^>]*>', "", head)
     body_open = src[head_end:src.index('<header class="hero"')]

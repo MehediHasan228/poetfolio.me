@@ -3,57 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme (the retired cyberpunk
+         theme opens as dark) -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t==="cyberpunk")t="dark";if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
-    <script id="hero-net">
-    /* Home only (the page builders drop it from the other pages): the particle network is part of the first look, so its
-       first still frame is drawn the moment the parser reaches the canvas. A script in the body would wait for the
-       stylesheets and run after the first paint. script~9e1709.js sets these same dots moving with drawParticleNet.
-       The viewport is measured here, after the viewport meta and before the body: reading it once the parser is deep in
-       the page would lay the whole page out without its stylesheets. */
-    (function () {
-        var COLORS = { dark: '#00f2fe', light: '#94a3b8', cyberpunk: '#f43f5e', mint: '#10b981', 'god-mode': '#00ff00' };
-        // One path for all the dots and one per alpha step for the links: a few draw calls a frame instead of hundreds.
-        window.drawParticleNet = function (x, ps) {
-            var col = ps.length ? ps[0].col : '', STEPS = 10, links = [], i, j, a, b, d, l;
-            x.clearRect(0, 0, x.canvas.width, x.canvas.height);
-            x.fillStyle = col;
-            x.beginPath();
-            for (i = 0; i < ps.length; i++) { x.moveTo(ps[i].x + ps[i].s, ps[i].y); x.arc(ps[i].x, ps[i].y, ps[i].s, 0, Math.PI * 2); }
-            x.fill();
-            for (i = 0; i < STEPS; i++) links.push(new Path2D());
-            for (i = 0; i < ps.length; i++) {
-                for (j = i + 1; j < ps.length; j++) {
-                    a = ps[i]; b = ps[j]; d = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
-                    if (d < 15000) { l = links[Math.min(STEPS - 1, Math.floor((1 - d / 15000) * STEPS))]; l.moveTo(a.x, a.y); l.lineTo(b.x, b.y); }
-                }
-            }
-            x.strokeStyle = col;
-            links.forEach(function (l, k) { x.globalAlpha = (k + 0.5) / STEPS; x.stroke(l); });
-            x.globalAlpha = 1;
-        };
-        var W = document.documentElement.clientWidth, H = document.documentElement.clientHeight;
-        var mo = new MutationObserver(function () {
-            var c = document.getElementById('particle-canvas'), x = c && c.getContext('2d');
-            if (!c) return;
-            mo.disconnect();
-            if (!x) return;
-            // the root's client size: on phones innerWidth can still hold the pre-viewport-meta width at this point
-            var w = W, h = H, ps = [], i;
-            var col = COLORS[document.documentElement.getAttribute('data-theme')] || COLORS.dark;
-            c.width = w; c.height = h;
-            for (i = 0; i < w * h / 9000; i++) {
-                ps.push({ x: Math.random() * w, y: Math.random() * h, dx: (Math.random() - 0.5) * 1.5, dy: (Math.random() - 0.5) * 1.5, s: Math.random() * 2 + 1, col: col });
-            }
-            window.heroParticles = ps;
-            drawParticleNet(x, ps);
-        });
-        mo.observe(document.documentElement, { childList: true, subtree: true });
-        document.addEventListener('DOMContentLoaded', function () { mo.disconnect(); });
-    })();
-    </script>
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
     <meta name="description" content="Mehedi Hasan is an AI-native software engineer in Dhaka who builds AI agents, ERPs and distributed systems with NestJS, Kafka, LangGraph and local LLMs.">
@@ -137,21 +91,17 @@
 </head>
 
 <body>
-    <div class="scroll-progress" id="scroll-progress"></div>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
     <div class="ui-controls">
-        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn magnetic-element"
+        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
             aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <button id="sound-toggler" class="control-btn sound-btn magnetic-element" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
+        <button id="sound-toggler" class="control-btn sound-btn" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
                 class="fa-solid fa-volume-high"></i></button>
-        <button id="theme-toggler" class="control-btn theme-btn magnetic-element" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
+        <button id="theme-toggler" class="control-btn theme-btn" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
                 class="fa-solid fa-palette"></i></button>
     </div>
 
     <nav aria-label="Main navigation">
-        <a href="./index.html" class="logo-link glitch-hover">
+        <a href="./index.html" class="logo-link">
             <picture>
                 <source srcset="./mehedi-logo.webp" type="image/webp">
                 <img src="./mehedi-logo.png" alt="Mehedi Hasan - AI Automation Expert Logo" class="site-logo" width="50" height="50" loading="eager">
@@ -160,13 +110,11 @@
         </a>
 
         <ul class="nav-links">
-            <li><a href="#about" class="magnetic-element hover-sound">Architecture</a></li>
-            <li><a href="#skills" class="magnetic-element hover-sound">Stack</a></li>
-            <li><a href="#projects" class="magnetic-element hover-sound">Deployments</a></li>
-            <li><a href="#contact" class="magnetic-element hover-sound">Contact</a></li>
-            <li><a href="#archives" class="magnetic-element hover-sound">Sandbox</a></li>
-            <li><a href="./index.html" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i
-                        class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+            <li><a href="#about" class="hover-sound">Architecture</a></li>
+            <li><a href="#skills" class="hover-sound">Stack</a></li>
+            <li><a href="#projects" class="hover-sound">Deployments</a></li>
+            <li><a href="#contact" class="hover-sound">Contact</a></li>
+            <li><a href="#archives" class="hover-sound">Sandbox</a></li>
         </ul>
 
         <div class="mobile-header-right">
@@ -187,13 +135,11 @@
             <i class="fa-solid fa-xmark"></i>
         </button>
         <ul class="nav-links">
-            <li><a href="#about" class="magnetic-element hover-sound">Architecture</a></li>
-            <li><a href="#skills" class="magnetic-element hover-sound">Stack</a></li>
-            <li><a href="#projects" class="magnetic-element hover-sound">Deployments</a></li>
-            <li><a href="#contact" class="magnetic-element hover-sound">Contact</a></li>
-            <li><a href="#archives" class="magnetic-element hover-sound">Sandbox</a></li>
-            <li><a href="./index.html" id="cli-toggle" class="magnetic-element hover-sound" title="Open Terminal"><i
-                        class="fa-solid fa-terminal" style="color: var(--accent-1);"></i></a></li>
+            <li><a href="#about" class="hover-sound">Architecture</a></li>
+            <li><a href="#skills" class="hover-sound">Stack</a></li>
+            <li><a href="#projects" class="hover-sound">Deployments</a></li>
+            <li><a href="#contact" class="hover-sound">Contact</a></li>
+            <li><a href="#archives" class="hover-sound">Sandbox</a></li>
         </ul>
         <div class="drawer-controls">
             <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
@@ -208,15 +154,14 @@
 
 
     <header class="hero" id="home">
-        <canvas id="particle-canvas" aria-hidden="true" width="762" height="484"></canvas>
         <div class="hero-content hidden show">
             <div class="hero-layout">
 
                 <div class="hero-text-side">
-                    <h1 class="decrypt-text" data-value="Hi, I'm Mehedi Hasan">Hi, I'm <span
+                    <h1 class="decrypt-text">Hi, I'm <span
                             class="gradient-text">Mehedi Hasan</span></h1>
-                    <h2><span class="prefix-text">I am an</span> <span class="typing-text">AI-Native Software Engineer</span><span
-                            class="cursor">&nbsp;</span></h2>
+                    <h2><span class="prefix-text">I am an</span> <span class="typing-text">AI-Native Software Engineer</span></h2>
+                    <p class="hero-roles">LLM Integration Specialist · Autonomous Agent Developer · Full-Stack System Architect</p>
 
                     <div class="terminal-feed" id="terminal-feed" role="region" aria-label="Highlights from my work">
                         <div class="terminal-header">
@@ -242,7 +187,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="terminal-body" id="terminal-ticker" role="log" aria-live="polite" aria-relevant="additions text">
+                        <div class="terminal-body" id="terminal-ticker">
                             <p class="log-line"><span class="log-time">$</span> <span class="log-tag tag-rag">SAWAB</span> <span class="log-msg">NGO ERP on Frappe + Next.js: <b class="metric-hl">10 modules</b>, live demo</span></p>
                             <p class="log-line"><span class="log-time">$</span> <span class="log-tag tag-ai">JIBIKA</span> <span class="log-msg">AI in HR &amp; payroll software used by <b class="metric-hl">300+ companies</b> • ~50% less manual work</span></p>
                             <p class="log-line"><span class="log-time">$</span> <span class="log-tag tag-stream">KARBAR</span> <span class="log-msg">ERP for Bangladesh: NBR VAT (Mushak 6.3, 6.5, 9.1), payroll &amp; TDS</span></p>
@@ -251,11 +196,11 @@
 
                     <div class="hero-cta-v2">
                         <div class="hero-cta-row">
-                            <a href="#projects" id="hero-cta-explore" class="btn primary-btn hero-cta-primary glow-effect magnetic-element hover-sound">
+                            <a href="#projects" id="hero-cta-explore" class="btn primary-btn hero-cta-primary glow-effect hover-sound">
                                 <i class="fa-solid fa-layer-group"></i> See my work
                             </a>
                             <a href="https://wa.me/8801799447594?text=Hi%20Mehedi%2C%20I%27d%20like%20to%20book%20a%20call%20about%20a%20project." id="hero-cta-call" target="_blank" rel="noopener noreferrer"
-                                class="btn secondary-btn hero-cta-secondary magnetic-element hover-sound">
+                                class="btn secondary-btn hero-cta-secondary hover-sound">
                                 <i class="fa-brands fa-whatsapp"></i> Book a Call
                             </a>
                         </div>
@@ -278,393 +223,7 @@
                                 </picture>
                             </div>
 
-                            <!-- Tactical Command Grid & Neural Link Field (Commander's Cyber Link) -->
-                            <div class="cinematic-layer layer-tactical-grid" aria-hidden="true">
-                                <svg class="tactical-grid-svg" viewBox="0 0 1054 1492" preserveAspectRatio="none">
-                                    <!-- Tactical Arc Waves expanding outward behind commander -->
-                                    <circle class="tactical-arc arc-1" cx="527" cy="550" r="280" />
-                                    <circle class="tactical-arc arc-2" cx="527" cy="550" r="390" />
-                                    <circle class="tactical-arc arc-3" cx="527" cy="550" r="500" />
-                                    <!-- Neural Command Beams from Commander to Wings -->
-                                    <path class="cmd-line cmd-line-l1" d="M 460 520 L 260 380 L 150 480" />
-                                    <path class="cmd-line cmd-line-l2" d="M 440 460 L 200 240 L 70 320" />
-                                    <path class="cmd-line cmd-line-r1" d="M 594 520 L 794 380 L 904 480" />
-                                    <path class="cmd-line cmd-line-r2" d="M 614 460 L 854 240 L 984 320" />
-                                </svg>
-                            </div>
-
-                                                        <!-- Layer 2: Rear Strategic AI Fleet (Rank 3 - Deep Cinematic Bokeh Blur ~2.6px) -->
-                            <div class="cinematic-layer layer-army layer-army-rear" aria-hidden="false">
-                                <!-- Left Flank: Foundational Models & Local Runtimes (4 Units) -->
-                                <div class="army-unit-wrap army-rank-3 r3-l1">
-                                    <div class="cyber-unit unit-rank-3 unit-meta unit-llama" tabindex="0" aria-label="Meta Llama">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/meta.svg" alt="Meta Llama" width="15" height="15">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">AI FOUNDATION</div>
-                                            <div class="popup-title">Meta Llama</div>
-                                            <div class="popup-desc">State-of-the-art open weights foundation architecture</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-l2">
-                                    <div class="cyber-unit unit-rank-3 unit-openclaw" tabindex="0" aria-label="OpenClaw Agent">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/openclaw.svg" alt="OpenClaw Agent" width="16" height="16">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">AUTONOMOUS AGENT</div>
-                                            <div class="popup-title">OpenClaw</div>
-                                            <div class="popup-desc">Open-source autonomous agent framework &amp; task orchestration</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-l3">
-                                    <div class="cyber-unit unit-rank-3 unit-opencode" tabindex="0" aria-label="OpenCode CLI">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/opencode.svg" alt="OpenCode CLI" width="15" height="15">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">TERMINAL AGENT</div>
-                                            <div class="popup-title">OpenCode</div>
-                                            <div class="popup-desc">AI-powered open-source terminal coding assistant</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-l4">
-                                    <div class="cyber-unit unit-rank-3 unit-ollama" tabindex="0" aria-label="Ollama">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/ollama.svg" alt="Ollama" width="15" height="15">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">LOCAL RUNTIME</div>
-                                            <div class="popup-title">Ollama</div>
-                                            <div class="popup-desc">High-performance local LLM execution &amp; offline inference</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-l5">
-                                    <div class="cyber-unit unit-rank-3 unit-redis" tabindex="0" aria-label="Redis">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/redis.svg" alt="Redis" width="15" height="15">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">CACHE &amp; QUEUE</div>
-                                            <div class="popup-title">Redis</div>
-                                            <div class="popup-desc">In-memory caching, pub/sub streams &amp; background job queues</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Right Flank: Databases, Vectors & Platform (5 Units) -->
-                                <div class="army-unit-wrap army-rank-3 r3-r1">
-                                    <div class="cyber-unit unit-rank-3 unit-postgresql" tabindex="0" aria-label="PostgreSQL">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/postgresql.svg" alt="PostgreSQL" width="15" height="15">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">DATABASE</div>
-                                            <div class="popup-title">PostgreSQL</div>
-                                            <div class="popup-desc">Connection pools &amp; high-concurrency relational data engine</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-r2">
-                                    <div class="cyber-unit unit-rank-3 unit-supabase" tabindex="0" aria-label="Supabase">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/supabase.svg" alt="Supabase" width="15" height="15">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">BACKEND CLOUD</div>
-                                            <div class="popup-title">Supabase</div>
-                                            <div class="popup-desc">Real-time Postgres backend, instant Auth &amp; edge functions</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-r3">
-                                    <div class="cyber-unit unit-rank-3 unit-pinecone" tabindex="0" aria-label="Pinecone">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/pinecone.svg" alt="Pinecone" width="15" height="15">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">VECTOR STORE</div>
-                                            <div class="popup-title">Pinecone</div>
-                                            <div class="popup-desc">Managed serverless vector database for production RAG search</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-r4">
-                                    <div class="cyber-unit unit-rank-3 unit-github" tabindex="0" aria-label="GitHub">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/github.svg" alt="GitHub" width="15" height="15">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">DEV PLATFORM</div>
-                                            <div class="popup-title">GitHub</div>
-                                            <div class="popup-desc">Global version control, automated Actions &amp; open collaboration</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-3 r3-r5">
-                                    <div class="cyber-unit unit-rank-3 unit-vercel" tabindex="0" aria-label="Vercel">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/vercel.svg" alt="Vercel" width="15" height="15">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">EDGE DEPLOY</div>
-                                            <div class="popup-title">Vercel</div>
-                                            <div class="popup-desc">Edge-native frontend deployment &amp; serverless functions</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Layer 3: Tactical Squadron (Rank 2 - Midfield Depth, Mild Blur ~1.3px) -->
-                            <div class="cinematic-layer layer-army layer-army-mid" aria-hidden="false">
-                                <!-- Left Flank: Agentic Coding Tools & Open LLM (4 Units) -->
-                                <div class="army-unit-wrap army-rank-2 r2-l1">
-                                    <div class="cyber-unit unit-rank-2 unit-qwen" tabindex="0" aria-label="Qwen">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/qwen.svg" alt="Qwen" width="19" height="19">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">FRONTIER MODEL</div>
-                                            <div class="popup-title">Qwen</div>
-                                            <div class="popup-desc">Alibaba frontier open reasoning, coding &amp; multilingual LLM</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-l2">
-                                    <div class="cyber-unit unit-rank-2 unit-githubcopilot" tabindex="0" aria-label="GitHub Copilot">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/githubcopilot.svg" alt="GitHub Copilot" width="19" height="19">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">AI PAIR PROGRAMMER</div>
-                                            <div class="popup-title">GitHub Copilot</div>
-                                            <div class="popup-desc">Pioneering AI pair programmer for multi-file codebase synthesis</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-l3">
-                                    <div class="cyber-unit unit-rank-2 unit-codex" tabindex="0" aria-label="OpenAI Codex">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/codex.svg" alt="OpenAI Codex" width="19" height="19">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">CODE ENGINE</div>
-                                            <div class="popup-title">OpenAI Codex</div>
-                                            <div class="popup-desc">Deep code synthesis, semantic translation &amp; algorithmic logic</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-l4">
-                                    <div class="cyber-unit unit-rank-2 unit-mistral" tabindex="0" aria-label="Mistral AI">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/mistral.svg" alt="Mistral AI" width="19" height="19">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">FRONTIER AI</div>
-                                            <div class="popup-title">Mistral</div>
-                                            <div class="popup-desc">European frontier open-weight models, Codestral &amp; fast reasoning</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-l5">
-                                    <div class="cyber-unit unit-rank-2 unit-antigravity" tabindex="0" aria-label="Google Antigravity">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/antigravity.svg" alt="Google Antigravity" width="19" height="19">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">AGENTIC IDE</div>
-                                            <div class="popup-title">Antigravity</div>
-                                            <div class="popup-desc">Google's agent-first IDE with autonomous multi-step task execution</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-l6">
-                                    <div class="cyber-unit unit-rank-2 unit-llamaindex" tabindex="0" aria-label="LlamaIndex">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/llamaindex.svg" alt="LlamaIndex" width="19" height="19">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">RAG FRAMEWORK</div>
-                                            <div class="popup-title">LlamaIndex</div>
-                                            <div class="popup-desc">Data ingestion, indexing &amp; retrieval pipelines for RAG</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Right Flank: Agent Frameworks, Protocols, Containers & Cloud (7 Units) -->
-                                <div class="army-unit-wrap army-rank-2 r2-r1">
-                                    <div class="cyber-unit unit-rank-2 unit-mcp" tabindex="0" aria-label="Model Context Protocol">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/mcp.svg" alt="Model Context Protocol" width="19" height="19">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">AI PROTOCOL</div>
-                                            <div class="popup-title">Model Context Protocol</div>
-                                            <div class="popup-desc">Anthropic open standard connecting LLMs to external systems</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-r2">
-                                    <div class="cyber-unit unit-rank-2 unit-langgraph" tabindex="0" aria-label="LangGraph">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/langgraph.svg" alt="LangGraph" width="19" height="19">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">AGENT FRAMEWORK</div>
-                                            <div class="popup-title">LangGraph</div>
-                                            <div class="popup-desc">Cyclic multi-agent state machines &amp; controllable loops</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-r3">
-                                    <div class="cyber-unit unit-rank-2 unit-langchain" tabindex="0" aria-label="LangChain">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/langchain.svg" alt="LangChain" width="19" height="19">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">AI FRAMEWORK</div>
-                                            <div class="popup-title">LangChain</div>
-                                            <div class="popup-desc">Agentic LLM reasoning chains &amp; dynamic memory systems</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-r4">
-                                    <div class="cyber-unit unit-rank-2 unit-crewai" tabindex="0" aria-label="CrewAI">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/crewai.svg" alt="CrewAI" width="19" height="19">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">AGENT SWARM</div>
-                                            <div class="popup-title">CrewAI</div>
-                                            <div class="popup-desc">Autonomous multi-agent role-playing collaboration swarms</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-r5">
-                                    <div class="cyber-unit unit-rank-2 unit-docker" tabindex="0" aria-label="Docker">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/docker.svg" alt="Docker" width="19" height="19">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">CONTAINERIZATION</div>
-                                            <div class="popup-title">Docker</div>
-                                            <div class="popup-desc">Reproducible containerized environments &amp; microservice delivery</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-r6">
-                                    <div class="cyber-unit unit-rank-2 unit-aws" tabindex="0" aria-label="AWS">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/aws.svg" alt="AWS" width="19" height="19">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">CLOUD</div>
-                                            <div class="popup-title">AWS</div>
-                                            <div class="popup-desc">Scalable cloud compute, Bedrock AI &amp; serverless infrastructure</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-2 r2-r7">
-                                    <div class="cyber-unit unit-rank-2 unit-kubernetes" tabindex="0" aria-label="Kubernetes">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/kubernetes.svg" alt="Kubernetes" width="19" height="19">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">ORCHESTRATION</div>
-                                            <div class="popup-title">Kubernetes</div>
-                                            <div class="popup-desc">Container orchestration, auto-scaling &amp; self-healing clusters</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Layer 4: Frontline Vanguard (Rank 1 - Razor Sharp, Crisp & Most Prominent) -->
-                            <div class="cinematic-layer layer-army layer-army-front">
-                                <!-- Left Shoulder Vanguard: Frontier AI Intelligence & IDE (5 Units) -->
-                                <div class="army-unit-wrap army-rank-1 r1-l1">
-                                    <div class="cyber-unit unit-rank-1 unit-openai" tabindex="0" aria-label="OpenAI">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/openai.svg" alt="OpenAI" width="24" height="24">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">FRONTIER AI</div>
-                                            <div class="popup-title">OpenAI</div>
-                                            <div class="popup-desc">Frontier deliberate reasoning, deep logic &amp; omni-modal AI</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-l2">
-                                    <div class="cyber-unit unit-rank-1 unit-claude" tabindex="0" aria-label="Claude">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/claude.svg" alt="Claude" width="24" height="24">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">FRONTIER AI</div>
-                                            <div class="popup-title">Claude</div>
-                                            <div class="popup-desc">Hybrid reasoning, precision coding &amp; ethical cognitive safety</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-l3">
-                                    <div class="cyber-unit unit-rank-1 unit-gemini" tabindex="0" aria-label="Google Gemini">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/gemini.svg" alt="Google Gemini" width="24" height="24">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">MULTIMODAL AI</div>
-                                            <div class="popup-title">Gemini</div>
-                                            <div class="popup-desc">1M+ context multimodal reasoning, realtime audio &amp; vision</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-l4">
-                                    <div class="cyber-unit unit-rank-1 unit-deepseek" tabindex="0" aria-label="DeepSeek">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/deepseek.svg" alt="DeepSeek" width="24" height="24">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">REASONING AI</div>
-                                            <div class="popup-title">DeepSeek</div>
-                                            <div class="popup-desc">State-of-the-art open reasoning &amp; mathematical logic</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-l5">
-                                    <div class="cyber-unit unit-rank-1 unit-cursor" tabindex="0" aria-label="Cursor">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/cursor.svg" alt="Cursor" width="24" height="24">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">AI CODE EDITOR</div>
-                                            <div class="popup-title">Cursor</div>
-                                            <div class="popup-desc">AI-native IDE with whole-codebase indexing &amp; agentic workflows</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-l6">
-                                    <div class="cyber-unit unit-rank-1 unit-huggingface" tabindex="0" aria-label="Hugging Face">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/huggingface.svg" alt="Hugging Face" width="24" height="24">
-                                        <div class="unit-popup popup-right">
-                                            <div class="popup-tag">MODEL HUB</div>
-                                            <div class="popup-title">Hugging Face</div>
-                                            <div class="popup-desc">Open model hub, Transformers &amp; fine-tuning ecosystem</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Right Shoulder Vanguard: Core Languages, Fullstack & Automation (6 Units) -->
-                                <div class="army-unit-wrap army-rank-1 r1-r1">
-                                    <div class="cyber-unit unit-rank-1 unit-python" tabindex="0" aria-label="Python">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/python.svg" alt="Python" width="24" height="24">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">LANGUAGE</div>
-                                            <div class="popup-title">Python</div>
-                                            <div class="popup-desc">AI/ML model engineering, automation &amp; backend microservices</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-r2">
-                                    <div class="cyber-unit unit-rank-1 unit-typescript" tabindex="0" aria-label="TypeScript">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/typescript.svg" alt="TypeScript" width="24" height="24">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">LANGUAGE</div>
-                                            <div class="popup-title">TypeScript</div>
-                                            <div class="popup-desc">Enterprise-grade type safety &amp; scalable full-stack codebases</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-r3">
-                                    <div class="cyber-unit unit-rank-1 unit-react" tabindex="0" aria-label="React">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/react.svg" alt="React" width="24" height="24">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">UI FRAMEWORK</div>
-                                            <div class="popup-title">React</div>
-                                            <div class="popup-desc">Concurrent rendering, interactive UI &amp; component architecture</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-r4">
-                                    <div class="cyber-unit unit-rank-1 unit-nextjs" tabindex="0" aria-label="Next.js">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/nextjs.svg" alt="Next.js" width="24" height="24">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">WEB FRAMEWORK</div>
-                                            <div class="popup-title">Next.js</div>
-                                            <div class="popup-desc">Production React framework, hybrid rendering &amp; server actions</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-r5">
-                                    <div class="cyber-unit unit-rank-1 unit-n8n" tabindex="0" aria-label="n8n">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/n8n.svg" alt="n8n" width="24" height="24">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">AUTOMATION</div>
-                                            <div class="popup-title">n8n</div>
-                                            <div class="popup-desc">Self-hosted workflow automation &amp; AI agent orchestration</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="army-unit-wrap army-rank-1 r1-r6">
-                                    <div class="cyber-unit unit-rank-1 unit-fastapi" tabindex="0" aria-label="FastAPI">
-                                        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="./uploads/brand-icons/fastapi.svg" alt="FastAPI" width="24" height="24">
-                                        <div class="unit-popup popup-left">
-                                            <div class="popup-tag">BACKEND API</div>
-                                            <div class="popup-title">FastAPI</div>
-                                            <div class="popup-desc">Async Python APIs, streaming LLM endpoints &amp; typed validation</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Layer 4: Subject (Foreground Cutout in front of badges with 3D parallax) -->
+                            <!-- Layer 2: Subject (Foreground Cutout with 3D parallax) -->
                             <div class="cinematic-layer layer-subject">
                                 <picture>
                                     <source srcset="./uploads/mehedi_subject-400.webp 400w, ./uploads/mehedi_subject-640.webp 640w, ./uploads/mehedi_subject-1054.webp 1054w" sizes="(max-width: 767px) 214px, 380px" type="image/webp">
@@ -712,7 +271,7 @@
             <!-- Unified Architecture Grid (Pillars & Stack View) -->
             <div class="arch-unified-grid" id="archUnifiedGrid">
                 <!-- 4 Core Foundational Architecture Pillars -->
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #a855f7;"><i class="fa-solid fa-brain"></i></div>
@@ -733,7 +292,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: var(--accent-1);"><i class="fa-solid fa-server"></i></div>
@@ -750,7 +309,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #f59e0b;"><i class="fa-solid fa-network-wired"></i></div>
@@ -766,7 +325,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-pillar-card tilt-card magnetic-element" data-domain="pillars">
+                <div class="arch-unified-card arch-pillar-card tilt-card" data-domain="pillars">
                     <div class="arch-pillar-header">
                         <div class="arch-pillar-title-wrap">
                             <div class="arch-pillar-icon" style="color: #38bdf8;"><i class="fa-solid fa-cloud"></i></div>
@@ -785,7 +344,7 @@
                     </div>
                 </div>
 
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-models">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-models">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #a855f718; color: #a855f7; border: 1px solid #a855f735;">
@@ -800,7 +359,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/openai.svg" alt="OpenAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/claude.svg" alt="Claude" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/gemini.svg" alt="Gemini" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/qwen.svg" alt="Qwen" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Qwen</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/meta.svg" alt="Llama" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Llama</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/mistral.svg" alt="Mistral" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Mistral</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/deepseek.svg" alt="DeepSeek" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> DeepSeek</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-agents">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-agents">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #00f2fe18; color: #00f2fe; border: 1px solid #00f2fe35;">
@@ -815,7 +374,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/hermis.svg" alt="Hermes agent" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Hermes agent</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/openclaw.svg" alt="OpenClaw" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenClaw</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/claudecode.svg" alt="Claude Code" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Claude Code</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/codex.svg" alt="Codex" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Codex</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/geminicli.svg" alt="Gemini CLI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Gemini CLI</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/opencode.svg" alt="OpenCode" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenCode</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/goose.svg" alt="Goose" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Goose</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/aider.svg" alt="Aider" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Aider</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-ide">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-ide">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #38bdf818; color: #38bdf8; border: 1px solid #38bdf835;">
@@ -830,7 +389,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/cursor.svg" alt="Cursor" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Cursor</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/windsurf.svg" alt="Windsurf" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Windsurf</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/githubcopilot.svg" alt="GitHub Copilot" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> GitHub Copilot</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/kiro.svg" alt="Kiro" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kiro</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/antigravity.svg" alt="Antigravity" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Antigravity</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-agent-framework">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-agent-framework">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #10b98118; color: #10b981; border: 1px solid #10b98135;">
@@ -845,7 +404,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/langgraph.svg" alt="LangGraph" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangGraph</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/langchain.svg" alt="LangChain" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LangChain</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/crewai.svg" alt="CrewAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> CrewAI</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/autogen.svg" alt="AutoGen" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> AutoGen</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/pydantic.svg" alt="PydanticAI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PydanticAI</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-protocol-tools">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-protocol-tools">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #f59e0b18; color: #f59e0b; border: 1px solid #f59e0b35;">
@@ -860,7 +419,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/mcp.svg" alt="MCP" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> MCP</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-arrows-split-up-and-left" style="color:#06b6d4;"></i> A2A</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-terminal" style="color:#10b981;"></i> Function Calling</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-toolbox" style="color:#f59e0b;"></i> Tool Use</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-local-ai">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-local-ai">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #ec489918; color: #ec4899; border: 1px solid #ec489935;">
@@ -875,7 +434,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/ollama.svg" alt="Ollama" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Ollama</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/lmstudio.svg" alt="LM Studio" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> LM Studio</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-gears" style="color:#f97316;"></i> llama.cpp</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-bolt-lightning" style="color:#a855f7;"></i> vLLM</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-automation">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-automation">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #ea580c18; color: #ea580c; border: 1px solid #ea580c35;">
@@ -890,7 +449,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/n8n.svg" alt="n8n" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> n8n</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/zapier.svg" alt="Zapier" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Zapier</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/make.svg" alt="Make" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Make</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-event-streaming">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-event-streaming">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #f59e0b18; color: #f59e0b; border: 1px solid #f59e0b35;">
@@ -905,7 +464,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/apachekafka.svg" alt="Kafka" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kafka</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/rabbitmq.svg" alt="RabbitMQ" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> RabbitMQ</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/redis.svg" alt="Redis Pub/Sub" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Redis Pub/Sub</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-rag-vector">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-rag-vector">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #06b6d418; color: #06b6d4; border: 1px solid #06b6d435;">
@@ -920,7 +479,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/pinecone.svg" alt="Pinecone" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Pinecone</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/chroma.svg" alt="Chroma" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Chroma</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/qdrant.svg" alt="Qdrant" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Qdrant</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/weaviate.svg" alt="Weaviate" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Weaviate</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="data-cloud" id="matrix-card-ai-database">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="data-cloud" id="matrix-card-ai-database">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #33679118; color: #336791; border: 1px solid #33679135;">
@@ -935,7 +494,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/postgresql.svg" alt="PostgreSQL" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> PostgreSQL</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/pgvector.svg" alt="pgvector" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> pgvector</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/supabase.svg" alt="Supabase" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Supabase</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/mongodb.svg" alt="MongoDB" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> MongoDB</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-web-ai">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="fullstack" id="matrix-card-web-ai">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #14b8a618; color: #14b8a6; border: 1px solid #14b8a635;">
@@ -950,7 +509,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/vercel.svg" alt="Vercel AI SDK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Vercel AI SDK</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-cubes" style="color:#06b6d4;"></i> AI SDK</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/openai.svg" alt="OpenAI SDK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenAI SDK</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-frontend">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="fullstack" id="matrix-card-frontend">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #61dafb18; color: #61dafb; border: 1px solid #61dafb35;">
@@ -965,7 +524,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/react.svg" alt="React" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> React</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/nextjs.svg" alt="Next.js" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Next.js</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/typescript.svg" alt="TypeScript" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> TypeScript</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/tailwind.svg" alt="Tailwind" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Tailwind</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="fullstack" id="matrix-card-backend">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="fullstack" id="matrix-card-backend">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #22c55e18; color: #22c55e; border: 1px solid #22c55e35;">
@@ -980,7 +539,7 @@
                         <span class="arch-matrix-tag hover-sound"><i class="fa-brands fa-node-js" style="color:#68a063;"></i> Node.js</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/nestjs.svg" alt="NestJS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> NestJS</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/express.svg" alt="Express" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Express</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/python.svg" alt="Python" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Python</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/fastapi.svg" alt="FastAPI" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> FastAPI</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-cloud">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="cloud-devops" id="matrix-card-cloud">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #ff990018; color: #ff9900; border: 1px solid #ff990035;">
@@ -995,7 +554,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/vercel.svg" alt="Vercel" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Vercel</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/aws.svg" alt="AWS" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> AWS</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/googlecloud.svg" alt="Google Cloud" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Google Cloud</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/cloudflare.svg" alt="Cloudflare" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Cloudflare</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-devops">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="cloud-devops" id="matrix-card-devops">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #326ce518; color: #326ce5; border: 1px solid #326ce535;">
@@ -1010,7 +569,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/docker.svg" alt="Docker" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Docker</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/githubactions.svg" alt="GitHub Actions" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> GitHub Actions</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/kubernetes.svg" alt="Kubernetes" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Kubernetes</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="cloud-devops" id="matrix-card-observability">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="cloud-devops" id="matrix-card-observability">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #f43f5e18; color: #f43f5e; border: 1px solid #f43f5e35;">
@@ -1025,7 +584,7 @@
                         <span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/prometheus.svg" alt="Prometheus" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Prometheus</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/grafana.svg" alt="Grafana" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> Grafana</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/elastic.svg" alt="ELK" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> ELK</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-magnifying-glass-chart" style="color:#f59e0b;"></i> LangSmith</span><span class="arch-matrix-tag hover-sound"><i class="fa-solid fa-fire-flame-curved" style="color:#ea580c;"></i> Langfuse</span><span class="arch-matrix-tag hover-sound"><img src="./uploads/brand-icons/opentelemetry.svg" alt="OpenTelemetry" class="arch-tag-icon" loading="lazy" decoding="async" width="14" height="14"> OpenTelemetry</span>
                     </div>
                 </div>
-                <div class="arch-unified-card arch-matrix-card tilt-card magnetic-element is-hidden" data-domain="ai" id="matrix-card-ai-ui-design">
+                <div class="arch-unified-card arch-matrix-card tilt-card is-hidden" data-domain="ai" id="matrix-card-ai-ui-design">
                     <div class="arch-matrix-card-header">
                         <div class="arch-matrix-cat-title">
                             <div class="arch-matrix-cat-icon" style="background: #d946ef18; color: #d946ef; border: 1px solid #d946ef35;">
@@ -1046,7 +605,7 @@
 
     <section id="skills" class="skills-section">
         <div class="section-title hidden">
-            <h2 class="decrypt-text glitch-hover" data-value="Technical Arsenal">Technical <span
+            <h2 class="decrypt-text">Technical <span
                     class="gradient-text">Arsenal</span></h2>
         </div>
 
@@ -1104,7 +663,7 @@
 
     <section id="projects" class="projects-section">
         <div class="section-title hidden">
-            <h2 class="decrypt-text glitch-hover" data-value="Production Deployments">Production <span
+            <h2 class="decrypt-text">Production <span
                     class="gradient-text">Deployments</span></h2>
         </div>
 
@@ -1149,7 +708,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="SAWAB NGO ERP">SAWAB NGO ERP</h3>
+                        <h3 class="decrypt-text">SAWAB NGO ERP</h3>
                         <div style="margin: 0.35rem 0 0.7rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                             <span class="status-badge-advanced">
                                 <span class="live-pulse-dot"></span> Live Demo
@@ -1188,7 +747,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="Karbar ERP — BD Business Suite">Karbar ERP — BD Business Suite</h3>
+                        <h3 class="decrypt-text">Karbar ERP — BD Business Suite</h3>
                         <div style="margin: 0.35rem 0 0.7rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                             <span class="status-badge-advanced">
                                 <span class="live-pulse-dot"></span> Production Suite
@@ -1231,7 +790,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="SAWAB Bangladesh Platform">SAWAB Bangladesh Platform</h3>
+                        <h3 class="decrypt-text">SAWAB Bangladesh Platform</h3>
                         <div style="margin: 0.35rem 0 0.7rem;">
                             <span class="status-badge-advanced">
                                 <span class="live-pulse-dot"></span> Live Production
@@ -1267,7 +826,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="SAWAB Foundation Portal">SAWAB Foundation Portal</h3>
+                        <h3 class="decrypt-text">SAWAB Foundation Portal</h3>
                         <div style="margin: 0.35rem 0 0.7rem;">
                             <span class="status-badge-advanced">
                                 <span class="live-pulse-dot"></span> Live Production
@@ -1302,7 +861,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="AI Video Making Engine">AI Video Making Engine</h3>
+                        <h3 class="decrypt-text">AI Video Making Engine</h3>
                         <div style="margin: 0.35rem 0 0.7rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                             <span class="status-badge-advanced">
                                 <span class="live-pulse-dot"></span> Completed System
@@ -1341,7 +900,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="AI Chat Web App">AI Chat Web App</h3>
+                        <h3 class="decrypt-text">AI Chat Web App</h3>
                         <div style="margin: 0.35rem 0 0.7rem;">
                             <span class="status-badge-advanced">
                                 <span class="live-pulse-dot"></span> Live Web App
@@ -1376,7 +935,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="HR & Payroll System">HR &amp; Payroll System</h3>
+                        <h3 class="decrypt-text">HR &amp; Payroll System</h3>
                         <div style="margin: 0.35rem 0 0.7rem;">
                             <span class="status-badge-advanced ongoing-dev-badge">
                                 <span class="ongoing-pulse-dot"></span> In Development
@@ -1411,7 +970,7 @@
                         </div>
                     </a>
                     <div class="project-details">
-                        <h3 class="decrypt-text" data-value="AI Hostel Management">AI Hostel Management</h3>
+                        <h3 class="decrypt-text">AI Hostel Management</h3>
                         <div style="margin: 0.35rem 0 0.7rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                             <span class="status-badge-advanced">
                                 <span class="live-pulse-dot"></span> Live Deployment
@@ -1450,7 +1009,7 @@
 
     <section id="archives" class="archives-section">
         <div class="section-title hidden">
-            <h2 class="decrypt-text glitch-hover" data-value="Deep Tech &amp; Creative Sandbox">Deep Tech &amp; <span
+            <h2 class="decrypt-text">Deep Tech &amp; <span
                     class="gradient-text">Creative Sandbox</span></h2>
         </div>
 
@@ -1466,7 +1025,7 @@
 
         <div class="archives-grid deeptech-grid" id="deeptechGrid">
             <!-- 01. Local LLM Clusters -->
-            <div class="archive-card hidden tilt-card magnetic-element hover-sound is-active" data-pillar="llm">
+            <div class="archive-card hidden tilt-card hover-sound is-active" data-pillar="llm">
                 <div class="archive-icon"><i class="fa-solid fa-robot"></i></div>
                 <div class="archive-info">
                     <span class="archive-cat">Neural Logic</span>
@@ -1476,7 +1035,7 @@
             </div>
 
             <!-- 02. Edge Hardware Inference -->
-            <div class="archive-card hidden tilt-card magnetic-element hover-sound" data-pillar="hardware">
+            <div class="archive-card hidden tilt-card hover-sound" data-pillar="hardware">
                 <div class="archive-icon"><i class="fa-solid fa-bolt"></i></div>
                 <div class="archive-info">
                     <span class="archive-cat">Hardware Telemetry</span>
@@ -1486,7 +1045,7 @@
             </div>
 
             <!-- 03. Autonomous Swarms & Workflows -->
-            <div class="archive-card hidden tilt-card magnetic-element hover-sound" data-pillar="swarms">
+            <div class="archive-card hidden tilt-card hover-sound" data-pillar="swarms">
                 <div class="archive-icon"><i class="fa-solid fa-network-wired"></i></div>
                 <div class="archive-info">
                     <span class="archive-cat">Systems Logic</span>
@@ -1496,7 +1055,7 @@
             </div>
 
             <!-- 04. Sacred Geometry -->
-            <div class="archive-card hidden tilt-card magnetic-element hover-sound" data-pillar="geometry">
+            <div class="archive-card hidden tilt-card hover-sound" data-pillar="geometry">
                 <div class="archive-icon"><i class="fa-solid fa-shapes"></i></div>
                 <div class="archive-info">
                     <span class="archive-cat">Computational Art</span>
@@ -1506,7 +1065,7 @@
             </div>
 
             <!-- 05. Cinematic Storytelling -->
-            <div class="archive-card hidden tilt-card magnetic-element hover-sound" data-pillar="cinematic">
+            <div class="archive-card hidden tilt-card hover-sound" data-pillar="cinematic">
                 <div class="archive-icon"><i class="fa-solid fa-clapperboard"></i></div>
                 <div class="archive-info">
                     <span class="archive-cat">Visual Media</span>
@@ -1516,7 +1075,7 @@
             </div>
 
             <!-- 06. Digital Library / Knowledge Hub -->
-            <div class="archive-card hidden tilt-card magnetic-element hover-sound" data-pillar="wisdom">
+            <div class="archive-card hidden tilt-card hover-sound" data-pillar="wisdom">
                 <div class="archive-icon"><i class="fa-solid fa-book-bookmark"></i></div>
                 <div class="archive-info">
                     <span class="archive-cat">Knowledge Engine</span>
@@ -1552,7 +1111,7 @@
 
     <section id="contact" class="contact-section">
         <div class="section-title hidden">
-            <h2 class="decrypt-text glitch-hover" data-value="Work With Me">Work <span
+            <h2 class="decrypt-text">Work <span
                     class="gradient-text">With Me</span></h2>
             <p class="svc2-lead">Pick what you need (optional), tell me a little about it, and I'll reply by email.</p>
         </div>
@@ -1604,40 +1163,25 @@
         </div>
 
         <div class="social-links" style="margin-top: 4rem;">
-            <a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="magnetic-element hover-sound" aria-label="GitHub"><i
+            <a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="hover-sound" aria-label="GitHub"><i
                     class="fa-brands fa-github"></i></a>
             <a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank" rel="noopener noreferrer"
-                class="magnetic-element hover-sound" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="mailto:mehedihasan228.cse@gmail.com" class="magnetic-element hover-sound" aria-label="Email"><i
+                class="hover-sound" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="mailto:mehedihasan228.cse@gmail.com" class="hover-sound" aria-label="Email"><i
                     class="fa-solid fa-envelope"></i></a>
-            <a href="tel:+8801799447594" class="magnetic-element hover-sound" aria-label="Phone"><i class="fa-solid fa-phone"></i></a>
+            <a href="tel:+8801799447594" class="hover-sound" aria-label="Phone"><i class="fa-solid fa-phone"></i></a>
         </div>
     </section>
 
     <div style="text-align: center; padding-bottom: 2rem;">
     </div>
 
-    <div id="mines-overlay" class="hidden-overlay">
-        <div class="mines-container">
-            <div class="mines-header draggable-header">
-                <h3>System Diagnostic <span style="color:var(--accent-1);">(Find 3 Safe Nodes)</span></h3>
-                <span id="close-mines" class="hover-sound"><i class="fa-solid fa-xmark"></i></span>
-            </div>
-            <div class="mines-grid" id="mines-grid"></div>
-            <div class="mines-status" id="mines-status">Awaiting input...</div>
-            <div id="promo-code-box"
-                style="display:none; margin-top:1rem; padding:1rem; background: rgba(74, 222, 128, 0.2); border: 1px dashed #4ade80; color: #4ade80; border-radius: 8px; font-weight: bold; font-size: 1.1rem;">
-                Congrats </div>
-            <button id="reset-mines" class="btn primary-btn full-width-btn hover-sound"
-                style="margin-top: 1rem; display:none;">Reboot System</button>
-        </div>
-    </div>
-
-    <div id="cli-terminal" class="hidden-overlay" style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
+    <!-- the terminal is an easter egg: the ` / ~ key or the footer's Terminal button opens it; closed, it is inert -->
+    <div id="cli-terminal" class="hidden-overlay" role="dialog" aria-modal="true" aria-label="Terminal" inert style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
         <div class="cli-container">
             <div class="cli-header draggable-header">
                 <span>root@mehedi.pro:~</span>
-                <i class="fa-solid fa-xmark hover-sound" id="close-cli" style="cursor:pointer; color:#ef4444;"></i>
+                <button type="button" class="hover-sound" id="close-cli" aria-label="Close terminal" style="cursor:pointer; color:#ef4444; background:none; border:0; padding:0; font-size:inherit;"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="cli-output" id="cli-output">
                 <div>Mehedi.pro OS v2.0.4 loaded.</div>
@@ -1650,10 +1194,6 @@
         </div>
     </div>
 
-    <div id="easter-egg-overlay" class="hidden-overlay">
-        <div id="hack-terminal"><span class="hack-cursor"></span></div>
-    </div>
-
     <footer>
         <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
         <div class="footer-copy" style="margin-top: 12px;">
@@ -1662,10 +1202,8 @@
                     src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
                     alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
         </div>
-        <div class="footer-egg" style="margin-top: 25px;">
-            <button id="self-destruct-btn" class="hover-sound"
-                style="width: 12px; height: 12px; background: #ef4444; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px #ef4444;"
-                title="Initiate Self Destruct"></button>
+        <div class="footer-egg">
+            <button type="button" class="footer-cli hover-sound" data-cli-open>Terminal</button>
         </div>
     </footer>
     <!-- ==========================================
@@ -1759,10 +1297,10 @@
         </div>
         <div class="chat-input-area">
             <textarea aria-label="Message the AI assistant" id="chat-input" rows="1" placeholder="Ask about projects, stack, hiring…" autocomplete="off" enterkeyhint="send" maxlength="500"></textarea>
-            <button id="voice-btn" class="magnetic-element hover-sound"
+            <button id="voice-btn" class="hover-sound"
                 style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:pointer;"
                 title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
-            <button id="chat-send" class="magnetic-element hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
+            <button id="chat-send" class="hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>

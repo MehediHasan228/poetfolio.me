@@ -583,7 +583,7 @@
     let pill = null, cssDone = false;
     function css() {
         if (cssDone) return; cssDone = true;
-        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=d36ff42a23', BASE).href;
+        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=4ceedca21b', BASE).href;
         document.head.appendChild(l);
     }
     /* the same player as the Focus page's bar: the photo, the name (it opens the mix: each layer's volume and ✕), the volume,
@@ -686,19 +686,6 @@
                 + `<button type="button" class="fp-btn fp-wide" data-act="view" aria-label="Focus view" title="Focus view">${fa('expand')}</button>`
                 + `<button type="button" class="fp-btn fp-x" aria-label="Stop Focus" title="Stop">${fa('xmark')}</button>`;
             sliders(pill);
-            /* the site's round cursor over the player: it draws above it, it follows the mouse here even while another page is
-               open in the frame (whose own cursor steps aside meanwhile), and its ring grows over the player's controls */
-            const dot = document.querySelector('.cursor-dot'), ring = document.querySelector('.cursor-outline');
-            const frameCursors = (show) => { if (frame) try { frame.contentDocument.querySelectorAll('.cursor-dot, .cursor-outline').forEach((el) => { el.style.opacity = show ? '' : '0'; }); } catch (e) {} };
-            pill.addEventListener('mouseenter', (e) => {
-                document.documentElement.classList.add('fp-over-pill'); frameCursors(false);
-                if (dot && ring) {                      /* jump to the pointer, so the ring doesn't sweep in from where it last was */
-                    const at = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-                    dot.style.transform = at; ring.getAnimations().forEach((x) => x.cancel()); ring.style.transform = at;
-                }
-            });
-            pill.addEventListener('mouseleave', () => { document.documentElement.classList.remove('fp-over-pill'); frameCursors(true); if (ring) ring.classList.remove('cursor-hover'); });
-            pill.addEventListener('mouseover', (e) => { if (ring) ring.classList.toggle('cursor-hover', !!e.target.closest('button, a, [role="slider"]')); });
             pill.addEventListener('click', (e) => {
                 const t = e.target;
                 if (t.closest('.fp-art')) { e.preventDefault(); goFocus(false); return; }
@@ -818,7 +805,7 @@
         else if (!on && frame) closeShell(false);
     });
     addEventListener('storage', (e) => {        /* a theme picked inside the frame recolours the player too */
-        if (e.key === 'mehedi_theme' && e.newValue) document.documentElement.setAttribute('data-theme', e.newValue);
+        if (e.key === 'mehedi_theme' && e.newValue) document.documentElement.setAttribute('data-theme', e.newValue === 'cyberpunk' ? 'dark' : e.newValue);   // cyberpunk is retired
     });
 
     window.FocusPlayer = {
