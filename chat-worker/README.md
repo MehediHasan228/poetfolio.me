@@ -53,7 +53,7 @@ No deploy is needed. The secret applies at once.
    npx wrangler deploy                   # prints https://mehedi-chat.<subdomain>.workers.dev
    ```
 
-3. Paste that URL into `CHAT_API_URL` in `docs/script~9e1709.js`. Bump `script~9e1709.js?v=` in `scripts/site_src/index.full.html`, then run `npm run build` and push.
+3. Paste that URL into `CHAT_API_URL` in `docs/script~9e1709.js`, then run `npm run build` (it stamps every page with the script's new content hash; `npm run stamp` does only that) and push.
 4. Check it with `curl https://mehedi-chat.<subdomain>.workers.dev/health`.
 
 ## Switch to OmniRoute later
