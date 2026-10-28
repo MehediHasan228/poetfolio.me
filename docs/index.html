@@ -3,11 +3,56 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- apply the saved theme before first paint, so navigating never flashes the default theme (the retired cyberpunk
-         theme opens as dark) -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t==="cyberpunk")t="dark";if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="god-mode"]{background:#000}</style>
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <script id="hero-net">
+    /* Home only (the page builders drop it from the other pages): the dot network behind the hero is part of the first
+       look, so its first still frame is drawn the moment the parser reaches the canvas. script~9e1709.js sets these dots
+       moving and recolours them when the theme changes (heroNetColors). The viewport is measured here, after the
+       viewport meta and before the body: read later, it would lay the page out without its stylesheets. */
+    (function () {
+        var COLORS = window.heroNetColors = { dark: '#00f2fe', light: '#94a3b8', cyberpunk: '#f43f5e', mint: '#10b981', 'god-mode': '#00ff00' };
+        // One path for all the dots and one per alpha step for the links: a few draw calls a frame instead of hundreds.
+        window.drawParticleNet = function (x, ps) {
+            var col = ps.length ? ps[0].col : '', STEPS = 10, links = [], i, j, a, b, d, l;
+            x.clearRect(0, 0, x.canvas.width, x.canvas.height);
+            x.fillStyle = col;
+            x.beginPath();
+            for (i = 0; i < ps.length; i++) { x.moveTo(ps[i].x + ps[i].s, ps[i].y); x.arc(ps[i].x, ps[i].y, ps[i].s, 0, Math.PI * 2); }
+            x.fill();
+            for (i = 0; i < STEPS; i++) links.push(new Path2D());
+            for (i = 0; i < ps.length; i++) {
+                for (j = i + 1; j < ps.length; j++) {
+                    a = ps[i]; b = ps[j]; d = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+                    if (d < 15000) { l = links[Math.min(STEPS - 1, Math.floor((1 - d / 15000) * STEPS))]; l.moveTo(a.x, a.y); l.lineTo(b.x, b.y); }
+                }
+            }
+            x.strokeStyle = col;
+            links.forEach(function (l, k) { x.globalAlpha = (k + 0.5) / STEPS; x.stroke(l); });
+            x.globalAlpha = 1;
+        };
+        var W = document.documentElement.clientWidth, H = document.documentElement.clientHeight;
+        var mo = new MutationObserver(function () {
+            var c = document.getElementById('particle-canvas'), x = c && c.getContext('2d');
+            if (!c) return;
+            mo.disconnect();
+            if (!x) return;
+            // the root's client size: on phones innerWidth can still hold the pre-viewport-meta width at this point
+            var w = W, h = H, ps = [], i;
+            var col = COLORS[document.documentElement.getAttribute('data-theme')] || COLORS.dark;
+            c.width = w; c.height = h;
+            for (i = 0; i < w * h / 9000; i++) {
+                ps.push({ x: Math.random() * w, y: Math.random() * h, dx: (Math.random() - 0.5) * 1.5, dy: (Math.random() - 0.5) * 1.5, s: Math.random() * 2 + 1, col: col });
+            }
+            window.heroParticles = ps;
+            drawParticleNet(x, ps);
+        });
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+        document.addEventListener('DOMContentLoaded', function () { mo.disconnect(); });
+    })();
+    </script>
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
     <meta name="description" content="Mehedi Hasan is an AI-native software engineer in Dhaka who builds AI agents, ERPs and distributed systems with NestJS, Kafka, LangGraph and local LLMs.">
@@ -63,7 +108,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="./vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=fde6109722">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=34bad986bc">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -157,6 +202,7 @@
 
     <main id="main-content">
     <header class="hero" id="home">
+        <canvas id="particle-canvas" aria-hidden="true" width="762" height="484"></canvas>
         <div class="hero-content hidden show">
             <div class="hero-layout">
 
@@ -393,9 +439,9 @@
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="./focus/focus.js?v=175ef5594a" defer></script>
+    <script src="./focus/focus.js?v=936ff0f26d" defer></script>
     <script src="./ai-orb-mascot.js?v=9117886cd3" defer></script>
-    <script src="./script~9e1709.js?v=298ae97afd" defer></script>
+    <script src="./script~9e1709.js?v=a436239b50" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

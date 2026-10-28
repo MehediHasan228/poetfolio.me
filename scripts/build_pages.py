@@ -108,7 +108,9 @@ def main() -> None:
     src = SRC.read_text(encoding="utf-8").replace("\r\n", "\n")
     head_end = src.index("<body>")
     head = src[:head_end]
-    # the desktop font preloads for the hero are on the home page only
+    # the hero's dot network is on the home page only, so is the script that draws its first frame
+    head = re.sub(r'\s*<script id="hero-net">.*?</script>', "", head, flags=re.S)
+    # and so are the desktop font preloads for the hero
     head = re.sub(r'\n\s*<!-- Home, desktop:.*?-->', "", head, flags=re.S)
     head = re.sub(r'\n\s*<link[^>]*\bdata-home\b[^>]*>', "", head)
     body_open = src[head_end:src.index('<header class="hero"')]

@@ -3,10 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- apply the saved theme before first paint, so navigating never flashes the default theme (the retired cyberpunk
-         theme opens as dark) -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t==="cyberpunk")t="dark";if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="god-mode"]{background:#000}</style>
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Mehedi Hasan">
@@ -55,7 +54,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=fde6109722">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=34bad986bc">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -645,9 +644,9 @@
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../focus/focus.js?v=175ef5594a" defer></script>
+    <script src="../focus/focus.js?v=936ff0f26d" defer></script>
     <script src="../ai-orb-mascot.js?v=9117886cd3" defer></script>
-    <script src="../script~9e1709.js?v=298ae97afd" defer></script>
+    <script src="../script~9e1709.js?v=a436239b50" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

@@ -29,7 +29,7 @@ const ROOT = path.resolve(__dirname, '..');
 const DOCS = path.join(ROOT, 'docs');
 const OUT_DIR = path.join(ROOT, 'scratch', 'check');
 const BASE = (process.env.CHECK_URL || 'http://localhost:8000').replace(/\/$/, '');
-const THEMES = ['dark', 'light', 'mint', 'god-mode'];
+const THEMES = ['dark', 'cyberpunk', 'light', 'mint', 'god-mode'];
 const VIEWPORTS = {
     desktop: { width: 1440, height: 900 },
     mobile: { width: 390, height: 844, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },

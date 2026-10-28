@@ -9,6 +9,11 @@ const THEME_PRESETS = {
         color: '#2563eb',
         glintColor: '#ffffff'
     },
+    'cyberpunk': {
+        backgroundColor: '#09090b',
+        color: '#f43f5e',
+        glintColor: '#fef08a'
+    },
     'mint': {
         backgroundColor: '#f4faf7',
         color: '#10b981',

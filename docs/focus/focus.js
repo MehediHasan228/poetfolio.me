@@ -810,7 +810,7 @@
         else if (!on && frame) closeShell(false);
     });
     addEventListener('storage', (e) => {        /* a theme picked inside the frame recolours the player too */
-        if (e.key === 'mehedi_theme' && e.newValue) document.documentElement.setAttribute('data-theme', e.newValue === 'cyberpunk' ? 'dark' : e.newValue);   // cyberpunk is retired
+        if (e.key === 'mehedi_theme' && e.newValue) document.documentElement.setAttribute('data-theme', e.newValue);
     });
 
     window.FocusPlayer = {

@@ -2123,11 +2123,9 @@ document.addEventListener('DOMContentLoaded', async () => {
        11. THEME SWITCHER
     ========================================== */
     const themeBtn = document.getElementById('theme-toggler');
-    const themes = ['dark', 'light', 'mint', 'god-mode'];
+    const themes = ['dark', 'cyberpunk', 'light', 'mint', 'god-mode'];
 
     let savedTheme = local.get('mehedi_theme') || 'dark';
-    // the cyberpunk theme is retired: a visitor who saved it gets dark
-    if (savedTheme === 'cyberpunk') { savedTheme = 'dark'; local.set('mehedi_theme', savedTheme); }
     document.documentElement.setAttribute('data-theme', savedTheme);
     let cTheme = themes.indexOf(savedTheme) !== -1 ? themes.indexOf(savedTheme) : 0;
 
@@ -2147,6 +2145,103 @@ document.addEventListener('DOMContentLoaded', async () => {
             cycleTheme();
         }
     });
+
+    /* The hero's dot network. The hero-net script in the head drew its first still frame; here the dots drift, shy
+       away from the mouse and rest while the hero is scrolled away. Phones draw every other frame (~30 fps) and move
+       twice as far each time; reduced motion keeps the still frame. A theme change only recolours the dots (the theme
+       button's click rebuilds and measures nothing) */
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas && canvas.getContext && canvas.getContext('2d');
+    if (ctx && typeof window.drawParticleNet === 'function') {
+        const mouse = { x: null, y: null, radius: 150 };
+        const root = document.documentElement;
+        const colour = () => (window.heroNetColors || {})[root.getAttribute('data-theme')] || '#00f2fe';
+        let pArray = [];
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+        root.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+        // keep: the dots drawn as the page parsed start moving from where they are, even when the size has moved a
+        // little (the head measured before the scrollbar existed): false then, as the resized canvas needs a redraw.
+        // The size is the root's client size, which on phones does not change as the address bar comes and goes
+        function initParticles(keep) {
+            const w = root.clientWidth, h = root.clientHeight;
+            if (keep && window.heroParticles) {
+                pArray = window.heroParticles;
+                if (canvas.width === w && canvas.height === h) return true;
+                canvas.width = w; canvas.height = h;
+                return false;
+            }
+            canvas.width = w; canvas.height = h;
+            const col = colour();
+            pArray = [];
+            for (let i = 0; i < (w * h) / 9000; i++) {
+                pArray.push({ x: Math.random() * w, y: Math.random() * h, dx: (Math.random() - 0.5) * 1.5, dy: (Math.random() - 0.5) * 1.5, s: Math.random() * 2 + 1, col });
+            }
+            return false;
+        }
+
+        let particlesOn = false, heroInView = true, particleFrame = 0;
+        const PARTICLE_STEP = matchMedia('(pointer: coarse)').matches ? 2 : 1;
+
+        function animateParticles() {
+            particlesOn = heroInView;
+            if (particlesOn) requestAnimationFrame(animateParticles);
+            if (particlesOn && ++particleFrame % PARTICLE_STEP) return;
+            pArray.forEach((p) => {
+                if (p.x >= canvas.width) { p.x = canvas.width; p.dx *= -1; }
+                else if (p.x <= 0) { p.x = 0; p.dx *= -1; }
+                if (p.y >= canvas.height) { p.y = canvas.height; p.dy *= -1; }
+                else if (p.y <= 0) { p.y = 0; p.dy *= -1; }
+                if (mouse.x != null) {
+                    const dx = mouse.x - p.x, dy = mouse.y - p.y, distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius && distance > 0) {
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        p.x -= (dx / distance) * force * 5;
+                        p.y -= (dy / distance) * force * 5;
+                    }
+                }
+                p.dx *= 0.98; p.dy *= 0.98;
+                if (Math.abs(p.dx) < 0.3) p.dx = p.dx > 0 ? 0.3 : -0.3;
+                if (Math.abs(p.dy) < 0.3) p.dy = p.dy > 0 ? 0.3 : -0.3;
+                p.x += p.dx * PARTICLE_STEP; p.y += p.dy * PARTICLE_STEP;
+            });
+            drawParticleNet(ctx, pArray);
+        }
+
+        // a new size rebuilds the dots once the resizing stops; a still network is redrawn at once
+        let resizeTimer = 0;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (canvas.width === root.clientWidth && canvas.height === root.clientHeight) return;
+                initParticles();
+                if (!particlesOn) drawParticleNet(ctx, pArray);
+            }, 150);
+        });
+
+        new MutationObserver(() => {
+            const col = colour();
+            if (!pArray.length || pArray[0].col === col) return;
+            pArray.forEach((p) => { p.col = col; });
+            if (!particlesOn) drawParticleNet(ctx, pArray);
+        }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+        // The page paints first: the dots start moving once the browser is idle, never with reduced motion. The first
+        // still frame was drawn with the hero; it is drawn here only if the window changed size since.
+        if (!initParticles(true)) drawParticleNet(ctx, pArray);
+        const startParticles = () => {
+            animateParticles();
+            new IntersectionObserver(([entry]) => {
+                heroInView = entry.isIntersecting;
+                if (heroInView && !particlesOn) animateParticles();
+            }).observe(canvas);
+        };
+        if (!PREFERS_REDUCED_MOTION) {
+            if ('requestIdleCallback' in window) requestIdleCallback(startParticles, { timeout: 3000 });
+            else setTimeout(startParticles, 1200);
+        }
+    }
 
     /* ==========================================
        12. VS CODE IDE LOGIC (DYNAMIC REFACTOR)

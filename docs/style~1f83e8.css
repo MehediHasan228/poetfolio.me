@@ -48,6 +48,31 @@
     --spatial-glass-specular: rgba(255, 255, 255, 0.95);
 }
 
+:root[data-theme="cyberpunk"] {
+    --bg-color: #09090b;
+    --card-bg: rgba(20, 0, 10, 0.7);
+    --text-primary: #fbbf24;
+    --text-secondary: #a1a1aa;
+    --accent-1: #f43f5e;
+    --accent-1-rgb: 244, 63, 94;
+    --accent-2: #eab308;
+    --accent-2-rgb: 234, 179, 8;
+    --accent-3: #ec4899;
+    --accent-3-rgb: 236, 72, 153;
+    --accent-rgb: 244, 63, 94;
+    --gradient-accent: linear-gradient(135deg, #f43f5e 0%, #eab308 100%);
+    --accent-gradient: linear-gradient(135deg, #f43f5e 0%, #eab308 100%);
+    --accent-glow: rgba(244, 63, 94, 0.45);
+    --accent-active-color: #ffffff;
+    --particle-color: #f43f5e;
+    /* Apple Spatial Liquid Glass (Pure Transparent Glass with Neon Rose Rim) */
+    --spatial-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(244, 63, 94, 0.08) 50%, rgba(234, 179, 8, 0.10) 100%);
+    --spatial-glass-border: rgba(244, 63, 94, 0.50);
+    --spatial-glass-glow: rgba(244, 63, 94, 0.45);
+    --spatial-glass-highlight: rgba(254, 205, 211, 0.70);
+    --spatial-glass-specular: rgba(255, 255, 255, 0.90);
+}
+
 :root[data-theme="mint"] {
     --bg-color: #f4faf7;
     --card-bg: rgba(255, 255, 255, 0.88);
@@ -465,6 +490,16 @@ section {
     margin: 0 auto;
     position: relative;
     z-index: 2;
+}
+
+#particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
 }
 
 /* --- DESKTOP UNIFORM BREATHING SPACE (Clears SYS_MONITOR with snug 17px gap) --- */
@@ -2130,6 +2165,29 @@ section {
     --grok-eye-bottom: var(--orb-eye-bot);
 }
 
+[data-theme="cyberpunk"] {
+    --orb-stop-highlight: #fff1f2;
+    --orb-stop-bright: #fb7185;
+    --orb-stop-primary: #e11d48;
+    --orb-stop-deep: #881337;
+    --orb-stop-dark: #400516;
+    --orb-stop-rim: #ff0055;
+    --orb-glow-color: #ff0055;
+    --orb-shadow-color: rgba(0, 0, 0, 0.85);
+    --orb-eye-top: #2a0512;
+    --orb-eye-bot: #0a0104;
+    --orb-eye-shadow: rgba(255, 0, 85, 0.4);
+
+    --grok-3d-highlight: var(--orb-stop-highlight);
+    --grok-3d-mid: #ffe4e6;
+    --grok-3d-base: var(--orb-stop-bright);
+    --grok-3d-shadow: var(--orb-stop-primary);
+    --grok-3d-rim: var(--orb-stop-rim);
+    --grok-3d-drop-shadow: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 20px rgba(255, 0, 85, 0.7));
+    --grok-eye-top: var(--orb-eye-top);
+    --grok-eye-bottom: var(--orb-eye-bot);
+}
+
 [data-theme="god-mode"] {
     --orb-stop-highlight: #f0fdf4;
     --orb-stop-bright: #4ade80;
@@ -2573,6 +2631,29 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
 }
 
 /* --- Theme Adaptations for Speech Bubble --- */
+[data-theme="cyberpunk"] .ai-orb-speech-bubble {
+    background: rgba(24, 4, 14, 0.95) !important;
+    border-color: var(--accent-1, #f43f5e) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 22px rgba(244, 63, 94, 0.4) !important;
+}
+[data-theme="cyberpunk"] .ai-orb-bubble-arrow {
+    background: rgba(24, 4, 14, 0.95) !important;
+    border-color: var(--accent-1, #f43f5e) !important;
+}
+[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 2px 10px rgba(244, 63, 94, 0.4) !important;
+}
+[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary span {
+    color: #ffffff !important;
+}
+[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary svg,
+[data-theme="cyberpunk"] .ai-orb-bubble-btn-primary .ch-bubble {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
 
 [data-theme="god-mode"] .ai-orb-speech-bubble {
     background: rgba(2, 18, 6, 0.96) !important;
@@ -6653,6 +6734,34 @@ footer {
     box-shadow: 0 0 6px rgba(16, 185, 129, 0.55), 0 0 12px rgba(16, 185, 129, 0.3) !important;
 }
 
+/* Cyberpunk Theme (Crimson Red & Neon Rose) */
+[data-theme="cyberpunk"] .lb-toggle {
+    background: linear-gradient(135deg, rgba(32, 6, 16, 0.98) 0%, rgba(20, 4, 10, 0.98) 60%, rgba(10, 2, 6, 1) 100%) !important;
+    border-top: 1.5px solid rgba(244, 63, 94, 0.85) !important;
+    border-left: 1.5px solid rgba(244, 63, 94, 0.65) !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.9) !important;
+    border-right: none !important;
+    box-shadow: -6px 0 20px rgba(0, 0, 0, 0.8),
+                -2px 0 14px rgba(244, 63, 94, 0.45),
+                inset 1px 1px 1.5px rgba(255, 255, 255, 0.25),
+                inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-theme="cyberpunk"] .lb-toggle::before {
+    background: #ff1e56 !important;
+    box-shadow: 0 0 8px #ff1e56, 0 0 12px rgba(244, 63, 94, 0.85) !important;
+}
+
+[data-theme="cyberpunk"] .lb-toggle::after {
+    display: none !important;
+}
+
+[data-theme="cyberpunk"] .lb-telemetry-bars .lb-bar,
+[data-theme="cyberpunk"] .lb-title-telemetry .lb-title-bar {
+    background: linear-gradient(180deg, #ff1e56 0%, #f43f5e 50%, #be123c 100%) !important;
+    box-shadow: 0 0 8px rgba(244, 63, 94, 0.9), 0 0 16px rgba(255, 30, 86, 0.5) !important;
+}
+
 /* God Mode Theme (Matrix Neon Green) */
 [data-theme="god-mode"] .lb-toggle {
     background: linear-gradient(135deg, rgba(4, 24, 8, 0.98) 0%, rgba(2, 16, 4, 0.98) 60%, rgba(0, 8, 2, 1) 100%) !important;
@@ -6713,6 +6822,17 @@ footer {
     color: #0f172a !important;
 }
 
+/* Cyberpunk Theme */
+[data-theme="cyberpunk"] .term-prompt {
+    color: #f43f5e !important;
+}
+[data-theme="cyberpunk"] .term-protocol {
+    color: #f43f5e !important;
+}
+[data-theme="cyberpunk"] .term-host {
+    color: #fbbf24 !important;
+}
+
 /* God-Mode Theme */
 [data-theme="god-mode"] .term-prompt,
 [data-theme="god-mode"] .term-protocol,
@@ -6739,6 +6859,16 @@ footer {
     border: 1px solid #cbd5e1 !important;
     color: #0f172a !important;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Cyberpunk Theme */
+[data-theme="cyberpunk"] .sys-monitor {
+    background: rgba(20, 0, 10, 0.92) !important;
+    border: 1px solid rgba(244, 63, 94, 0.4) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(244, 63, 94, 0.15) !important;
+}
+[data-theme="cyberpunk"] .mon-title {
+    color: #f43f5e !important;
 }
 
 /* =========================================================
@@ -6880,6 +7010,7 @@ footer {
 
 @media (max-width: 768px) {
     :is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget.chat-collapsed,
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed,
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed {
         background: transparent !important;
         border: none !important;
@@ -6889,6 +7020,7 @@ footer {
     }
 
     :is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget.chat-collapsed *,
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed *,
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed * {
         background: transparent !important;
         border: none !important;
@@ -6965,6 +7097,46 @@ footer {
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
 }
 
+/* Cyberpunk Theme Chat Widget */
+[data-theme="cyberpunk"] #ai-chat-widget {
+    background: rgba(20, 0, 10, 0.95) !important;
+    border: 1px solid rgba(244, 63, 94, 0.5) !important;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7), 0 0 20px rgba(244, 63, 94, 0.2) !important;
+}
+
+[data-theme="cyberpunk"] .chat-header {
+    background: linear-gradient(110deg, rgba(20, 0, 10, 0.95), rgba(40, 5, 20, 0.95)) !important;
+    border-bottom: 1px solid rgba(244, 63, 94, 0.4) !important;
+    color: #ffffff !important;
+}
+
+@media (min-width: 769px) {
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed {
+        background: rgba(20, 0, 10, 0.9) !important;
+        border: 1px solid rgba(244, 63, 94, 0.6) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 22px rgba(244, 63, 94, 0.35) !important;
+    }
+
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed:hover {
+        border-color: #ff0055 !important;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 0, 85, 0.6) !important;
+    }
+
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed .chat-header {
+        background: transparent !important;
+        color: #ffffff !important;
+    }
+
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed .chat-header-title {
+        color: #f43f5e !important;
+        font-weight: 700 !important;
+    }
+
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed #chat-toggle-icon {
+        color: #f43f5e !important;
+    }
+}
+
 /* God Mode Theme Chat Widget Desktop Pill */
 @media (min-width: 769px) {
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed {
@@ -6985,6 +7157,34 @@ footer {
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed #chat-toggle-icon {
         color: #00ff00 !important;
     }
+}
+
+[data-theme="cyberpunk"] .chat-header i,
+[data-theme="cyberpunk"] .chat-header span,
+[data-theme="cyberpunk"] #chat-toggle-icon {
+    color: #f43f5e !important;
+}
+
+[data-theme="cyberpunk"] .bot-msg {
+    background: rgba(244, 63, 94, 0.1) !important;
+    color: #f1f5f9 !important;
+    border: 1px solid rgba(244, 63, 94, 0.3) !important;
+}
+
+[data-theme="cyberpunk"] .chat-input-area {
+    background: rgba(10, 0, 5, 0.8) !important;
+    border-top: 1px solid rgba(244, 63, 94, 0.3) !important;
+}
+
+[data-theme="cyberpunk"] #chat-input {
+    background: rgba(20, 0, 10, 0.8) !important;
+    border: 1px solid rgba(244, 63, 94, 0.4) !important;
+    color: #fbbf24 !important;
+}
+
+[data-theme="cyberpunk"] #chat-send {
+    background: #f43f5e !important;
+    color: #000000 !important;
 }
 
 /* ==========================================
@@ -7230,6 +7430,51 @@ footer {
     background: #f1f5f9 !important;
     border-color: #2563eb !important;
     color: #1d4ed8 !important;
+}
+
+/* Cyberpunk Theme Overrides */
+[data-theme="cyberpunk"] .cyber-overlay-btn {
+    background: #f43f5e !important;
+    box-shadow: 0 4px 18px rgba(244, 63, 94, 0.5) !important;
+}
+
+[data-theme="cyberpunk"] .project-preview-link:hover .cyber-overlay-btn {
+    background: #e11d48 !important;
+    box-shadow: 0 8px 25px rgba(244, 63, 94, 0.8) !important;
+}
+
+/* Cyberpunk Active Tabs & Buttons (Desktop, Tablet, Mobile) */
+[data-theme="cyberpunk"] .arch-unified-filter-btn.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
+}
+
+[data-theme="cyberpunk"] .arch-tab-btn.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    border-color: #f43f5e !important;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important;
+}
+
+[data-theme="cyberpunk"] .radar-tab.active,
+[data-theme="cyberpunk"] .lb-content .radar-tab.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
+}
+
+[data-theme="cyberpunk"] .radar-subtab.active {
+    background: rgba(244, 63, 94, 0.2) !important;
+    border-color: #f43f5e !important;
+    color: #f43f5e !important;
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.35) !important;
+}
+
+[data-theme="cyberpunk"] .rank-pill.rank-1 {
+    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
+    color: #09090b !important;
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.5) !important;
 }
 
 /* Blueprint Badge Styling */
@@ -8021,6 +8266,9 @@ footer {
     100% { stroke-dashoffset: -100; opacity: 0.4; }
 }
 
+/* Cyberpunk: rose + gold (theme gradient pair) instead of two pinks */
+[data-theme="cyberpunk"] .terminal-live-badge.is-pulse { --pulse-b: var(--accent-2); }
+
 /* Light theme: royal blue + cyan, softer glow on white */
 :is([data-theme="light"], [data-theme="mint"]) .terminal-live-badge.is-pulse { --pulse-b: #06b6d4; }
 :is([data-theme="light"], [data-theme="mint"]) .term-pulse-base.term-pulse-a { opacity: 0.18; }
@@ -8141,6 +8389,10 @@ footer {
     html:is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget.chat-collapsed::before {
         background-image: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%);
     }
+    html[data-theme="cyberpunk"]:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
+        --pill-glass: rgba(30, 4, 16, 0.55);
+        --pill-depth: rgba(0, 0, 0, 0.6);
+    }
     html[data-theme="god-mode"]:is(*, [data-theme]) #ai-chat-widget.chat-collapsed {
         --pill-glass: rgba(0, 20, 4, 0.58);
         --pill-depth: rgba(0, 0, 0, 0.7);
@@ -8225,6 +8477,7 @@ html:is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget {
     --chat-sub: #64748b;
     --chat-hair: rgba(15, 23, 42, 0.08);
 }
+html[data-theme="cyberpunk"] #ai-chat-widget { --chat-user-fg: #1a0610; --chat-bot-bg: rgba(255, 255, 255, 0.05); }
 html[data-theme="god-mode"] #ai-chat-widget { --chat-user-fg: #021206; }
 
 /* Header: title + subtitle (subtitle only when expanded) */
@@ -8333,10 +8586,12 @@ html #ai-chat-widget #chat-send:hover { transform: translateY(-1px) scale(1.04);
 html #ai-chat-widget { --chip-fg: #e8fbff; --chip-ico: var(--accent-1); --action-fg: var(--accent-1); }
 html[data-theme="light"] #ai-chat-widget { --chip-fg: #0f172a; --chip-ico: #2563eb; --action-fg: #1d4ed8; }
 html[data-theme="mint"] #ai-chat-widget { --chip-fg: #0f172a; --chip-ico: #059669; --action-fg: #047857; }
+html[data-theme="cyberpunk"] #ai-chat-widget { --chip-fg: #ffeab0; --chip-ico: #fbbf24; --action-fg: #fcd34d; --chat-sub: rgba(255, 226, 170, 0.72); }
 html[data-theme="god-mode"] #ai-chat-widget { --chip-fg: #c8ffd4; --chip-ico: #4ade80; --action-fg: #86efac; }
 
 html #ai-chat-widget .chat-action { color: var(--action-fg); }
 html #ai-chat-widget .chat-action:hover { color: var(--chat-user-fg); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); }
+html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 
 
 /* ===== Separate pages: page hero + home explore grid ===== */
@@ -8648,6 +8903,26 @@ body.light-mode .bottom-nav a[aria-current="page"] {
     color: #0b1120 !important;
 }
 
+[data-theme="cyberpunk"] .control-btn {
+    background: rgba(24, 4, 16, 0.92) !important;
+    border: 1px solid rgba(244, 63, 94, 0.5) !important;
+    color: #f43f5e !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(244, 63, 94, 0.3) !important;
+}
+[data-theme="cyberpunk"] .control-btn:hover {
+    background: #f43f5e !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(244, 63, 94, 0.7) !important;
+}
+[data-theme="cyberpunk"] .control-btn.whatsapp-btn {
+    color: #22c55e !important;
+    border-color: rgba(34, 197, 94, 0.5) !important;
+}
+[data-theme="cyberpunk"] .control-btn.whatsapp-btn:hover {
+    background: #22c55e !important;
+    color: #09090b !important;
+}
+
 [data-theme="god-mode"] .control-btn {
     background: rgba(0, 20, 0, 0.92) !important;
     border: 1px solid rgba(0, 255, 0, 0.5) !important;
@@ -8895,6 +9170,11 @@ body.light-mode .bottom-nav a[aria-current="page"] {
         border-left: 1px solid rgba(16, 185, 129, 0.25) !important;
         box-shadow: -15px 0 45px rgba(5, 150, 105, 0.08), inset 1px 0 0 rgba(255, 255, 255, 0.95) !important;
     }
+    [data-theme="cyberpunk"] .mobile-menu-drawer {
+        background: linear-gradient(145deg, rgba(244, 63, 94, 0.14) 0%, rgba(20, 5, 15, 0.55) 100%) !important;
+        border-left: 1px solid rgba(244, 63, 94, 0.45) !important;
+        box-shadow: -15px 0 45px rgba(244, 63, 94, 0.2), inset 1px 0 0 rgba(255, 255, 255, 0.18) !important;
+    }
     [data-theme="god-mode"] .mobile-menu-drawer {
         background: linear-gradient(145deg, rgba(0, 255, 0, 0.08) 0%, rgba(0, 15, 0, 0.58) 100%) !important;
         border-left: 1px solid rgba(0, 255, 0, 0.4) !important;
@@ -8981,6 +9261,7 @@ body.light-mode .bottom-nav a[aria-current="page"] {
     html:is(*, [data-theme]) #ai-chat-widget.chat-collapsed,
     [data-theme="light"] #ai-chat-widget.chat-collapsed,
     [data-theme="mint"] #ai-chat-widget.chat-collapsed,
+    [data-theme="cyberpunk"] #ai-chat-widget.chat-collapsed,
     [data-theme="god-mode"] #ai-chat-widget.chat-collapsed {
         background: transparent !important;
         border: none !important;
@@ -9806,6 +10087,7 @@ html { --leak-1: var(--accent-1-rgb, 0, 242, 254); --leak-2: var(--accent-2-rgb,
        --leak-a: .40; --leak-b: .34; --leak-c: .28; --grain: .10; }
 html[data-theme="light"]     { --leak-3: 139, 92, 246;  --leak-a: .42; --leak-b: .34; --leak-c: .36; --grain: .07; }
 html[data-theme="mint"]      { --leak-3: 45, 212, 191;  --leak-a: .42; --leak-b: .32; --leak-c: .34; --grain: .07; }
+html[data-theme="cyberpunk"] { --leak-3: 168, 85, 247;  --leak-a: .26; --leak-b: .16; --leak-c: .22; }
 html[data-theme="god-mode"]  { --leak-3: 0, 180, 90;    --leak-a: .20; --leak-b: .14; --leak-c: .12; }
 html::before, html::after, body::after { content: ""; position: fixed; z-index: -1; pointer-events: none; }
 /* AURORA — two bands of light ribbons sway slowly across the top of every page. The bands are soft from their own
@@ -9860,12 +10142,16 @@ html body .nx:not(#_bg) { background: transparent !important; }
 @media print { html::before, html::after, body::before, body::after { display: none; } }
 
 /* Hero name gradient follows every theme (the dark one used to leak into the others) */
+html[data-theme="cyberpunk"] .gradient-text {
+    background: linear-gradient(135deg, #f43f5e 0%, #fb7185 45%, #eab308 100%) !important;
+    -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;
+}
 html[data-theme="god-mode"] .gradient-text {
     background: linear-gradient(135deg, #00ff00 0%, #4ade80 50%, #a3e635 100%) !important;
     -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;
 }
 
-/* A soft pool of the page colour sits behind the hero text and the portrait */
+/* The particle network fades out behind the hero text so the lines never cross the words */
 .hero .hero-text-side { position: relative; isolation: isolate; }
 .hero .hero-text-side::before {
     content: ""; position: absolute; z-index: -1; pointer-events: none;
@@ -9904,6 +10190,7 @@ html:not([data-theme]) body #ai-chat-widget.chat-expanded:not(#_ai) {
     backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
 }
 html[data-theme="god-mode"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(0,255,0,.05), transparent 30%), #030803 !important; }
+html[data-theme="cyberpunk"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(244,63,94,.07), transparent 30%), #12040a !important; backdrop-filter: none !important; }
 /* the user's own bubble stays fully visible at the top edge instead of fading into the header */
 html #ai-chat-widget.chat-expanded .chat-body { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; }
 
@@ -9925,6 +10212,9 @@ html body .bottom-nav:not(#_bn) a { opacity: .7; transition: opacity .2s ease, c
 html body .bottom-nav:not(#_bn) a[aria-current="page"],
 html body .bottom-nav:not(#_bn) a.is-pending { opacity: 1; color: var(--accent-1) !important; }
 html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { filter: drop-shadow(0 0 6px rgba(var(--accent-1-rgb), .55)); }
+/* red theme: its gold text is darker than white, so the resting tabs dim less (4.9:1) */
+html[data-theme="cyberpunk"] body .bottom-nav:not(#_bn) a:not([aria-current="page"], .is-pending) { opacity: .85; }
+html[data-theme="cyberpunk"] .sidebar-title { color: #fb7185; }   /* rose #f43f5e is 4.2:1 on the panel */
 [data-theme="mint"] body .bottom-nav:not(#_bn) a:is([aria-current="page"], .is-pending) { color: #047857 !important; }
 /* the tapped tab lights up instantly */
 html body .bottom-nav:not(#_bn) a { transition: none !important; }
@@ -9966,6 +10256,7 @@ html body .bottom-nav { view-transition-name: tabbar; }
 
 /* Skeleton: a dark version and a light version, matched to the theme */
 #page-skeleton { --sk: rgba(148, 163, 184, .14); --sk-hi: rgba(148, 163, 184, .28); background: #0b1120; }
+html[data-theme="cyberpunk"] #page-skeleton { background: #09090b; --sk: rgba(244, 63, 94, .12); --sk-hi: rgba(244, 63, 94, .24); }
 html[data-theme="god-mode"] #page-skeleton { background: #000; --sk: rgba(0, 255, 0, .10); --sk-hi: rgba(0, 255, 0, .20); }
 html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton { --sk: #e2e8f0; --sk-hi: #f1f5f9; background: #f8fafc; }
 html[data-theme="mint"] #page-skeleton { --sk: #dcefe6; --sk-hi: #eef8f3; background: #f4faf7; }
@@ -10113,6 +10404,20 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     --pf-glass-ink-2: #64748b;
     --pf-edge: rgba(255, 255, 255, 0.9);
     --pf-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04);
+}
+:root[data-theme="cyberpunk"] {
+    --pf-surface: #130a10;
+    --pf-surface-2: #1e0f18;
+    --pf-line: #3a1824;
+    --pf-line-strong: #52202f;
+    --pf-ink: #fbbf24;
+    --pf-ink-2: #dcbf86;
+    --pf-ink-3: #a1a1aa;
+    --pf-brand: #f43f5e;
+    --pf-brand-rgb: 244, 63, 94;
+    --pf-on-brand: #ffffff;
+    --pf-glow: rgba(244, 63, 94, 0.35);
+    --pf-glass: rgba(19, 10, 16, 0.78);
 }
 :root[data-theme="god-mode"] {
     --pf-brand: #00ff00;
