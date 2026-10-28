@@ -176,7 +176,8 @@
     let saveTimer = 0;
     function save(now) {
         clearTimeout(saveTimer);
-        const w = () => { st.at = Date.now(); local.set(KEY, JSON.stringify(st)); };
+        /* the scene goes with it: the Focus page's head reads it to preload the stage photo before any script runs */
+        const w = () => { st.at = Date.now(); try { st.scene = scene() || undefined; } catch (e) {} local.set(KEY, JSON.stringify(st)); };
         if (now) w(); else saveTimer = setTimeout(w, 250);
     }
 
@@ -245,15 +246,27 @@
         const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 380; lp.Q.value = 1.1; lp.connect(out);
         [[55, 'sawtooth', 0.11], [55.5, 'sawtooth', 0.11], [82.5, 'triangle', 0.09], [110, 'sine', 0.07]].forEach(([f, t, v]) => osc(f, t).connect(level(v)).connect(lp));
         osc(0.04).connect(level(140)).connect(lp.frequency);      /* opens and closes every 25 s */
-        const air = ctx.createBufferSource(), bp = ctx.createBiquadFilter();
-        air.buffer = generate('pink'); air.loop = true; bp.type = 'bandpass'; bp.frequency.value = 600; bp.Q.value = 0.7;
-        air.connect(bp).connect(level(0.5)).connect(out); air.start(); parts.push(air);
-        return { stop: () => parts.forEach((p) => { try { p.stop(); } catch (e) {} }) };
+        let stopped = false;
+        buffer('pink').then((b) => {                /* the air joins once its noise is made (after the tap has painted) */
+            if (stopped) return;
+            const air = ctx.createBufferSource(), bp = ctx.createBiquadFilter();
+            air.buffer = b; air.loop = true; bp.type = 'bandpass'; bp.frequency.value = 600; bp.Q.value = 0.7;
+            air.connect(bp).connect(level(0.5)).connect(out); air.start(); parts.push(air);
+        }, () => {});
+        return { stop: () => { stopped = true; parts.forEach((p) => { try { p.stop(); } catch (e) {} }); } };
     }
+    /* fn runs after the next frame is painted (or after 250 ms in a tab that draws no frames): making seconds of noise
+       inside the tap that asked for it held that tap's frame back by over 100 ms on a slow phone */
+    const afterPaint = (fn) => new Promise((ok, no) => {
+        let done = false;
+        const go = () => { if (done) return; done = true; try { ok(fn()); } catch (e) { no(e); } };
+        requestAnimationFrame(() => setTimeout(go, 0));
+        setTimeout(go, 250);
+    });
     function buffer(id) {
         if (!buffers.has(id)) {
             const s = BY[id];
-            const p = s.gen ? Promise.resolve(generate(s.gen))
+            const p = s.gen ? afterPaint(() => generate(s.gen))
                 : fetch(new URL('sounds/' + id + '.mp3', BASE)).then((r) => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
                     .then((ab) => new Promise((ok, no) => ctx.decodeAudioData(ab, ok, no)));
             p.catch(() => buffers.delete(id));
@@ -810,7 +823,11 @@
         else if (!on && frame) closeShell(false);
     });
     addEventListener('storage', (e) => {        /* a theme picked inside the frame recolours the player too */
-        if (e.key === 'mehedi_theme' && e.newValue) document.documentElement.setAttribute('data-theme', e.newValue);
+        if (e.key !== 'mehedi_theme' || !e.newValue) return;
+        const root = document.documentElement;      /* painted in one frame, without transitions, as script~ does */
+        root.classList.add('theme-swap');
+        root.setAttribute('data-theme', e.newValue);
+        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-swap')));
     });
 
     window.FocusPlayer = {
@@ -825,6 +842,9 @@
         title, busy, play, pause, toggleSound, setVolume, setMaster, toggleMute, usePreset, setMix, shuffle, clear, end, sceneOf, sceneUrl,
         playRadio, stopRadio, setRadioVolume, setSleep, setLead, setPlan, setDip, surah, next: () => step(1), prev: () => step(-1),
         tap: () => { audio(); if (ctx.state !== 'running') ctx.resume(); return { ctx, node: master }; },     /* for the visualizer */
+        /* the audio engine, made ahead and left silent: the first one in a browser session starts the browser's audio
+           service, which held the first play tap for about 200 ms. Made without a tap it stays suspended until play() */
+        warm: () => { if (ctx) return; audio(); if (ctx.state === 'running' && !playing && !radioOn) ctx.suspend(); },
         startTimer, pauseTimer, resetTimer, setPhase, clock,
         on: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
         keep: (id, on) => { if (on) keepers.add(id); else keepers.delete(id); },

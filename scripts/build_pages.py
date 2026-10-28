@@ -116,7 +116,9 @@ def main() -> None:
     body_open = src[head_end:src.index('<header class="hero"')]
     hero = src[src.index('<header class="hero"'):src.index("</header>") + len("</header>")]
     tail = src[src.index('<div style="text-align: center; padding-bottom: 2rem;">'):]
-    tail = tail.replace('</html>', '</html>')
+    # these pages have no Focus player of their own: focus-boot.js loads the player (focus.js) only when it has
+    # something to show here (a session to pick up again, or this page sits in the frame of a page that plays)
+    sub_tail = tail.replace("/focus/focus.js?", "/focus/focus-boot.js?", 1)
 
     # ---- sub pages ----
     for sid, (slug, label, title, intro, points) in PAGES.items():
@@ -132,7 +134,7 @@ def main() -> None:
         sec = re.sub(r'<div class="section-title[^"]*">.*?</div>\s*', "", sec, count=1, flags=re.S)
         doc = (set_meta(head, slug, title, intro, "../") + body_open + '<main id="main-content">\n' + page_hero
                + f'<h2 class="sr-only">{label}</h2>\n' + sec + "\n</main>\n\n"
-               + bottom_nav(slug, prefix="../") + "\n" + tail)
+               + bottom_nav(slug, prefix="../") + "\n" + sub_tail)
         doc = swap_nav(rewrite(doc, "../"), "../")
         doc = doc.replace("<body>", f'<body class="subpage" data-page="{slug}">', 1)
         out = DOCS / slug / "index.html"

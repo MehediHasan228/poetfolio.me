@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     function makeVerticalEdgeDraggable(element, handles) {
         if (!element || !handles) return;
-        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        let pos2 = 0, pos4 = 0;
         let isDragging = false;
         let startY = 0;
         let lastDragTime = 0;
@@ -2112,7 +2112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function activateGodMode() {
         playSound('success');
-        document.documentElement.setAttribute('data-theme', 'god-mode');
+        setTheme('god-mode');
         local.set('mehedi_theme', 'god-mode');
         updateClearance(2);
 
@@ -2122,19 +2122,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ==========================================
        11. THEME SWITCHER
     ========================================== */
-    const themeBtn = document.getElementById('theme-toggler');
     const themes = ['dark', 'cyberpunk', 'light', 'mint', 'god-mode'];
 
     let savedTheme = local.get('mehedi_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    let cTheme = themes.indexOf(savedTheme) !== -1 ? themes.indexOf(savedTheme) : 0;
+
+    // The new theme is painted with transitions off (html.theme-swap, style~): otherwise every element starts its own
+    // colour transitions, over a thousand of them, and the click takes up to a second on a slow phone. They come back
+    // once that frame is out.
+    function setTheme(t) {
+        const root = document.documentElement;
+        root.classList.add('theme-swap');
+        root.setAttribute('data-theme', t);
+        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-swap')));
+    }
 
     function cycleTheme() {
         const current = document.documentElement.getAttribute('data-theme') || savedTheme;
         let idx = themes.indexOf(current);
         if (idx === -1) idx = 0;
         do { idx = (idx + 1) % themes.length; } while (themes[idx] === 'god-mode');
-        document.documentElement.setAttribute('data-theme', themes[idx]);
+        setTheme(themes[idx]);
         local.set('mehedi_theme', themes[idx]);
     }
 
@@ -2703,58 +2711,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* ==========================================
-       17. NEW: INTERACTIVE API SANDBOX
-    ========================================== */
-    function syntaxHighlight(json) {
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-            var cls = 'json-number';
-            if (/^"/.test(match)) {
-                if (/:$/.test(match)) { cls = 'json-key'; } else { cls = 'json-string'; }
-            } else if (/true|false/.test(match)) { cls = 'json-number'; } else if (/null/.test(match)) { cls = 'json-number'; }
-            return '<span class="' + cls + '">' + match + '</span>';
-        });
-    }
-
-    const apiPresets = {
-        systems: {
-            status: 200,
-            cluster: "mehedi-prod-us-east",
-            uptime: "99.99%",
-            nodes: [
-                { service: "microservices-mesh", protocol: "gRPC", p99: "11.2ms", status: "HEALTHY" },
-                { service: "kafka-event-bus", brokers: 3, throughput: "52.4K msg/s", status: "HEALTHY" },
-                { service: "k8s-orchestrator", pods: 24, autoscaling: "ACTIVE", status: "HEALTHY" },
-                { service: "ai-cot-agent", model: "Gemini 2.5", latency: "140ms", status: "HEALTHY" }
-            ],
-            security: { tls: "1.3", ddos_mitigation: "Active", zero_trust: true }
-        },
-        stack: {
-            status: 200,
-            engineer: "Mehedi Hasan",
-            stack: {
-                backend: ["NestJS", "Node.js", "Python", "Go"],
-                persistence: ["PostgreSQL", "Redis Cluster", "pgBouncer"],
-                streaming: ["Apache Kafka", "RabbitMQ"],
-                devops_sre: ["AWS", "Docker", "Kubernetes", "Prometheus", "Grafana"],
-                ai_systems: ["LLM Agents", "Vector Embeddings", "LangChain"]
-            },
-            protocols: ["HTTP/3", "gRPC", "WebSocket"]
-        },
-        metrics: {
-            status: 200,
-            telemetry: {
-                p99_latency: "11.8ms",
-                cache_hit_ratio: "99.4%",
-                req_per_second: "4.8K req/s",
-                error_rate: "0.001%",
-                sla_availability: "99.99%",
-                cot_speedup: "4.2x"
-            }
-        }
-    };
-
-    /* ==========================================
        17. DISTRIBUTED ARCHITECTURE TOPOLOGY MESH
     ========================================== */
     const topoNodes = document.querySelectorAll('.topo-node');
@@ -3289,6 +3245,28 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         renderLeaderboard(currentCategory, currentSubcategory);
     }, 0);
 
+    // A character in no font the site ships (▲ and ↔ in the leaderboard, বাং, 👋 and → in the chat) makes the browser
+    // search the system's fonts, slowly, the first time it meets it in each font and weight: about 150 ms on a slow
+    // phone, which the first open of the leaderboard or the chat used to pay. These characters are laid out unseen in
+    // the site's fonts a few seconds after load, when the page is idle, so those searches are done when a panel opens.
+    // (Not on the visitor's first touch or scroll: the warm-up then landed in that tap's own frame and slowed the menu.)
+    const warmFallbackFonts = () => {
+        const probe = document.createElement('div');
+        probe.setAttribute('aria-hidden', 'true');
+        probe.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;white-space:nowrap';
+        probe.innerHTML = ['Poppins', "'Fira Code',monospace"].map((f) => [400, 600, 700]
+            .map((w) => `<span style="font-family:${f};font-weight:${w}">▲↔→👋বাং</span>`).join('')).join('');
+        document.body.appendChild(probe);
+        void probe.offsetWidth;
+        probe.remove();
+    };
+    const warmLater = () => setTimeout(() => {
+        if ('requestIdleCallback' in window) requestIdleCallback(warmFallbackFonts, { timeout: 3000 });
+        else warmFallbackFonts();
+    }, 3000);
+    if (document.readyState === 'complete') warmLater();
+    else window.addEventListener('load', warmLater, { once: true });
+
     // Pulse update logic (every 60s)
     setInterval(() => {
         if (ARENA_STORE) {
@@ -3308,7 +3286,20 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         };
         syncLeaderboard();
 
+        // Folded and slid out of sight, the panel isn't rendered (.lb-parked, style~): on a computer it otherwise stays
+        // laid out off screen, and its 500-odd elements (25 rows) were restyled with every change, a theme swap above all
+        let parkTimer = 0;
+        const park = () => { if (lbWidget.classList.contains('lb-collapsed')) lbWidget.classList.add('lb-parked'); };
+        park();
+
         function openLeaderboard(fromKeyboard) {
+            clearTimeout(parkTimer);
+            lbWidget.classList.remove('lb-parked');
+            // the rows come one frame after the card (style~, .lb-opening): on a phone the folded panel is not laid out,
+            // and the card and its 25 rows laid out in the tap's own frame made the tap slow. The card is still sliding
+            // in, off to the side, when they appear.
+            lbWidget.classList.add('lb-opening');
+            requestAnimationFrame(() => requestAnimationFrame(() => lbWidget.classList.remove('lb-opening')));
             lbWidget.classList.remove('lb-collapsed', 'lb-closing');
             lbWidget.classList.add('lb-expanded');
             if (lbToggleIcon) {
@@ -3339,6 +3330,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 syncLeaderboard();
                 // focus that was in the panel comes back to the toggle, which shows again once the panel is folded
                 if (hadFocus) lbToggleBtn.focus({ preventScroll: true });
+                clearTimeout(parkTimer);
+                parkTimer = setTimeout(park, 450);   // once it has slid away (0.4 s)
             }, closeDelay);
 
             if (typeof playSound === 'function') playSound('click');

@@ -746,8 +746,6 @@
             if (minutes >= 2) return `You've spent ${minutes} minutes here. Thank you for that.`;
             return null;
         }
-        const CHAT = { cta: 'Ask my AI', action: 'chat' };
-        const TALK = { cta: "Let's talk", href: rootHref + 'contact/' };
         const OPEN = ['Let me open the chat and tell you properly.', 'Opening the chat for that, one sec.', 'Good question. Let me answer it properly in the chat.'];
         const FLOWS = {
             home: () => ({ ask: ['What brings you here today?', 'So, what brings you here?'], replies: [

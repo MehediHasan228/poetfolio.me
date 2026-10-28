@@ -3647,8 +3647,17 @@ def sub_header(slug, title):
 </div>'''
 
 
+# the pages with a Focus or YouTube player of their own (window.FocusPlayer, window.TubeDock: every Library page plays its
+# videos in the dock) load focus.js, the player; every other page loads focus-boot.js, which loads it only when Focus has
+# something to show there (a session to pick up again, or the page sits in the frame of a page that plays). The home page
+# (dash.js) loads it too, from the source
+FOCUS_PAGES = ("library", "library/watch-listen", "library/focus", "library/bookmarks", "library/skills")
+
+
 def page(slug, title, desc, topbar_title, body, cur, show_open=True, show_rail=True):
     head, opening, tail = shell(slug, title, desc, cur)
+    if slug not in FOCUS_PAGES:
+        tail = tail.replace("/focus/focus.js?", "/focus/focus-boot.js?", 1)
     sub_bar = sub_header(slug, topbar_title)
     is_profile = (slug == "profile")
     return f'''{head}<body class="subpage nx-page" data-page="{slug}">{opening}
@@ -4624,10 +4633,46 @@ FX_TAB_ICONS = {
 }
 
 
+# The Focus page's largest paint is the stage photo. focus-page.js used to add it once every script had run, then fade it
+# in, so it came seconds late. Now the head works out which photo it is (the scene of the visitor's saved mix, which
+# focus.js saves with it, or else the mix suggested for the time of day: keep the hour lists and SCENE_OF in step with
+# pick() in focus-page.js and PRESETS in focus.js) and preloads it, and the stage starts with it in place, already shown. One size
+# per screen: 800 px wide on phones, where a dark gradient covers it, 1600 px elsewhere. With no answer (a saved mix from
+# before, storage blocked), the stage waits for focus-page.js as before.
+FX_FIRST_HEAD = """<script>
+(function () {
+  var SCENE_OF = { deep: 'hills', monsoon: 'monsoon', cha: 'teastall', coding: 'desk', village: 'village', river: 'river', train: 'train',
+    study: 'library', forest: 'forest', coxs: 'beach', cozy: 'hearth', cafe: 'cafe', storm: 'storm', starship: 'space' };
+  var st = null, key = null;
+  try { st = JSON.parse(localStorage.getItem('focus:v1')); } catch (e) {}
+  if (st && st.mix && Object.keys(st.mix).length) key = st.scene || null;
+  else {
+    var now = new Date(), h = now.getHours();
+    var ids = h < 5 ? ['train', 'coding', 'starship'] : h < 9 ? ['forest', 'river', 'coxs'] : h < 12 ? ['deep', 'study', 'cafe']
+      : h < 17 ? ['cha', 'study', 'cafe'] : h < 20 ? ['cha', 'cozy', 'river'] : ['coding', 'village', 'train'];
+    var list = now.getMonth() >= 5 && now.getMonth() <= 8 && h >= 12 ? ['monsoon'].concat(ids) : ids;
+    var day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
+    key = SCENE_OF[list[day % list.length]];
+  }
+  if (!key || !/^[a-z]+$/.test(key)) return;
+  var src = '/focus/scenes/' + key + '-' + (matchMedia('(max-width: 767px)').matches ? 800 : 1600) + '.webp?v=2';
+  window.fxFirstScene = { key: key, src: src };
+  var l = document.createElement('link');
+  l.rel = 'preload'; l.as = 'image'; l.href = src; l.setAttribute('fetchpriority', 'high');
+  document.head.appendChild(l);
+})();
+</script>"""
+# right after the stage's photo box: the photo from the head, shown at once (is-on is set before its first style, so it
+# doesn't fade in); focus-page.js finds it there by its data-scene
+FX_FIRST_IMG = ("<script>(function () { var f = window.fxFirstScene, box = document.currentScript.previousElementSibling; if (!f || !box) return;"
+                " var i = document.createElement('img'); i.alt = ''; i.className = 'is-on'; i.dataset.scene = f.key;"
+                " i.setAttribute('fetchpriority', 'high'); i.src = f.src; box.appendChild(i); })();</script>")
+
+
 def library_focus():
     fa = lambda n: f'<i class="fa-solid fa-{n}" aria-hidden="true"></i>'
     stage = (f'<div class="fx-stage" role="region" aria-labelledby="fx-title-h">'
-             f'<div class="fx-scenes" data-scenes data-sizes="(max-width: 767px) 100vw, 1120px" aria-hidden="true"></div>'
+             f'<div class="fx-scenes" data-scenes data-sizes="(max-width: 767px) 100vw, 1120px" aria-hidden="true"></div>{FX_FIRST_IMG}'
              f'<canvas class="fx-viz" id="fx-viz-canvas" hidden aria-hidden="true"></canvas>'
              f'<div class="fx-stage-in">'
              f'<p class="fx-state" id="fx-state">Ready to play</p><h2 class="fx-title" id="fx-title-h"><span id="fx-title">Focus</span></h2>'
@@ -4685,6 +4730,8 @@ def library_focus():
             f'</div>{LIB_JS}<script src="../focus/focus-page.js?v=36" defer></script>')
     html_out = page("library/focus", "Focus · Library", "Ambient sounds, Quran radio and a focus timer that keep playing while you browse.",
                     "Library", body, "library", show_rail=False)
+    # after the viewport meta, so a phone is measured at its own width
+    html_out = re.sub(r'(<meta name="viewport"[^>]*>)', lambda m: m.group(1) + "\n    " + FX_FIRST_HEAD, html_out, count=1)
     return two_deep(html_out)
 
 

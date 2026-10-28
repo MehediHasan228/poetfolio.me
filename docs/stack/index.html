@@ -39,10 +39,6 @@
     <style>
     @font-face{font-family:'Fira Code';font-style:normal;font-weight:400 600;font-display:swap;src:url(/vendor/fonts/fira-code-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
     @font-face{font-family:'Fira Code';font-style:normal;font-weight:400 600;font-display:swap;src:url(/vendor/fonts/fira-code-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;src:url(/vendor/fonts/inter-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-    @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;src:url(/vendor/fonts/inter-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400 800;font-display:swap;src:url(/vendor/fonts/plus-jakarta-sans-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
-    @font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400 800;font-display:swap;src:url(/vendor/fonts/plus-jakarta-sans-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
     @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/poppins-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
     @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/poppins-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
     @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/vendor/fonts/poppins-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
@@ -54,7 +50,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=34bad986bc">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=7b5870dc1e">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -240,7 +236,7 @@
     <!-- ==========================================
          FLOATING AI LEADERBOARD WIDGET
     ========================================== -->
-    <div id="leaderboard-widget" class="lb-collapsed">
+    <div id="leaderboard-widget" class="lb-collapsed lb-parked">
         <button type="button" class="lb-toggle hover-sound" aria-label="Open AI leaderboard" aria-expanded="false" aria-controls="lb-panel">
             <span class="lb-telemetry-bars" id="lb-toggle-icon" aria-hidden="true">
                 <span class="lb-bar lb-bar-1"></span>
@@ -335,9 +331,9 @@
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../focus/focus.js?v=936ff0f26d" defer></script>
-    <script src="../ai-orb-mascot.js?v=9117886cd3" defer></script>
-    <script src="../script~9e1709.js?v=a436239b50" defer></script>
+    <script src="../focus/focus-boot.js?v=0d8852d1a8" defer></script>
+    <script src="../ai-orb-mascot.js?v=d987e524cd" defer></script>
+    <script src="../script~9e1709.js?v=1785345a39" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

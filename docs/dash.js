@@ -450,7 +450,6 @@
     if (yt) {
         const tracks = JSON.parse(yt.dataset.tracks).map((x) => Object.assign({}, x, {av: x.av ? new URL(x.av, location.href).href : ''}));
         const screen = yt.querySelector('.dash-yt-screen');
-        const toggle = yt.querySelector('[data-yt="toggle"]');
         let cur = 0, mode = 'idle';   // in the tile: idle (no video), playing, paused
         let dock = null;
         try {

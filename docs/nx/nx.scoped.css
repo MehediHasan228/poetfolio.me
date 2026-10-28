@@ -37,7 +37,7 @@
 .nx {
     --brand-soft: rgba(var(--brand-rgb), .14);
     --shadow-btn: 0 0 0 4px rgba(var(--brand-rgb), .14), 0 8px 22px -6px rgba(var(--brand-rgb), .55), inset 0 1px 6px rgba(255, 255, 255, .22);
-    --font: 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 .nx *, .nx *::before, .nx *::after { box-sizing: border-box; }
 .nx { scroll-behavior: smooth; }
@@ -51,28 +51,18 @@
 .nx :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
 .nx .shell { display: flex; max-width: 1400px; margin: 0 auto; }
 .nx .brand { display: flex; align-items: center; gap: 10px; height: 70px; padding: 0 8px; }
-.nx .brand-mark { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; font-weight: 900; font-size: 18px; letter-spacing: -.05em; color: var(--on-brand); background: var(--grad); box-shadow: var(--shadow-btn); transition: transform .2s; }
-.nx .brand:hover .brand-mark { transform: rotate(-4deg); }
 .nx .menu { margin-top: 12px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
 .nx .menu a { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 12px; font-size: 18px; transition: background .15s; }
 .nx .menu a:hover { background: var(--surface-2); }
 .nx .menu a[aria-current="page"] { background: var(--surface-2); font-weight: 700; }
 .nx .menu svg { width: 24px; height: 24px; flex-shrink: 0; transition: transform .15s; }
 .nx .menu a:active svg { transform: scale(.9); }
-.nx .side-foot { display: flex; flex-direction: column; gap: 12px; padding: 0 8px; }
-.nx .round-btns { display: flex; gap: 8px; }
 .nx .round { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--line); transition: background .15s, transform .15s; }
 .nx .round:hover { background: var(--surface-3); }
 .nx .round:active { transform: scale(.93); }
 .nx .round svg { width: 18px; height: 18px; }
 .nx .copy { font-size: 14px; color: var(--ink-3); }
 .nx .main { flex: 1; min-width: 0; border-left: 1px solid var(--line); border-right: 1px solid var(--line); padding-bottom: 0; }
-.nx .topbar { position: sticky; top: 0; z-index: 20; height: 74px; display: flex; align-items: center; gap: 12px; padding: 0 24px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(12px); }
-.nx .topbar h1 { font-size: 20px; font-weight: 600; letter-spacing: -.01em; flex: 1; }
-.nx .top-id { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
-.nx .top-id img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px var(--line); }
-.nx .top-id b { display: flex; align-items: center; gap: 4px; font-size: 16px; }
-.nx .top-id small { display: block; font-size: 14px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nx .verified { width: 18px; height: 18px; color: var(--brand); flex-shrink: 0; }
 .nx .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 18px; height: 40px; border-radius: 11px; font-weight: 600; font-size: 16px; white-space: nowrap; transition: transform .15s, filter .15s, background .15s; }
 .nx .btn:active { transform: scale(.97); }
@@ -116,29 +106,19 @@
 .nx .sec-title { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 600; margin: 0 0 16px; }
 .nx .sec-title svg { width: 24px; height: 24px; }
 .nx .prose p { color: var(--ink-2); margin-bottom: 14px; }
-.nx .cards3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 28px; }
 .nx .card { padding: 20px; border-radius: 20px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
 .nx .card h4 { font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 10px; }
 .nx .card .big { font-size: 20px; font-weight: 600; }
-.nx .card .sm { color: var(--ink-3); font-size: 15px; margin-top: 6px; }
 .nx .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 .nx .chip { padding: 2px 10px; border-radius: 8px; font-size: 13px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink-2); }
 .nx .exp { margin-top: 36px; display: flex; flex-direction: column; gap: 20px; }
-.nx .exp-item { padding: 22px; border-radius: 20px; box-shadow: inset 0 0 0 1px var(--line); }
-.nx .exp-item h3 { font-size: 20px; }
 .nx .exp-meta { color: var(--ink-3); font-size: 15px; margin: 2px 0 10px; }
-.nx .exp-item li { margin: 6px 0; color: var(--ink-2); padding-left: 18px; position: relative; }
-.nx .exp-item li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
 .nx .metrics { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
-.nx .metric { padding: 10px 16px; border-radius: 14px; background: var(--brand-soft); }
-.nx .metric b { display: block; font-size: 20px; color: var(--link); }
-.nx .metric span { font-size: 13px; color: var(--ink-3); }
 .nx .grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 .nx .proj { display: flex; flex-direction: column; padding: 6px; border-radius: 28px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); transition: transform .2s, box-shadow .2s; }
 @media (hover: hover) and (pointer: fine){.nx .proj:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--brand), 0 18px 40px -22px rgba(var(--brand-rgb), .6); }}
 .nx .proj-cover { position: relative; height: 168px; border-radius: 22px; display: grid; place-items: center; overflow: hidden; background: radial-gradient(120% 120% at 20% 0%, var(--pc-1) 0%, var(--pc-2) 45%, var(--pc-3) 100%); }
 .nx .proj-cover::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255, 255, 255, .12) 1px, transparent 1px); background-size: 14px 14px; }
-.nx .proj-tile { position: relative; z-index: 1; width: 104px; height: 84px; border-radius: 20px; display: grid; place-items: center; font-size: 34px; color: #fff; background: rgba(255, 255, 255, .14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); backdrop-filter: blur(6px); }
 .nx .badge { position: absolute; z-index: 2; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--link); background: rgba(0, 0, 0, .55); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); }
 .nx .proj-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .nx .proj-body h3 { font-size: 18px; font-weight: 600; }
@@ -729,7 +709,6 @@
 }
 @media (max-width: 1199px){.nx .rail { display: none; }}
 @media (max-width: 767px){.nx .main { border: 0; padding-bottom: 84px; }
-.nx .topbar { display: none; }
 .nx .bottom-nav { position: fixed; z-index: 1000; left: 0; right: 0; bottom: 0; width: 100%; display: flex; justify-content: space-around; align-items: center; padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 8px)) 6px; border-radius: 0; border-top: 1px solid var(--line); background: color-mix(in srgb, var(--card-bg, var(--surface)) 88%, transparent); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.22); }
 .nx .bottom-nav a { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-width: 0; gap: 3px; padding: 6px 4px; border-radius: 12px; font-size: 11px; font-weight: 500; color: var(--text-color, var(--ink-3)); text-decoration: none; transition: background 0.2s, color 0.2s, transform 0.15s; }
 .nx .bottom-nav a svg { width: 22px; height: 22px; flex-shrink: 0; }
@@ -744,48 +723,24 @@
 .nx { scroll-behavior: auto; }}
 .nx .pad { max-width: 860px; margin-inline: auto; }
 .nx .pad .panel, .nx .pad .exp, .nx .pad .prose { max-width: 760px; margin-inline: auto; }
-.nx .pad .cards3 { max-width: 760px; margin-inline: auto; }
 .nx .pad > .lead { text-align: center; max-width: 620px; margin-inline: auto; }
 .nx .filters { justify-content: center; }
-.nx .topbar { padding-inline: max(24px, calc((100% - 860px) / 2)); }
 .nx .theme-btn i { font-size: 15px; }
 .nx .main { min-width: 0; }
-.nx .topnav-in { max-width: 1180px; margin: 0 auto; height: 72px; padding: 0 24px; display: flex; align-items: center; gap: 24px; }
 .nx .shell { max-width: 1180px; align-items: flex-start; }
 .nx .main { border-left: 0; border-right: 0; }
-.nx .topbar { top: 72px; }
 .nx .rail { top: 72px; max-height: calc(100dvh - 72px); }
 .nx .rail-top { display: none; }
 .nx .rail-body { padding-top: 28px; }
-.nx .topbar { padding-inline: 24px; }
 @media (max-width: 1239px){.nx .rail { display: none; }}
-@media (max-width: 860px){.nx .topnav-in { height: 60px; }
-.nx .topbar { top: 60px; }}
-@media (max-width: 767px){.nx .topbar { display: flex; height: 60px; }}
-.nx .exp-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
-.nx .exp-id { flex: 1; min-width: 0; }
-.nx .exp-head .exp-meta { margin: 2px 0 0; }
-.nx .logo-sq { flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-weight: 700; font-size: 15px; color: var(--link); background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .3); }
-.nx .exp-date { flex-shrink: 0; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; padding-top: 4px; text-align: right; }
-.nx .exp-date .now { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--link); background: var(--brand-soft); }
-.nx .exp-item ul { margin-top: 4px; }
-.nx .exp-item .chips { margin-top: 14px; }
-.nx .big-metrics { margin: 24px 0 0; }
-.nx .big-metrics .metric { flex: 1 1 150px; }
+@media (max-width: 860px){}
 .nx .sk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
 .nx .sk { padding: 18px; border-radius: 18px; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface); }
 .nx .sk h4 { font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin: 0 0 4px; }
 .nx .edu { display: flex; align-items: center; gap: 14px; padding: 18px 22px; border-radius: 20px; box-shadow: inset 0 0 0 1px var(--line); }
 .nx .edu h3 { font-size: 18px; }
 .nx .edu .exp-meta { margin: 2px 0 0; }
-.nx .certs { display: grid; gap: 10px; }
-.nx .certs li { display: flex; gap: 14px; align-items: center; padding: 14px 18px; border-radius: 16px; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface); }
-.nx .certs li > i { color: var(--link); font-size: 18px; width: 22px; text-align: center; }
-.nx .certs b { display: block; font-weight: 600; font-size: 15px; }
-.nx .certs small { color: var(--ink-3); font-size: 13px; }
 .nx .empty { text-align: center; padding: 44px 16px 28px; display: grid; justify-items: center; gap: 10px; }
-.nx .empty-ico { width: 60px; height: 60px; border-radius: 18px; display: grid; place-items: center; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
-.nx .empty-ico svg { width: 28px; height: 28px; }
 .nx .empty h2 { font-size: 22px; font-weight: 600; }
 .nx .empty p { color: var(--ink-3); max-width: 420px; }
 .nx .empty .btn { margin-top: 8px; }
@@ -810,9 +765,7 @@
 .nx .reach-card .arr { color: var(--ink-3); font-size: 13px; }
 .nx .svc-card .btn { width: auto; }
 @media (max-width: 767px){.nx .reach { grid-template-columns: 1fr; }
-.nx .svc { grid-template-columns: 1fr; }
-.nx .exp-head { flex-wrap: wrap; }
-.nx .exp-date { text-align: left; padding-left: 60px; width: 100%; }}
+.nx .svc { grid-template-columns: 1fr; }}
 .nx .svc { grid-template-columns: repeat(3, 1fr); }
 .nx .svc-card .btn { font-size: 14px; }
 @media (max-width: 900px){.nx .svc { grid-template-columns: 1fr; }}

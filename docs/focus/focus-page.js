@@ -56,6 +56,11 @@
         const typing = (el) => el && (/^(input|textarea|select)$/i.test(el.tagName) || el.isContentEditable);
         const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
         const coarse = matchMedia('(pointer: coarse)').matches;
+        /* this page is for listening: the audio engine is made while the page is idle (FP.warm), so the first play,
+           preset or next/previous doesn't wait for the browser to start its audio service */
+        const warm = () => { if (FP.warm) FP.warm(); };
+        const warmLater = () => setTimeout(() => { if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 3000 }); else warm(); }, 2000);
+        if (document.readyState === 'complete') warmLater(); else addEventListener('load', warmLater, { once: true });
         const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return u; } };
         const commons = (file) => 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(file);
 

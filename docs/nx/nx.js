@@ -1,8 +1,4 @@
 (function () {
-    var root = document.documentElement;
-    function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-    function set(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
-
     // theme is handled by the shared site script (palette button, key mehedi_theme)
     document.addEventListener('click', function (e) {
         var share = e.target.closest('[data-share]');
