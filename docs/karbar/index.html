@@ -37,7 +37,9 @@
                         radial-gradient(circle at 85% 20%, rgba(0, 242, 254, 0.12), transparent 40%),
                         var(--bg);
             color: var(--text);
-            font-family: 'Plus Jakarta Sans', 'Hind Siliguri', system-ui, sans-serif;
+            /* system-ui before Hind Siliguri: while Plus Jakarta Sans loads, Latin text waits in a font of similar width
+               instead of Hind's narrower Latin, which rewrapped the heading and moved the page. Bangla still reaches Hind. */
+            font-family: 'Plus Jakarta Sans', system-ui, 'Hind Siliguri', sans-serif;
             line-height: 1.6;
             min-height: 100vh;
         }
@@ -69,12 +71,18 @@
         @keyframes pulse { 50% { opacity: 0.4; } }
 
         .actions { display: flex; flex-wrap: wrap; gap: 12px; }
-        .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 12px; font-weight: 700; text-decoration: none; border: 1px solid var(--border); transition: transform 0.15s, box-shadow 0.15s; }
+        /* A fixed number of hero buttons per row, so font and icon loading can't rewrap the row and move the page */
+        .hero .actions { display: grid; grid-template-columns: repeat(2, max-content); justify-items: start; }
+        .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 12px; font: inherit; font-weight: 700; color: inherit; text-decoration: none; border: 1px solid var(--border); transition: transform 0.15s, box-shadow 0.15s; }
         .btn:hover { transform: translateY(-2px); }
         .btn.primary { background: linear-gradient(135deg, var(--indigo), #06b6d4); border: none; box-shadow: 0 10px 30px rgba(79, 70, 229, 0.35); }
-        .btn.primary[aria-disabled="true"] { opacity: 0.45; pointer-events: none; }
+        .btn.primary:disabled { opacity: 0.45; pointer-events: none; }
         .btn.ghost { background: var(--card); }
-        .note { color: var(--muted); font-size: 0.85rem; margin-top: 14px; }
+        .note { display: grid; color: var(--muted); font-size: 0.85rem; margin-top: 14px; }
+        /* Both wordings share one cell, so the note is always as tall as the longer one */
+        .note > span { grid-area: 1 / 1; }
+        .note .if-offline, .note.offline .if-ready { visibility: hidden; }
+        .note.offline .if-offline { visibility: visible; }
 
         .mock { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; backdrop-filter: blur(8px); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }
         .mock-bar { display: flex; gap: 6px; margin-bottom: 14px; }
@@ -110,6 +118,16 @@
             .hero { grid-template-columns: 1fr; padding-top: 16px; }
             .grid { grid-template-columns: 1fr; }
         }
+        @media (min-width: 700px) and (max-width: 860px) {
+            .hero .actions { grid-template-columns: repeat(3, max-content); }
+        }
+        @media (max-width: 459px) {
+            .hero .actions { grid-template-columns: max-content; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .status.live .dot { animation: none; }
+            .btn { transition: none; }
+        }
     </style>
 </head>
 <body>
@@ -129,12 +147,12 @@
                 <p class="tagline">Accounting, NBR VAT (Mushak), payroll, inventory, sales, purchase and projects — one system, fully in Bangla.</p>
                 <p class="tagline bn">হিসাব, মূসক ভ্যাট, বেতন, মজুদ, বিক্রয়-ক্রয় আর প্রকল্প — সব এক জায়গায়, সম্পূর্ণ বাংলায়।</p>
 
-                <div id="status" class="status"><span class="dot"></span><span id="status-text">Checking live demo…</span></div>
+                <div id="status" class="status" role="status"><span class="dot"></span><span id="status-text">Checking live demo…</span></div>
 
                 <div class="actions">
-                    <a id="demo-btn" class="btn primary" href="#" aria-disabled="true" target="_blank" rel="noopener">
+                    <button id="demo-btn" class="btn primary" type="button" disabled>
                         <i class="fa-solid fa-play"></i> Open Live Demo
-                    </a>
+                    </button>
                     <a class="btn ghost" href="https://github.com/MehediHasan228/karbar-erp" target="_blank" rel="noopener">
                         <i class="fa-brands fa-github"></i> GitHub Repo
                     </a>
@@ -142,7 +160,10 @@
                         <i class="fa-brands fa-whatsapp"></i> Get demo login
                     </a>
                 </div>
-                <p class="note">Demo login is shared on request. <span class="bn">ডেমো লগইনের জন্য WhatsApp-এ যোগাযোগ করুন।</span></p>
+                <p id="demo-note" class="note">
+                    <span class="if-ready">Demo login is shared on request. <span class="bn">ডেমো লগইনের জন্য WhatsApp-এ যোগাযোগ করুন।</span></span>
+                    <span class="if-offline">Meanwhile, see the code on GitHub or message me for a walkthrough. <span class="bn">এর মধ্যে GitHub-এ কোড দেখুন, অথবা WhatsApp-এ যোগাযোগ করুন।</span></span>
+                </p>
             </div>
 
             <div class="mock" aria-hidden="true" style="padding: 12px; overflow: hidden;">
@@ -150,7 +171,7 @@
                     <i></i><i></i><i></i>
                     <span style="font-size: 0.72rem; color: var(--muted); margin-left: 8px; font-family: monospace;">admin.karbar.demo / ড্যাশবোর্ড</span>
                 </div>
-                <img src="../karbar_erp_preview.webp" alt="Karbar ERP Live Dashboard" style="width: 100%; height: auto; border-radius: 10px; display: block; box-shadow: 0 12px 35px rgba(0,0,0,0.6);">
+                <img src="../karbar_erp_preview.webp" alt="Karbar ERP Live Dashboard" width="1280" height="800" style="width: 100%; height: auto; border-radius: 10px; display: block; box-shadow: 0 12px 35px rgba(0,0,0,0.6);">
             </div>
         </header>
 
@@ -227,30 +248,40 @@
             const status = document.getElementById('status');
             const text = document.getElementById('status-text');
             const button = document.getElementById('demo-btn');
+            const note = document.getElementById('demo-note');
+            const MAX_AGE = 2 * 24 * 60 * 60 * 1000;
 
             const setOffline = () => {
                 status.className = 'status offline';
-                text.textContent = 'Demo is offline right now — message me for a walkthrough';
+                text.textContent = 'Live demo is offline right now';
+                note.classList.add('offline');
             };
 
             try {
+                // demo.json is { url, updated_at }, written by docker/production/demo-tunnel.sh (karbar-erp) when it starts
+                // a Cloudflare quick tunnel. Every start gets a new address, so an old file names a tunnel that is gone and
+                // asking it would only log a DNS error.
                 const response = await fetch('./demo.json?t=' + Date.now(), { cache: 'no-store' });
-                const { url } = await response.json();
+                const { url, updated_at: updatedAt } = response.ok ? await response.json() : {};
+                const age = Date.now() - Date.parse(updatedAt);
 
-                if (!url) {
+                if (!/^https:\/\//.test(url || '') || !(age < MAX_AGE)) {
                     return setOffline();
                 }
 
+                const base = url.replace(/\/$/, '');
                 const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), 7000);
+                const timer = setTimeout(() => controller.abort(), 4000);
 
-                await fetch(url.replace(/\/$/, '') + '/health', { mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
+                await fetch(base + '/health', { mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
                 clearTimeout(timer);
 
                 status.className = 'status live';
                 text.textContent = 'Live demo is online';
-                button.href = url.replace(/\/$/, '') + '/admin';
-                button.removeAttribute('aria-disabled');
+                const link = Object.assign(document.createElement('a'), {
+                    id: 'demo-btn', className: 'btn primary', href: base + '/admin', target: '_blank', rel: 'noopener', innerHTML: button.innerHTML,
+                });
+                button.replaceWith(link);
             } catch (error) {
                 setOffline();
             }
