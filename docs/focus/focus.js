@@ -583,7 +583,7 @@
     let pill = null, cssDone = false;
     function css() {
         if (cssDone) return; cssDone = true;
-        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=8', BASE).href;
+        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=d36ff42a23', BASE).href;
         document.head.appendChild(l);
     }
     /* the same player as the Focus page's bar: the photo, the name (it opens the mix: each layer's volume and ✕), the volume,
