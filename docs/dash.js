@@ -548,6 +548,33 @@
         setTimeout(() => chat.discuss(), 350);    /* once the chat has opened, as the greeting bubble does */
     });
 
+    // people: one face at a time steps into the spotlight and the line under the orbit names them; hovering or
+    // focusing a face brings that one forward. The turns wait while the pointer is on the orbit, and stay still for
+    // reduced motion
+    const orbit = s.querySelector('.dash-orbit'), spot = s.querySelector('.dash-spot');
+    if (orbit && spot) {
+        const sats = [...orbit.querySelectorAll('.dash-sat')];
+        let at = 0, held = false;
+        const showSpot = (i) => {
+            at = i;
+            sats.forEach((x, k) => x.classList.toggle('is-spot', k === i));
+            spot.querySelector('b').textContent = sats[i].dataset.name;
+            spot.querySelector('span').textContent = sats[i].dataset.role;
+            if (!still) { spot.classList.remove('is-swap'); void spot.offsetWidth; spot.classList.add('is-swap'); }
+        };
+        sats.forEach((x, i) => { x.addEventListener('pointerenter', () => showSpot(i)); x.addEventListener('focus', () => showSpot(i)); });
+        orbit.addEventListener('pointerenter', () => { held = true; });
+        orbit.addEventListener('pointerleave', () => { held = false; });
+        orbit.addEventListener('focusin', () => { held = true; });
+        orbit.addEventListener('focusout', () => { held = false; });
+        orbit.classList.add('has-spot');
+        showSpot(0);
+        if (!still) setInterval(() => {
+            if (held || document.hidden || !s.classList.contains('is-onscreen')) return;
+            showSpot((at + 1) % sats.length);
+        }, 3000);
+    }
+
     // career and library: a legend row and its piece of the chart light each other
     s.querySelectorAll('.dash-career, .dash-library').forEach((tile) => {
         const light = (k) => {

@@ -973,7 +973,8 @@ body.nx-page[data-page="profile"] .nx .rail {
 /* Experience timeline on profile */
 .exp-modern { display: flex; flex-direction: column; gap: 0; margin-top: 16px; }
 .exp-item-modern { display: flex; gap: 24px; position: relative; text-align: left; }
-#experience, #tools, .exp-item-modern[id] { scroll-margin-top: 110px; }   /* links from the dashboard land clear of the top bar */
+#experience, #tools, .exp-item-modern[id], .person[id] { scroll-margin-top: 110px; }
+.person:target { box-shadow: 0 0 0 2px var(--brand), 0 18px 40px -24px rgba(var(--brand-rgb), .6); }   /* links from the dashboard land clear of the top bar */
 .exp-timeline { display: flex; flex-direction: column; align-items: center; width: 48px; flex-shrink: 0; }
 .exp-logo-box { width: 48px; height: 48px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; position: relative; z-index: 2; }
 .status-dot { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; background: var(--brand); border: 2px solid var(--bg); border-radius: 50%; }
@@ -4484,6 +4485,17 @@ def nl_shelf(c):
             f'<div class="nl-shelf-row">{"".join(nl_video(v) for v in c["videos"])}</div></div>')
 
 
+def person_anchor(name):
+    """The id of a person's card on the People page (p-andrej-karpathy), for links from the home dashboard."""
+    return "p-" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")[:40]
+
+
+def short_role(bio):
+    """A bio's first clause, for one line under the home dashboard's orbit (Founder of Laracasts, AI researcher)."""
+    s = re.split(r"[,:;]", bio or "")[0].strip()
+    return re.split(r" and ", s)[0].strip() if len(s) > 34 else s
+
+
 def job_anchor(company):
     """The id of a job on the profile (exp-jibika-intelligic-ltd), for links from other pages."""
     return "exp-" + re.sub(r"[^a-z0-9]+", "-", company.lower()).strip("-")[:40]
@@ -4912,7 +4924,7 @@ def people():
         btn = (f'<a class="btn btn-secondary btn-sm" href="{url}" target="_blank" rel="noopener noreferrer">Follow <i class="fa-solid fa-arrow-up-right-from-square"></i></a>'
                if url else '<span class="tag role">Reference</span>')
         quote = f'<p class="why"><i class="fa-solid fa-quote-left"></i> {e(why)}</p>' if why else ""
-        cards += (f'<article class="person" data-platform="{plat}"><div class="p-head"><span class="av p-img" style="background-image:url({ini})"><span class="plat">{badge_svg(plat)}</span></span>'
+        cards += (f'<article class="person" id="{person_anchor(name)}" data-platform="{plat}"><div class="p-head"><span class="av p-img" style="background-image:url({ini})"><span class="plat">{badge_svg(plat)}</span></span>'
                   f'<div class="p-id"><b>{e(name)}</b><small>{e(handle)} &middot; {plat}</small></div>{btn}</div>'
                   f'<p>{e(bio)}</p>{quote}<div class="tag-row">{tg}</div></article>')
     fl = f'<button class="fchip" data-filter="all" aria-pressed="true">All<em>{len(PEOPLE)}</em></button>' + "".join(
@@ -4976,11 +4988,12 @@ CSS_VER = "0"  # set in main() from the stylesheet content, so browsers never re
 DASH_SHORT = {"SAWAB Bangladesh": "SAWAB", "Jibika Intelligic Ltd.": "Jibika", "Smart Software Limited": "Smart Software",
               "HBIZZ Group Company": "HBIZZ", "Tafseerul Quran Foundation (TQF)": "TQF"}
 DASH_TOOLS = 5   # tools the Stack tile shows per area
+DASH_PEOPLE_SKIP = {"Taylor Otwell"}   # left out of the People tile's orbit (the owner's choice); still on the People page
 DASH_AREA = {"Core stack": "Core", "AI & agents": "AI", "AI-assisted development": "AI dev",
              "Data & streaming": "Data", "Infra & observability": "Infra"}
 # the dashboard's script: reveals and counts once in view, runs the loops only while seen, and the projects,
 # stack, career and library interactions
-DASH_JS = '<script src="./dash.js?v=24" defer></script>'
+DASH_JS = '<script src="./dash.js?v=25" defer></script>'
 
 
 def home_dashboard():
@@ -5133,12 +5146,15 @@ def home_dashboard():
              f'<p class="dash-ask-hint"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>Tap a tool to ask my AI how I use it</p>'
              f'{more("./profile/#tools", "See every tool")}</article>')
 
-    # people: faces in orbit around the count
-    shown = PEOPLE[:8]
-    orbit = "".join(f'<span class="dash-sat" style="--a:{i * 360 / len(shown):.0f}deg"><img src="{root(p[0])}" alt="" '
-                    f'width="34" height="34" loading="lazy" decoding="async" title="{e(p[1])}"></span>' for i, p in enumerate(shown))
+    # people: faces in orbit around the count, each a link to its card on the People page. One at a time steps into the
+    # spotlight and the line under the orbit names them (dash.js)
+    shown = [p for p in PEOPLE if p[1] not in DASH_PEOPLE_SKIP][:10]
+    orbit = "".join(f'<a class="dash-sat" href="./people/#{person_anchor(p[1])}" style="--a:{i * 360 / len(shown):.0f}deg" '
+                    f'data-name="{e(p[1])}" data-role="{e(short_role(p[5]))}" aria-label="{e(p[1])}, {e(short_role(p[5]))}">'
+                    f'<img src="{root(p[0])}" alt="" width="34" height="34" loading="lazy" decoding="async"></a>' for i, p in enumerate(shown))
     people = (f'<article class="dash-tile dash-people">{head(ico("people"), "People")}'
               f'<div class="dash-orbit"><div class="dash-orbit-ring">{orbit}</div><span class="dash-orbit-core"><b>{len(PEOPLE)}</b>people</span></div>'
+              f'<p class="dash-spot" aria-hidden="true"><b>{e(shown[0][1])}</b><span>{e(short_role(shown[0][5]))}</span></p>'
               f'<p class="dash-text">Builders and teachers I learn from, from Laravel to LangGraph.</p>'
               f'{more("./people/", f"See all {len(PEOPLE)} people")}</article>')
 

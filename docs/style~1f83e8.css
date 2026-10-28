@@ -12504,6 +12504,18 @@ html body #about :is(.arch-tech-tag, .arch-matrix-tag) img { width: 16px; height
     color: var(--pf-brand);
 }
 .dash-people .dash-text { text-align: center; }
+/* the spotlight: one face steps forward (scale, which adds to the orbit's spin) and the others step back; the line under
+   the orbit names it */
+a.dash-sat { display: block; border-radius: 50%; }
+a.dash-sat:focus-visible { outline: 2px solid var(--pf-brand); outline-offset: 3px; }
+.dash-sat img { transition: scale 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, opacity 0.35s ease; }
+.dash-orbit.has-spot .dash-sat:not(.is-spot) img { opacity: 0.72; }
+.dash-sat.is-spot { z-index: 1; }
+.dash-sat.is-spot img { scale: 1.28; box-shadow: 0 0 0 2px var(--pf-surface), 0 0 0 4px var(--pf-brand), 0 0 18px var(--pf-glow); }
+.dash-spot { display: grid; gap: 2px; min-height: 42px; margin: -4px 0 10px; text-align: center; }
+.dash-spot b { font-size: 14px; font-weight: 600; color: var(--pf-ink); }
+.dash-spot span { overflow: hidden; font-size: 12.5px; white-space: nowrap; text-overflow: ellipsis; color: var(--pf-ink-3); }
+.dash-spot.is-swap { animation: dash-pop 0.35s ease both; }
 
 /* library: the shelves as one split bar */
 .dash-split {
