@@ -4,6 +4,11 @@
     const s = document.getElementById('overview');
     if (!s) return;
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // site storage can be blocked (then touching it throws): it is read and written only through these
+    const local = {
+        get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+    };
 
     // Dhaka's time in the status line
     const clock = s.querySelector('[data-dash-clock]');
@@ -174,6 +179,7 @@
                 const on = p.dataset.area === i;
                 if (on && p.hidden && !still) p.animate([{opacity: 0, transform: 'translateY(4px)'}, {opacity: 1, transform: 'none'}], {duration: 260, easing: 'ease-out'});
                 p.hidden = !on;
+                p.inert = !on;   // they keep their place (the tile holds one height) but never take Tab or reach a screen reader
             });
             if (keep) btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.area === i)));
         };
@@ -303,8 +309,8 @@
         let viz = null, vizLib = null, vizSet = {}, vizNames = [], vizOn = false, raf = 0, auto = 0, nameT = 0, inView = true;
         let canvas = null, nameEl = null;
         const hist = [];
-        const prefs = () => { try { return JSON.parse(localStorage.getItem(VIZ_KEY)) || {}; } catch (err) { return {}; } };
-        const keep = (o) => { try { localStorage.setItem(VIZ_KEY, JSON.stringify(Object.assign(prefs(), o))); } catch (err) {} };
+        const prefs = () => { try { return JSON.parse(local.get(VIZ_KEY)) || {}; } catch (err) { return {}; } };
+        const keep = (o) => local.set(VIZ_KEY, JSON.stringify(Object.assign(prefs(), o)));
         const script = (src) => new Promise((ok, no) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = no; document.head.appendChild(el); });
         const say = (text, err) => {
             nameEl.textContent = text;
@@ -448,7 +454,7 @@
         let cur = 0, mode = 'idle';   // in the tile: idle (no video), playing, paused
         let dock = null;
         try {
-            const last = JSON.parse(localStorage.getItem('lib:last'));
+            const last = JSON.parse(local.get('lib:last'));
             const at = last ? tracks.findIndex((x) => x.id === last.id) : -1;
             if (at >= 0) cur = at;
         } catch (e) {}
@@ -460,7 +466,7 @@
             const t = tracks[cur];
             screen.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + t.id + '?autoplay=1&rel=0&enablejsapi=1" title="' +
                 t.title.replace(/"/g, '&quot;') + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
-            try { localStorage.setItem('lib:last', JSON.stringify({id: t.id, title: t.title, sub: t.sub, at: Date.now()})); } catch (e) {}
+            local.set('lib:last', JSON.stringify({id: t.id, title: t.title, sub: t.sub, at: Date.now()}));
         };
         const show = () => {
             let t = tracks[cur], state = mode;

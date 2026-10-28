@@ -24,7 +24,7 @@ The Worker also does five things:
 
 Replies stream back as OpenAI-style SSE. The model can end a reply with `[[src:/page/]]` and `[[act:cv|whatsapp|email|projects|contact]]` tags. The site turns these into source links and buttons.
 
-If the Worker is unreachable, the chat falls back to Pollinations. Then it answers from the site's own knowledge file: it says the AI is on a break and quotes the matching lines.
+If the Worker is unreachable, the chat answers from the site's own knowledge file. It quotes the matching lines under a note that the AI is offline, with WhatsApp and email links, and the header says "Offline" until the Worker answers again.
 
 ## Add a free Gemini key
 

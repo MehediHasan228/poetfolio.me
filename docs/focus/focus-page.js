@@ -5,6 +5,11 @@
  */
 (function () {
     'use strict';
+    /* site storage can be blocked (then touching it throws): it is read and written only through these */
+    const local = {
+        get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+    };
     const LINES = [
         'Start with the smallest piece you can finish before the tea goes cold.',
         'Write the ugly first draft. Polish is a second pass.',
@@ -220,7 +225,7 @@
                 $('fx-panel-' + t.dataset.tab).hidden = !on;
                 if (on && focus) t.focus();
             });
-            try { localStorage.setItem(TAB, name); } catch (e) {}
+            local.set(TAB, name);
         }
         libTabs.forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
         $('fx-lib').querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
@@ -232,7 +237,7 @@
         const counts = { sounds: FP.SOUNDS.length, radio: FP.STATIONS.length };
         document.querySelectorAll('[data-count]').forEach((b) => { b.textContent = counts[b.dataset.count]; });
         showTab((() => {
-            try { const t = localStorage.getItem(TAB); if (t && $('fx-panel-' + t)) return t; } catch (e) {}
+            const t = local.get(TAB); if (t && $('fx-panel-' + t)) return t;
             const s = FP.state(); return s.radio && !Object.keys(s.mix).length ? 'radio' : 'sounds';     /* first visit: what is playing, else sounds */
         })());
         /* on desktop the tab row sticks under the header: its offset is measured, the header differs by width */
@@ -375,7 +380,7 @@
             + `<button type="button" class="fx-text-btn" id="fx-share">${ico('link')}<span>Share</span></button>`
             + `<button type="button" class="fx-text-btn" id="fx-clear">${ico('trash-can')}<span>Clear all</span></button></div>`
             + '<ul class="fx-layers" id="fx-layers"></ul></div>'
-            + '<div class="fx-bar" id="fx-bar" role="region" aria-label="Player">'
+            + '<div class="fx-bar" id="fx-bar" role="region" aria-label="Player" inert>'
             + '<button type="button" class="fx-thumb" id="fx-thumb" aria-label="Open the focus view" title="Focus view (V)">'
             + `<span class="fx-scenes" data-scenes data-sizes="56px" aria-hidden="true"></span><span class="fx-thumb-over">${ico('expand')}</span></button>`
             + '<button type="button" class="fx-now" id="fx-now" aria-expanded="false" aria-controls="fx-mixer"><span class="fx-now-text"><b id="fx-name"></b>'
@@ -407,6 +412,7 @@
         function dock() {
             const up = page.hasAttribute('data-mixed') && (past || !mixerEl.hidden);
             page.toggleAttribute('data-bar', up);
+            $('fx-bar').inert = !up;   /* down, it is out of sight, so Tab passes it by */
             const clash = up && !!orb && orb.classList.contains('chat-collapsed') && meets(orbBox(), $('fx-dock').getBoundingClientRect(), 8);
             document.documentElement.classList.toggle('fx-orb-yields', clash);
         }
@@ -599,8 +605,8 @@
 
         /* ---- visualizer: Milkdrop presets (butterchurn, MIT), loaded the first time it is switched on; it hears the sounds and the radio ---- */
         const VIZ = 'focus:viz', CDN = 'https://cdn.jsdelivr.net/npm/', canvas = $('fx-viz-canvas');
-        const vizPrefs = () => { try { return JSON.parse(localStorage.getItem(VIZ)) || {}; } catch (e) { return {}; } };
-        const vizKeep = (o) => { try { localStorage.setItem(VIZ, JSON.stringify(Object.assign(vizPrefs(), o))); } catch (e) {} };
+        const vizPrefs = () => { try { return JSON.parse(local.get(VIZ)) || {}; } catch (e) { return {}; } };
+        const vizKeep = (o) => local.set(VIZ, JSON.stringify(Object.assign(vizPrefs(), o)));
         const script = (src) => new Promise((ok, no) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = no; document.head.appendChild(el); });
         let viz = null, vizLib = null, vizPresets = {}, vizNames = [], vizRaf = 0, vizOn = false, vizNameT = 0;
         function vizSay(text, err) {
@@ -770,9 +776,9 @@
         /* ---- radio: one grid of reciters (eight in sight, the rest behind "more"), the Quran with Bangla meaning as its own grid,
            the visitor's own streams from a quiet "+". Cards carry a name and nothing else until they play ---- */
         const radioBox = $('fx-radio'), STN = 'focus:stations', MORE = 'focus:more';
-        const myStations = () => { try { return JSON.parse(localStorage.getItem(STN)) || []; } catch (e) { return []; } };
-        const keepStations = (list) => { try { localStorage.setItem(STN, JSON.stringify(list.slice(0, 12))); } catch (e) {} };
-        const moreOpen = () => { try { return localStorage.getItem(MORE) === '1'; } catch (e) { return false; } };
+        const myStations = () => { try { return JSON.parse(local.get(STN)) || []; } catch (e) { return []; } };
+        const keepStations = (list) => local.set(STN, JSON.stringify(list.slice(0, 12)));
+        const moreOpen = () => local.get(MORE) === '1';
         const station = (x, opts) => {
             const o = opts || {}, tint = x.group === 'bn' ? 'bn' : o.own ? 'noise' : 'quran';
             const label = x.group === 'bn' ? x.name.replace(/, Bangla$/, '') : x.name.replace(/^Muhammad Siddiq /, '');      /* fits two lines on a phone */
@@ -824,7 +830,7 @@
         }
         function showMoreLabel(open, n) { return open ? `<span>Fewer</span>${ico('chevron-up')}` : `<span>${n} more reciters</span>${ico('chevron-down')}`; }
         function showMore(open) {
-            try { localStorage.setItem(MORE, open ? '1' : '0'); } catch (e) {}
+            local.set(MORE, open ? '1' : '0');
             const btn = $('fx-showmore'), head = btn.getBoundingClientRect().top;
             radioBox.querySelectorAll('.fx-st-more-item').forEach((li) => { li.hidden = !open; });
             btn.setAttribute('aria-expanded', String(open)); btn.innerHTML = showMoreLabel(open, inGroup('more').length);

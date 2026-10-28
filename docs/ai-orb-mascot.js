@@ -12,6 +12,11 @@
  */
 
 (function () {
+    /* site storage can be blocked (then touching it throws): it is read and written only through these. ss lasts the
+       visit (this tab), ls the browser */
+    const ss = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+    const ls = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+
     const ORB_SVG_TEMPLATE = `
 <svg class="ai-orb-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
@@ -429,11 +434,11 @@
             ['.sk', 'skills']
         ];
         let st;
-        try { st = JSON.parse(sessionStorage.getItem(KEY)); } catch (e) { st = null; }
+        try { st = JSON.parse(ss.get(KEY)); } catch (e) { st = null; }
         if (!st || typeof st !== 'object') st = {};
         st.dwell = st.dwell || {}; st.kind = st.kind || {}; st.revisits = st.revisits || {}; st.chips = st.chips || {};
         st.clicks = st.clicks || {}; st.pages = st.pages || []; st.scroll = st.scroll || { fast: 0, slow: 0, back: 0 }; st.revAt = st.revAt || {};
-        const save = () => { try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+        const save = () => ss.set(KEY, JSON.stringify(st));
         let started = false;
 
         function label(el, kind) {
@@ -543,7 +548,7 @@
         }
 
         function profile() {
-            let from = ''; try { from = sessionStorage.getItem('greet:from') || ''; } catch (e) {}
+            const from = ss.get('greet:from') || '';
             const has = (p) => st.pages.some((x) => x.indexOf(p) !== -1);
             const kd = (k) => Object.keys(st.dwell).filter((l) => st.kind[l] === k).reduce((a, l) => a + st.dwell[l], 0);
             const s = { recruiter: 0, technical: 0, client: 0, personal: 0 };
@@ -625,9 +630,7 @@
         const still = window.matchMedia('(prefers-reduced-motion: reduce)');
         const rootHref = (() => { const l = document.querySelector('a.logo-link'); return l ? new URL(l.getAttribute('href'), location.href).href.replace(/index\.html$/, '') : '/'; })();
 
-        /* ---- per-session memory (attention, pages) and per-browser visit history ---- */
-        const ss = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} } };
-        const ls = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+        /* ---- per-session memory (attention, pages) and per-browser visit history (ss and ls, at the top) ---- */
         const num = (v) => Number(v) || 0;
         if (!ss.get('greet:start')) {
             ss.set('greet:start', String(Date.now()));

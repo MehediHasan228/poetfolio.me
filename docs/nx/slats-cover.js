@@ -21,15 +21,18 @@ const THEME_PRESETS = {
     }
 };
 
+// site storage can be blocked (then touching it throws): it is read only through this
+function storedTheme() {
+    try { return localStorage.getItem('mehedi_theme'); } catch (e) { return null; }
+}
+
 function getCurrentTheme() {
     const rootTheme = document.documentElement.getAttribute('data-theme');
     if (rootTheme && THEME_PRESETS[rootTheme]) return rootTheme;
     const bodyTheme = document.body ? document.body.getAttribute('data-theme') : null;
     if (bodyTheme && THEME_PRESETS[bodyTheme]) return bodyTheme;
-    try {
-        const saved = localStorage.getItem('mehedi_theme');
-        if (saved && THEME_PRESETS[saved]) return saved;
-    } catch(e) {}
+    const saved = storedTheme();
+    if (saved && THEME_PRESETS[saved]) return saved;
     if (document.documentElement.classList.contains('light')) return 'light';
     return 'dark';
 }

@@ -1088,6 +1088,10 @@ body.nx-page[data-page="profile"] .nx .rail {
 .extra-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 /* sidebar: no inner scroller; it stays sticky while the page scrolls and reaches its full height at the page end */
 body.nx-page[data-page] .nx .rail { max-height: none !important; overflow: visible !important; }
+/* ...except while the keyboard is in it: taller than the window (the profile's), its lower links would stay below the fold
+   however the page scrolls, since it is sticky; then it scrolls inside the window, so the focused link is in sight */
+body.nx-page[data-page] .nx .rail:has(:focus-visible) { max-height: calc(100dvh - 162px) !important; overflow-y: auto !important; scroll-padding-block: 16px 48px; }
+body.nx-page[data-page="profile"] .nx .rail:has(:focus-visible) { max-height: calc(100dvh - 98px) !important; }
 /* the sidebar comes after the page in the HTML, and long pages paint before it arrives: its 392px is kept from the first paint,
    so the page column never jumps sideways */
 @media (min-width: 1240px) { .nx .shell.has-rail > .main { max-width: calc(100% - 392px); } }
@@ -2914,6 +2918,8 @@ html.fp-playing .nx .fx-live { display: inline-block; }
    nor does the orb cover a stage button, it fades in place (no movement, so the check that hides it stays true) */
 html.fx-orb-yields body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { transform: translateY(160%) !important; opacity: 0 !important; pointer-events: none !important; }
 html.fx-orb-away body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { opacity: 0 !important; pointer-events: none !important; }
+/* ...but while the orb's toggle has keyboard focus it stays in sight (a Tab stop must be) */
+html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx):has(:focus-visible) { transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
 .nx .fx-stage-mix { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .nx .fx-glass.fx-mixbtn { display: inline-flex; align-items: center; gap: 7px; width: auto; min-width: 44px; padding: 0 14px; border-radius: 999px; }
 .nx .fx-mixbtn b { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -4367,12 +4373,18 @@ def nl_feature(cat="Learn", first=False):
             f'<a class="nl-cta" href="{f["url"]}" target="_blank" rel="noopener noreferrer">{e(f["cta"])}{nl_icon("out", 15)}</a></div></div>')
 
 
-def nl_player(first_index=0):
+def nl_player(first_index=0, listed=0):
+    """The big player. On Watch & Listen it plays the stage's channels (LIB_JS); with listed, the player carries its own
+    first `listed` tracks (the Library overview, which shows that many under it and has no stage)."""
     m = LIB["music"]
     av = {a["slug"]: a["avatar"] for a in m["artists"]}
     tracks = [dict(t, av=av.get(t["by"], "")) for t in m["tracks"]]
     t = tracks[first_index]
-    return (f'<div class="nl-player" data-nl-player>'
+    own = ""
+    if listed:
+        data = [{"id": x["id"], "title": x["title"], "sub": x["sub"], "ar": x.get("ar", ""), "av": x["av"]} for x in tracks[:listed]]
+        own = f' data-tracks="{e(json.dumps(data, ensure_ascii=False))}"'
+    return (f'<div class="nl-player" data-nl-player{own}>'
             f'<div class="nl-screen"><img class="nl-screen-thumb" src="{yt_thumb(t["id"], "hqdefault")}" alt="" fetchpriority="high">'
             f'<button type="button" class="nl-play" data-nl-play aria-label="Play">{nl_icon("play", 30)}</button><div class="nl-frame"></div></div>'
             f'<div class="nl-player-bar"><img class="nl-player-av" src="{t["av"]}" alt="" width="48" height="48">'
@@ -4465,14 +4477,15 @@ def library():
     bm_all = {it["title"]: (it, sec["title"]) for sec in LIB["bookmarks"]["sections"] for it in sec["items"]}
     bms = "".join(nl_bm_card(*bm_all[n]) for n in o["bookmarks"] if n in bm_all)
     tracks = LIB["music"]["tracks"]
-    tlist = "".join(nl_track(i, t) for i, t in enumerate(tracks[:6]))
+    listed = 6   # the overview lists six tracks under its player, and the player plays those
+    tlist = "".join(nl_track(i, t) for i, t in enumerate(tracks[:listed]))
     body = (f'<div class="pad nl-page">{hero}'
             f'<div class="nl-section">{nl_head("skills", "AI Skills", secs.get("AI Skills", ""), c["skills"])}'
             f'<div class="nl-grid">{skills}</div>{nl_more("skills", f"See all {c["skills"]} skills")}</div>'
             f'<div class="nl-section">{nl_head("bookmarks", "Bookmarks", secs.get("Bookmarks", ""), c["bookmarks"])}'
             f'{nl_feature()}<div class="nl-grid">{bms}</div>{nl_more("bookmarks", f"See all {c["bookmarks"]} links")}</div>'
             f'<div class="nl-section">{nl_head("music", "Watch & Listen", secs.get("Watch & Listen", ""), c["music"])}'
-            f'{nl_player()}<ol class="nl-tracks">{tlist}</ol>'
+            f'{nl_player(listed=listed)}<ol class="nl-tracks">{tlist}</ol>'
             f'<div class="nl-ch-grid nl-ch-strip">{"".join(nl_channel_card(x) for x in LIB["music"]["featured"])}</div>'
             f'{nl_more("music", "Open Watch & Listen")}</div>'
             f'</div>{LIB_JS}')
@@ -4660,6 +4673,8 @@ LIB_JS = """<script>
 })();
 
 (function () {
+  /* site storage can be blocked (then writing to it throws): it is written only through this */
+  function keep(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function iframe(id) {
     return '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="YouTube video player" ' +
            'allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
@@ -4671,7 +4686,11 @@ LIB_JS = """<script>
   var stage = document.querySelector("[data-stage]");
   var channels = stage ? JSON.parse(stage.getAttribute("data-channels")) : [];
   var onStage = channels.length ? channels[0].key : "";
+  /* without a stage (the Library overview) the player carries the tracks listed under it */
   var tracks = channels.length ? channels[0].tracks : [];
+  if (!channels.length && player && player.hasAttribute("data-tracks")) {
+    try { tracks = JSON.parse(player.getAttribute("data-tracks")); } catch (err) { tracks = []; }
+  }
   var cur = 0, playing = false;
   var playIcon = stage ? stage.querySelector(".nl-tthumb > span").innerHTML : "";
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -4717,8 +4736,9 @@ LIB_JS = """<script>
     if (keyboard) stage.focus({ preventScroll: true });
   }
   function setTrack(i, play) {
-    if (!player) return;
-    cur = i; var t = tracks[i];
+    var t = tracks[i];
+    if (!player || !t) return;
+    cur = i;
     player.querySelector(".nl-player-title").textContent = t.title;
     var sub = player.querySelectorAll(".nl-player-sub span");
     sub[0].textContent = t.sub || ""; sub[1].textContent = t.ar || "";
@@ -4730,7 +4750,7 @@ LIB_JS = """<script>
       if (window.TubeDock) { window.TubeDock.play(dockTracks(), i); return; }   /* plays in this screen, and keeps playing on other pages */
       player.querySelector(".nl-frame").innerHTML = iframe(t.id);
       player.classList.add("is-playing");
-      try { localStorage.setItem("lib:last", JSON.stringify({ id: t.id, title: t.title, sub: t.sub || "", at: Date.now() })); } catch (e) {}
+      keep("lib:last", JSON.stringify({ id: t.id, title: t.title, sub: t.sub || "", at: Date.now() }));
     }
   }
   /* the dock sits in whichever page stays loaded, so its avatars need full addresses */
@@ -5086,7 +5106,7 @@ def home_dashboard():
                       f'{im}{e(label)}</button>')
         if rest:
             chips += f'<span class="dash-tool is-more" title="{e(", ".join(lbl for lbl, _ in rest))}">+{len(rest)} more</span>'
-        panels += (f'<div class="dash-area-tools" data-area="{i}"' + ('' if i == pick else ' hidden') + '>'
+        panels += (f'<div class="dash-area-tools" data-area="{i}"' + ('' if i == pick else ' hidden inert') + '>'
                    f'<p>{e(use)}</p>{chips}</div>')
     stack = (f'<article class="dash-tile dash-stack">{head(ico("badge"), "Stack", f"{tools} tools")}{radar}'
              f'<div class="dash-areas" role="group" aria-label="Areas of the stack">{area_btns}</div><div class="dash-area-panels">{panels}</div>'

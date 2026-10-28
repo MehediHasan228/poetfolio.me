@@ -1498,6 +1498,10 @@ body.nx-page[data-page="profile"] .nx .rail {
 .extra-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 /* sidebar: no inner scroller; it stays sticky while the page scrolls and reaches its full height at the page end */
 body.nx-page[data-page] .nx .rail { max-height: none !important; overflow: visible !important; }
+/* ...except while the keyboard is in it: taller than the window (the profile's), its lower links would stay below the fold
+   however the page scrolls, since it is sticky; then it scrolls inside the window, so the focused link is in sight */
+body.nx-page[data-page] .nx .rail:has(:focus-visible) { max-height: calc(100dvh - 162px) !important; overflow-y: auto !important; scroll-padding-block: 16px 48px; }
+body.nx-page[data-page="profile"] .nx .rail:has(:focus-visible) { max-height: calc(100dvh - 98px) !important; }
 /* the sidebar comes after the page in the HTML, and long pages paint before it arrives: its 392px is kept from the first paint,
    so the page column never jumps sideways */
 @media (min-width: 1240px) { .nx .shell.has-rail > .main { max-width: calc(100% - 392px); } }
@@ -3324,6 +3328,8 @@ html.fp-playing .nx .fx-live { display: inline-block; }
    nor does the orb cover a stage button, it fades in place (no movement, so the check that hides it stays true) */
 html.fx-orb-yields body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { transform: translateY(160%) !important; opacity: 0 !important; pointer-events: none !important; }
 html.fx-orb-away body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx) { opacity: 0 !important; pointer-events: none !important; }
+/* ...but while the orb's toggle has keyboard focus it stays in sight (a Tab stop must be) */
+html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_fx):has(:focus-visible) { transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
 .nx .fx-stage-mix { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .nx .fx-glass.fx-mixbtn { display: inline-flex; align-items: center; gap: 7px; width: auto; min-width: 44px; padding: 0 14px; border-radius: 999px; }
 .nx .fx-mixbtn b { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }

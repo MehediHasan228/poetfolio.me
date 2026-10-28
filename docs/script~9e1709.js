@@ -6,6 +6,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Respect the OS "reduce motion" setting for the heavy decorative effects.
     const PREFERS_REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
+    // The browser may refuse site storage (blocked cookies, some private windows): then reading it throws. Every read and
+    // write goes through these two, so the page works the same without it and only forgets the visitor's choices.
+    const local = {
+        get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+    };
+    const session = {
+        get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+        set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} }
+    };
+
     // Ensure mobile browsers always open cleanly at top if no hash in URL
     if (!window.location.hash) {
         if ('scrollRestoration' in history) {
@@ -17,13 +28,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ==========================================
        0. GAMIFIED SECURITY CLEARANCE
     ========================================== */
-    let clearance = parseInt(localStorage.getItem('mehedi_clearance')) || 1;
+    let clearance = parseInt(local.get('mehedi_clearance')) || 1;
     const clrDisplay = document.getElementById('clearance-level');
 
     function updateClearance(level) {
         if (level > clearance) {
             clearance = level;
-            localStorage.setItem('mehedi_clearance', clearance);
+            local.set('mehedi_clearance', clearance);
             if (typeof playSound === 'function') playSound('success');
         }
         if (clrDisplay) {
@@ -44,12 +55,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     ========================================== */
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
-    let isMuted = localStorage.getItem('mehedi_muted') === 'true';
+    // sound is off until the visitor turns it on; a choice they saved before is kept
+    const savedMute = local.get('mehedi_muted');
+    let isMuted = savedMute === null ? true : savedMute === 'true';
 
+    // the buttons are toggles: pressed while sound is on
     function updateSoundIcons() {
-        const iconHtml = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+        const iconHtml = isMuted ? '<i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>' : '<i class="fa-solid fa-volume-high" aria-hidden="true"></i>';
         document.querySelectorAll('#sound-toggler, .sound-btn').forEach(btn => {
             btn.innerHTML = iconHtml;
+            btn.setAttribute('aria-pressed', String(!isMuted));
         });
     }
     updateSoundIcons();
@@ -59,9 +74,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (soundBtn) {
             e.preventDefault();
             isMuted = !isMuted;
-            localStorage.setItem('mehedi_muted', isMuted);
+            local.set('mehedi_muted', isMuted);
             updateSoundIcons();
-            if (!audioCtx && !isMuted) audioCtx = new AudioContext();
+            // turned on, the audio engine starts just after this click has painted: starting it (the browser's audio
+            // service, the first time) held the button's new state back
+            if (!audioCtx && !isMuted) requestAnimationFrame(() => setTimeout(() => { if (!audioCtx && !isMuted) audioCtx = new AudioContext(); }, 0));
         }
     });
 
@@ -267,13 +284,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         let lastDragTime = 0;
 
         // Restore saved position on mobile
-        try {
-            const savedTop = localStorage.getItem('poetfolio_lb_mobile_top');
-            if (savedTop && window.innerWidth <= 860) {
-                element.style.setProperty('--lb-mobile-top', savedTop + 'px');
-                element.style.setProperty('--lb-mobile-transform', 'none');
-            }
-        } catch(err) {}
+        const savedTop = local.get('poetfolio_lb_mobile_top');
+        if (savedTop && window.innerWidth <= 860) {
+            element.style.setProperty('--lb-mobile-top', savedTop + 'px');
+            element.style.setProperty('--lb-mobile-transform', 'none');
+        }
 
         handles.forEach(handle => {
             if (handle.classList.contains('lb-toggle')) {
@@ -362,10 +377,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     lastDragTime = Date.now();
                     setTimeout(() => { isDragging = false; }, 250);
                     if (window.innerWidth <= 860) {
-                        try {
-                            const curTop = element.style.getPropertyValue('--lb-mobile-top');
-                            if (curTop) localStorage.setItem('poetfolio_lb_mobile_top', parseFloat(curTop));
-                        } catch(err) {}
+                        const curTop = element.style.getPropertyValue('--lb-mobile-top');
+                        if (curTop) local.set('poetfolio_lb_mobile_top', parseFloat(curTop));
                     }
                 } else {
                     isDragging = false;
@@ -992,37 +1005,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Chat Worker URL (chat-worker/). Empty = use the free fallback. After `wrangler deploy`, paste the URL here,
-    // e.g. 'https://mehedi-chat.<your-subdomain>.workers.dev'
+    // Chat Worker URL (chat-worker/). Empty = no AI: every answer comes from the site (offlineReply). After `wrangler
+    // deploy`, paste the URL here, e.g. 'https://mehedi-chat.<your-subdomain>.workers.dev'
     const CHAT_API_URL = 'https://mehedi-chat.rajnieem.workers.dev';
 
-    const CHAT_PROFILE = "You are Mehedi Hasan, replying in the first person to a visitor on your portfolio site (mehedi.pro.bd); you are an AI version of him, so say so if asked. Answer in the visitor's language, warmly and briefly: 1-3 short sentences. Never invent facts, prices or dates, and never commit to work or deadlines. " +
-        "Facts: Mehedi is an AI-native software engineer in Bangladesh with 4+ years in production. Backend and systems: NestJS, Laravel, Node.js, PostgreSQL, Redis, Kafka, RabbitMQ, Docker, Kubernetes, AWS, CI/CD. Frontend: React, TypeScript, Flutter. AI: LangGraph, MCP, RAG with PGVector, local LLMs via Ollama, Claude, Gemini, n8n automations. " +
-        "Work: SAWAB's multi-organisation NGO ERP (Frappe, ERPNext, Next.js; live demo), HR and payroll systems with AI modules, Karbar ERP (VAT and payroll for Bangladesh), the SAWAB Bangladesh platform, and autonomous AI agent swarms. Open to freelance and contract work. " +
-        "Contact: WhatsApp +880 1799-447594, email mehedihasan228.cse@gmail.com, GitHub github.com/MehediHasan228. If unsure, invite them to message you on WhatsApp.";
-
-    const DEFAULT_RESPONSE = "Query complete. Try asking about Mehedi's skills, enterprise ERPs, cloud architectures, AI services, or how to reach him directly.";
-
     // ── CHAT FUNCTIONS ─────────────────────────────────────────────────────────
-    function getBotResponse(input) {
-        for (const key in KNOWLEDGE_BASE) {
-            if (KNOWLEDGE_BASE[key].keywords.some(regex => regex.test(input))) {
-                return KNOWLEDGE_BASE[key].response;
-            }
-        }
-        return DEFAULT_RESPONSE;
-    }
-
     if (chatWidget && chatHeader) {
         // AI Orb Mascot Reference
         const getMascot = () => document.getElementById('chat-mascot') || chatWidget.querySelector('ai-orb-mascot');
 
+        // The header's toggle (the orb and the name) is a button, so the keyboard opens and closes the chat too; the language
+        // and new-chat buttons beside it are their own. A click elsewhere on the header still toggles, as before.
+        const chatToggle = document.getElementById('chat-toggle');
         chatHeader.addEventListener('click', (e) => {
             if (e.target.closest('.chat-head-btn')) return;
-            toggleChat();
+            // detail 0 from the browser: Enter or Space on the toggle. The greeting bubble's own click() has detail 0 too,
+            // but is not trusted: a tap on the bubble must not raise the phone keyboard over the panel
+            toggleChat(e.detail === 0 && e.isTrusted);
         });
+        // Esc closes it and hands focus back to the toggle (when focus was in the chat, or nowhere). The greeting bubble
+        // has Esc while it shows, and the leaderboard while focus is in it.
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && chatWidget.classList.contains('chat-expanded') && !document.getElementById('ai-orb-speech-bubble')) toggleChat();
+            if (e.key !== 'Escape' || e.defaultPrevented || !chatWidget.classList.contains('chat-expanded') || document.getElementById('ai-orb-speech-bubble')) return;
+            const lb = document.getElementById('leaderboard-widget');
+            if (lb && lb.contains(document.activeElement)) return;
+            const nowhere = !document.activeElement || document.activeElement === document.body;
+            toggleChat();   // focus in the chat goes back to the toggle there
+            if (nowhere && chatToggle) chatToggle.focus({ preventScroll: true });
         });
 
         // Interactive AI Orb Mascot touch & hover feedback
@@ -1057,46 +1066,52 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 1400);
         }, { passive: true });
 
-        function toggleChat() {
+        // Folded, the panel's parts are inert, so Tab passes the widget by; the toggle says whether it is open
+        function syncChatState() {
+            const open = chatWidget.classList.contains('chat-expanded');
+            if (chatToggle) chatToggle.setAttribute('aria-expanded', String(open));
+            chatWidget.querySelectorAll('.chat-body, .chat-input-area, .chat-mode-bar, .chat-foot').forEach((el) => { el.inert = !open; });
+        }
+
+        // fromKeyboard: opened with Enter or Space, so the message box takes focus at once (with a mouse it does too, a
+        // moment later; on a touch screen it waits for a tap, or the keyboard would cover the panel)
+        function toggleChat(fromKeyboard = false) {
             chatWidget.classList.toggle('chat-expanded');
             chatWidget.classList.toggle('chat-collapsed');
-            
+            const open = chatWidget.classList.contains('chat-expanded');
+            // closing with focus inside (a keyboard close, or the panel tucking itself away) gives it back to the toggle
+            // before the panel turns inert
+            if (!open && chatToggle && chatWidget.contains(document.activeElement) && document.activeElement !== chatToggle) chatToggle.focus({ preventScroll: true });
+            syncChatState();
+
             // Clear any inline styles from keyboard sync when toggling
             chatWidget.style.bottom = '';
             chatWidget.style.maxHeight = '';
-            
+
             const mascot = getMascot();
             const icon = document.getElementById('chat-toggle-icon');
             if (icon) {
-                if (chatWidget.classList.contains('chat-expanded')) {
-                    icon.classList.remove('fa-chevron-up');
-                    icon.classList.add('fa-chevron-down');
-                    
-                    // USER OPENS CHAT:
-                    // -> Blink
-                    // -> Slight excited expression
-                    // -> Tiny bounce
-                    // -> Return to normal
-                    if (mascot) {
-                        mascot.setExpression('blink');
-                        setTimeout(() => {
-                            if (chatWidget.classList.contains('chat-expanded')) {
-                                mascot.triggerReaction('excited', 1400);
-                            }
-                        }, 140);
-                    }
-
+                icon.classList.toggle('fa-chevron-down', open);
+                icon.classList.toggle('fa-chevron-up', !open);
+            }
+            if (open) {
+                // USER OPENS CHAT: blink, a slight excited look and a tiny bounce, then back to normal
+                if (mascot) {
+                    mascot.setExpression('blink');
                     setTimeout(() => {
-                        if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
-                    }, 100);
-                    if (window.matchMedia('(pointer: fine)').matches) setTimeout(() => chatInput.focus({ preventScroll: true }), 260);
-                } else {
-                    icon.classList.remove('fa-chevron-down');
-                    icon.classList.add('fa-chevron-up');
-                    if (mascot) {
-                        mascot.setExpression('idle');
-                    }
+                        if (chatWidget.classList.contains('chat-expanded')) {
+                            mascot.triggerReaction('excited', 1400);
+                        }
+                    }, 140);
                 }
+
+                setTimeout(() => {
+                    if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+                }, 100);
+                if (fromKeyboard) chatInput.focus({ preventScroll: true });
+                else if (window.matchMedia('(pointer: fine)').matches) setTimeout(() => chatInput.focus({ preventScroll: true }), 260);
+            } else if (mascot) {
+                mascot.setExpression('idle');
             }
             if (typeof playSound === 'function') playSound('click');
         }
@@ -1187,8 +1202,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // The conversation survives page changes for this visit
         const LOG_KEY = 'chat:log', USED_KEY = 'chat:used';
         const store = {
-            get: (k, d) => { try { return JSON.parse(sessionStorage.getItem(k)) || d; } catch (e) { return d; } },
-            set: (k, v) => { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+            get: (k, d) => { try { return JSON.parse(session.get(k)) || d; } catch (e) { return d; } },
+            set: (k, v) => session.set(k, JSON.stringify(v))
         };
         const remember = (role, html, text) => { const log = store.get(LOG_KEY, []); log.push({ r: role, h: html, t: text || '' }); store.set(LOG_KEY, log.slice(-30)); };
         const markUsed = (key) => { const u = store.get(USED_KEY, []); if (!u.includes(key)) { u.push(key); store.set(USED_KEY, u); } };
@@ -1337,11 +1352,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 { i: 'pin', label: 'ডেলিভারি অ্যাপ', text: '৩০ জন ডেলিভারি রাইডারের জন্য মোবাইল অ্যাপ: লাইভ GPS ট্র্যাকিং, অর্ডার স্ট্যাটাস আর অ্যাডমিন ড্যাশবোর্ড।' }
             ]
         };
-        const prefs = {
-            get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
-            set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
-        };
-        const lang = () => (prefs.get('chat:lang') === 'bn' ? 'bn' : 'en');
+        const lang = () => (local.get('chat:lang') === 'bn' ? 'bn' : 'en');
         // Project discussion stays on for the whole conversation (and across pages) until ended
         let fitMode = !!store.get('chat:project', false);
         const brief = () => String(store.get('chat:brief', '') || '');
@@ -1350,6 +1361,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         modeBar.hidden = true;
         const inputArea = chatWidget.querySelector('.chat-input-area');
         if (inputArea) inputArea.before(modeBar);
+        syncChatState();
         function setProject(on) {
             fitMode = on; store.set('chat:project', on);
             if (!on) store.set('chat:brief', '');
@@ -1494,9 +1506,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         function heroText() {
             const bn = lang() === 'bn';
             const num = (v) => Number(v) || 0;
-            const ssGet = (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
-            const visits = num(prefs.get('greet:visits')), awayRaw = ssGet('greet:away'), away = awayRaw === null ? null : num(awayRaw);
-            const pages = num(ssGet('greet:pages')), from = ssGet('greet:from'), page = pageKey(), h = new Date().getHours();
+            const visits = num(local.get('greet:visits')), awayRaw = session.get('greet:away'), away = awayRaw === null ? null : num(awayRaw);
+            const pages = num(session.get('greet:pages')), from = session.get('greet:from'), page = pageKey(), h = new Date().getHours();
             const ask = bn ? 'আমার কাজ নিয়ে যা খুশি জিজ্ঞেস করুন।' : 'Ask me anything about my work.';
             if (visits > 1 && away !== null) {
                 if (away > 1) return { title: bn ? 'আবার স্বাগতম!' : 'Welcome back!', sub: bn ? `${away} দিন পর দেখা হলো। কী জানতে চান?` : `It's been ${away} days. What would you like to know?` };
@@ -1545,7 +1556,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         rotatePlaceholder(true);
         if (fitMode) setProject(true);
-        chatHeader.addEventListener('click', () => { if (chatWidget.classList.contains('chat-expanded')) { prefs.set('chat:seen', String(Date.now())); rotatePlaceholder(true); } });
+        chatHeader.addEventListener('click', () => { if (chatWidget.classList.contains('chat-expanded')) { local.set('chat:seen', String(Date.now())); rotatePlaceholder(true); } });
 
         const langBtn = document.getElementById('chat-lang');
         function syncLangBtn() {
@@ -1558,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         if (langBtn) langBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            prefs.set('chat:lang', lang() === 'bn' ? 'en' : 'bn');
+            local.set('chat:lang', lang() === 'bn' ? 'en' : 'bn');
             const log = store.get(LOG_KEY, []);
             if (log.length) { const sub = chatBody.querySelector('.chat-hero-sub'); if (sub) sub.textContent = T[lang()].sub; followUps(); syncLangBtn(); }
             else renderHome();
@@ -1766,9 +1777,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             discuss() { startFit(); }
         };
 
-        // When no AI answers (the Worker and the free service are both down, e.g. the Gemini credits run out), say so in
-        // the visitor's language, then give the sentences of the site's own knowledge file (the one the AI reads) that
-        // match the question, with a way to ask Mehedi himself. Small talk, contact and prices keep their set replies.
+        // When no AI answers (the Worker is down, e.g. the Gemini credits run out), offlineNote says so in the visitor's
+        // language, and this gives the sentences of the site's own knowledge file (the one the AI reads) that match the
+        // question, with a way to ask Mehedi himself. Small talk, contact and prices keep their set replies.
         let siteSentences = null, siteProjects = [];
         const OFF_STOP = new Set(("how does do did doing what which who whom whose why when where is are was were be been the a an and or of in on at " +
             "to for with about from into his her he him she they them mehedi mehedi's you your yours use uses used using work works working " +
@@ -1799,8 +1810,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (BN_CONTACT.test(txt)) key = 'contact';
             else if (BN_PRICE.test(txt)) key = 'services';
             if (key === 'greetings' || BN_HELLO.test(txt)) {
-                return formatReply(bn ? 'ভালো আছি, ধন্যবাদ! আমার AI এই মুহূর্তে একটু বিরতিতে আছে, তবে আমার কাজ, প্রজেক্ট বা স্কিল নিয়ে জিজ্ঞেস করলে আমার সাইট থেকে উত্তর দিতে পারব।' :
-                    "Hi! My AI is taking a short break right now, but ask me about my work, projects or stack and I'll answer from my site.");
+                return formatReply(bn ? 'ভালো আছি, ধন্যবাদ! আমার কাজ, প্রজেক্ট বা স্কিল নিয়ে জিজ্ঞেস করলে আমার সাইট থেকে উত্তর দিতে পারব।' :
+                    "Hi! Ask me about my work, projects or stack and I'll answer from my site.");
             }
             if (/^(smalltalk|contact|services)$/.test(key || '')) return formatReply(KNOWLEDGE_BASE[key].response);
             const own = txt.match(/[A-Za-z0-9][A-Za-z0-9.+#-]*[A-Za-z0-9+#]|[A-Za-z0-9]/g) || [];
@@ -1857,16 +1868,36 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (siteProjects.length && !names.size && (terms.some((w) => /^(projects?|portfolio|products?)$/.test(w)) || /প্রজেক্ট|প্রকল্প/.test(txt))) {
                 const short = (d) => { let s = d.split(/:\s|\s\(/)[0].trim(); if (s.length > 80) s = s.slice(0, 80).replace(/[\s,]+\S*$/, '') + '…'; return s; };
                 const list = siteProjects.slice(0, 6).map((x) => '• **' + x.name + '**: ' + short(x.desc));
-                const lead = bn ? 'আমার AI এই মুহূর্তে একটু বিরতিতে আছে, তবে সাইট থেকে আমার কয়েকটা প্রজেক্ট:' : 'My AI is taking a short break right now, but here are some of my projects from the site:';
+                const lead = bn ? 'সাইট থেকে আমার কয়েকটা প্রজেক্ট:' : 'Here are some of my projects from the site:';
                 return formatReply(lead + '\n' + list.join('\n')) + ask.replace('</div>', `<a class="chat-action" href="/projects/">${bn ? 'সব প্রজেক্ট' : 'All projects'}</a></div>`);
             }
             if (hits.length) {
-                const lead = bn ? 'আমার AI এই মুহূর্তে একটু বিরতিতে আছে, তাই আমার সাইটে যা লেখা আছে তা থেকে বলছি:' : 'My AI is taking a short break right now, so here is what my site says:';
+                const lead = bn ? 'আমার সাইটে যা লেখা আছে তা থেকে বলছি:' : 'Here is what my site says:';
                 return formatReply(lead + '\n' + hits.map((h) => '• ' + h).join('\n')) + ask;
             }
             if (key) return formatReply(KNOWLEDGE_BASE[key].response);
-            return formatReply(bn ? 'আমার AI এই মুহূর্তে একটু বিরতিতে আছে। একটু পরে আবার জিজ্ঞেস করুন, অথবা সরাসরি আমাকে লিখুন:' :
-                'My AI is taking a short break right now. Please ask again in a little while, or write to me directly:') + ask;
+            return formatReply(bn ? 'একটু পরে আবার জিজ্ঞেস করুন, অথবা সরাসরি আমাকে লিখুন:' :
+                'Please ask again in a little while, or write to me directly:') + ask;
+        }
+
+        // One calm line above every answer while the AI is offline, with the page's own WhatsApp and email links
+        const OFFLINE_ICON = '<svg class="chip-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.6 12.5H4a3 3 0 0 1-.4-6 4.3 4.3 0 0 1 7.6-1.4M12.6 7.2A2.7 2.7 0 0 1 12 12.5H7.4"/><path d="M2.5 2.5l11 11"/></svg>';
+        function offlineNote(txt) {
+            const bn = /[\u0980-\u09FF]/.test(txt) || lang() === 'bn';
+            const href = (sel, fallback) => { const a = document.querySelector(sel); return esc(a ? a.getAttribute('href') : fallback); };
+            const wa = `<a href="${href('a.whatsapp-btn', 'https://wa.me/8801799447594')}" target="_blank" rel="noopener">WhatsApp</a>`;
+            const mail = href('a[href^="mailto:"]', 'mailto:mehedihasan228.cse@gmail.com');
+            return `<p class="chat-offline-note">${OFFLINE_ICON}<span>` + (bn
+                ? `আমার AI এই মুহূর্তে অফলাইনে আছে — ${wa}-এ মেসেজ দিন বা <a href="${mail}">ইমেইল</a> করুন।`
+                : `My AI is offline right now — message me on ${wa} or <a href="${mail}">email</a>.`) + '</span></p>';
+        }
+
+        // the header's status line tells the truth: Offline once the Worker fails, Online again when it next answers
+        const headSub = chatWidget.querySelector('.chat-header-sub');
+        function setLive(on) {
+            if (!headSub || headSub.classList.contains('is-off') !== on) return;
+            headSub.classList.toggle('is-off', !on);
+            headSub.lastChild.textContent = on ? 'Online · replies in seconds' : 'Offline · answers from my site';
         }
 
         async function sendChat() {
@@ -1909,46 +1940,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 answerText = r.text; nexts = r.nexts; streamedHtml = r.html;
                 streamed = true;
                 isSuccess = true;
+                setLive(true);
             } catch (primaryError) {
-                console.warn("[AI_CHAT] Chat worker unavailable, using the free fallback.", primaryError && primaryError.message);
-
-                try {
+                console.warn("[AI_CHAT] Chat worker unavailable, answering from the site's knowledge file.", primaryError && primaryError.message);
+                setLive(false);
+                if (mode === 'fit') {
                     // a fit check needs his real record: without the Worker, hand the brief straight to Mehedi
-                    if (mode === 'fit') {
-                        const bn = /[\u0980-\u09FF]/.test(txt);
-                        typingEl.innerHTML = `<p>${esc(T[bn ? 'bn' : 'en'].fitOff)}</p><div class="chat-actions"><a class="chat-action" href="${waHref('Hi Mehedi, I would like to discuss a project: ' + brief().slice(0, 600))}" target="_blank" rel="noopener">WhatsApp</a></div>`;
-                        isSuccess = true;
-                        throw 'handled';
-                    }
-                    // Secondary: Free Public AI Fallback (Direct Text Endpoint)
-                    const past = history.slice(-4).map((m) => (m.r === 'user' ? 'User: ' : 'Assistant: ') + m.t.slice(0, 180)).join('\n');
-                    const encodedPrompt = encodeURIComponent(CHAT_PROFILE + '\n\n' + (past ? past + '\n' : '') + 'User: ' + txt + '\nAssistant:');
-                    const secondaryResponse = await fetch(`https://text.pollinations.ai/${encodedPrompt}`, { signal: AbortSignal.timeout ? AbortSignal.timeout(7000) : undefined });
-
-                    if (secondaryResponse.ok) {
-                        let reply = await secondaryResponse.text();
-                        // Strip any Pollinations deprecation notice injected at the top
-                        const noticeMarker = 'Note: Anonymous requests to text.pollinations.ai are NOT affected and will continue to work normally.';
-                        if (reply.includes(noticeMarker)) {
-                            reply = reply.substring(reply.indexOf(noticeMarker) + noticeMarker.length).trim();
-                        }
-                        if (reply) {
-                            typingEl.innerHTML = formatReply(reply);
-                            isSuccess = true;
-                        } else {
-                            throw new Error("Reply was empty after stripping notice");
-                        }
-                    } else {
-                        throw new Error("Secondary API Failed");
-                    }
-
-                } catch (secondaryError) {
-                    if (secondaryError === 'handled') return;
-                    // Tertiary: the site's own words (offlineReply above)
-                    console.warn("[AI_CHAT] All APIs Offline. Answering from the site's knowledge file.");
-                    typingEl.innerHTML = await offlineReply(txt);
-                    isSuccess = true;
+                    const bn = /[\u0980-\u09FF]/.test(txt);
+                    typingEl.innerHTML = `<p>${esc(T[bn ? 'bn' : 'en'].fitOff)}</p><div class="chat-actions"><a class="chat-action" href="${waHref('Hi Mehedi, I would like to discuss a project: ' + brief().slice(0, 600))}" target="_blank" rel="noopener">WhatsApp</a></div>`;
+                } else {
+                    // the site's own words (offlineReply above), under a note that the AI is offline and how to reach him
+                    typingEl.innerHTML = offlineNote(txt) + await offlineReply(txt);
                 }
+                isSuccess = true;
             } finally {
                 typingEl.classList.remove('typing-indicator');
                 if (!streamed) settle(typingEl);
@@ -2109,7 +2113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function activateGodMode() {
         playSound('success');
         document.documentElement.setAttribute('data-theme', 'god-mode');
-        localStorage.setItem('mehedi_theme', 'god-mode');
+        local.set('mehedi_theme', 'god-mode');
         updateClearance(2);
 
         setTimeout(() => { alert("/// GOD MODE ACTIVATED /// \nHardware limits bypassed. Root access simulated."); }, 300);
@@ -2121,9 +2125,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const themeBtn = document.getElementById('theme-toggler');
     const themes = ['dark', 'light', 'mint', 'god-mode'];
 
-    let savedTheme = localStorage.getItem('mehedi_theme') || 'dark';
+    let savedTheme = local.get('mehedi_theme') || 'dark';
     // the cyberpunk theme is retired: a visitor who saved it gets dark
-    if (savedTheme === 'cyberpunk') { savedTheme = 'dark'; localStorage.setItem('mehedi_theme', savedTheme); }
+    if (savedTheme === 'cyberpunk') { savedTheme = 'dark'; local.set('mehedi_theme', savedTheme); }
     document.documentElement.setAttribute('data-theme', savedTheme);
     let cTheme = themes.indexOf(savedTheme) !== -1 ? themes.indexOf(savedTheme) : 0;
 
@@ -2133,7 +2137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (idx === -1) idx = 0;
         do { idx = (idx + 1) % themes.length; } while (themes[idx] === 'god-mode');
         document.documentElement.setAttribute('data-theme', themes[idx]);
-        localStorage.setItem('mehedi_theme', themes[idx]);
+        local.set('mehedi_theme', themes[idx]);
     }
 
     document.addEventListener('click', (e) => {
@@ -3200,12 +3204,27 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     const lbToggleIcon = document.getElementById('lb-toggle-icon');
 
     if (lbWidget && lbToggleBtn) {
-        function openLeaderboard() {
+        // Folded, the panel is inert, so Tab passes it by; the toggle says whether it is open
+        const lbPanel = lbWidget.querySelector('.lb-content');
+        const syncLeaderboard = () => {
+            const open = lbWidget.classList.contains('lb-expanded');
+            lbToggleBtn.setAttribute('aria-expanded', String(open));
+            if (lbPanel) lbPanel.inert = !open;
+        };
+        syncLeaderboard();
+
+        function openLeaderboard(fromKeyboard) {
             lbWidget.classList.remove('lb-collapsed', 'lb-closing');
             lbWidget.classList.add('lb-expanded');
             if (lbToggleIcon) {
                 lbToggleIcon.classList.remove('fa-chart-simple');
                 lbToggleIcon.classList.add('fa-chevron-right');
+            }
+            syncLeaderboard();
+            // opened from the keyboard, focus goes to the chosen category (on phones the toggle hides behind the panel)
+            if (fromKeyboard) {
+                const tab = lbWidget.querySelector('.radar-tab.active');
+                if (tab) tab.focus({ preventScroll: true });
             }
             if (typeof playSound === 'function') playSound('click');
         }
@@ -3216,18 +3235,22 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             
             const closeDelay = (window.innerWidth <= 860) ? 260 : 0;
             setTimeout(() => {
+                const hadFocus = lbWidget.contains(document.activeElement);
                 lbWidget.classList.remove('lb-expanded', 'lb-full-view', 'lb-closing');
                 lbWidget.classList.add('lb-collapsed');
                 if (lbToggleIcon) {
                     lbToggleIcon.classList.remove('fa-chevron-right', 'fa-chart-simple');
                 }
+                syncLeaderboard();
+                // focus that was in the panel comes back to the toggle, which shows again once the panel is folded
+                if (hadFocus) lbToggleBtn.focus({ preventScroll: true });
             }, closeDelay);
 
             if (typeof playSound === 'function') playSound('click');
         }
 
         let lastToggleTime = 0;
-        function toggleLeaderboard() {
+        function toggleLeaderboard(fromKeyboard) {
             const now = Date.now();
             if (now - lastToggleTime < 320) return;
             lastToggleTime = now;
@@ -3235,15 +3258,23 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             if (lbWidget.classList.contains('lb-expanded')) {
                 closeLeaderboard();
             } else {
-                openLeaderboard();
+                openLeaderboard(fromKeyboard);
             }
         }
 
-        // Direct tap/click listener for mobile, tablet, and desktop
+        // Direct tap/click listener for mobile, tablet, and desktop (detail 0: Enter or Space on the toggle)
         lbToggleBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            toggleLeaderboard();
+            toggleLeaderboard(e.detail === 0);
+        });
+
+        // Esc closes it, unless focus is in the chat, which has its own Esc
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape' || e.defaultPrevented || !lbWidget.classList.contains('lb-expanded')) return;
+            const chat = document.getElementById('ai-chat-widget');
+            if (chat && chat.contains(document.activeElement)) return;
+            closeLeaderboard();
         });
 
         // Close on clicking outside on desktop and tablet
@@ -3683,85 +3714,3 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     console.log("/// Mehedi Portfolio OS Initialized /// Status: NOMINAL");
 });
-
-// --- Mobile Menu Drawer Toggle ---
-function openMobileMenu() {
-    const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
-    const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
-    if (mobileMenuDrawer) {
-        mobileMenuDrawer.classList.add('drawer-open');
-    }
-    if (mobileBackdrop) {
-        mobileBackdrop.classList.add('active');
-    }
-    document.body.classList.add('drawer-open');
-}
-
-function closeMobileMenu(e) {
-    if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
-    if (e && e.stopPropagation) { e.stopPropagation(); }
-    const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
-    const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
-    if (mobileMenuDrawer) {
-        mobileMenuDrawer.classList.remove('drawer-open');
-    }
-    if (mobileBackdrop) {
-        mobileBackdrop.classList.remove('active');
-    }
-    document.body.classList.remove('drawer-open');
-}
-
-function toggleMobileMenu(e) {
-    if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
-    if (e && e.stopPropagation) { e.stopPropagation(); }
-    const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
-    if (mobileMenuDrawer && mobileMenuDrawer.classList.contains('drawer-open')) {
-        closeMobileMenu();
-    } else {
-        openMobileMenu();
-    }
-}
-
-window.toggleMobileMenu = toggleMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
-window.openMobileMenu = openMobileMenu;
-
-function initMobileMenu() {
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const mobileMenuClose = document.getElementById('mobile-menu-close');
-    const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
-    const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
-    const navLinks = document.querySelectorAll('#mobile-menu-drawer .nav-links a');
-
-    if (mobileMenuToggle && !mobileMenuToggle.getAttribute('onclick')) {
-        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
-    }
-    
-    if (mobileMenuClose && !mobileMenuClose.getAttribute('onclick')) {
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
-    }
-
-    if (mobileBackdrop) {
-        mobileBackdrop.addEventListener('click', closeMobileMenu);
-        mobileBackdrop.addEventListener('touchend', closeMobileMenu);
-    }
-    
-    // Close drawer when a nav link is clicked
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            closeMobileMenu();
-        });
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeMobileMenu();
-        }
-    });
-}
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileMenu);
-} else {
-    initMobileMenu();
-}

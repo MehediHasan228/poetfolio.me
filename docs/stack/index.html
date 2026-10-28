@@ -55,7 +55,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=ea0c3335b9">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=fde6109722">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -85,11 +85,11 @@
 <body class="subpage" data-page="stack">
     <div class="ui-controls">
         <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
-            aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <button id="sound-toggler" class="control-btn sound-btn" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
-                class="fa-solid fa-volume-high"></i></button>
-        <button id="theme-toggler" class="control-btn theme-btn" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
-                class="fa-solid fa-palette"></i></button>
+            aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+        <button type="button" id="sound-toggler" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
+                class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
+        <button type="button" id="theme-toggler" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
+                class="fa-solid fa-palette" aria-hidden="true"></i></button>
     </div>
 
     <nav aria-label="Main navigation">
@@ -112,20 +112,20 @@
 
         <div class="mobile-header-right">
             <a href="../contact/" class="mobile-contact-btn hover-sound" aria-label="Contact"><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>Contact</span></a>
-            <button id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer" onclick="window.toggleMobileMenu && toggleMobileMenu(event)">
+            <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
                 <span class="mm-bars" aria-hidden="true"><i></i><i></i><i></i></span>
             </button>
         </div>
     </nav>
 
-    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop" onclick="window.closeMobileMenu && closeMobileMenu(event)"></div>
-    <div id="mobile-menu-drawer" class="mobile-menu-drawer">
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop"></div>
+    <div id="mobile-menu-drawer" class="mobile-menu-drawer" role="dialog" aria-modal="true" aria-label="Menu" inert aria-hidden="true">
         <a href="../index.html" class="drawer-brand" aria-label="Mehedi Hasan, home">
             <img src="../mehedi-logo.webp" alt="" width="36" height="36" decoding="async">
             <span><b>Mehedi Hasan</b><small>Full-stack &amp; AI engineer</small></span>
         </a>
-        <button id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close Menu" onclick="window.closeMobileMenu && closeMobileMenu(event)">
-            <i class="fa-solid fa-xmark"></i>
+        <button type="button" id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close menu">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
         <ul class="nav-links">
             <li><a href="../profile/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
@@ -137,11 +137,11 @@
         </ul>
         <div class="drawer-controls">
             <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
-                aria-label="Direct Protocol: WhatsApp Message" title="Contact on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-            <button class="control-btn sound-btn" aria-label="Toggle UI Audio Protocol" title="Toggle UI Audio"><i
-                    class="fa-solid fa-volume-high"></i></button>
-            <button class="control-btn theme-btn" aria-label="Toggle Interface Theme" title="Toggle Theme"><i
-                    class="fa-solid fa-palette"></i></button>
+                aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+            <button type="button" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
+                    class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
+            <button type="button" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
+                    class="fa-solid fa-palette" aria-hidden="true"></i></button>
         </div>
         <p class="drawer-copy">© 2026 Mehedi Hasan</p>
     </div>
@@ -176,7 +176,7 @@
                         <!-- Dynamic Content Inject -->
                     </ul>
                 </div>
-                <div class="ide-editor-wrapper">
+                <div class="ide-editor-wrapper" tabindex="0" role="region" aria-label="Code sample">
                     <div class="ide-line-numbers" id="line-numbers">
                         <div>1</div>
                         <div>2</div>
@@ -242,16 +242,16 @@
          FLOATING AI LEADERBOARD WIDGET
     ========================================== -->
     <div id="leaderboard-widget" class="lb-collapsed">
-        <div class="lb-toggle hover-sound" role="button" aria-label="Open AI Leaderboard">
-            <div class="lb-telemetry-bars" id="lb-toggle-icon" aria-hidden="true">
+        <button type="button" class="lb-toggle hover-sound" aria-label="Open AI leaderboard" aria-expanded="false" aria-controls="lb-panel">
+            <span class="lb-telemetry-bars" id="lb-toggle-icon" aria-hidden="true">
                 <span class="lb-bar lb-bar-1"></span>
                 <span class="lb-bar lb-bar-2"></span>
                 <span class="lb-bar lb-bar-3"></span>
-            </div>
-            <span class="lb-tooltip">AI Leaderboard</span>
-        </div>
+            </span>
+            <span class="lb-tooltip" aria-hidden="true">AI Leaderboard</span>
+        </button>
 
-        <div class="radar-container lb-content">
+        <div class="radar-container lb-content" id="lb-panel" inert>
             <div class="radar-header">
                 <div class="radar-title-group draggable-header" style="cursor: move; flex-grow: 1;">
                     <h3><span class="lb-title-telemetry" aria-hidden="true"><span class="lb-title-bar lb-tb-1"></span><span class="lb-title-bar lb-tb-2"></span><span class="lb-title-bar lb-tb-3"></span><span class="lb-title-bar lb-tb-4"></span></span> AI Leaderboard</h3>
@@ -264,11 +264,11 @@
                         <button class="radar-tab" data-category="image">IMAGE</button>
                         <button class="radar-tab" data-category="video">VIDEO</button>
                     </div>
-                    <button id="lb-expand-btn" class="hover-sound" title="Toggle Full View" style="background: transparent; border: 1px solid rgba(var(--accent-rgb), 0.3); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer;">
-                        <i class="fa-solid fa-expand"></i>
+                    <button type="button" id="lb-expand-btn" class="hover-sound" title="Full view" aria-label="Full view" style="background: transparent; border: 1px solid rgba(var(--accent-rgb), 0.3); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer;">
+                        <i class="fa-solid fa-expand" aria-hidden="true"></i>
                     </button>
-                    <button id="lb-close-btn" class="lb-mobile-close-btn hover-sound" title="Close Leaderboard" aria-label="Close Leaderboard">
-                        <i class="fa-solid fa-xmark"></i>
+                    <button type="button" id="lb-close-btn" class="lb-mobile-close-btn hover-sound" title="Close leaderboard" aria-label="Close leaderboard">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                     </button>
                 </div>
                 <div class="sync-indicator">
@@ -289,7 +289,7 @@
                 </div>
             </div>
 
-            <div class="radar-table-wrapper">
+            <div class="radar-table-wrapper" tabindex="0" role="region" aria-label="AI leaderboard rankings">
                 <table id="ai-leaderboard-table">
                     <thead>
                         <tr>
@@ -314,70 +314,116 @@
 
     <div id="ai-chat-widget" class="chat-collapsed hover-sound">
         <div class="chat-header" id="chat-header">
-            <span class="chat-header-content">
+            <button type="button" class="chat-header-content" id="chat-toggle" aria-label="Ask My AI" aria-expanded="false" aria-controls="chat-body chat-input-area">
                 <span class="grok-bot-avatar ai-orb-avatar" aria-hidden="true">
                     <ai-orb-mascot id="chat-mascot" expression="idle"></ai-orb-mascot>
                 </span>
                 <span class="chat-header-text"><span class="chat-header-title">Ask My AI</span><span class="chat-header-name">Mehedi's AI</span><span class="chat-header-sub"><i class="chat-live" aria-hidden="true"></i>Online · replies in seconds</span></span>
-            </span>
+            </button>
             <button type="button" class="chat-head-btn chat-lang-btn" id="chat-lang" lang="bn" title="বাংলায় দেখুন" aria-label="বাংলায় দেখুন">বাং</button>
             <button type="button" class="chat-head-btn" id="chat-reset" title="New chat" aria-label="Start a new chat"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10a6 6 0 1 0 1.8-4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 3.5v3.2h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            <i class="fa-solid fa-chevron-up" id="chat-toggle-icon"></i>
+            <i class="fa-solid fa-chevron-up" id="chat-toggle-icon" aria-hidden="true"></i>
         </div>
         <div class="chat-body" id="chat-body">
             <!-- Dynamic chat messages rendered via JS -->
         </div>
-        <div class="chat-input-area">
+        <div class="chat-input-area" id="chat-input-area">
             <textarea aria-label="Message the AI assistant" id="chat-input" rows="1" placeholder="Ask about projects, stack, hiring…" autocomplete="off" enterkeyhint="send" maxlength="500"></textarea>
-            <button id="voice-btn" class="hover-sound"
+            <button type="button" id="voice-btn" class="hover-sound"
                 style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:pointer;"
-                title="Voice Protocol"><i class="fa-solid fa-microphone"></i></button>
+                title="Voice input" aria-label="Voice input"><i class="fa-solid fa-microphone" aria-hidden="true"></i></button>
             <button id="chat-send" class="hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../focus/focus.js?v=a2c75ce8f0" defer></script>
-    <script src="../ai-orb-mascot.js?v=02d49c6932" defer></script>
-    <script src="../script~9e1709.js?v=4dff873c31" defer></script>
+    <script src="../focus/focus.js?v=175ef5594a" defer></script>
+    <script src="../ai-orb-mascot.js?v=9117886cd3" defer></script>
+    <script src="../script~9e1709.js?v=298ae97afd" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->
     <script>
-    function openMobileMenu() {
-        var d = document.getElementById('mobile-menu-drawer');
-        var b = document.getElementById('mobile-menu-backdrop');
-        if (d) d.classList.add('drawer-open');
-        if (b) b.classList.add('active');
-        document.body.classList.add('drawer-open');
-        var t = document.getElementById('mobile-menu-toggle');
-        if (t) { t.setAttribute('aria-expanded', 'true'); t.setAttribute('aria-label', 'Close menu'); }
-    }
-    function closeMobileMenu(e) {
-        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
-        if (e && e.stopPropagation) { e.stopPropagation(); }
-        var d = document.getElementById('mobile-menu-drawer');
-        var b = document.getElementById('mobile-menu-backdrop');
-        if (d) d.classList.remove('drawer-open');
-        if (b) b.classList.remove('active');
-        document.body.classList.remove('drawer-open');
-        var t = document.getElementById('mobile-menu-toggle');
-        if (t) { t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Open menu'); }
-    }
-    /* keep the menu button state in sync with the drawer, whichever script opened it */
+    /* the phone menu is a modal dialog and this is its only code. Closed, the drawer is inert and hidden from screen
+       readers. Open, focus moves into it, Tab goes round inside it and the rest of the page is inert; Esc, the close
+       button and the backdrop close it and give focus back to the menu button (a link just closes it) */
     (function () {
-        function sync() {
-            var d = document.getElementById('mobile-menu-drawer'), t = document.getElementById('mobile-menu-toggle');
-            if (!d || !t) return;
-            var open = d.classList.contains('drawer-open');
-            t.setAttribute('aria-expanded', open ? 'true' : 'false');
-            t.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        var toggle = document.getElementById('mobile-menu-toggle');
+        var drawer = document.getElementById('mobile-menu-drawer');
+        var backdrop = document.getElementById('mobile-menu-backdrop');
+        var closer = document.getElementById('mobile-menu-close');
+        if (!toggle || !drawer) return;
+        var muted = [];   /* what opening made inert: closing wakes only these, never what was inert already (the terminal) */
+        function isOpen() { return drawer.classList.contains('drawer-open'); }
+        function stops() {
+            return [].filter.call(drawer.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+                function (el) { return el.getClientRects().length > 0; });
         }
-        function watch() {
-            var d = document.getElementById('mobile-menu-drawer');
-            if (d) new MutationObserver(sync).observe(d, { attributes: true, attributeFilter: ['class'] });
-            sync();
+        function open() {
+            if (isOpen()) return;
+            drawer.inert = false; drawer.removeAttribute('aria-hidden');
+            drawer.classList.add('drawer-open');
+            if (backdrop) backdrop.classList.add('active');
+            document.body.classList.add('drawer-open');
+            toggle.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-label', 'Close menu');
+            /* the page goes inert and focus moves in just after the drawer's first frame: making every part of a long page
+               inert restyles all of it, and done in the tap it held the tap's paint back (the backdrop covers the page
+               meanwhile, and the keydown handler keeps Tab inside) */
+            requestAnimationFrame(function () {
+                setTimeout(function () {
+                    if (!isOpen()) return;
+                    [].forEach.call(document.body.children, function (el) {
+                        if (el === drawer || el === backdrop || el.inert || el.tagName === 'SCRIPT') return;
+                        el.inert = true; muted.push(el);
+                    });
+                    var first = stops()[0];
+                    if (first && !drawer.contains(document.activeElement)) first.focus({ preventScroll: true });
+                }, 0);
+            });
         }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+        /* backFocus false: a link was followed, or the menu closed itself; focus stays where it is. The page wakes just
+           after the drawer's first frame out, as it went inert (above) */
+        function close(e, backFocus) {
+            if (e && e.type) { if (e.cancelable) e.preventDefault(); e.stopPropagation(); }
+            if (!isOpen()) return;
+            drawer.classList.remove('drawer-open');
+            if (backdrop) backdrop.classList.remove('active');
+            document.body.classList.remove('drawer-open');
+            toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open menu');
+            requestAnimationFrame(function () {
+                setTimeout(function () {
+                    if (isOpen()) return;
+                    muted.forEach(function (el) { el.inert = false; }); muted = [];
+                    if (backFocus !== false) toggle.focus({ preventScroll: true });
+                    drawer.inert = true; drawer.setAttribute('aria-hidden', 'true');
+                }, 0);
+            });
+        }
+        toggle.addEventListener('click', function (e) {
+            if (e.cancelable) e.preventDefault();
+            e.stopPropagation();
+            if (isOpen()) close(); else open();
+        });
+        if (closer) closer.addEventListener('click', close);
+        if (backdrop) { backdrop.addEventListener('click', close); backdrop.addEventListener('touchend', close); }
+        [].forEach.call(drawer.querySelectorAll('.nav-links a'), function (a) {
+            a.addEventListener('click', function () { close(null, false); });
+        });
+        /* registered before the page's other scripts, so the menu has Esc first and nothing under it closes too */
+        document.addEventListener('keydown', function (e) {
+            if (!isOpen()) return;
+            if (e.key === 'Escape') { e.stopImmediatePropagation(); close(); return; }
+            if (e.key !== 'Tab') return;
+            var list = stops();
+            if (!list.length) return;
+            var first = list[0], last = list[list.length - 1], at = document.activeElement;
+            if (!drawer.contains(at)) { e.preventDefault(); first.focus(); }
+            else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+        });
+        /* the drawer only exists on phone widths: turned or resized past them, it closes and the page wakes */
+        var phone = window.matchMedia('(max-width: 768px)');
+        var onWidth = function (m) { if (!m.matches) close(null, false); };
+        if (phone.addEventListener) phone.addEventListener('change', onWidth); else if (phone.addListener) phone.addListener(onWidth);
     })();
     /* bottom tab bar: a pill that slides to the tapped tab; tapping the current tab scrolls to the top */
     document.addEventListener('DOMContentLoaded', function () {
@@ -440,22 +486,23 @@
        (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
     /* who is a first-time visitor is read now, before the page's scripts run: the mascot saves its greeting (greet:last)
        before load, and read at load every first visit looked like a returning one and refetched ten pages */
-    var RELEASE = '2026-10-13b', firstVisit = false, refreshed = false;
-    try {
-        refreshed = localStorage.getItem('pages_refreshed') === RELEASE;
-        firstVisit = !localStorage.getItem('pages_refreshed') && !localStorage.getItem('greet:last') && !localStorage.getItem('mehedi_theme');
-    } catch (e) { refreshed = true; }
+    /* site storage can be blocked (then reading it throws): these never throw, and a blocked visitor counts as new */
+    function stored(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function keep(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    var RELEASE = '2026-10-13b';
+    var refreshed = stored('pages_refreshed') === RELEASE;
+    var firstVisit = !stored('pages_refreshed') && !stored('greet:last') && !stored('mehedi_theme');
     window.addEventListener('load', function () {
         if (refreshed) return;
         /* first-time visitors have nothing stale to clear: mark it done and spend no bandwidth */
-        if (firstVisit) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }
+        if (firstVisit) { keep('pages_refreshed', RELEASE); return; }
         var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
         var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
         var pages = ['', 'index.html', 'profile/', 'projects/', 'people/', 'contact/', 'library/',
                      'library/skills/', 'library/bookmarks/', 'library/watch-listen/'];
         var i = 0;
         function next() {
-            if (i >= pages.length) { try { localStorage.setItem('pages_refreshed', RELEASE); } catch (e) {} return; }
+            if (i >= pages.length) { keep('pages_refreshed', RELEASE); return; }
             var p = pages[i++];
             var run = function () { fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}).then(next); };
             if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 4000 }); else setTimeout(run, 400);
@@ -479,16 +526,6 @@
             });
         }, { passive: true });
     })();
-    function toggleMobileMenu(e) {
-        if (e && e.cancelable && e.preventDefault) { e.preventDefault(); }
-        if (e && e.stopPropagation) { e.stopPropagation(); }
-        var d = document.getElementById('mobile-menu-drawer');
-        if (d && d.classList.contains('drawer-open')) {
-            closeMobileMenu();
-        } else {
-            openMobileMenu();
-        }
-    }
     </script>
 
     <!-- Instant page changes: 3 s after the page has loaded (so they never compete with it), the main pages are

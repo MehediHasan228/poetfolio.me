@@ -16,6 +16,11 @@
 (function () {
     'use strict';
     if (window.FocusPlayer) return;
+    /* site storage can be blocked (then touching it throws): it is read and written only through these */
+    const local = {
+        get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+    };
     try {
         const t = window.top;
         if (t !== window && t.FocusPlayer && t.FocusPlayer.host) {
@@ -158,7 +163,7 @@
 
     /* ---- state, kept per browser so a new page can offer to resume ---- */
     const KEY = 'focus:v1';
-    const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+    const read = () => { try { return JSON.parse(local.get(KEY)) || {}; } catch (e) { return {}; } };
     const st = Object.assign({ mix: {}, master: 0.8, active: false, at: 0, done: 0, radio: null, radioVol: 0.8, sleep: 0, lead: 'mix',
         plan: 'classic', dip: true, day: '', mins: 0, tracks: {},
         timer: { phase: 'focus', running: false, endsAt: 0, left: PHASES.focus[1] * 60000 } }, read());
@@ -171,7 +176,7 @@
     let saveTimer = 0;
     function save(now) {
         clearTimeout(saveTimer);
-        const w = () => { st.at = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+        const w = () => { st.at = Date.now(); local.set(KEY, JSON.stringify(st)); };
         if (now) w(); else saveTimer = setTimeout(w, 250);
     }
 
@@ -368,7 +373,7 @@
         return mixTitle() || 'Focus';
     }
     /* the lock screen, headset buttons and media keys: next and previous step through the presets, or the stations when only the radio plays */
-    const myStations = () => { try { return (JSON.parse(localStorage.getItem('focus:stations')) || []).filter((x) => x && /^https:\/\//i.test(x.url)); } catch (e) { return []; } };
+    const myStations = () => { try { return (JSON.parse(local.get('focus:stations')) || []).filter((x) => x && /^https:\/\//i.test(x.url)); } catch (e) { return []; } };
     function step(d) {
         const set = lead() === 'radio' && stationOf(st.radio.url);
         if (set && set.list) { surah(trackOf(set).n + d); return; }          /* in a set, next and previous are surahs */
@@ -844,6 +849,11 @@
 (function () {
     'use strict';
     if (window.TubeDock) return;
+    /* site storage can be blocked (then touching it throws): it is read and written only through these */
+    const local = {
+        get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+        set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+    };
     try {
         const t = window.top;
         if (t !== window && t.TubeDock) { window.TubeDock = t.TubeDock; return; }
@@ -858,8 +868,8 @@
         high: '<i class="fa-solid fa-volume-high"></i>', low: '<i class="fa-solid fa-volume-low"></i>', mute: '<i class="fa-solid fa-volume-xmark"></i>'
     };
     let tracks = [], index = 0, playing = false, dock = null, video = null;
-    const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
-    const stored = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
+    const store = (k, v) => local.set(k, JSON.stringify(v));
+    const stored = (k) => { try { return JSON.parse(local.get(k)); } catch (e) { return null; } };
     /* where the visitor left the dock (a side and a height), and its volume */
     let pos = stored('td:pos');
     if (!pos || !/^[lr]$/.test(pos.side) || typeof pos.top !== 'number') pos = null;
@@ -1206,7 +1216,7 @@
             send('loadVideoById', [t.id]);
         }
         playing = true;
-        try { localStorage.setItem('lib:last', JSON.stringify({ id: t.id, title: t.title, sub: t.sub || '', at: Date.now() })); } catch (e) {}
+        local.set('lib:last', JSON.stringify({ id: t.id, title: t.title, sub: t.sub || '', at: Date.now() }));
         keep(true);
         render();
         emit();
