@@ -185,7 +185,14 @@ async function runAxe(page) {
 // Tab through the page once (until focus comes back round) and keep the stops nobody can see. A stop that looks hidden
 // is looked at again after a moment, so something that fades in on focus (a skip link) isn't counted
 async function invisibleTabStops(page) {
-    await page.evaluate(() => { document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0); });
+    // focus scrolls instantly while we look (with smooth scrolling, a stop far down a long page is still on its way
+    // into view when it is measured)
+    await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = 'auto';
+        document.body.style.scrollBehavior = 'auto';
+        document.activeElement && document.activeElement.blur();
+        window.scrollTo(0, 0);
+    });
     const bad = new Map();
     const look = () => page.evaluate(() => {
         const d = window.__describeFocus();
