@@ -205,17 +205,12 @@
             <div class="hero-layout">
 
                 <div class="hero-text-side">
+                    <!-- a quiet status above the name: plain text with a still green dot (no pulse, no glow) -->
+                    <p class="hero-avail"><span class="hero-avail-dot" aria-hidden="true"></span>Available for work&nbsp;· Dhaka&nbsp;(GMT+6)</p>
                     <h1 class="hero-name">Mehedi Hasan</h1>
                     <h2 class="hero-role">AI-Native Software Engineer</h2>
                     <!-- each phrase stays whole; where the column is narrow the last phrase takes its own line, without its dot -->
                     <p class="hero-roles"><span>LLM integration</span>&nbsp;· <span>Autonomous agents</span><span class="hr-sep"> · </span><span class="hr-last">Full-stack architecture</span></p>
-
-                    <!-- three highlights, each with its project badge -->
-                    <ul class="hero-highlights" aria-label="Highlights from my work">
-                        <li><span class="hl-tag tag-rag">SAWAB</span> <span class="hl-msg">NGO ERP on Frappe + Next.js: <b>10 modules</b>, live demo</span></li>
-                        <li><span class="hl-tag tag-ai">JIBIKA</span> <span class="hl-msg">AI in HR &amp; payroll software used by <b>300+ companies</b> • ~50% less manual work</span></li>
-                        <li><span class="hl-tag tag-stream">KARBAR</span> <span class="hl-msg">ERP for Bangladesh: NBR VAT (Mushak 6.3, 6.5, 9.1), payroll &amp; TDS</span></li>
-                    </ul>
 
                     <div class="hero-cta-v2">
                         <div class="hero-cta-row">
@@ -231,6 +226,24 @@
                             </a>
                         </div>
                     </div>
+
+                    <!-- the proof card: three results, figure first; each whole row is one link to where the result comes from
+                         (Jibika's job on the profile, as the dashboard's "300+ companies" tile; the projects, where SAWAB's
+                         ERP is the first card; Karbar's page) -->
+                    <ul class="hero-proof" aria-label="Results from my work">
+                        <li><a class="hover-sound" href="./profile/#exp-jibika-intelligic-ltd">
+                            <span class="hp-fig">300+ companies</span>
+                            <span class="hp-text">AI in HR &amp; payroll, ~50% less manual work</span>
+                            <span class="hp-src">Jibika<svg class="hp-go" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a></li>
+                        <li><a class="hover-sound" href="./projects/">
+                            <span class="hp-fig">10 modules</span>
+                            <span class="hp-text">NGO ERP, live demo</span>
+                            <span class="hp-src">SAWAB<svg class="hp-go" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a></li>
+                        <li><a class="hover-sound" href="./karbar/">
+                            <span class="hp-fig">Built for BD</span>
+                            <span class="hp-text">VAT, payroll &amp; tax in one ERP</span>
+                            <span class="hp-src">Karbar<svg class="hp-go" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a></li>
+                    </ul>
                 </div>
 
                 <div class="hero-image-side">

@@ -518,39 +518,95 @@ section {
 :root[data-theme="cyberpunk"] { --accent-ink: #fb7185; }   /* the nx pages' --link: the same rose for text everywhere */   /* 6.7:1 on white, 5.3:1 on the blue tints (#2563eb fell to 4.1:1 there) */
 :root[data-theme="mint"] { --accent-ink: #047857; }
 
-/* the three highlights: a plain list, each line led by its project's badge */
-.hero-highlights {
-    list-style: none;
+/* "Available for work": a quiet status above the name, plain text (not a button) in Ink 3 with a still dot in the
+   theme's success green (no pulse, no glow). Every line height is set here, so the fonts arriving move nothing. */
+:root { --pf-ok: #4ade80; }
+:root:is([data-theme="light"], [data-theme="mint"]) { --pf-ok: #16a34a; }   /* the projects' "Live" green */
+.hero-avail {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 1.5rem 0 1.75rem;
-    padding: 14px 16px;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px;
+    font-family: 'Poppins', 'Poppins Fallback', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--pf-ink-3);
+}
+.hero-avail-dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pf-ok);
+}
+
+/* The proof card: three results, figure first. One 16px-radius list on surface with hairlines between the rows; each
+   row is one link (the row is the target): the figure (Fira Code 600, accent text), what it means (Ink 2), and where it
+   comes from at the row's end (Ink 3, an arrow after it). The figures share one column (subgrid), so the texts line up. */
+.hero-proof {
+    list-style: none;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    margin: 32px 0 0;
+    padding: 0;
     border: 1px solid var(--pf-line);
     border-radius: 16px;
     background: color-mix(in srgb, var(--pf-surface) 84%, transparent);
     text-align: left;
 }
-.hero-highlights li {
-    display: flex;
+.hero-proof li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; margin: 0; }
+.hero-proof li + li { border-top: 1px solid var(--pf-line); }
+.hero-proof a {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
     align-items: baseline;
-    gap: 10px;
-    font-size: 0.875rem;
-    line-height: 1.5;
+    column-gap: 16px;
+    min-height: 48px;
+    padding: 13px 18px;
     color: var(--pf-ink-2);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
 }
-.hero-highlights b { font-weight: 600; color: var(--pf-ink); }
-.hl-msg { text-wrap: pretty; }
-.hl-tag {
-    flex: 0 0 4.6rem;
-    padding: 1px 0;
-    border-radius: 6px;
-    text-align: center;
+.hero-proof li:first-child a { border-radius: 15px 15px 0 0; }
+.hero-proof li:last-child a { border-radius: 0 0 15px 15px; }
+.hero-proof a:hover { background: color-mix(in srgb, var(--pf-ink) 5%, transparent); }
+html body .hero-proof a:focus-visible { outline-offset: -2px; }   /* inside the card, along its rounded corners */
+.hp-fig {
     font-family: 'Fira Code', monospace;
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
+    line-height: 22px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    color: var(--accent-ink);
 }
+.hp-text {
+    font-family: 'Poppins', 'Poppins Fallback', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 22px;
+    color: var(--pf-ink-2);
+    text-wrap: pretty;
+}
+.hp-src {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    justify-self: end;
+    font-family: 'Poppins', 'Poppins Fallback', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 22px;
+    white-space: nowrap;
+    color: var(--pf-ink-3);
+    transition: color 0.2s ease;
+}
+.hp-go { flex: none; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.hero-proof a:is(:hover, :focus-visible) .hp-src { color: var(--accent-ink); }
+.hero-proof a:hover .hp-go { transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) { .hero-proof a, .hp-src, .hp-go { transition: none; } .hero-proof a:hover .hp-go { transform: none; } }
 
 /* --- TABLET LANDSCAPE & COMPACT DESKTOP HERO HARMONIZATION --- */
 @media (min-width: 861px) and (max-width: 1200px) {
@@ -716,9 +772,6 @@ section {
 }
 
 
-.tag-ai { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-.tag-stream { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-.tag-rag { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
 
 /* ==========================================
    DASHBOARD GRID (API & TELEMETRY)
@@ -2755,24 +2808,6 @@ footer {
 /* --- 6. TERMINAL FEED / LIVE SYSTEM LOGS (Light Theme) --- */
 
 
-:is([data-theme="light"], [data-theme="mint"]) .tag-ai {
-    background: #f5f3ff !important;
-    color: #6d28d9 !important;
-    border: 1px solid #ddd6fe !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .tag-stream {
-    background: #fffbeb !important;
-    color: #b45309 !important;
-    border: 1px solid #fde68a !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .tag-rag {
-    background: #ecfdf5 !important;
-    color: #047857 !important;
-    border: 1px solid #a7f3d0 !important;
-}
-
 
 /* --- 7. SYSTEM MONITOR FLOATING WIDGET (Light Theme) --- */
 :is([data-theme="light"], [data-theme="mint"]) .sys-monitor {
@@ -3214,7 +3249,7 @@ footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.85rem;
-    margin-top: 1.4rem;
+    margin-top: 24px;
     position: relative;
     z-index: 5;
 }
@@ -3288,8 +3323,7 @@ footer {
     .hero-cta-v2 {
         align-items: stretch;
         width: 100%;
-        margin-top: 1.2rem;
-        margin-bottom: 1.2rem;
+        margin-top: 16px;
     }
 
 
@@ -3580,13 +3614,6 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     box-shadow: 0 4px 14px var(--shade, rgba(0, 0, 0, 0.4)) !important;
 }
 
-
-[data-theme="mint"] .tag-rag,
-[data-theme="mint"] .tag-ai {
-    background: #eaf6f0 !important;
-    border-color: #a7f3d0 !important;
-    color: #047857 !important;
-}
 
 [data-theme="mint"] .mon-title {
     color: #059669 !important;
@@ -4960,18 +4987,25 @@ html body .nx:not(#_bg) { background: transparent !important; }
     inset: -60px -90px -50px -120px;
     background: radial-gradient(closest-side, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 88%, transparent) 55%, transparent 100%);
 }
+/* beside the photo the column's first line (the status) sits in its top-left corner, where the oval had faded out: the
+   oval reaches further up and left there, so that line is as clear of the lines as the name */
+@media (min-width: 861px) {
+    .hero .hero-text-side::before { inset: -140px -90px -50px -160px; }
+}
 .hero .hero-image-side { position: relative; isolation: isolate; }
 .hero .hero-image-side::before {
     content: ""; position: absolute; z-index: -1; pointer-events: none; inset: -30px;
     background: radial-gradient(closest-side, color-mix(in srgb, var(--bg-color) 70%, transparent) 60%, transparent 100%);
 }
 
-/* Phones: a larger portrait; the three highlights wrap in a compact list */
+/* Phones: a larger portrait */
 @media (max-width: 767px) {
     html body .hero-image-wrapper:not(#_h) { max-width: 176px !important; width: 46vw !important; padding: 8px !important; border-radius: 26px !important; }
-    .hero-highlights { gap: 6px; margin: 0.9rem 0 1rem; padding: 10px 12px; }
-    .hero-highlights li { gap: 8px; font-size: 0.8125rem; line-height: 1.4; }
-    .hl-tag { flex-basis: 4.4rem; }
+}
+/* Short phones (360x640, 375x667): a smaller portrait, the same shape and the same image files, so the whole row of
+   actions sits above the tab bar with room to spare. A media query, so it holds from the first paint (no shift). */
+@media (max-width: 767px) and (max-height: 700px) {
+    html body .hero-image-wrapper:not(#_h) { max-width: 148px !important; }
 }
 
 /* FLOATING CONTROLS, ONE RULE. The folded chat is the only floating control (WhatsApp lives in the phone menu, on
@@ -5222,6 +5256,35 @@ html body .hero-text-side .hero-roles:not(#_h) {
 /* Stacked and centred (769-860px): the buttons are centred under the centred text too */
 @media (min-width: 769px) and (max-width: 860px) {
     .hero-cta-v2, .hero-cta-row { align-items: center; justify-content: center; }
+}
+/* Centred (860px and below): the status line is centred over the name too */
+@media (max-width: 860px) {
+    .hero-avail { justify-content: center; }
+}
+@media (max-width: 768px) {
+    .hero-avail { margin-bottom: 6px; font-size: 0.8125rem; }
+}
+/* The proof rows in a narrow column (phones, the column beside the photo at 1024px): the figure and its source share
+   the first line, the text takes the whole second line, so nothing is squeezed into a thin middle column */
+@container hero-text (max-width: 540px) {
+    .hero-proof { display: block; margin-top: 24px; }
+    .hero-proof li { display: block; }
+    .hero-proof a {
+        grid-template-columns: minmax(0, 1fr) max-content;
+        grid-template-areas: "fig src" "text text";
+        row-gap: 2px;
+        column-gap: 12px;
+        padding: 11px 16px;
+    }
+    .hp-fig { grid-area: fig; }
+    .hp-src { grid-area: src; }
+    .hp-text { grid-area: text; }
+}
+@media (max-width: 768px) {
+    .hero-proof { margin-top: 20px; }
+    .hp-fig { font-size: 0.875rem; line-height: 20px; }
+    .hp-text { font-size: 0.8125rem; line-height: 20px; }
+    .hp-src { font-size: 0.78125rem; line-height: 20px; }
 }
 
 /* Loops that ran on the main thread every frame now run on the GPU (each forced a layout pass, which also slows the

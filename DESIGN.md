@@ -143,15 +143,18 @@ One accent per theme, used for links, the current page, figures and the primary 
 | fill gradient | #00f2fe → #4facfe | #f43f5e → #eab308 | #1d4ed8 → #2563eb | #34d399 → #10b981 | #00ff00 → #00cc00 |
 | text on a fill (`--accent-active-color`, nx `--on-brand`) | #0b1120 | #09090b | #ffffff | #022c22 | #000000 |
 | shadow colour (`--shade`) | black 45% | black 50% | navy 16% | navy 16% | black 60% |
+| success (`--pf-ok`, a dot, not text) | #4ade80 | #4ade80 | #16a34a | #16a34a | #4ade80 |
 
 Every text pair above passes 4.5:1, on the page, on surface-2 and on the fill (God mode's ink-3 is 7.9:1 on its
-cards; Light's accent text 5.3:1 even on its own blue tints). Muted text is the ink-3 token, never ink at a lower
+cards; Light's accent text 5.3:1 even on its own blue tints). The success dot is a graphic: 3.1:1 or more on every page
+colour. Muted text is the ink-3 token, never ink at a lower
 opacity: opacity fell under 4.5:1 in Light and Mint.
 
 God mode is listed in the theme menu only after the Konami code unlocks it (`mehedi_godmode` in storage).
 
 **The One Accent Rule.** A screen uses its theme's accent for state and emphasis only: the current page, links, one
-filled button per group, key figures. Project badges (green, purple, amber) are the only other hues.
+filled button per group, key figures. Status colours (the success green of "Available for work" and "Live"; amber,
+pink on Profile's work rows) are the only other hues.
 
 **The Accent-as-Text Rule.** Text, icons and focus outlines in the accent use `--accent-ink` (nx `--link`), never
 the raw brand: Mint's brand green is too light on white (2.5:1), so it reads in deep green there, and Light's in a
@@ -259,27 +262,49 @@ the hero portrait 26px. Buttons and header controls are full pills or circles. B
   (dashboard tiles); that light is the accent at low opacity on the border only.
 
 ### Home hero
-- Left (desktop) or under the photo, centred (phones and below 861px): the name as the h1 (Display, Ink), the role as
-  its subtitle (Subtitle, accent text) 10px under it (4px on phones), and right under the role one quiet line of
-  specialities, "LLM integration · Autonomous agents · Full-stack architecture" (Poppins 400, 15px, 13px on phones,
-  Ink 2), 6px under it (4px on phones). No height is reserved for any of them, so nothing leaves an empty band. The
-  specialities break only between phrases: where the text column is under 470px (a container query) the last phrase
-  takes its own line without its dot.
-- Then the highlights list, then one row of three actions: See my work (primary), Book a Call (secondary, WhatsApp),
-  Download CV (quiet, with its icon). Phones: the two filled buttons share the first line and Download CV takes the
-  whole second line, its label centred. Beside the photo in a column under 480px (1024px, a short 900px window): the
-  two filled ones, then Download CV on the next line with its icon on the column's edge. Stacked and centred
-  (769-860px): the row is centred too.
+- One order at every size, top to bottom: the status line, the name, the role, the specialities, the actions, the proof
+  card. Left beside the photo (desktop, from 861px), or under the photo and centred (860px and below; the proof card's
+  rows stay left-aligned).
+- **Status line:** "Available for work · Dhaka (GMT+6)", plain text, not a button or a chip: Poppins 400, 14px (13px on
+  phones), Ink 3, after an 8px still dot in the success green (`--pf-ok`), with no pulse and no glow. 14px above the name
+  (6px on phones).
+- The name as the h1 (Display, Ink), the role as its subtitle (Subtitle, accent text) 10px under it (4px on phones), and
+  right under the role one quiet line of specialities, "LLM integration · Autonomous agents · Full-stack architecture"
+  (Poppins 400, 15px, 13px on phones, Ink 2), 6px under it (4px on phones). No height is reserved for any of them, so
+  nothing leaves an empty band. The specialities break only between phrases: where the text column is under 470px (a
+  container query) the last phrase takes its own line without its dot.
+- **Actions,** 24px under the specialities (16px on phones), one row of three: See my work (primary), Book a Call
+  (secondary, WhatsApp), Download CV (quiet, with its icon). Phones: the two filled buttons share the first line and
+  Download CV takes the whole second line, its label centred. Beside the photo in a column under 480px (1024px, a short
+  900px window): the two filled ones, then Download CV on the next line with its icon on the column's edge. Stacked and
+  centred (769-860px): the row is centred too.
+- **Proof card,** 32px under the actions (24px in a narrow column, 20px on phones): a list labelled "Results from my
+  work", on surface at 84% with a 1px `line` border and a 16px radius, its three rows split by `line` hairlines. Each
+  row is one link, so the row is the target, figure first: the figure (Fira Code 600, 15px, 14px on phones,
+  `--accent-ink`), what it means (Poppins 400, 14px, 13px on phones, Ink 2), and the source at the row's end (Poppins
+  13px, 12.5px on phones, Ink 3, a small arrow after it). No chips, no other colours. The figures share one column
+  (subgrid), so the texts line up; where the text column is under 540px (a container query: phones, beside the photo at
+  1024px) the figure and the source share the first line and the text takes the second. Rows are 48px tall (64px on
+  phones). Hover: a 5% ink tint, the source and arrow in the accent, the arrow 2px on (no motion under reduced motion).
+  Focus: the 2px accent ring inset by 2px, along the card's corners. Each row leads to where its result comes from:
+  Jibika's job on the profile (the dashboard's "300+ companies" tile goes there too), the projects (SAWAB's ERP is the
+  first card), Karbar's page. The details the rows leave out live there: Frappe and Next.js on Projects and Profile,
+  Mushak 6.3, 6.5, 6.6, 9.1 and TDS on Projects and /karbar/.
+- First screen: on phones the whole row of actions sits above the tab bar (at 360x640 and 375x667 the photo is 148px
+  wide instead of 176px, by a height media query: the same shape and image files, no shift); the proof card may start
+  below the fold. On desktops everything from the status line to the first proof row is in the first screen at 1280x800
+  and 1440x900. Every line in the hero takes its line height from the stylesheet, so nothing moves when the fonts arrive.
+- The dot network fades out behind the text column in an oval; beside the photo the oval reaches further up and left,
+  so the status line in the column's top-left corner is as clear of the lines as the name.
 - The portrait: the photo itself wears the frame, one 1px hairline in the theme's `line` colour, 26px radius, the lift
   shadow. No outer ring or card around it; the box that floats it is transparent.
 
 ### Chips and badges
-- Chips: surface-2 with a 1px line ring, 999px or 6px radius, Ink 2 text. Project badges in the hero: Fira Code 12px,
-  6px radius, their own green, purple or amber at 12-15% fill with a 30% border.
+- Chips: surface-2 with a 1px line ring, 999px or 6px radius, Ink 2 text.
 
 ### List rows
-- The hero highlights: a 16px-radius list on surface (84%), one row per item: badge, then the text in Ink 2 with the
-  figure in Ink 600. Dashboard rows: surface-2, 10-12px radius, 40px+ tall.
+- The hero's proof card: a 16px-radius list on surface (84%), hairlines between rows, each row one link, figure first
+  (see Home hero). Dashboard rows: surface-2, 10-12px radius, 40px+ tall.
 
 ### Footer
 - One row under a hairline, max 1200px: the copyright (13px, Ink 3) left; the DMCA badge and the Terminal button
