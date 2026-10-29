@@ -118,14 +118,6 @@ export async function initSlats() {
         observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
     }
 
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('#theme-toggler, .theme-btn, [data-theme-toggle]')) {
-            setTimeout(updateAllSlats, 20);
-            setTimeout(updateAllSlats, 100);
-            setTimeout(updateAllSlats, 300);
-        }
-    });
-
     window.addEventListener('storage', (e) => {
         if (e.key === 'mehedi_theme') {
             updateAllSlats();

@@ -559,7 +559,7 @@
             if (kd('experience') + kd('education') > 15000) s.recruiter += 2;
             if (has('/profile/')) s.recruiter += 1;
             if (st.clicks.github) s.technical += 2;
-            if (has('/stack/') || has('/architecture/')) s.technical += 2;
+            if (has('/architecture/')) s.technical += 2;
             if (kd('architecture') + kd('skills') > 10000) s.technical += 2;
             if (Object.values(st.chips).reduce((a, b) => a + b, 0) >= 2) s.technical += 2;
             const sel = st.sel && Date.now() - st.sel.at < 4 * 60000 ? st.sel : null;

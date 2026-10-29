@@ -232,11 +232,4 @@
   } else {
     init();
   }
-
-  // Hook into theme toggles
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#theme-toggler, .theme-btn, [data-theme-toggle]')) {
-      setTimeout(init, 50);
-    }
-  });
 })();

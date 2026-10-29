@@ -19,6 +19,7 @@
  *   a click that takes more than 200 ms to paint, with the CPU slowed 4x like a mid-range phone
  *   errors when the browser blocks site storage (localStorage throws)
  *   internal links that don't answer 200, and #anchors that point nowhere
+ *   a page that forwards (meta refresh: /stack/, /sandbox/) to a page that doesn't answer or a #part it doesn't have
  *   a ?v= on a CSS/JS reference that doesn't match the file's content hash (npm run stamp fixes these)
  */
 const fs = require('fs');
@@ -62,6 +63,30 @@ function discoverPages() {
     walk(DOCS);
     if (fs.existsSync(path.join(DOCS, '404.html'))) pages.push('/404.html');
     return pages.sort();
+}
+
+// where a page that only forwards (meta refresh) sends the visitor, as a full URL; null for a normal page
+function redirectTarget(p) {
+    const m = fs.readFileSync(pageFile(p), 'utf8').match(/http-equiv="refresh"\s+content="\d+;\s*url=([^"]+)"/i);
+    return m ? new URL(m[1], BASE + p).href : null;
+}
+
+// a forward must land on a page that answers, on the #part it names (checked in the built file)
+function checkRedirects(redirects) {
+    const failures = [];
+    for (const p of redirects) {
+        const to = redirectTarget(p);
+        if (!to) { failures.push({ type: 'redirect', key: `redirect|${p}|none`, detail: `${p}: forwards nowhere (no url in its meta refresh)` }); continue; }
+        const u = new URL(to);
+        if (u.origin !== new URL(BASE).origin || !u.hash) continue;
+        const file = pageFile(normalisePage(u.pathname));
+        const id = decodeURIComponent(u.hash.slice(1));
+        const html = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+        if (!new RegExp(`\\sid="${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`).test(html)) {
+            failures.push({ type: 'redirect', key: `redirect|${p}|${u.pathname}${u.hash}`, detail: `${p} forwards to ${u.pathname}${u.hash}, which has no element with that id` });
+        }
+    }
+    return failures;
 }
 
 // "/profile" and "/profile/" are the same page; "/404.html" is a file
@@ -412,10 +437,15 @@ function launchOptions() {
     main.forEach((r) => failures.push(...r.fails));
     step(`pages, axe (dark), Tab stops: ${main.reduce((n, r) => n + r.fails.length, 0)} problems`);
 
-    const links = [...new Set(main.flatMap((r) => r.links).map((u) => u.split('#')[0]).concat(redirects.map((p) => BASE + p)))];
+    const targets = redirects.map(redirectTarget).filter((u) => u && u.startsWith(BASE));
+    const links = [...new Set(main.flatMap((r) => r.links).concat(redirects.map((p) => BASE + p), targets).map((u) => u.split('#')[0]))];
     const linkFails = await checkLinks(links);
     failures.push(...linkFails);
     step(`${links.length} internal links: ${linkFails.length} broken`);
+
+    const redirectFails = checkRedirects(redirects);
+    failures.push(...redirectFails);
+    step(`${redirects.length} pages that forward (${redirects.join(', ') || 'none'}): ${redirectFails.length} land nowhere`);
 
     const stampFails = checkStamps();
     failures.push(...stampFails);

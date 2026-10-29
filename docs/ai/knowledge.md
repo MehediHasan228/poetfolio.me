@@ -43,6 +43,7 @@ AI skills, bookmarks, and what I watch and listen to.
 - AI Skills 11
 - Bookmarks 44
 - Watch & Listen 45
+- AI Leaderboard Daily
 Up next Surah Ar-Rahman Omar Hisham Al Arabi
 Open the library
 ### Focus
@@ -55,7 +56,7 @@ Tell me what you need. I work from Dhaka (GMT+6), remote-first.
 Message on WhatsApp Discuss with my AI Email me
 or use the contact form
 
-# Profile: experience, education, skills (/profile/)
+# Profile: experience, education, skills, tools (/profile/)
 ## Mehedi Hasan
 AI-Native Software Engineer
 - Software Developer at SAWAB Bangladesh · 4+ yrs
@@ -146,6 +147,74 @@ PostgreSQL pgvector Kafka Redis Pub/Sub Qdrant Supabase RabbitMQ
 #### Infra & observability
 Containers, cloud and monitoring
 Docker GitHub Actions Cloudflare AWS Google Cloud Namecheap Langfuse OpenTelemetry Grafana
+### Sample designs
+Four sample designs that put these tools together, each with its pipeline and code.
+TypeScript order_service.nest.ts
+#### Transactional Outbox & Event-Driven Pipeline
+High-Concurrency Ingress with ACID Protection & Apache Kafka Pub/Sub
+NestJS Microservices PostgreSQL ACID Apache Kafka Distributed Tx
+- 1.2ms Ingress Latency
+- 100% ACID Tx Isolation
+- 0% Drop Kafka Reliability
+- 50k+ RPM Peak Capacity
+Pipeline and code
+- Step 01 // Ingress Order Ingestion
+REST/gRPC checkout payload validated & ingested via NestJS controller.
+- Step 02 // ACID Tx Row-Locked Write
+PostgreSQL connection pool executes atomic BEGIN -> INSERT with row locking.
+- Step 03 // Kafka Emit Event Publication
+Outbox event emitted to order.dispatched stream with zero packet loss.
+- Step 04 // Downstream Async Sync & Rollback
+Inventory & payment microservices sync; automated rollback on exception.
+TypeScript distributed_cache.ts
+#### Distributed Mutex Lock & Cache Stampede Shield
+Redis Cluster Engine with NX Mutex & Token Bucket Rate Limiting
+Redis Cluster ioredis Redlock Algorithm Stampede Prevention
+- 99.4% Cache Hit Ratio
+- 3000ms Lock TTL Safety
+- Zero-Dogpile Stampede Guard
+- 100k+ OPS Redis Throughput
+- Step 01 // Burst Read Traffic Ingress
+High-concurrency read requests hit distributed cache layer simultaneously.
+- Step 02 // Mutex Lock Redlock NX Check
+Acquires atomic distributed lock with 3000ms TTL to prevent dogpiling.
+- Step 03 // Failsafe Wait Wait & Retry (50ms)
+Secondary workers wait and read cached result instead of hitting database.
+- Step 04 // Hydration Atomic Hydration
+Winning worker queries DB once, re-hydrates Redis, and releases mutex.
+Python agentic_pipeline.py
+#### Autonomous Vector RAG & Agentic Swarm
+Enterprise Knowledge Grounding with Gemini 1.5 Pro & PGVector HNSW
+LangChain Gemini 1.5 Pro PGVector HNSW Async Python
+- 18.4ms Retrieval Speed
+- 96.8% Context Density
+- 0% Hallucination Strict Grounding
+- 1M Tokens Context Window
+- Step 01 // Embed Semantic Query Parse
+User prompt parsed and converted into dense 768-dim vector embeddings.
+- Step 02 // Search PGVector Cosine Search
+HNSW index runs sub-15ms nearest-neighbor semantic cosine similarity match.
+- Step 03 // Grounding Context Fusion
+Top-5 authoritative document chunks extracted and injected into prompt context.
+- Step 04 // Synthesis Gemini 1.5 Synthesis
+Gemini 1.5 Pro produces hallucination-free answer with exact citations.
+YAML k8s_deployment.yaml
+#### Cloud-Native Kubernetes & Auto-Healing Cluster
+High-Availability Container Orchestration with Prometheus Telemetry
+AWS EKS Kubernetes Apps/v1 Prometheus Scrape RollingUpdate
+- 99.99% Production SLA
+- 5 Replicas Active Redundancy
+- < 3s Auto-Healing Time
+- 1Gi / 1000m Pod Limits
+- Step 01 // Routing Cloudflare Ingress
+Global CDN and ingress controller route authenticated traffic to API gateway.
+- Step 02 // Scaling 5x Pod Replicas
+Auto-scaled stateless NestJS pods balance CPU/memory load evenly across nodes.
+- Step 03 // Rollout Zero-Downtime Rollout
+RollingUpdate strategy swaps container images with zero service interruption.
+- Step 04 // Metrics Prometheus Scrape
+Prometheus scrapes port 3000 every 15s to push alerts to Grafana dashboard.
+How I design systems: the architecture
 ## Education
 ### B.Sc. in Computer Science & Engineering
 Daffodil International University (DIU), Dhaka · Graduated 2022
@@ -176,7 +245,7 @@ Volunteer
 Technical contributor for community websites and open-source non-profit initiatives.
 Non-profit WordPress Community tech
 
-# Projects (/projects/)
+# Projects and experiments (/projects/)
 Products I've designed, built and shipped: NGO and ERP platforms, AI automation and web projects.
 Live demo Live Demo
 ### SAWAB NGO ERP
@@ -214,27 +283,33 @@ WordPress Volunteer
 ### HBIZZ Corporate Website
 Corporate website for a freight and logistics company on WordPress with cPanel hosting configuration and performance monitoring.
 WordPress cPanel
-
-# Tech stack (/stack/)
-Home / Stack
-## Technology Stack
-The tools I reach for in production, grouped by what they are used for: AI and agents, full-stack web, data and vector search, and cloud/DevOps.
-- TypeScript, NestJS, Next.js and Laravel (Filament)
-- PostgreSQL, PGVector and Redis for data and retrieval
-- OpenAI, Claude, Gemini and local models via Ollama
-mehedi_workspace - VS Code
-order_service.nest.ts
-EXPLORER
-main*
-TypeScript
+## Experiments
+Where I experiment: local LLM clusters, edge inference, autonomous swarms and creative side projects that later feed into client work.
+Neural Logic
+### Local LLM Clusters
+Deployment: Ollama, DeepSeek & Llama 3 quantized pipelines
+Hardware Telemetry
+### Edge Hardware Inference
+Throughput: High-bandwidth Apple Silicon & GPU acceleration
+Systems Logic
+### Autonomous Swarms
+Orchestration: n8n, LangGraph & event-driven state machines
+Computational Art
+### Sacred Geometry
+Synthesis: Procedural symmetry & Islamic geometric patterns
+Visual Media
+### Cinematic Storytelling
+Pipeline: FFmpeg automation, video grading & 9:16 virality AI
+Knowledge Engine
+### Synthesized Wisdom
+Archive: Classical epistemology bridged with modern CS systems
 
 # Architecture (/architecture/)
-Home / Architecture
-## Architecture
 How I design systems: clean-architecture NestJS services, event streaming with Kafka, Redis-backed consistency and agentic AI layers on top. Four-plus years of freelance delivery across ERP, NGO and AI automation products.
 - Clean-architecture NestJS + PostgreSQL + Redis backends
 - Event-driven design with Kafka and gRPC between services
 - Agentic layer: LangGraph, MCP and RAG over PGVector
+## System Architecture
 ### Autonomous AI & Agents
 Agentic SOTA
 Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.
@@ -251,71 +326,72 @@ Kafka RabbitMQ Redis Pub/Sub
 HA Cluster
 Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards & centralized ELK logging.
 Docker Kubernetes AWS Prometheus Grafana ELK
-#### AI Models
+### AI Models
 Foundation SOTA
 Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.
 OpenAI Claude Gemini Qwen Llama Mistral DeepSeek
-#### AI Agents
+### AI Agents
 Autonomous Actors
 Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.
 Hermes agent OpenClaw Claude Code Codex Gemini CLI OpenCode Goose Aider
-#### AI IDE
+### AI IDE
 Next-Gen Editors
 Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.
 Cursor Windsurf GitHub Copilot Kiro Antigravity
-#### Agent Framework
+### Agent Framework
 Multi-Agent Swarm
 Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.
 LangGraph LangChain CrewAI AutoGen PydanticAI
-#### Protocol / Tools
+### Protocol / Tools
 Open Protocols
 Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.
 MCP A2A Function Calling Tool Use
-#### Local AI
+### Local AI
 Edge & Private
 Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.
 Ollama LM Studio llama.cpp vLLM
-#### Automation
+### Automation
 Event Pipeline
 Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.
 n8n Zapier Make
 High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.
-#### RAG / Vector
+### RAG / Vector
 Dense Retrieval
 High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.
 Pinecone Chroma Qdrant Weaviate
-#### AI Database
+### AI Database
 Storage & Vectors
 ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.
 PostgreSQL pgvector Supabase MongoDB
-#### Web AI
+### Web AI
 Streaming Edge UI
 Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.
 Vercel AI SDK AI SDK OpenAI SDK
-#### Frontend
+### Frontend
 Reactive Interface
 Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.
 React Next.js TypeScript Tailwind
-#### Backend
+### Backend
 Distributed Primitives
 Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.
 Node.js NestJS Express Python FastAPI
-#### Cloud
+### Cloud
 Hyperscale Edge
 Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.
 Vercel AWS Google Cloud Cloudflare
-#### DevOps
+### DevOps
 Containers & CD
 Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.
 Docker GitHub Actions Kubernetes
-#### Observability
+### Observability
 Tracing & Metrics
 End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.
 Prometheus Grafana ELK LangSmith Langfuse OpenTelemetry
-#### AI UI / Design
+### AI UI / Design
 Generative Scaffolding
 Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.
 v0 Lovable Bolt Google Stitch
+Every tool I use Projects built this way
 
 # People (/people/)
 ## People I learn from
@@ -379,7 +455,7 @@ Email mehedihasan228.cse@gmail.com WhatsApp +880 1799-447594 LinkedIn in/mehedi-
 100 things I use, love and recommend
 ## My library
 The AI skills in my daily workflow, the sites I keep bookmarked and the nasheeds on repeat while I code.
-11 AI Skills 44 Bookmarks 45 Watch & Listen Focus Sounds & a timer
+11 AI Skills 44 Bookmarks 45 Watch & Listen Focus Sounds & a timer AI Leaderboard Which AI models lead right now: Arena's daily ranking for agents, chat, code, image and video.
 ## AI Skills
 The agent skills I use every day in my agentic development workflow.
 See all 11

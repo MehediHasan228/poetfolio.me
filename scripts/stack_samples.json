@@ -1,0 +1,217 @@
+{
+ "_about": "The code samples and their pipelines that the old /stack/ page showed in its editor; Profile > Tools shows them now (build_nx_pages.py, tool_samples). The code is HTML with keyword/string/comment/function spans.",
+ "samples": [
+  {
+   "file": "order_service.nest.ts",
+   "lang": "TypeScript",
+   "code": "<span class=\"keyword\">import</span> { Controller, Inject } <span class=\"keyword\">from</span> <span class=\"string\">'@nestjs/common'</span>;\n<span class=\"keyword\">import</span> { MessagePattern, Payload } <span class=\"keyword\">from</span> <span class=\"string\">'@nestjs/microservices'</span>;\n<span class=\"keyword\">import</span> { ClientKafka } <span class=\"keyword\">from</span> <span class=\"string\">'@nestjs/microservices'</span>;\n\n<span class=\"comment\">// High-Concurrency Event-Driven Microservice</span>\n@<span class=\"function\">Controller</span>()\n<span class=\"keyword\">export class</span> <span class=\"function\">OrderConsumerController</span> {\n    <span class=\"keyword\">constructor</span>(\n        @<span class=\"function\">Inject</span>(<span class=\"string\">'KAFKA_SERVICE'</span>) <span class=\"keyword\">private readonly</span> kafkaClient: ClientKafka,\n        <span class=\"keyword\">private readonly</span> dbPool: PostgresConnectionPool\n    ) {}\n\n    @<span class=\"function\">MessagePattern</span>(<span class=\"string\">'order.checkout.v1'</span>)\n    <span class=\"keyword\">async</span> <span class=\"function\">handleOrderEvent</span>(@<span class=\"function\">Payload</span>() data: OrderPayload) {\n        <span class=\"keyword\">const</span> client = <span class=\"keyword\">await</span> <span class=\"keyword\">this</span>.dbPool.connect();\n        <span class=\"keyword\">try</span> {\n            <span class=\"keyword\">await</span> client.query(<span class=\"string\">'BEGIN'</span>);\n            <span class=\"keyword\">const</span> record = <span class=\"keyword\">await</span> client.query(\n                <span class=\"string\">'INSERT INTO orders(id, amount, status) VALUES($1, $2, $3) RETURNING *'</span>,\n                [data.id, data.amount, <span class=\"string\">'PROCESSING'</span>]\n            );\n            <span class=\"keyword\">await</span> client.query(<span class=\"string\">'COMMIT'</span>);\n            <span class=\"keyword\">this</span>.kafkaClient.emit(<span class=\"string\">'order.dispatched'</span>, { orderId: record.rows[0].id });\n            <span class=\"keyword\">return</span> { status: <span class=\"string\">'DISPATCHED_TO_PIPELINE'</span>, latency: <span class=\"string\">'1.2ms'</span> };\n        } <span class=\"keyword\">catch</span> (err) {\n            <span class=\"keyword\">await</span> client.query(<span class=\"string\">'ROLLBACK'</span>);\n            <span class=\"keyword\">throw</span> err;\n        }\n    }\n}",
+   "title": "Transactional Outbox & Event-Driven Pipeline",
+   "subtitle": "High-Concurrency Ingress with ACID Protection & Apache Kafka Pub/Sub",
+   "badges": [
+    "NestJS Microservices",
+    "PostgreSQL ACID",
+    "Apache Kafka",
+    "Distributed Tx"
+   ],
+   "steps": [
+    {
+     "step": "Step 01 // Ingress",
+     "title": "Order Ingestion",
+     "desc": "REST/gRPC checkout payload validated & ingested via NestJS controller."
+    },
+    {
+     "step": "Step 02 // ACID Tx",
+     "title": "Row-Locked Write",
+     "desc": "PostgreSQL connection pool executes atomic BEGIN -> INSERT with row locking."
+    },
+    {
+     "step": "Step 03 // Kafka Emit",
+     "title": "Event Publication",
+     "desc": "Outbox event emitted to order.dispatched stream with zero packet loss."
+    },
+    {
+     "step": "Step 04 // Downstream",
+     "title": "Async Sync & Rollback",
+     "desc": "Inventory & payment microservices sync; automated rollback on exception."
+    }
+   ],
+   "metrics": [
+    {
+     "value": "1.2ms",
+     "label": "Ingress Latency"
+    },
+    {
+     "value": "100% ACID",
+     "label": "Tx Isolation"
+    },
+    {
+     "value": "0% Drop",
+     "label": "Kafka Reliability"
+    },
+    {
+     "value": "50k+ RPM",
+     "label": "Peak Capacity"
+    }
+   ]
+  },
+  {
+   "file": "distributed_cache.ts",
+   "lang": "TypeScript",
+   "code": "<span class=\"keyword\">import</span> Redis <span class=\"keyword\">from</span> <span class=\"string\">'ioredis'</span>;\n\n<span class=\"comment\">// Redis Cluster Distributed Lock & Rate Limiter (Token Bucket)</span>\n<span class=\"keyword\">export class</span> <span class=\"function\">DistributedCacheEngine</span> {\n    <span class=\"keyword\">private</span> cluster: Redis.Cluster;\n\n    <span class=\"keyword\">constructor</span>() {\n        <span class=\"keyword\">this</span>.cluster = <span class=\"keyword\">new</span> Redis.Cluster([{ host: <span class=\"string\">'redis-cluster'</span>, port: 6379 }]);\n    }\n\n    <span class=\"keyword\">async</span> <span class=\"function\">acquireLockAndCache</span>(key: <span class=\"variable\">string</span>, ttlMs: <span class=\"variable\">number</span>, fetchFn: () =&gt; Promise&lt;any&gt;) {\n        <span class=\"keyword\">const</span> lockKey = `lock:${key}`;\n        <span class=\"keyword\">const</span> acquired = <span class=\"keyword\">await</span> <span class=\"keyword\">this</span>.cluster.set(lockKey, <span class=\"string\">'LOCKED'</span>, <span class=\"string\">'PX'</span>, 3000, <span class=\"string\">'NX'</span>);\n        \n        <span class=\"keyword\">if</span> (!acquired) {\n            <span class=\"keyword\">await</span> <span class=\"keyword\">new</span> Promise(res =&gt; setTimeout(res, 50));\n            <span class=\"keyword\">return</span> <span class=\"keyword\">this</span>.cluster.get(key); <span class=\"comment\">// Cache stampede protection</span>\n        }\n\n        <span class=\"keyword\">try</span> {\n            <span class=\"keyword\">const</span> freshData = <span class=\"keyword\">await</span> fetchFn();\n            <span class=\"keyword\">await</span> <span class=\"keyword\">this</span>.cluster.set(key, JSON.stringify(freshData), <span class=\"string\">'PX'</span>, ttlMs);\n            <span class=\"keyword\">return</span> freshData;\n        } <span class=\"keyword\">finally</span> {\n            <span class=\"keyword\">await</span> <span class=\"keyword\">this</span>.cluster.del(lockKey);\n        }\n    }\n}",
+   "title": "Distributed Mutex Lock & Cache Stampede Shield",
+   "subtitle": "Redis Cluster Engine with NX Mutex & Token Bucket Rate Limiting",
+   "badges": [
+    "Redis Cluster",
+    "ioredis",
+    "Redlock Algorithm",
+    "Stampede Prevention"
+   ],
+   "steps": [
+    {
+     "step": "Step 01 // Burst Read",
+     "title": "Traffic Ingress",
+     "desc": "High-concurrency read requests hit distributed cache layer simultaneously."
+    },
+    {
+     "step": "Step 02 // Mutex Lock",
+     "title": "Redlock NX Check",
+     "desc": "Acquires atomic distributed lock with 3000ms TTL to prevent dogpiling."
+    },
+    {
+     "step": "Step 03 // Failsafe Wait",
+     "title": "Wait & Retry (50ms)",
+     "desc": "Secondary workers wait and read cached result instead of hitting database."
+    },
+    {
+     "step": "Step 04 // Hydration",
+     "title": "Atomic Hydration",
+     "desc": "Winning worker queries DB once, re-hydrates Redis, and releases mutex."
+    }
+   ],
+   "metrics": [
+    {
+     "value": "99.4%",
+     "label": "Cache Hit Ratio"
+    },
+    {
+     "value": "3000ms",
+     "label": "Lock TTL Safety"
+    },
+    {
+     "value": "Zero-Dogpile",
+     "label": "Stampede Guard"
+    },
+    {
+     "value": "100k+ OPS",
+     "label": "Redis Throughput"
+    }
+   ]
+  },
+  {
+   "file": "agentic_pipeline.py",
+   "lang": "Python",
+   "code": "<span class=\"keyword\">import</span> asyncio\n<span class=\"keyword\">from</span> langchain_google_genai <span class=\"keyword\">import</span> ChatGoogleGenerativeAI\n<span class=\"keyword\">from</span> pgvector.asyncpg <span class=\"keyword\">import</span> register_vector\n\n<span class=\"comment\"># Autonomous LLM RAG & Orchestration Engine</span>\n<span class=\"keyword\">async def</span> <span class=\"function\">orchestrate_inference</span>(query: str, pool):\n    model = ChatGoogleGenerativeAI(model=<span class=\"string\">\"gemini-1.5-pro\"</span>, temperature=0.1)\n    \n    <span class=\"comment\"># Retrieve context from PostgreSQL PGVector index</span>\n    <span class=\"keyword\">async with</span> pool.acquire() <span class=\"keyword\">as</span> conn:\n        embeddings = <span class=\"keyword\">await</span> model.aembed_query(query)\n        context = <span class=\"keyword\">await</span> conn.fetch(\n            <span class=\"string\">\"SELECT content FROM knowledge_docs ORDER BY embedding &lt;=&gt; $1 LIMIT 5\"</span>,\n            embeddings\n        )\n    \n    response = <span class=\"keyword\">await</span> model.ainvoke(f<span class=\"string\">\"Context: {context}\\nTask: {query}\"</span>)\n    <span class=\"keyword\">return</span> {<span class=\"string\">\"result\"</span>: response.content, <span class=\"string\">\"latency_ms\"</span>: 18.4}",
+   "title": "Autonomous Vector RAG & Agentic Swarm",
+   "subtitle": "Enterprise Knowledge Grounding with Gemini 1.5 Pro & PGVector HNSW",
+   "badges": [
+    "LangChain",
+    "Gemini 1.5 Pro",
+    "PGVector HNSW",
+    "Async Python"
+   ],
+   "steps": [
+    {
+     "step": "Step 01 // Embed",
+     "title": "Semantic Query Parse",
+     "desc": "User prompt parsed and converted into dense 768-dim vector embeddings."
+    },
+    {
+     "step": "Step 02 // Search",
+     "title": "PGVector Cosine Search",
+     "desc": "HNSW index runs sub-15ms nearest-neighbor semantic cosine similarity match."
+    },
+    {
+     "step": "Step 03 // Grounding",
+     "title": "Context Fusion",
+     "desc": "Top-5 authoritative document chunks extracted and injected into prompt context."
+    },
+    {
+     "step": "Step 04 // Synthesis",
+     "title": "Gemini 1.5 Synthesis",
+     "desc": "Gemini 1.5 Pro produces hallucination-free answer with exact citations."
+    }
+   ],
+   "metrics": [
+    {
+     "value": "18.4ms",
+     "label": "Retrieval Speed"
+    },
+    {
+     "value": "96.8%",
+     "label": "Context Density"
+    },
+    {
+     "value": "0% Hallucination",
+     "label": "Strict Grounding"
+    },
+    {
+     "value": "1M Tokens",
+     "label": "Context Window"
+    }
+   ]
+  },
+  {
+   "file": "k8s_deployment.yaml",
+   "lang": "YAML",
+   "code": "<span class=\"comment\"># Cloud-Native Kubernetes Pod & Prometheus Scraping</span>\n<span class=\"keyword\">apiVersion</span>: apps/v1\n<span class=\"keyword\">kind</span>: Deployment\n<span class=\"keyword\">metadata</span>:\n  <span class=\"keyword\">name</span>: nestjs-api-gateway\n  <span class=\"keyword\">annotations</span>:\n    <span class=\"string\">prometheus.io/scrape</span>: <span class=\"string\">\"true\"</span>\n    <span class=\"string\">prometheus.io/port</span>: <span class=\"string\">\"3000\"</span>\n<span class=\"keyword\">spec</span>:\n  <span class=\"keyword\">replicas</span>: 5\n  <span class=\"keyword\">strategy</span>:\n    <span class=\"keyword\">type</span>: RollingUpdate\n  <span class=\"keyword\">template</span>:\n    <span class=\"keyword\">spec</span>:\n      <span class=\"keyword\">containers</span>:\n        - <span class=\"keyword\">name</span>: app\n          <span class=\"keyword\">image</span>: mehedi/nest-gateway:v2.4\n          <span class=\"keyword\">resources</span>:\n            <span class=\"keyword\">limits</span>: { cpu: <span class=\"string\">\"1000m\"</span>, memory: <span class=\"string\">\"1Gi\"</span> }\n          <span class=\"keyword\">envFrom</span>:\n            - <span class=\"keyword\">configMapRef</span>: { name: app-env-config }",
+   "title": "Cloud-Native Kubernetes & Auto-Healing Cluster",
+   "subtitle": "High-Availability Container Orchestration with Prometheus Telemetry",
+   "badges": [
+    "AWS EKS",
+    "Kubernetes Apps/v1",
+    "Prometheus Scrape",
+    "RollingUpdate"
+   ],
+   "steps": [
+    {
+     "step": "Step 01 // Routing",
+     "title": "Cloudflare Ingress",
+     "desc": "Global CDN and ingress controller route authenticated traffic to API gateway."
+    },
+    {
+     "step": "Step 02 // Scaling",
+     "title": "5x Pod Replicas",
+     "desc": "Auto-scaled stateless NestJS pods balance CPU/memory load evenly across nodes."
+    },
+    {
+     "step": "Step 03 // Rollout",
+     "title": "Zero-Downtime Rollout",
+     "desc": "RollingUpdate strategy swaps container images with zero service interruption."
+    },
+    {
+     "step": "Step 04 // Metrics",
+     "title": "Prometheus Scrape",
+     "desc": "Prometheus scrapes port 3000 every 15s to push alerts to Grafana dashboard."
+    }
+   ],
+   "metrics": [
+    {
+     "value": "99.99%",
+     "label": "Production SLA"
+    },
+    {
+     "value": "5 Replicas",
+     "label": "Active Redundancy"
+    },
+    {
+     "value": "< 3s",
+     "label": "Auto-Healing Time"
+    },
+    {
+     "value": "1Gi / 1000m",
+     "label": "Pod Limits"
+    }
+   ]
+  }
+ ]
+}

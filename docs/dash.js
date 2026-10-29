@@ -215,7 +215,7 @@
             const tool = e.target.closest('[data-ask]');
             if (!tool) return;
             const chat = window.MehediChat;
-            if (!chat || !chat.ask) { location.href = './stack/'; return; }
+            if (!chat || !chat.ask) { location.href = './profile/#tools'; return; }
             const name = tool.dataset.ask;
             const q = chat.lang && chat.lang() === 'bn' ? 'মেহেদী তার কাজে ' + name + ' কীভাবে ব্যবহার করেন?' : 'How does Mehedi use ' + name + ' in his work?';
             if (chat.open) chat.open();
