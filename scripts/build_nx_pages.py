@@ -224,6 +224,103 @@ PEOPLE = [
     ('../uploads/people/povilas-korop.webp', 'Povilas Korop', '@PovilasKorop', 'X', 'https://x.com/PovilasKorop', 'Founder of Laravel Daily: practical Laravel tips every day', 'A great person to follow', ['Tech']),
     ('../uploads/people/taylor-otwell.webp', 'Taylor Otwell', '@taylorotwell', 'X', 'https://x.com/taylorotwell', 'Creator of Laravel', 'A great person to follow', ['Tech']),
 ]
+# /architecture/: the views of the filter (key, label, Font Awesome icon) and the cards. "pillars" shows the four core pillars,
+# "all" every card that is not a pillar, the others the cards of their domain
+ARCH_INTRO = ("How I design systems: clean-architecture NestJS services, event streaming with Kafka, Redis-backed consistency "
+              "and agentic AI layers on top. Four-plus years of freelance delivery across ERP, NGO and AI automation products.")
+ARCH_POINTS = ["Clean-architecture NestJS + PostgreSQL + Redis backends",
+               "Event-driven design with Kafka and gRPC between services",
+               "Agentic layer: LangGraph, MCP and RAG over PGVector"]
+ARCH_FILTERS = [("pillars", "Core Pillars", "fa-cubes"), ("all", "All Stack", "fa-layer-group"), ("ai", "AI & Agents", "fa-robot"),
+                ("fullstack", "Full-Stack & Web", "fa-code"), ("data-cloud", "Data & Vector", "fa-database"),
+                ("cloud-devops", "Cloud & DevOps", "fa-server")]
+# (domain, title, badge, description, Font Awesome icon, [(tag, brand-icon slug or Font Awesome icon)])
+ARCH_CARDS = [
+    ("pillars", "Autonomous AI & Agents", "Agentic SOTA",
+     "Autonomous multi-agent swarms with Model Context Protocol, LangGraph cyclic graphs, RAG retrieval & local-to-cloud LLMs.",
+     "fa-brain", [("MCP", "mcp"), ("LangGraph", "langgraph"), ("RAG", "fa-layer-group"), ("Multi-Agent Systems", "fa-users-gear"),
+                  ("OpenAI", "openai"), ("Claude", "claude"), ("Gemini", "gemini"), ("Ollama", "ollama")]),
+    ("pillars", "Distributed Backend", "Sub-15ms p99",
+     "Clean-architecture NestJS microservices with PostgreSQL connection pools, distributed Redis locks & type-safe domain boundaries.",
+     "fa-server", [("NestJS", "nestjs"), ("PostgreSQL", "postgresql"), ("Redis", "redis"), ("TypeScript", "typescript")]),
+    ("pillars", "Event Streaming", "Zero-Loss",
+     "High-throughput asynchronous message bus via Apache Kafka, RabbitMQ enterprise queues & real-time Redis Pub/Sub.",
+     "fa-network-wired", [("Kafka", "apachekafka"), ("RabbitMQ", "rabbitmq"), ("Redis Pub/Sub", "redis")]),
+    ("pillars", "Cloud & Observability", "HA Cluster",
+     "Elastic Kubernetes orchestration on AWS with Prometheus telemetry, Grafana dashboards & centralized ELK logging.",
+     "fa-cloud", [("Docker", "docker"), ("Kubernetes", "kubernetes"), ("AWS", "aws"), ("Prometheus", "prometheus"),
+                  ("Grafana", "grafana"), ("ELK", "elastic")]),
+    ("ai", "AI Models", "Foundation SOTA",
+     "Frontier reasoning & multi-modal foundation models deployed for zero-shot, COT & agentic inference.",
+     "fa-brain", [("OpenAI", "openai"), ("Claude", "claude"), ("Gemini", "gemini"), ("Qwen", "qwen"), ("Llama", "meta"),
+                  ("Mistral", "mistral"), ("DeepSeek", "deepseek")]),
+    ("ai", "AI Agents", "Autonomous Actors",
+     "Autonomous coding, cognitive reasoning, and CLI agents executing complex multi-step developer workflows.",
+     "fa-robot", [("Hermes agent", "hermis"), ("OpenClaw", "openclaw"), ("Claude Code", "claudecode"), ("Codex", "codex"),
+                  ("Gemini CLI", "geminicli"), ("OpenCode", "opencode"), ("Goose", "goose"), ("Aider", "aider")]),
+    ("ai", "AI IDE", "Next-Gen Editors",
+     "Agentic development environments with inline context synthesis, codebase indexing, and multi-file diffing.",
+     "fa-laptop-code", [("Cursor", "cursor"), ("Windsurf", "windsurf"), ("GitHub Copilot", "githubcopilot"), ("Kiro", "kiro"),
+                        ("Antigravity", "antigravity")]),
+    ("ai", "Agent Framework", "Multi-Agent Swarm",
+     "Stateful cyclic graphs, role-playing agent swarms, and deterministic tool-use control loops.",
+     "fa-diagram-project", [("LangGraph", "langgraph"), ("LangChain", "langchain"), ("CrewAI", "crewai"), ("AutoGen", "autogen"),
+                            ("PydanticAI", "pydantic")]),
+    ("ai", "Protocol / Tools", "Open Protocols",
+     "Standardized agent-to-agent communication protocols, dynamic tool execution, and schema-bound calling.",
+     "fa-plug-circle-bolt", [("MCP", "mcp"), ("A2A", "fa-arrows-split-up-and-left"), ("Function Calling", "fa-terminal"),
+                             ("Tool Use", "fa-toolbox")]),
+    ("ai", "Local AI", "Edge & Private",
+     "Air-gapped on-device inference engines, quantized model runtimes, and low-latency local execution.",
+     "fa-microchip", [("Ollama", "ollama"), ("LM Studio", "lmstudio"), ("llama.cpp", "fa-gears"), ("vLLM", "fa-bolt-lightning")]),
+    ("data-cloud", "Automation", "Event Pipeline",
+     "Workflow automation pipelines linking Webhooks, REST endpoints, CRMs, and autonomous triggers.",
+     "fa-arrows-spin", [("n8n", "n8n"), ("Zapier", "zapier"), ("Make", "make")]),
+    ("data-cloud", "Event Streaming", "Zero-Loss",
+     "High-throughput asynchronous message bus and real-time event-driven pub/sub architecture.",
+     "fa-network-wired", [("Kafka", "apachekafka"), ("RabbitMQ", "rabbitmq"), ("Redis Pub/Sub", "redis")]),
+    ("data-cloud", "RAG / Vector", "Dense Retrieval",
+     "High-dimensional approximate nearest neighbor indexing for dense retrieval and contextual grounding.",
+     "fa-cubes-stacked", [("Pinecone", "pinecone"), ("Chroma", "chroma"), ("Qdrant", "qdrant"), ("Weaviate", "weaviate")]),
+    ("data-cloud", "AI Database", "Storage & Vectors",
+     "ACID-compliant relational & document storage integrated with HNSW indexes and real-time CDC streams.",
+     "fa-database", [("PostgreSQL", "postgresql"), ("pgvector", "pgvector"), ("Supabase", "supabase"), ("MongoDB", "mongodb")]),
+    ("fullstack", "Web AI", "Streaming Edge UI",
+     "Edge-ready streaming client SDKs for generative user interfaces, structured outputs, and chat UX.",
+     "fa-cloud-arrow-down", [("Vercel AI SDK", "vercel"), ("AI SDK", "fa-cubes"), ("OpenAI SDK", "openai")]),
+    ("fullstack", "Frontend", "Reactive Interface",
+     "Pixel-perfect, hyper-accessible modern interfaces with server components, hydration, and utility design tokens.",
+     "fa-react", [("React", "react"), ("Next.js", "nextjs"), ("TypeScript", "typescript"), ("Tailwind", "tailwind")]),
+    ("fullstack", "Backend", "Distributed Primitives",
+     "Scalable event-driven REST & gRPC microservices, async concurrency, and bulletproof domain layers.",
+     "fa-server", [("Node.js", "fa-node-js"), ("NestJS", "nestjs"), ("Express", "express"), ("Python", "python"), ("FastAPI", "fastapi")]),
+    ("cloud-devops", "Cloud", "Hyperscale Edge",
+     "Multi-cloud high-availability architectures, edge compute, serverless runners, and globally distributed networks.",
+     "fa-cloud", [("Vercel", "vercel"), ("AWS", "aws"), ("Google Cloud", "googlecloud"), ("Cloudflare", "cloudflare")]),
+    ("cloud-devops", "DevOps", "Containers & CD",
+     "Immutable containerization, declarative cluster provisioning, and automated zero-downtime CI/CD pipelines.",
+     "fa-gears", [("Docker", "docker"), ("GitHub Actions", "githubactions"), ("Kubernetes", "kubernetes")]),
+    ("cloud-devops", "Observability", "Tracing & Metrics",
+     "End-to-end distributed LLM tracing, latency breakdown, prompt evaluation, token accounting, and APM telemetry.",
+     "fa-chart-line", [("Prometheus", "prometheus"), ("Grafana", "grafana"), ("ELK", "elastic"), ("LangSmith", "fa-magnifying-glass-chart"),
+                       ("Langfuse", "fa-fire-flame-curved"), ("OpenTelemetry", "opentelemetry")]),
+    ("ai", "AI UI / Design", "Generative Scaffolding",
+     "Next-generation AI-assisted interface scaffolding, prompt-to-production UI builders, and design systems.",
+     "fa-wand-magic-sparkles", [("v0", "v0"), ("Lovable", "lovable"), ("Bolt", "bolt"), ("Google Stitch", "stitch")]),
+]
+# the Projects page's Experiments (the old /sandbox/ page): (category, title, line, Font Awesome icon)
+EXPERIMENTS_INTRO = ("Where I experiment: local LLM clusters, edge inference, autonomous swarms and creative side projects "
+                     "that later feed into client work.")
+EXPERIMENTS = [
+    ("Neural Logic", "Local LLM Clusters", "Deployment: Ollama, DeepSeek & Llama 3 quantized pipelines", "fa-robot"),
+    ("Hardware Telemetry", "Edge Hardware Inference", "Throughput: High-bandwidth Apple Silicon & GPU acceleration", "fa-bolt"),
+    ("Systems Logic", "Autonomous Swarms", "Orchestration: n8n, LangGraph & event-driven state machines", "fa-network-wired"),
+    ("Computational Art", "Sacred Geometry", "Synthesis: Procedural symmetry & Islamic geometric patterns", "fa-shapes"),
+    ("Visual Media", "Cinematic Storytelling", "Pipeline: FFmpeg automation, video grading & 9:16 virality AI", "fa-clapperboard"),
+    ("Knowledge Engine", "Synthesized Wisdom", "Archive: Classical epistemology bridged with modern CS systems", "fa-book-bookmark"),
+]
+# Profile > Tools: the code samples and their pipelines (the old /stack/ page showed them in a mock editor)
+TOOL_SAMPLES = json.loads((Path(__file__).resolve().parent / "stack_samples.json").read_text(encoding="utf-8"))["samples"]
 
 
 
@@ -1546,7 +1643,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 }
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
-/* Floating Controls (Theme, Sound, WhatsApp) & AI Widget: the AI leaderboard tab shows on every page */
+/* Floating Controls (Theme, Sound, WhatsApp) & AI Widget */
 
 @media (max-width: 767px) {
   .nx .filters {
@@ -4260,6 +4357,7 @@ def profile():
 <div class="exp-modern">{jobs}</div>
 <h2 class="sec-title" id="tools" style="margin-top:44px"><i class="fa-solid fa-code"></i> Tools I use</h2>
 <div class="sk-grid">{skills}</div>
+{tool_samples()}
 <h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-graduation-cap"></i> Education</h2>
 <div class="exp">{edu}</div>
 <h2 class="sec-title" style="margin-top:44px"><i class="fa-solid fa-award"></i> Certifications &amp; training</h2>
@@ -4275,6 +4373,45 @@ def profile():
 </div>
 </div>'''
     return page("profile", f"{NAME} · Profile", f"{NAME}: {TAGLINE}. {ROLE_NOW}. Laravel, NestJS, Kafka and agentic AI systems.", "", body, "profile")
+
+
+FA_BRANDS = {"fa-node-js", "fa-react", "fa-python", "fa-docker", "fa-github"}
+
+
+def fa_icon(name):
+    return f'<i class="{"fa-brands" if name in FA_BRANDS else "fa-solid"} {name}" aria-hidden="true"></i>'
+
+
+def tool_samples():
+    """Profile > Tools: four of the tools at work, each a small system with its numbers; the pipeline and the code open
+    on request (they were the old /stack/ page's mock editor). Code keeps its keyword/string/comment/function spans."""
+    cards = ""
+    for i, s in enumerate(TOOL_SAMPLES):
+        badges = "".join(f'<span class="chip">{e(b)}</span>' for b in s["badges"])
+        metrics = "".join(f'<li><b>{e(m["value"])}</b><span>{e(m["label"])}</span></li>' for m in s["metrics"])
+        steps = "".join(f'<li><span class="smp-step">{e(st["step"])}</span><b>{e(st["title"])}</b><p>{e(st["desc"])}</p></li>'
+                        for st in s["steps"])
+        cards += (f'<article class="smp-card"><p class="smp-file"><span class="smp-lang">{e(s["lang"])}</span>'
+                  f'<code>{e(s["file"])}</code></p><h4>{e(s["title"])}</h4><p class="smp-sub">{e(s["subtitle"])}</p>'
+                  f'<div class="chips smp-badges">{badges}</div><ul class="smp-metrics" aria-label="Figures">{metrics}</ul>'
+                  f'<details class="smp-more"><summary>{CHEVRON}<span>Pipeline and code</span></summary>'
+                  f'<ol class="smp-steps">{steps}</ol>'
+                  f'<pre class="smp-code" tabindex="0" role="region" aria-label="Code: {e(s["file"])}"><code>{s["code"]}</code></pre>'
+                  f'</details></article>')
+    return (f'<section class="smp" aria-labelledby="smp-title"><h3 class="smp-title" id="smp-title">Sample designs</h3>'
+            f'<p class="smp-lead">Four sample designs that put these tools together, each with its pipeline and code.</p>'
+            f'<div class="smp-grid">{cards}</div>'
+            f'<a class="nl-more smp-arch" href="../architecture/">How I design systems: the architecture{nl_icon("right", 15)}</a></section>')
+
+
+def experiments():
+    """Projects > Experiments (the old /sandbox/ page)."""
+    cards = "".join(
+        f'<article class="xp-card"><span class="nl-tile xp-ico">{fa_icon(icon)}</span><div><p class="xp-cat">{e(cat)}</p>'
+        f'<h3>{e(title)}</h3><p class="xp-line">{e(line)}</p></div></article>' for cat, title, line, icon in EXPERIMENTS)
+    return (f'<section class="xp" id="experiments" aria-labelledby="xp-title"><h2 class="sec-title" id="xp-title">'
+            f'<i class="fa-solid fa-flask" aria-hidden="true"></i> Experiments</h2><p class="xp-lead">{e(EXPERIMENTS_INTRO)}</p>'
+            f'<div class="xp-grid">{cards}</div></section>')
 
 
 def proj_card(t, d, tags, icon, badge, links, img, first=False):
@@ -4317,9 +4454,71 @@ def proj_card(t, d, tags, icon, badge, links, img, first=False):
 def projects():
     cards = "".join(proj_card(*x, first=i == 0) for i, x in enumerate(PROJECTS))
     body = (f'<div class="pad"><p class="lead">Products I\'ve designed, built and shipped: NGO and ERP platforms, AI automation and web projects.</p>'
-            f'<div class="grid2">{cards}</div></div>')
+            f'<div class="grid2">{cards}</div>{experiments()}</div>')
     return page("projects", "Projects", "Products and systems built by Mehedi Hasan: NGO ERP, Karbar ERP, SAWAB platforms, AI video engine and more.",
                 "Projects", body, "projects")
+
+
+ARCH_LAYERS = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+               'aria-hidden="true"><path d="M12 4l-8 4l8 4l8-4l-8-4"/><path d="M4 12l8 4l8-4"/><path d="M4 16l8 4l8-4"/></svg>')
+
+
+def arch_shows(view, domain):
+    return domain == "pillars" if view == "pillars" else (domain != "pillars" if view == "all" else domain == view)
+
+
+# the view buttons: one is pressed; the cards of the other views are left out of the page (.is-off), and a status line
+# tells screen readers what shows now
+ARCH_JS = """<script>
+(function () {
+  var root = document.querySelector('[data-arc]');
+  if (!root) return;
+  var btns = [].slice.call(root.querySelectorAll('[data-arc-view]'));
+  var cards = [].slice.call(root.querySelectorAll('[data-domain]'));
+  var status = root.querySelector('[data-arc-status]');
+  function shows(view, d) { return view === 'pillars' ? d === 'pillars' : view === 'all' ? d !== 'pillars' : d === view; }
+  root.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-arc-view]');
+    if (!b || b.getAttribute('aria-pressed') === 'true') return;
+    var view = b.getAttribute('data-arc-view'), n = 0;
+    btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    cards.forEach(function (c) { var on = shows(view, c.getAttribute('data-domain')); c.classList.toggle('is-off', !on); n += on; });
+    status.textContent = b.querySelector('span').textContent + ': ' + n + (n === 1 ? ' card' : ' cards');
+  });
+})();
+</script>"""
+
+
+def architecture():
+    def tag(label, icon):
+        if icon and icon.startswith("fa-"):
+            im = fa_icon(icon)
+        else:
+            src = icon_src(icon) if icon else None
+            im = f'<img src="{src}" alt="" width="14" height="14" loading="lazy" decoding="async">' if src else ""
+        return f'<span class="chip chip-logo arc-tag">{im}{e(label)}</span>'
+
+    first = ARCH_FILTERS[0][0]
+    counts = {k: sum(arch_shows(k, c[0]) for c in ARCH_CARDS) for k, _, _ in ARCH_FILTERS}
+    views = "".join(f'<button type="button" class="arc-view" data-arc-view="{k}" aria-pressed="{str(k == first).lower()}">'
+                    f'{fa_icon(ic)}<span>{e(label)}</span><b>{counts[k]}</b></button>' for k, label, ic in ARCH_FILTERS)
+    # arch-unified-card: the chat's visitor sense (ai-orb-mascot.js) counts time spent on these cards as interest in
+    # architecture. The cards of the other views are in the page, only not shown, so the AI's knowledge base keeps them
+    cards = "".join(
+        f'<article class="arc-card arch-unified-card{"" if arch_shows(first, dom) else " is-off"}" data-domain="{dom}">'
+        f'<div class="arc-card-head"><span class="nl-tile">{fa_icon(icon)}</span><h3>{e(title)}</h3></div>'
+        f'<p class="arc-badge"><i aria-hidden="true"></i>{e(badge)}</p><p class="arc-desc">{e(desc)}</p>'
+        f'<div class="chips arc-tags">{"".join(tag(l, i) for l, i in tags)}</div></article>'
+        for dom, title, badge, desc, icon, tags in ARCH_CARDS)
+    points = "".join(f'<li>{nl_icon("check", 16)}<span>{e(p)}</span></li>' for p in ARCH_POINTS)
+    body = (f'<div class="pad arc-page"><p class="lead">{e(ARCH_INTRO)}</p><ul class="arc-points">{points}</ul>'
+            f'<section class="arc" data-arc aria-labelledby="arc-title"><h2 class="sec-title" id="arc-title">{ARCH_LAYERS}System Architecture</h2>'
+            f'<div class="arc-views" role="group" aria-label="Architecture views">{views}</div>'
+            f'<p class="sr-only" data-arc-status aria-live="polite"></p>'
+            f'<div class="arc-grid">{cards}</div></section>'
+            f'<div class="arc-next"><a class="nl-more" href="../profile/#tools">Every tool I use{nl_icon("right", 15)}</a>'
+            f'<a class="nl-more" href="../projects/">Projects built this way{nl_icon("right", 15)}</a></div></div>{ARCH_JS}')
+    return page("architecture", "Architecture", ARCH_INTRO, "Architecture", body, "")
 
 
 # ------------------------------------------------------------------ LIBRARY
@@ -4388,7 +4587,8 @@ def nl_more(key, label):
 
 def nl_tabs(cur):
     c = lib_counts()
-    items = [("", "All", "books", sum(c.values()))] + [(k, l, LIB_SUB_ICON[k], c[k]) for k, l in LIB_SUBS] + [("focus", "Focus", "wave", None)]
+    items = ([("", "All", "books", sum(c.values()))] + [(k, l, LIB_SUB_ICON[k], c[k]) for k, l in LIB_SUBS]
+             + [("focus", "Focus", "wave", None), ("leaderboard", "AI Leaderboard", "trophy", None)])
     lis = "".join(
         f'<li><a href="../library/{lib_href(k) + "/" if k else ""}"{" class=\"is-active\" aria-current=\"page\"" if k == cur else ""}>'
         f'{nl_icon(ic, 16)}<span>{e(l)}</span>{f"<b>{n}</b>" if n is not None else ""}</a></li>' for k, l, ic, n in items)
@@ -4522,6 +4722,9 @@ def library():
         for k, l in LIB_SUBS)
     stats += (f'<a class="nl-stat nl-stat-focus" href="../library/focus/"><span class="nl-stat-ico">{nl_icon("wave", 20)}</span>'
               f'<b>Focus<i class="fx-live" aria-hidden="true"></i></b><span>Sounds &amp; a timer</span></a>')
+    # the AI leaderboard across the row: Arena's daily ranking of AI models
+    stats += (f'<a class="nl-stat nl-stat-wide" href="../library/leaderboard/"><span class="nl-stat-ico">{nl_icon("trophy", 20)}</span>'
+              f'<b>AI Leaderboard</b><span>{e(LB_ABOUT)}</span>{nl_icon("right", 18)}</a>')
     hero = (f'<div class="nl-hero"><span class="nl-pill"><i></i>{sum(c.values())} things I use, love and recommend</span>'
             f'<h2 class="nl-hero-title">{e(o["title"])}</h2><p>{e(o["intro"])}</p><div class="nl-stats">{stats}</div></div>')
     groups = LIB["skills"]["groups"]
@@ -4733,6 +4936,202 @@ def library_focus():
     # after the viewport meta, so a phone is measured at its own width
     html_out = re.sub(r'(<meta name="viewport"[^>]*>)', lambda m: m.group(1) + "\n    " + FX_FIRST_HEAD, html_out, count=1)
     return two_deep(html_out)
+
+
+# ------------------------------------------------------------------ AI LEADERBOARD (/library/leaderboard/)
+# Arena's ranking of AI models. A GitHub Actions bot (.github/workflows/arena_daily_sync.yml, scripts/sync_arena.js) rewrites
+# docs/data/arena_leaderboard.json every day; this page is built with the first board from that file, so it reads without
+# script and doesn't move, and LB_JS loads the file again for the other boards and for a newer day than the build's.
+# Keep the row markup here and in LB_JS the same.
+ARENA_FILE = DOCS / "data" / "arena_leaderboard.json"
+LB_ABOUT = "Which AI models lead right now: Arena's daily ranking for agents, chat, code, image and video."
+LB_TOP = 25
+
+
+def lb_heads(cat):
+    return ("Net improvement", "Confirmed success") if cat == "agent" else ("Score", "Votes")
+
+
+def lb_range(rank, rng):
+    """Arena's rank range ("1 ↔ 8", sometimes the wrong way round) as "1–8"; nothing when it is the rank itself."""
+    n = sorted(int(x) for x in re.findall(r"\d+", str(rng or "")))
+    return "" if len(n) < 2 or n[0] == n[-1] else f"{n[0]}–{n[-1]}"
+
+
+def lb_row(m, cat):
+    agent = cat == "agent"
+    score = re.sub(r"^Score:\s*", "", str(m.get("score") or ""))
+    second = re.sub(r"\s*votes$", "", str(m.get("secondary") or "")) if not agent else str(m.get("secondary") or "")
+    num = float(re.sub(r"[^0-9.-]", "", score) or 0)
+    width = min(max(num * 4.5, 10), 100) if agent else min(max((num - 1000) / 800 * 100, 15), 100)
+    sign = lambda v: (" ldr-down" if v.startswith("-") else " ldr-up") if agent else ""
+    rng = lb_range(m.get("rank"), m.get("rank_range"))
+    rank = int(m.get("rank") or 0)
+    small = lambda v: f'<span class="ldr-margin">{e(v)}</span>' if v else ""
+    return (f'<tr><td class="ldr-rank"><span class="ldr-pill{" is-top" if 0 < rank <= 3 else ""}">{rank}</span>'
+            + (f'<span class="ldr-range"><span class="sr-only">could rank </span>{rng}</span>' if rng else "")
+            + f'</td><td class="ldr-model"><b>{e(str(m.get("name") or ""))}</b><span>{e(str(m.get("lab") or ""))}</span></td>'
+            f'<td class="ldr-num{sign(score)}"><span class="ldr-val">{e(score)}</span><i class="ldr-bar" style="--w:{width:.0f}%" aria-hidden="true"></i>'
+            f'{small(m.get("score_margin") or "")}</td>'
+            f'<td class="ldr-num{sign(second)}"><span class="ldr-val">{e(second)}</span>{small(m.get("secondary_margin") or "")}</td>'
+            f'<td class="ldr-lic"><span>{e(str(m.get("license") or "Proprietary"))}</span></td></tr>')
+
+
+def lb_day(iso):
+    try:
+        d = date.fromisoformat(str(iso)[:10])
+    except ValueError:
+        return "", ""
+    return d.isoformat(), f"{d.day} {d.strftime('%b %Y')}"
+
+
+def library_leaderboard():
+    data = json.loads(ARENA_FILE.read_text(encoding="utf-8"))
+    cats = data.get("categories") or {}
+    # every board's name, line and size, so the buttons work before the rankings have loaded
+    boards = {c: {"title": v.get("title") or c.title(),
+                  "subs": [{"key": k, "title": s.get("title") or k, "desc": s.get("description") or "", "url": s.get("url") or "",
+                            "total": s.get("total_models") or len(s.get("models") or [])}
+                           for k, s in (v.get("subcategories") or {}).items()]} for c, v in cats.items()}
+    cat = next(iter(boards))
+    sub = boards[cat]["subs"][0]
+    models = (cats[cat]["subcategories"][sub["key"]].get("models") or [])[:LB_TOP]
+    iso, day = lb_day(data.get("updated_at"))
+    head1, head2 = lb_heads(cat)
+    cat_btns = "".join(f'<button type="button" data-lb-cat="{e(k)}" aria-pressed="{str(k == cat).lower()}"{" class=\"is-active\"" if k == cat else ""}>'
+                       f'<span>{e(v["title"])}</span></button>' for k, v in boards.items())
+    sub_btns = "".join(f'<button type="button" data-lb-sub="{e(s["key"])}" aria-pressed="{str(s is sub).lower()}">{e(s["title"])}</button>'
+                       for s in boards[cat]["subs"])
+    shown = min(LB_TOP, len(models))
+    body = (f'<div class="pad nl-page">{nl_tabs("leaderboard")}<div class="nl-section ldr" data-lb data-built="{e(str(data.get("updated_at") or ""))}" '
+            f'data-boards="{e(json.dumps(boards, ensure_ascii=False))}">'
+            f'<div class="nl-head"><span class="nl-tile">{nl_icon("trophy", 20)}</span><div class="nl-head-text"><h2>AI Leaderboard</h2>'
+            f'<p>{e(LB_ABOUT)}</p></div></div>'
+            f'<p class="ldr-meta"><span>Updated <time data-lb-day datetime="{iso}">{e(day)}</time></span>'
+            f'<a href="{e(data.get("source") or "https://arena.ai/leaderboard")}" target="_blank" rel="noopener noreferrer">Source: Arena (arena.ai)'
+            f'{nl_icon("out", 13)}</a></p>'
+            f'<div class="nl-chips ldr-cats" role="group" aria-label="Kind of model">{cat_btns}</div>'
+            f'<div class="ldr-subs" role="group" aria-label="Board"{"" if len(boards[cat]["subs"]) > 1 else " hidden"}>{sub_btns}</div>'
+            f'<p class="ldr-about"><span data-lb-desc>{e(sub["desc"])}</span><span data-lb-count>Top {shown} of {sub["total"]} models</span>'
+            f'<a data-lb-link href="{e(sub["url"])}" target="_blank" rel="noopener noreferrer">Full ranking on arena.ai{nl_icon("out", 13)}</a></p>'
+            f'<p class="sr-only" data-lb-status aria-live="polite"></p>'
+            f'<div class="ldr-card"><table class="ldr-table" id="ldr-table"><caption class="sr-only" data-lb-caption>'
+            f'{e(boards[cat]["title"])}: {e(sub["title"])}, top {shown} of {sub["total"]} models</caption>'
+            f'<thead><tr><th scope="col">Rank</th><th scope="col">Model</th><th scope="col" data-lb-h1>{head1}</th>'
+            f'<th scope="col" data-lb-h2>{head2}</th><th scope="col" class="ldr-lic">License</th></tr></thead>'
+            f'<tbody data-lb-rows>{"".join(lb_row(m, cat) for m in models)}</tbody></table></div></div></div>{LIB_JS}{LB_JS}')
+    html_out = page("library/leaderboard", "AI Leaderboard · Library", LB_ABOUT, "Library", body, "library")
+    return two_deep(html_out)
+
+
+LB_JS = """<script>
+(function () {
+  var root = document.querySelector('[data-lb]');
+  if (!root) return;
+  var BOARDS = JSON.parse(root.getAttribute('data-boards'));
+  var TOP = 25;
+  var rows = root.querySelector('[data-lb-rows]'), subsBox = root.querySelector('.ldr-subs');
+  var cat = Object.keys(BOARDS)[0], sub = BOARDS[cat].subs[0].key;
+  var data = null, failed = false, loading = null, built = root.getAttribute('data-built'), builtRows = rows.innerHTML;
+  function isFirst() { return cat === Object.keys(BOARDS)[0] && sub === BOARDS[cat].subs[0].key; }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function subOf(c, k) { return BOARDS[c].subs.filter(function (s) { return s.key === k; })[0] || BOARDS[c].subs[0]; }
+  function range(r) {
+    var n = (String(r || '').match(/\\d+/g) || []).map(Number).sort(function (a, b) { return a - b; });
+    return n.length < 2 || n[0] === n[n.length - 1] ? '' : n[0] + '\\u2013' + n[n.length - 1];
+  }
+  function row(m, agent) {
+    var score = String(m.score || '').replace(/^Score:\\s*/, '');
+    var second = String(m.secondary || '');
+    if (!agent) second = second.replace(/\\s*votes$/, '');
+    var num = parseFloat(score.replace(/[^0-9.-]/g, '')) || 0;
+    var w = agent ? Math.min(Math.max(num * 4.5, 10), 100) : Math.min(Math.max((num - 1000) / 800 * 100, 15), 100);
+    var sign = function (v) { return agent ? (v.charAt(0) === '-' ? ' ldr-down' : ' ldr-up') : ''; };
+    var small = function (v) { return v ? '<span class="ldr-margin">' + esc(v) + '</span>' : ''; };
+    var rank = +m.rank || 0, rng = range(m.rank_range);
+    return '<tr><td class="ldr-rank"><span class="ldr-pill' + (rank > 0 && rank <= 3 ? ' is-top' : '') + '">' + rank + '</span>' +
+      (rng ? '<span class="ldr-range"><span class="sr-only">could rank </span>' + rng + '</span>' : '') + '</td>' +
+      '<td class="ldr-model"><b>' + esc(m.name) + '</b><span>' + esc(m.lab) + '</span></td>' +
+      '<td class="ldr-num' + sign(score) + '"><span class="ldr-val">' + esc(score) + '</span><i class="ldr-bar" style="--w:' + Math.round(w) + '%" aria-hidden="true"></i>' + small(m.score_margin) + '</td>' +
+      '<td class="ldr-num' + sign(second) + '"><span class="ldr-val">' + esc(second) + '</span>' + small(m.secondary_margin) + '</td>' +
+      '<td class="ldr-lic"><span>' + esc(m.license || 'Proprietary') + '</span></td></tr>';
+  }
+  function state(html) { rows.innerHTML = '<tr class="ldr-state"><td colspan="5">' + html + '</td></tr>'; }
+  function day(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  }
+  // what the board's lines say, then its rows (from the loaded rankings; until they come, a line that says so)
+  function show(announce) {
+    var b = BOARDS[cat], s = subOf(cat, sub), agent = cat === 'agent';
+    var list = data && data.categories && data.categories[cat] && data.categories[cat].subcategories[s.key];
+    var models = list && list.models ? list.models.slice(0, TOP) : null;
+    var total = (list && list.total_models) || s.total, n = models ? models.length : Math.min(TOP, total);
+    root.querySelector('[data-lb-h1]').textContent = agent ? 'Net improvement' : 'Score';
+    root.querySelector('[data-lb-h2]').textContent = agent ? 'Confirmed success' : 'Votes';
+    root.querySelector('[data-lb-desc]').textContent = s.desc;
+    root.querySelector('[data-lb-count]').textContent = 'Top ' + n + ' of ' + total + ' models';
+    root.querySelector('[data-lb-caption]').textContent = b.title + ': ' + s.title + ', top ' + n + ' of ' + total + ' models';
+    var link = root.querySelector('[data-lb-link]');
+    if (s.url) link.href = s.url;
+    if (models) rows.innerHTML = models.map(function (m) { return row(m, agent); }).join('');
+    else if (isFirst()) rows.innerHTML = builtRows;
+    else if (failed) state('The latest rankings could not be loaded. <button type="button" class="ldr-retry" data-lb-retry>Try again</button>');
+    else state('Loading the latest rankings\\u2026');
+    if (announce) root.querySelector('[data-lb-status]').textContent = models || isFirst() ? b.title + ': ' + s.title + ', ' + n + ' models' : '';
+  }
+  // a new kind of model gets its boards' buttons; within one, the buttons stay (so the one pressed keeps the focus)
+  function subButtons(fresh) {
+    var subs = BOARDS[cat].subs;
+    subsBox.hidden = subs.length < 2;
+    if (fresh) subsBox.innerHTML = subs.map(function (s) {
+      return '<button type="button" data-lb-sub="' + esc(s.key) + '" aria-pressed="' + (s.key === sub) + '">' + esc(s.title) + '</button>';
+    }).join('');
+    else subsBox.querySelectorAll('[data-lb-sub]').forEach(function (x) { x.setAttribute('aria-pressed', String(x.getAttribute('data-lb-sub') === sub)); });
+  }
+  function remember() { try { history.replaceState(null, '', '#' + sub); } catch (e) {} }
+  function load() {
+    if (loading) return loading;
+    failed = false;
+    loading = fetch(new URL('../../data/arena_leaderboard.json', location.href), { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        if (!d || !d.categories) throw new Error('no rankings');
+        data = d;
+        var t = root.querySelector('[data-lb-day]'), newer = d.updated_at && d.updated_at !== built;
+        // a newer day than the build's: its date, and the board on show again; a board that waited for them: its rows
+        if (newer) { t.textContent = day(d.updated_at); t.setAttribute('datetime', String(d.updated_at).slice(0, 10)); }
+        if (newer || !isFirst()) show(!isFirst());
+      })
+      .catch(function () { failed = true; loading = null; if (!isFirst()) show(true); });
+    return loading;
+  }
+  function pick(c, k, announce) {
+    var fresh = c !== cat;
+    cat = c; sub = subOf(c, k).key;
+    root.querySelectorAll('[data-lb-cat]').forEach(function (x) {
+      var on = x.getAttribute('data-lb-cat') === cat;
+      x.setAttribute('aria-pressed', String(on)); x.classList.toggle('is-active', on);
+    });
+    subButtons(fresh);
+    if (!data && !isFirst()) load();
+    show(announce);
+  }
+  root.addEventListener('click', function (ev) {
+    var t = ev.target.closest('button');
+    if (!t) return;
+    if (t.hasAttribute('data-lb-cat')) { var c = t.getAttribute('data-lb-cat'); if (c !== cat) { pick(c, BOARDS[c].subs[0].key, true); remember(); } }
+    else if (t.hasAttribute('data-lb-sub')) { if (t.getAttribute('data-lb-sub') !== sub) { pick(cat, t.getAttribute('data-lb-sub'), true); remember(); } }
+    else if (t.hasAttribute('data-lb-retry')) { load(); show(false); }
+  });
+  // a link to one board (#webdev)
+  var want = decodeURIComponent(location.hash.slice(1));
+  Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, false); }); });
+  // the rankings load once the page has, while it is idle, so a later choice shows at once
+  var later = function () { ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(load, { timeout: 2000 }); };
+  if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
+})();
+</script>"""
 
 
 LIB_JS = """<script>
@@ -5222,6 +5621,8 @@ def home_dashboard():
     split = "".join(f'<i class="l{i}" data-k="l{i}" style="--w:{counts[k] / whole * 100:.1f}%"></i>' for i, (k, _) in enumerate(LIB_SUBS))
     shelves = "".join(f'<li data-k="l{i}"><a href="./library/{lib_href(k)}/"><i class="l{i}"></i>{e(label)}<b>{counts[k]}</b></a></li>'
                       for i, (k, label) in enumerate(LIB_SUBS))
+    # and the library's AI leaderboard (Arena's daily ranking), which is not one of the three shelves the bar splits
+    shelves += f'<li class="dash-shelf-lb"><a href="./library/leaderboard/">{nl_icon("trophy", 14)}AI Leaderboard<b>Daily</b></a></li>'
     # a small Watch & Listen player: the track shown is the last one played (dash.js), or the first; play opens the
     # video in the tile (YouTube asks that it stays visible), and the arrows step through the tracks. Moving bars before
     # the title say it plays; the words stay for screen readers
@@ -5304,15 +5705,173 @@ def home_dashboard():
             f'{DASH_JS}</section>\n')
 
 
+# Profile > Tools' sample designs, Projects > Experiments, /architecture/ and /library/leaderboard/. Colours come from the
+# theme variables; the few that are not (the rankings' up and down, the code's syntax) are set per theme here
+PAGES_CSS = """
+/* these sections sit in the page's column, without the site stylesheet's padding for its full-width sections (!important there on phones) */
+.nx :is(.arc, .xp, .smp) { padding: 0 !important; }
+/* sample designs (Profile > Tools) */
+.nx .smp { margin-top: 36px; }
+.nx .smp-title { font-size: 17px; font-weight: 700; color: var(--ink); margin: 0; }
+.nx .smp-lead { margin: 4px 0 16px; font-size: 14.5px; color: var(--ink-2); }
+.nx .smp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.nx .smp-card { min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 18px; background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line); }
+.nx .smp-file { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: 12.5px; color: var(--ink-3); }
+.nx .smp-file code { font-family: 'Fira Code', ui-monospace, monospace; overflow-wrap: anywhere; }
+.nx .smp-lang { padding: 2px 8px; border-radius: 6px; font-weight: 600; color: var(--ink-2); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.nx .smp-card h4 { margin: 0; font-size: 16px; line-height: 1.35; font-weight: 700; color: var(--ink); }
+.nx .smp-sub { margin: 0; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+.nx .smp-badges { margin-top: 0; }
+.nx .smp-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
+.nx .smp-metrics li { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+.nx .smp-metrics b { font-family: 'Fira Code', ui-monospace, monospace; font-size: 15px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.nx .smp-metrics span { font-size: 12.5px; color: var(--ink-2); }
+.nx .smp-more { margin-top: 2px; }
+.nx .smp-more summary { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 12px 6px 10px; border-radius: 10px;
+  cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.nx .smp-more summary::-webkit-details-marker { display: none; }
+.nx .smp-more summary:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent); }
+.nx .smp-more summary svg { transform: rotate(-90deg); transition: transform .2s ease; }
+.nx .smp-more[open] summary svg { transform: none; }
+.nx .smp-steps { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.nx .smp-steps li { padding-left: 14px; box-shadow: inset 2px 0 0 color-mix(in srgb, var(--brand) 55%, transparent); }
+.nx .smp-step { display: block; font-family: 'Fira Code', ui-monospace, monospace; font-size: 12px; color: var(--ink-3); }
+.nx .smp-steps b { display: block; font-size: 14px; color: var(--ink); }
+.nx .smp-steps p { margin: 2px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.nx .smp-code { margin: 14px 0 0; padding: 14px; max-height: 420px; overflow: auto; border-radius: 12px; background: color-mix(in srgb, var(--ink) 4%, var(--bg));
+  box-shadow: inset 0 0 0 1px var(--line); font: 12.5px/1.6 'Fira Code', ui-monospace, monospace; color: var(--ink-2); tab-size: 4; }
+.nx .smp-code code { font: inherit; white-space: pre; }
+.nx .smp-code .keyword { color: var(--smp-kw); }
+.nx .smp-code .string { color: var(--smp-str); }
+.nx .smp-code .function { color: var(--smp-fn); }
+.nx .smp-code .comment { color: var(--smp-cm, var(--ink-3)); font-style: italic; }
+.nx .smp-code .variable { color: var(--ink); }
+.nx .smp-arch { margin-top: 16px; }
+.nx { --smp-kw: #67e8f9; --smp-str: #86efac; --smp-fn: #fcd34d; --ldr-up: #4ade80; --ldr-down: #f87171; }
+[data-theme="cyberpunk"] .nx { --smp-kw: #fb7185; --smp-str: #86efac; --smp-fn: #fcd34d; --ldr-up: #4ade80; --ldr-down: #fda4af; }
+:is([data-theme="light"], [data-theme="mint"]) .nx { --smp-kw: #1d4ed8; --smp-str: #166534; --smp-fn: #92400e; --smp-cm: #475569; --ldr-up: #15803d; --ldr-down: #b91c1c; }
+[data-theme="god-mode"] .nx { --smp-kw: #00ff00; --smp-str: #bbf7d0; --smp-fn: #fde68a; --ldr-up: #00ff00; --ldr-down: #fca5a5; }
+
+/* experiments (Projects) */
+.nx .xp { margin-top: 48px; scroll-margin-top: 140px; }
+.nx .xp-lead { margin: -4px 0 18px; color: var(--ink-2); font-size: 15px; }
+.nx .xp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.nx .xp-card { display: flex; gap: 14px; align-items: flex-start; padding: 18px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.nx .xp-ico { width: 40px; height: 40px; border-radius: 12px; font-size: 16px; }
+.nx .xp-cat { margin: 0 0 2px; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); }
+.nx .xp-card h3 { margin: 0; font-size: 16px; font-weight: 700; color: var(--ink); }
+.nx .xp-line { margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+
+/* /architecture/ */
+.nx .arc-points { display: grid; gap: 10px; margin: -8px 0 40px; padding: 0; list-style: none; }
+.nx .arc-points li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--ink); }
+.nx .arc-points svg { flex-shrink: 0; margin-top: 3px; color: var(--brand); }
+.nx .arc-views { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+.nx .arc-view { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 600;
+  color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); transition: border-color .2s ease, color .2s ease; }
+.nx .arc-view i { font-size: 13px; color: var(--ink-3); }
+.nx .arc-view b { font-weight: 600; font-family: 'Fira Code', ui-monospace, monospace; font-size: 12.5px; color: var(--ink-3); }
+.nx .arc-view:hover { color: var(--ink); border-color: color-mix(in srgb, var(--brand) 45%, transparent); }
+.nx .arc-view[aria-pressed="true"] { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+.nx .arc-view[aria-pressed="true"] :is(i, b) { color: color-mix(in srgb, var(--bg) 75%, transparent); }
+.nx .arc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.nx .arc-card { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); }
+.nx .arc-card.is-off { display: none; }
+.nx .arc-card-head { display: flex; align-items: center; gap: 12px; }
+.nx .arc-card-head .nl-tile { width: 40px; height: 40px; border-radius: 12px; font-size: 16px; }
+.nx .arc-card h3 { margin: 0; font-size: 17px; line-height: 1.3; font-weight: 700; color: var(--ink); }
+.nx .arc-badge { align-self: flex-start; display: inline-flex; align-items: center; gap: 7px; margin: 0; padding: 4px 10px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--line); }
+.nx .arc-badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+.nx .arc-desc { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
+.nx .arc-tags { margin-top: auto; padding-top: 4px; }
+.nx .arc-tag i { font-size: 12px; color: var(--ink-3); }
+.nx .arc-next { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 36px; }
+.nx .arc-next .nl-more { margin-top: 0; }
+
+/* /library/leaderboard/ */
+.nx .nl-stat-wide { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 14px; }
+.nx .nl-stat-wide .nl-stat-ico { margin: 0; }
+.nx .nl-stat-wide b { font-size: 18px; white-space: nowrap; }
+.nx .nl-stat-wide > span:not(.nl-stat-ico) { flex: 1; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
+.nx .nl-stat-wide > svg { flex-shrink: 0; color: var(--ink-3); }
+.nx .ldr-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: -6px 0 18px; font-size: 13.5px; color: var(--ink-3); }
+.nx .ldr-meta a, .nx .ldr-about a { display: inline-flex; align-items: center; gap: 5px; color: var(--ink-2); text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--ink-2) 40%, transparent); text-underline-offset: 3px; }
+.nx .ldr-meta a:hover, .nx .ldr-about a:hover { color: var(--brand); }
+.nx .ldr-cats { margin-bottom: 12px; }
+.nx .ldr-cats button { min-height: 38px; }
+.nx .ldr-cats button[aria-pressed="true"] { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+.nx .ldr-subs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+.nx .ldr-subs[hidden] { display: none; }
+.nx .ldr-subs button { min-height: 32px; padding: 5px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--ink-2);
+  background: var(--surface-2); border: 1px solid var(--line); cursor: pointer; }
+.nx .ldr-subs button:hover { color: var(--ink); }
+.nx .ldr-subs button[aria-pressed="true"] { color: var(--ink); background: var(--brand-soft); border-color: color-mix(in srgb, var(--brand) 60%, transparent); }
+.nx .ldr-about { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin: 0 0 14px; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+.nx .ldr-about [data-lb-desc] { flex-basis: 100%; }
+.nx .ldr-about [data-lb-count] { font-family: 'Fira Code', ui-monospace, monospace; font-size: 12.5px; color: var(--ink-3); }
+.nx .ldr-card { border-radius: 24px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+.nx .ldr-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.nx .ldr-table th { padding: 12px 14px; text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--ink-2); background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.nx .ldr-table td { padding: 12px 14px; vertical-align: middle; border-top: 1px solid var(--line); }
+.nx .ldr-table tbody tr:first-child td { border-top: 0; }
+.nx .ldr-rank { width: 76px; }
+.nx .ldr-pill { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 6px; border-radius: 10px; font: 600 13px 'Fira Code', ui-monospace, monospace;
+  color: var(--ink-2); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.nx .ldr-pill.is-top { color: var(--ink); background: var(--brand-soft); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 60%, transparent); }
+.nx .ldr-range { display: block; margin-top: 4px; font: 12px 'Fira Code', ui-monospace, monospace; color: var(--ink-3); }
+.nx .ldr-model b { display: block; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.nx .ldr-model > span { display: block; margin-top: 1px; font-size: 12.5px; color: var(--ink-3); }
+.nx .ldr-num { font-family: 'Fira Code', ui-monospace, monospace; }
+.nx .ldr-val { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.nx .ldr-up .ldr-val { color: var(--ldr-up); }
+.nx .ldr-down .ldr-val { color: var(--ldr-down); }
+.nx .ldr-bar { position: relative; display: block; width: 72px; height: 4px; margin: 6px 0 4px; border-radius: 4px; overflow: hidden; background: var(--surface-3); }
+.nx .ldr-bar::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); border-radius: inherit; background: var(--brand); }
+.nx .ldr-margin { display: block; font-size: 12px; color: var(--ink-3); }
+.nx td.ldr-lic span { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--ink-2);
+  background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.nx .ldr-state td { padding: 28px 16px; text-align: center; color: var(--ink-2); }
+.nx .ldr-retry { margin-left: 8px; min-height: 32px; padding: 4px 12px; border-radius: 10px; font-weight: 600; color: var(--ink); background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line); }
+/* phones: the licence column goes (the lab line under each model names it too), the headings drop their capitals so they
+   take less width than the model names, and the view buttons get small enough for two or three to a row */
+@media (max-width: 640px) {
+  .nx .ldr-table { font-size: 13px; }
+  .nx .ldr-table th { padding: 10px 6px; font-size: 12px; letter-spacing: 0; text-transform: none; line-height: 1.3; }
+  .nx .ldr-table td { padding: 10px 6px; }
+  .nx .ldr-table :is(th, td):first-child { padding-left: 12px; }
+  .nx .ldr-table :is(th, td):last-child { padding-right: 12px; }
+  .nx .ldr-table .ldr-lic { display: none; }
+  .nx .ldr-rank { width: 48px; }
+  .nx .ldr-bar { width: 48px; }
+  .nx .ldr-cats button { padding: 7px 12px; font-size: 13px; }
+  .nx .nl-stat-wide { flex-wrap: wrap; }
+  .nx .nl-stat-wide > span:not(.nl-stat-ico) { flex-basis: 100%; order: 3; }
+  .nx .nl-stat-wide > svg { margin-left: auto; }
+  .nx .arc-views { gap: 6px; }
+  .nx .arc-view { min-height: 36px; padding: 6px 11px; gap: 6px; font-size: 13px; }
+  .nx .arc-view i { display: none; }
+  .nx .arc-grid { grid-template-columns: minmax(0, 1fr); }
+  .nx .arc-card { padding: 18px; border-radius: 20px; }
+  .nx .smp-grid { grid-template-columns: minmax(0, 1fr); }
+}
+"""
+
+
 def main():
     global CSS_VER
-    css = scope_css((DOCS / "nx" / "nx.css").read_text(encoding="utf-8")) + SCOPED_FIX
+    css = scope_css((DOCS / "nx" / "nx.css").read_text(encoding="utf-8")) + SCOPED_FIX + PAGES_CSS
     (DOCS / "nx" / "nx.scoped.css").write_text(css, encoding="utf-8")
     CSS_VER = hashlib.md5(css.encode("utf-8")).hexdigest()[:10]
     pages = [("profile", profile), ("projects", projects), ("people", people),
-             ("contact", contact), ("library", library)]
+             ("contact", contact), ("library", library), ("architecture", architecture)]
     pages += [(f"library/{lib_href(k)}", (lambda k=k: library_sub(k))) for k, _ in LIB_SUBS]
-    pages += [("library/focus", library_focus)]
+    pages += [("library/focus", library_focus), ("library/leaderboard", library_leaderboard)]
     for slug, fn in pages:
         out = DOCS / slug / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)

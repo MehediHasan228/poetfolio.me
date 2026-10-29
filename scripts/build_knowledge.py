@@ -23,16 +23,16 @@ SITE = "https://mehedi.pro.bd"
 # (path in docs/, public url, title). Home first: it is the broadest overview.
 PAGES = [
     ("index.html", "/", "Home"),
-    ("profile/index.html", "/profile/", "Profile: experience, education, skills"),
-    ("projects/index.html", "/projects/", "Projects"),
-    ("stack/index.html", "/stack/", "Tech stack"),
+    ("profile/index.html", "/profile/", "Profile: experience, education, skills, tools"),
+    ("projects/index.html", "/projects/", "Projects and experiments"),
     ("architecture/index.html", "/architecture/", "Architecture"),
     ("people/index.html", "/people/", "People"),
     ("contact/index.html", "/contact/", "Contact"),
     ("library/index.html", "/library/", "Library"),
 ]
 
-SKIP_TAGS = {"script", "style", "noscript", "svg", "nav", "footer", "header", "template", "button", "form", "select", "iframe"}
+# (pre: the sample code on Profile > Tools; its comments would read as headings here)
+SKIP_TAGS = {"script", "style", "noscript", "svg", "nav", "footer", "header", "template", "button", "form", "select", "iframe", "pre"}
 SKIP_IDS = {"ai-chat-widget", "ai-orb-speech-bubble", "terminal", "cli-terminal"}
 SKIP_CLASS = re.compile(r"\b(bottom-nav|mobile-menu|drawer|sr-only|visually-hidden|marquee|ticker|telemetry|sys-monitor|radar)\b")
 BLOCK = {"p", "li", "h1", "h2", "h3", "h4", "h5", "h6", "td", "th", "dt", "dd", "figcaption", "blockquote", "summary", "div", "section", "article", "tr", "br"}

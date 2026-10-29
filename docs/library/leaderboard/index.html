@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Mehedi Hasan">
+    <meta name="description" content="Which AI models lead right now: Arena's daily ranking for agents, chat, code, image and video.">
+    <meta name="keywords" content="Mehedi Hasan, Full-Stack Developer, AI Automation, LLM Integration, Web Engineering, Bangladesh">
+    <link rel="canonical" href="https://mehedi.pro.bd/library/leaderboard/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mehedi.pro.bd/library/leaderboard/">
+    <meta property="og:title" content="AI Leaderboard · Library | Mehedi Hasan">
+    <meta property="og:description" content="Architecting the future of web and AI automation. Explore my technical arsenal and production deployments.">
+    <meta property="og:image" content="https://mehedi.pro.bd/mehedi-logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mehedi.pro.bd/library/leaderboard/">
+    <meta property="twitter:title" content="AI Leaderboard · Library | Mehedi Hasan">
+    <meta property="twitter:description" content="Architecting the future of web and AI automation. Explore my technical arsenal and production deployments.">
+    <meta property="twitter:image" content="https://mehedi.pro.bd/mehedi-logo.png">
+    <title>AI Leaderboard · Library | Mehedi Hasan</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon/icon-96.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/icon-32.png">
+    <link rel="manifest" href="../../favicon/site.webmanifest">
+
+    <!-- Fonts, self-hosted (Google Fonts files, latin and latin-ext): the browser knows them before the first paint, and the
+         body text (Poppins) is preloaded, so text doesn't jump when the fonts arrive -->
+    <link rel="preload" href="/vendor/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/vendor/fonts/poppins-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+    @font-face{font-family:'Fira Code';font-style:normal;font-weight:400 600;font-display:swap;src:url(/vendor/fonts/fira-code-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+    @font-face{font-family:'Fira Code';font-style:normal;font-weight:400 600;font-display:swap;src:url(/vendor/fonts/fira-code-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/poppins-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/poppins-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/vendor/fonts/poppins-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/poppins-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/poppins-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/vendor/fonts/poppins-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    </style>
+
+    <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
+    <link rel="stylesheet" href="../../vendor/fa/css/all.min.css?v=ec291c690a">
+
+    <link rel="stylesheet" href="../../style~1f83e8.css?v=ec7effce93">
+
+    <!-- JSON-LD Structured Data for Google Rich Results -->
+    
+<link rel="stylesheet" href="../../nx/nx.scoped.css?v=c3d2f24103">
+</head>
+
+<body class="subpage nx-page" data-page="library/leaderboard">
+    <div class="ui-controls">
+        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
+            aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+        <button type="button" id="sound-toggler" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
+                class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
+        <button type="button" id="theme-toggler" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
+                class="fa-solid fa-palette" aria-hidden="true"></i></button>
+    </div>
+
+    <nav aria-label="Main navigation">
+        <a href="../../" class="logo-link">
+            <picture>
+                <source srcset="../../mehedi-logo.webp" type="image/webp">
+                <img src="../../mehedi-logo.png" alt="Mehedi Hasan - AI Automation Expert Logo" class="site-logo" width="50" height="50" loading="eager">
+            </picture>
+            <span class="brand-name">Mehedi Hasan</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="../../profile/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../../projects/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../../people/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../../contact/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li class="nav-sep" aria-hidden="true"></li>
+            <li><a href="../../library/" class="active hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
+        </ul>
+
+        <div class="mobile-header-right">
+            <a href="../../contact/" class="mobile-contact-btn hover-sound" aria-label="Contact"><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>Contact</span></a>
+            <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
+                <span class="mm-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop"></div>
+    <div id="mobile-menu-drawer" class="mobile-menu-drawer" role="dialog" aria-modal="true" aria-label="Menu" inert aria-hidden="true">
+        <a href="../../index.html" class="drawer-brand" aria-label="Mehedi Hasan, home">
+            <img src="../../mehedi-logo.webp" alt="" width="36" height="36" decoding="async">
+            <span><b>Mehedi Hasan</b><small>Full-stack &amp; AI engineer</small></span>
+        </a>
+        <button type="button" id="mobile-menu-close" class="mobile-menu-close hover-sound" aria-label="Close menu">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="../../profile/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg> <span>Profile</span></a></li>
+            <li><a href="../../projects/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3l8 4.5v9L12 21l-8-4.5v-9zm0 9l8-4.5M12 12v9m0-9L4 7.5"/></svg> <span>Projects</span></a></li>
+            <li><a href="../../people/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg> <span>People</span></a></li>
+            <li><a href="../../contact/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7l9 6l9-6"/></g></svg> <span>Contact</span></a></li>
+            <li class="nav-sep" aria-hidden="true"></li>
+            <li><a href="../../library/" class="active hover-sound nav-link-item" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
+        </ul>
+        <div class="drawer-controls">
+            <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
+                aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+            <button type="button" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
+                    class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
+            <button type="button" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
+                    class="fa-solid fa-palette" aria-hidden="true"></i></button>
+        </div>
+        <p class="drawer-copy">© 2026 Mehedi Hasan</p>
+    </div>
+
+
+    
+<div class="nx">
+<div class="sub-header-bar">
+  <div class="sub-header-shell">
+    <div class="sub-header-left">
+      <h1 class="sub-header-title">Library</h1>
+    </div>
+    <div class="sub-header-right">
+      <div class="share-wrap">
+        <button type="button" class="btn-share" data-share aria-haspopup="dialog" aria-expanded="false" aria-label="Share this page" title="Share this page">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+        </button>
+        <div class="share-panel" role="dialog" aria-label="Share this page" hidden>
+          <p class="share-title">Share this page</p>
+          <div class="share-link"><span data-share-url></span><button type="button" class="share-copy" data-share-copy>Copy link</button></div>
+          <div class="share-nets">
+            <a data-net="linkedin" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i><span>LinkedIn</span></a>
+            <a data-net="x" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.9-6.4L6.3 22H3.2l7.3-8.3L1 2h6.3l4.4 5.9L18.9 2Zm-1.1 18.1h1.7L6.3 3.8H4.5l13.3 16.3Z"/></svg><span>X</span></a>
+            <a data-net="facebook" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i><span>Facebook</span></a>
+            <a data-net="whatsapp" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
+            <a data-net="email"><i class="fa-solid fa-envelope"></i><span>Email</span></a>
+          </div>
+        </div>
+      </div>
+      <a class="btn-rail-top" href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" title="Follow on GitHub" aria-label="Follow Mehedi on GitHub">
+        <span class="git-icon-wrap"><i class="fa-brands fa-github"></i></span>
+        <span>Follow</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="git-arr"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="shell has-rail">
+<main class="main">
+<div class="pad nl-page"><div class="nl-tabs" role="navigation" aria-label="Library sections"><ul><li><a href="../../library/"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg><span>All</span><b>100</b></a></li><li><a href="../../library/skills/"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2m0-12a2 2 0 0 1 2 2a2 2 0 0 1 2-2a2 2 0 0 1-2-2a2 2 0 0 1-2 2M9 18a6 6 0 0 1 6-6a6 6 0 0 1-6-6a6 6 0 0 1-6 6a6 6 0 0 1 6 6"></path></svg><span>AI Skills</span><b>11</b></a></li><li><a href="../../library/bookmarks/"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 10v11l-5-3l-5 3V10a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3"></path><path d="M11 3h5a3 3 0 0 1 3 3v11"></path></g></svg><span>Bookmarks</span><b>44</b></a></li><li><a href="../../library/watch-listen/"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm11 0a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2z"></path><path d="M4 15v-3a8 8 0 0 1 16 0v3"></path></g></svg><span>Watch &amp; Listen</span><b>45</b></a></li><li><a href="../../library/focus/"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M3 10v4M7 7v10M11 4v16M15 8v8M19 6v12"/></svg><span>Focus</span></a></li><li><a href="../../library/leaderboard/" class="is-active" aria-current="page"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17 3H7v2H3v3a4 4 0 0 0 4 4h.3A5 5 0 0 0 11 14.9V18H8v3h8v-3h-3v-3.1A5 5 0 0 0 16.7 12h.3a4 4 0 0 0 4-4V5h-4zM5 8V7h2v3a2 2 0 0 1-2-2zm14 0a2 2 0 0 1-2 2V7h2z"/></svg><span>AI Leaderboard</span></a></li></ul></div><div class="nl-section ldr" data-lb data-built="2026-10-28T05:17:27.344Z" data-boards="{&quot;agent&quot;: {&quot;title&quot;: &quot;Agent&quot;, &quot;subs&quot;: [{&quot;key&quot;: &quot;agent&quot;, &quot;title&quot;: &quot;Agent&quot;, &quot;desc&quot;: &quot;Rankings across agent behavior signals&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/agent&quot;, &quot;total&quot;: 53}]}, &quot;chat&quot;: {&quot;title&quot;: &quot;Chat&quot;, &quot;subs&quot;: [{&quot;key&quot;: &quot;text&quot;, &quot;title&quot;: &quot;Text&quot;, &quot;desc&quot;: &quot;Rankings across text-to-text tasks and more&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/text&quot;, &quot;total&quot;: 414}, {&quot;key&quot;: &quot;search&quot;, &quot;title&quot;: &quot;Search&quot;, &quot;desc&quot;: &quot;Rankings across web search-integrated LLMs&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/search&quot;, &quot;total&quot;: 34}, {&quot;key&quot;: &quot;vision&quot;, &quot;title&quot;: &quot;Vision&quot;, &quot;desc&quot;: &quot;Rankings across multimodal visual models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/vision&quot;, &quot;total&quot;: 165}, {&quot;key&quot;: &quot;document&quot;, &quot;title&quot;: &quot;Document&quot;, &quot;desc&quot;: &quot;Rankings across document analysis models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/document&quot;, &quot;total&quot;: 44}]}, &quot;code&quot;: {&quot;title&quot;: &quot;Code&quot;, &quot;subs&quot;: [{&quot;key&quot;: &quot;webdev&quot;, &quot;title&quot;: &quot;WebDev&quot;, &quot;desc&quot;: &quot;Rankings across front-end web development tasks&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/code/webdev&quot;, &quot;total&quot;: 142}, {&quot;key&quot;: &quot;image-to-webdev&quot;, &quot;title&quot;: &quot;Image-to-WebDev&quot;, &quot;desc&quot;: &quot;Rankings across image-to-webdev generation models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/code/image-to-webdev&quot;, &quot;total&quot;: 64}]}, &quot;image&quot;: {&quot;title&quot;: &quot;Image&quot;, &quot;subs&quot;: [{&quot;key&quot;: &quot;text-to-image&quot;, &quot;title&quot;: &quot;Text-to-Image&quot;, &quot;desc&quot;: &quot;Rankings across text-to-image generation models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/text-to-image&quot;, &quot;total&quot;: 82}, {&quot;key&quot;: &quot;image-edit&quot;, &quot;title&quot;: &quot;Image Edit&quot;, &quot;desc&quot;: &quot;Rankings across image editing models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/image-edit&quot;, &quot;total&quot;: 59}]}, &quot;video&quot;: {&quot;title&quot;: &quot;Video&quot;, &quot;subs&quot;: [{&quot;key&quot;: &quot;text-to-video&quot;, &quot;title&quot;: &quot;Text-to-Video&quot;, &quot;desc&quot;: &quot;Rankings across text-to-video generation models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/text-to-video&quot;, &quot;total&quot;: 48}, {&quot;key&quot;: &quot;image-to-video&quot;, &quot;title&quot;: &quot;Image-to-Video&quot;, &quot;desc&quot;: &quot;Rankings across image-to-video generation models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/image-to-video&quot;, &quot;total&quot;: 48}, {&quot;key&quot;: &quot;video-edit&quot;, &quot;title&quot;: &quot;Video Edit&quot;, &quot;desc&quot;: &quot;Rankings across video editing models&quot;, &quot;url&quot;: &quot;https://arena.ai/leaderboard/video-edit&quot;, &quot;total&quot;: 10}]}}"><div class="nl-head"><span class="nl-tile"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17 3H7v2H3v3a4 4 0 0 0 4 4h.3A5 5 0 0 0 11 14.9V18H8v3h8v-3h-3v-3.1A5 5 0 0 0 16.7 12h.3a4 4 0 0 0 4-4V5h-4zM5 8V7h2v3a2 2 0 0 1-2-2zm14 0a2 2 0 0 1-2 2V7h2z"/></svg></span><div class="nl-head-text"><h2>AI Leaderboard</h2><p>Which AI models lead right now: Arena&#x27;s daily ranking for agents, chat, code, image and video.</p></div></div><p class="ldr-meta"><span>Updated <time data-lb-day datetime="2026-10-28">28 Oct 2026</time></span><a href="https://arena.ai/leaderboard" target="_blank" rel="noopener noreferrer">Source: Arena (arena.ai)<svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M7 7h10v10"/></svg></a></p><div class="nl-chips ldr-cats" role="group" aria-label="Kind of model"><button type="button" data-lb-cat="agent" aria-pressed="true" class="is-active"><span>Agent</span></button><button type="button" data-lb-cat="chat" aria-pressed="false"><span>Chat</span></button><button type="button" data-lb-cat="code" aria-pressed="false"><span>Code</span></button><button type="button" data-lb-cat="image" aria-pressed="false"><span>Image</span></button><button type="button" data-lb-cat="video" aria-pressed="false"><span>Video</span></button></div><div class="ldr-subs" role="group" aria-label="Board" hidden><button type="button" data-lb-sub="agent" aria-pressed="true">Agent</button></div><p class="ldr-about"><span data-lb-desc>Rankings across agent behavior signals</span><span data-lb-count>Top 25 of 53 models</span><a data-lb-link href="https://arena.ai/leaderboard/agent" target="_blank" rel="noopener noreferrer">Full ranking on arena.ai<svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M7 7h10v10"/></svg></a></p><p class="sr-only" data-lb-status aria-live="polite"></p><div class="ldr-card"><table class="ldr-table" id="ldr-table"><caption class="sr-only" data-lb-caption>Agent: Agent, top 25 of 53 models</caption><thead><tr><th scope="col">Rank</th><th scope="col">Model</th><th scope="col" data-lb-h1>Net improvement</th><th scope="col" data-lb-h2>Confirmed success</th><th scope="col" class="ldr-lic">License</th></tr></thead><tbody data-lb-rows><tr><td class="ldr-rank"><span class="ldr-pill is-top">1</span><span class="ldr-range"><span class="sr-only">could rank </span>1–8</span></td><td class="ldr-model"><b>Claude Opus 5.5 (Max)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+15.53%</span><i class="ldr-bar" style="--w:70%" aria-hidden="true"></i><span class="ldr-margin">±4.63%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+17.29%</span><span class="ldr-margin">±6.02%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill is-top">2</span><span class="ldr-range"><span class="sr-only">could rank </span>1–7</span></td><td class="ldr-model"><b>Claude Opus 5.5 (High)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+14.33%</span><i class="ldr-bar" style="--w:64%" aria-hidden="true"></i><span class="ldr-margin">±2.18%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+13.93%</span><span class="ldr-margin">±3.84%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill is-top">3</span><span class="ldr-range"><span class="sr-only">could rank </span>1–8</span></td><td class="ldr-model"><b>GPT 6 Astra (Max)</b><span>OpenAI · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+13.09%</span><i class="ldr-bar" style="--w:59%" aria-hidden="true"></i><span class="ldr-margin">±2.37%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+12.13%</span><span class="ldr-margin">±3.88%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">4</span><span class="ldr-range"><span class="sr-only">could rank </span>1–8</span></td><td class="ldr-model"><b>Claude Fable 5.1 (Max)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+12.66%</span><i class="ldr-bar" style="--w:57%" aria-hidden="true"></i><span class="ldr-margin">±2.05%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+16.19%</span><span class="ldr-margin">±2.96%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">5</span><span class="ldr-range"><span class="sr-only">could rank </span>1–11</span></td><td class="ldr-model"><b>Claude Sonnet 5.5 (Max)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+11.95%</span><i class="ldr-bar" style="--w:54%" aria-hidden="true"></i><span class="ldr-margin">±3.31%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+15.83%</span><span class="ldr-margin">±5.06%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">6</span><span class="ldr-range"><span class="sr-only">could rank </span>1–11</span></td><td class="ldr-model"><b>GPT 6.1 Sol (Max)</b><span>OpenAI · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+11.72%</span><i class="ldr-bar" style="--w:53%" aria-hidden="true"></i><span class="ldr-margin">±3.05%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+14.74%</span><span class="ldr-margin">±4.18%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">7</span><span class="ldr-range"><span class="sr-only">could rank </span>1–12</span></td><td class="ldr-model"><b>GPT 6 Sol (Max)</b><span>OpenAI · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+9.92%</span><i class="ldr-bar" style="--w:45%" aria-hidden="true"></i><span class="ldr-margin">±2.38%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+6.97%</span><span class="ldr-margin">±4.34%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">8</span><span class="ldr-range"><span class="sr-only">could rank </span>2–13</span></td><td class="ldr-model"><b>Gemini 4 Argon (High)</b><span>Google · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+9.26%</span><i class="ldr-bar" style="--w:42%" aria-hidden="true"></i><span class="ldr-margin">±2.36%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+15.64%</span><span class="ldr-margin">±3.26%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">9</span><span class="ldr-range"><span class="sr-only">could rank </span>5–12</span></td><td class="ldr-model"><b>Claude Fable 5 (High)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+8.94%</span><i class="ldr-bar" style="--w:40%" aria-hidden="true"></i><span class="ldr-margin">±1.27%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+5.79%</span><span class="ldr-margin">±2.60%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">10</span><span class="ldr-range"><span class="sr-only">could rank </span>5–13</span></td><td class="ldr-model"><b>Claude Opus 5 (Max)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+8.12%</span><i class="ldr-bar" style="--w:37%" aria-hidden="true"></i><span class="ldr-margin">±1.47%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+10.42%</span><span class="ldr-margin">±3.10%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">11</span><span class="ldr-range"><span class="sr-only">could rank </span>5–14</span></td><td class="ldr-model"><b>Claude Opus 5 (High)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+7.95%</span><i class="ldr-bar" style="--w:36%" aria-hidden="true"></i><span class="ldr-margin">±1.39%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+8.37%</span><span class="ldr-margin">±2.99%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">12</span><span class="ldr-range"><span class="sr-only">could rank </span>7–14</span></td><td class="ldr-model"><b>Claude Opus 4.8 (High)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+7.13%</span><i class="ldr-bar" style="--w:32%" aria-hidden="true"></i><span class="ldr-margin">±1.37%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+4.68%</span><span class="ldr-margin">±2.75%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">13</span><span class="ldr-range"><span class="sr-only">could rank </span>9–16</span></td><td class="ldr-model"><b>GPT 5.6 Sol (xHigh)</b><span>OpenAI · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+6.23%</span><i class="ldr-bar" style="--w:28%" aria-hidden="true"></i><span class="ldr-margin">±1.28%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+5.34%</span><span class="ldr-margin">±2.70%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">14</span><span class="ldr-range"><span class="sr-only">could rank </span>11–23</span></td><td class="ldr-model"><b>Claude Sonnet 5 (High)</b><span>Anthropic · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+4.91%</span><i class="ldr-bar" style="--w:22%" aria-hidden="true"></i><span class="ldr-margin">±1.69%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+2.22%</span><span class="ldr-margin">±3.48%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">15</span><span class="ldr-range"><span class="sr-only">could rank </span>13–23</span></td><td class="ldr-model"><b>GPT 5.5 (xHigh)</b><span>OpenAI · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+4.38%</span><i class="ldr-bar" style="--w:20%" aria-hidden="true"></i><span class="ldr-margin">±1.09%</span></td><td class="ldr-num ldr-down"><span class="ldr-val">-0.88%</span><span class="ldr-margin">±2.34%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">16</span><span class="ldr-range"><span class="sr-only">could rank </span>14–23</span></td><td class="ldr-model"><b>Muse Spark 1.3 (Max)</b><span>Meta · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+4.04%</span><i class="ldr-bar" style="--w:18%" aria-hidden="true"></i><span class="ldr-margin">±0.66%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+5.32%</span><span class="ldr-margin">±1.39%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">17</span><span class="ldr-range"><span class="sr-only">could rank </span>14–23</span></td><td class="ldr-model"><b>Deepseek V4.1 Flash (Max)</b><span>DeepSeek · MIT</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+3.80%</span><i class="ldr-bar" style="--w:17%" aria-hidden="true"></i><span class="ldr-margin">±0.39%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+7.44%</span><span class="ldr-margin">±0.86%</span></td><td class="ldr-lic"><span>MIT</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">18</span><span class="ldr-range"><span class="sr-only">could rank </span>14–23</span></td><td class="ldr-model"><b>Kimi K3 (Max)</b><span>Moonshot · Kimi K3 license</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+3.78%</span><i class="ldr-bar" style="--w:17%" aria-hidden="true"></i><span class="ldr-margin">±0.59%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+6.46%</span><span class="ldr-margin">±1.32%</span></td><td class="ldr-lic"><span>Kimi K3 license</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">19</span><span class="ldr-range"><span class="sr-only">could rank </span>14–25</span></td><td class="ldr-model"><b>Hy4 preview</b><span>Tencent · Apache 2.0</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+3.61%</span><i class="ldr-bar" style="--w:16%" aria-hidden="true"></i><span class="ldr-margin">±0.70%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+5.96%</span><span class="ldr-margin">±1.48%</span></td><td class="ldr-lic"><span>Apache 2.0</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">20</span><span class="ldr-range"><span class="sr-only">could rank </span>13–33</span></td><td class="ldr-model"><b>MiMo V2.6 Pro</b><span>Xiaomi · MIT</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+3.52%</span><i class="ldr-bar" style="--w:16%" aria-hidden="true"></i><span class="ldr-margin">±1.92%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+8.03%</span><span class="ldr-margin">±3.88%</span></td><td class="ldr-lic"><span>MIT</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">21</span><span class="ldr-range"><span class="sr-only">could rank </span>14–27</span></td><td class="ldr-model"><b>GLM 5.2 (Max)</b><span>Z.ai · MIT</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+3.19%</span><i class="ldr-bar" style="--w:14%" aria-hidden="true"></i><span class="ldr-margin">±0.73%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+4.11%</span><span class="ldr-margin">±1.58%</span></td><td class="ldr-lic"><span>MIT</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">22</span><span class="ldr-range"><span class="sr-only">could rank </span>14–34</span></td><td class="ldr-model"><b>Grok 4.7 (xHigh)</b><span>SpaceXAI · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+2.83%</span><i class="ldr-bar" style="--w:13%" aria-hidden="true"></i><span class="ldr-margin">±1.71%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+3.93%</span><span class="ldr-margin">±3.66%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">23</span><span class="ldr-range"><span class="sr-only">could rank </span>14–33</span></td><td class="ldr-model"><b>Gemini 3.8 Flash (High)</b><span>Google · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+2.75%</span><i class="ldr-bar" style="--w:12%" aria-hidden="true"></i><span class="ldr-margin">±0.93%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+5.30%</span><span class="ldr-margin">±2.05%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">24</span><span class="ldr-range"><span class="sr-only">could rank </span>19–33</span></td><td class="ldr-model"><b>Qwen3.8 Max</b><span>Alibaba · Proprietary</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+2.35%</span><i class="ldr-bar" style="--w:11%" aria-hidden="true"></i><span class="ldr-margin">±0.59%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+5.09%</span><span class="ldr-margin">±1.32%</span></td><td class="ldr-lic"><span>Proprietary</span></td></tr><tr><td class="ldr-rank"><span class="ldr-pill">25</span><span class="ldr-range"><span class="sr-only">could rank </span>20–34</span></td><td class="ldr-model"><b>GLM 5.3 (Max)</b><span>Z.ai · MIT</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+2.15%</span><i class="ldr-bar" style="--w:10%" aria-hidden="true"></i><span class="ldr-margin">±0.72%</span></td><td class="ldr-num ldr-up"><span class="ldr-val">+4.78%</span><span class="ldr-margin">±1.62%</span></td><td class="ldr-lic"><span>MIT</span></td></tr></tbody></table></div></div></div><script>
+(function () {
+  // cards glow where the pointer is, like the cards elsewhere on the site
+  var SEL = '.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch';
+  // the light eases after the pointer instead of jumping, so the movement reads clearly
+  function follow(c) {
+    if (c._raf) return;
+    (function step() {
+      c._x += (c._tx - c._x) * 0.18; c._y += (c._ty - c._y) * 0.18;
+      c.style.setProperty('--gx', c._x.toFixed(1) + 'px'); c.style.setProperty('--gy', c._y.toFixed(1) + 'px');
+      c._raf = (Math.abs(c._tx - c._x) > 0.4 || Math.abs(c._ty - c._y) > 0.4) ? requestAnimationFrame(step) : null;
+    })();
+  }
+  document.addEventListener('pointermove', function (ev) {
+    var c = ev.target.closest && ev.target.closest(SEL);
+    if (!c) return;
+    var r = c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (c._x === undefined || !c.matches(':hover')) { c._x = x; c._y = y; }
+    c._tx = x; c._ty = y; follow(c);
+  }, { passive: true });
+  document.addEventListener('pointerover', function (ev) {
+    var c = ev.target.closest && ev.target.closest(SEL);
+    if (!c || c.contains(ev.relatedTarget)) return;
+    var r = c.getBoundingClientRect();
+    c._x = c._tx = ev.clientX - r.left; c._y = c._ty = ev.clientY - r.top; follow(c);
+  }, { passive: true });
+})();
+
+(function () {
+  /* site storage can be blocked (then writing to it throws): it is written only through this */
+  function keep(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function iframe(id) {
+    return '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="YouTube video player" ' +
+           'allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  }
+  var player = document.querySelector("[data-nl-player]");
+  /* Watch & Listen's stage: the channel at the top, with this player and its track list. A video played from a channel
+     card brings that channel up, and the one there comes down: An Nafee's card takes the raised card's place in My top
+     channels (or the top of it, for a Learning channel); the others go back to their own place */
+  var stage = document.querySelector("[data-stage]");
+  var channels = stage ? JSON.parse(stage.getAttribute("data-channels")) : [];
+  var onStage = channels.length ? channels[0].key : "";
+  /* without a stage (the Library overview) the player carries the tracks listed under it */
+  var tracks = channels.length ? channels[0].tracks : [];
+  if (!channels.length && player && player.hasAttribute("data-tracks")) {
+    try { tracks = JSON.parse(player.getAttribute("data-tracks")); } catch (err) { tracks = []; }
+  }
+  var cur = 0, playing = false;
+  var playIcon = stage ? stage.querySelector(".nl-tthumb > span").innerHTML : "";
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function channel(key) { return channels.filter(function (c) { return c.key === key; })[0]; }
+  function find(id) {
+    for (var k = 0; k < channels.length; k++) {
+      var i = channels[k].tracks.findIndex(function (x) { return x.id === id; });
+      if (i >= 0) return { ch: channels[k], i: i };
+    }
+    return null;
+  }
+  function raise(key) {
+    var ch = channel(key), up = document.querySelector('[data-ch="' + key + '"]');
+    if (!ch || !up || key === onStage) return;
+    var head = stage.querySelector(".nl-artist-head");
+    head.querySelector("h3").innerHTML = '<img src="' + esc(ch.avatar) + '" alt="" width="32" height="32">' + esc(ch.name) + "<span>" + esc(ch.count) + "</span>";
+    head.querySelector("a").href = ch.url;
+    stage.setAttribute("data-cat", ch.cat);
+    stage.querySelector(".nl-tracks").innerHTML = ch.tracks.map(function (x, i) {
+      return '<li><button type="button" data-track="' + i + '"><span class="nl-n">' + (i + 1) + '</span><span class="nl-tthumb">' +
+        '<img src="https://i.ytimg.com/vi/' + x.id + '/mqdefault.jpg" alt="" loading="lazy"><span>' + playIcon + '</span></span>' +
+        '<span class="nl-tmeta"><span>' + esc(x.title) + "</span><span>" + esc(x.sub) + "</span></span>" +
+        (x.ar ? '<span class="nl-ar" lang="ar" dir="rtl">' + esc(x.ar) + "</span>" : "") + "</button></li>";
+    }).join("");
+    tracks = ch.tracks;
+    var feats = document.querySelector("[data-feats]"), down = document.querySelector('[data-ch="' + onStage + '"]');
+    if (down) down.classList.remove("is-up");
+    up.classList.add("is-up");
+    var first = feats.querySelector('[data-ch="' + channels[0].key + '"]');
+    if (key !== channels[0].key) feats.insertBefore(first, up.parentNode === feats ? up : feats.firstChild);
+    onStage = key;
+    // rows that were hidden measured nothing: their position dots and edge fades are worked out again
+    [first, down].forEach(function (c) { if (c) c.querySelectorAll(".nl-vids, .nl-shelf-row").forEach(function (r) { r.dispatchEvent(new Event("scroll")); }); });
+  }
+  /* to the stage, clear of the page's top bars, so the video that just started is in view; from the keyboard, focus
+     follows (the card that was pressed has just gone) */
+  function toStage(keyboard) {
+    // the sticky bar's resting place, not where it is now: on phones the nav slides away while the page scrolls
+    var nav = document.querySelector("body > nav"), bar = document.querySelector(".sub-header-bar");
+    var cover = Math.max(nav ? nav.offsetHeight : 0, bar ? (parseFloat(getComputedStyle(bar).top) || 0) + bar.offsetHeight : 0);
+    var y = stage.getBoundingClientRect().top + scrollY - cover - 12;
+    scrollTo({ top: Math.max(0, y), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    if (keyboard) stage.focus({ preventScroll: true });
+  }
+  function setTrack(i, play) {
+    var t = tracks[i];
+    if (!player || !t) return;
+    cur = i;
+    player.querySelector(".nl-player-title").textContent = t.title;
+    var sub = player.querySelectorAll(".nl-player-sub span");
+    sub[0].textContent = t.sub || ""; sub[1].textContent = t.ar || "";
+    if (t.av) player.querySelector(".nl-player-av").src = t.av;
+    player.querySelector(".nl-screen-thumb").src = "https://i.ytimg.com/vi/" + t.id + "/hqdefault.jpg";
+    document.querySelectorAll("[data-track]").forEach(function (b) { b.classList.toggle("is-current", +b.getAttribute("data-track") === i); });
+    if (play) {
+      playing = true;
+      if (window.TubeDock) { window.TubeDock.play(dockTracks(), i); return; }   /* plays in this screen, and keeps playing on other pages */
+      player.querySelector(".nl-frame").innerHTML = iframe(t.id);
+      player.classList.add("is-playing");
+      keep("lib:last", JSON.stringify({ id: t.id, title: t.title, sub: t.sub || "", at: Date.now() }));
+    }
+  }
+  /* the dock sits in whichever page stays loaded, so its avatars need full addresses */
+  function dockTracks() {
+    return tracks.map(function (x) { return { id: x.id, title: x.title, sub: x.sub || "", av: x.av ? new URL(x.av, location.href).href : "" }; });
+  }
+  function docked() { return window.TubeDock && window.TubeDock.state().open; }
+  var playSvg = player ? player.querySelector("[data-nl-play]").innerHTML : "";
+  var pauseSvg = '<svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+  /* the dock's video sits in this screen while the page is in view; the big player follows the dock (its track, and
+     whether it plays); then a ?play=<video id> link starts that track */
+  function followDock() {
+    if (!player || !window.TubeDock) return;
+    var dockApi = window.TubeDock, screen = player.querySelector(".nl-screen"), label = player.querySelector("[data-nl-label]");
+    var sync = function () {
+      var st = dockApi.state();
+      var at = st.track ? tracks.findIndex(function (x) { return x.id === st.track.id; }) : -1;
+      /* the dock plays another channel's video (back from another page): that channel is the one up on the stage */
+      if (st.open && st.track && at < 0) { var hit = find(st.track.id); if (hit) { raise(hit.ch.key); at = hit.i; } }
+      var on = st.open && at >= 0;
+      player.classList.toggle("is-docked", on);
+      player.classList.toggle("is-dock-playing", on && st.playing);
+      player.querySelector("[data-nl-play]").innerHTML = on && st.playing ? pauseSvg : playSvg;
+      label.textContent = on ? (st.playing ? "Now playing" : "Paused") : "Up next";
+      if (on && at !== cur) setTrack(at, false);
+      playing = on && st.playing;
+    };
+    var off = dockApi.on(sync);
+    dockApi.slot(screen);
+    sync();
+    /* in Focus's frame the dock outlives this page: it lets go of the screen and stops listening when the page closes */
+    addEventListener("pagehide", function () { dockApi.unslot(screen); off(); });
+    addEventListener("pageshow", function (ev) { if (ev.persisted) { off = dockApi.on(sync); dockApi.slot(screen); sync(); } });
+    var asked = new URLSearchParams(location.search).get("play");
+    var want = asked ? find(asked) : null;
+    if (want) { raise(want.ch.key); setTrack(want.i, true); player.scrollIntoView({ block: "center" }); }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", followDock); else followDock();
+  /* horizontal chip rows (tabs + bookmark filters) */
+  var rows = document.querySelectorAll(".nl-chips, .nl-tabs ul, .nl-shelf-row, .nl-vids");
+  function fade(row) {
+    row.classList.toggle("fade-l", row.scrollLeft > 4);
+    row.classList.toggle("fade-r", row.scrollLeft + row.clientWidth < row.scrollWidth - 4);
+  }
+  function center(el, smooth) {
+    var row = el.closest(".nl-chips, .nl-tabs ul");
+    if (!row) return;
+    var left = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2;
+    row.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "instant" });   // "auto" would follow the row's smooth scrolling
+  }
+  rows.forEach(function (row) {
+    row.addEventListener("scroll", function () { fade(row); }, { passive: true });
+    row.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      var max = row.scrollWidth - row.clientWidth;
+      if (max <= 0 || (e.deltaY < 0 && row.scrollLeft <= 0) || (e.deltaY > 0 && row.scrollLeft >= max - 1)) return;
+      e.preventDefault();
+      row.scrollLeft += e.deltaY;
+    }, { passive: false });
+    var active = row.querySelector(".is-active");
+    if (active) center(active, false);
+    fade(row);
+  });
+  // the active tab is measured again once the web fonts have widened the tabs, and after a resize
+  function settle() {
+    rows.forEach(function (row) { var a = row.querySelector(".is-active"); if (a) center(a, false); fade(row); });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(settle);
+  var resizeT = 0;
+  window.addEventListener("resize", function () { clearTimeout(resizeT); resizeT = setTimeout(settle, 120); });
+
+  /* position dots under sideways video rows (shown on phones only, via CSS) */
+  document.querySelectorAll(".nl-vids, .nl-shelf-row").forEach(function (row) {
+    var cards = row.children; if (cards.length < 2) return;
+    var dots = document.createElement("div"); dots.className = "nl-dots"; dots.setAttribute("aria-hidden", "true");
+    for (var i = 0; i < cards.length; i++) {
+      var b = document.createElement("button"); b.type = "button"; b.tabIndex = -1;
+      (function (n) { b.addEventListener("click", function () { row.scrollTo({ left: cards[n].offsetLeft - cards[0].offsetLeft, behavior: "smooth" }); }); })(i);
+      dots.appendChild(b);
+    }
+    row.insertAdjacentElement("afterend", dots);
+    function sync() {
+      var step = cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
+      var max = row.scrollWidth - row.clientWidth;
+      var n = row.scrollLeft >= max - 4 ? cards.length - 1 : Math.round(row.scrollLeft / step);
+      [].forEach.call(dots.children, function (d, k) { d.classList.toggle("is-on", k === n); });
+    }
+    row.addEventListener("scroll", sync, { passive: true }); sync();
+  });
+
+  document.addEventListener("click", function (ev) {
+    var t = ev.target;
+    if (!t || !t.closest) return;
+    var copy = t.closest(".nl-copy");
+    if (copy) {
+      var text = copy.getAttribute("data-copy");
+      var done = function () { copy.classList.add("is-copied"); setTimeout(function () { copy.classList.remove("is-copied"); }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done); }
+      else { var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); }
+      return;
+    }
+    var f = t.closest("[data-nl-filter]");
+    if (f) {
+      var cat = f.getAttribute("data-nl-filter");
+      document.querySelectorAll("[data-nl-filter]").forEach(function (b) { b.classList.toggle("is-active", b === f); });
+      center(f, true);
+      document.querySelectorAll(".nl-page [data-cat]").forEach(function (el) {
+        el.hidden = !(cat === "All" || el.getAttribute("data-cat") === cat);
+      });
+      return;
+    }
+    var vp = t.closest("[data-yt-play]");
+    if (vp) {
+      var scr = vp.closest("[data-yt]"), card = vp.closest("[data-ch]");
+      if (stage && card && channel(card.getAttribute("data-ch"))) {   /* on the stage's big player, not in the small card */
+        raise(card.getAttribute("data-ch"));
+        setTrack(Math.max(0, tracks.findIndex(function (x) { return x.id === scr.getAttribute("data-yt"); })), true);
+        toStage(ev.detail === 0);
+        return;
+      }
+      scr.innerHTML = iframe(scr.getAttribute("data-yt")); scr.classList.add("is-playing"); return;
+    }
+    var tr = t.closest("[data-track]");
+    if (tr) { setTrack(+tr.getAttribute("data-track"), true); return; }
+    if (t.closest("[data-nl-play]")) { if (docked()) window.TubeDock.toggle(); else setTrack(cur, true); return; }
+    if (t.closest("[data-nl-prev]")) { if (docked()) window.TubeDock.prev(); else setTrack((cur - 1 + tracks.length) % tracks.length, playing); return; }
+    if (t.closest("[data-nl-next]")) { if (docked()) window.TubeDock.next(); else setTrack((cur + 1) % tracks.length, playing); return; }
+  });
+})();
+</script><script>
+(function () {
+  var root = document.querySelector('[data-lb]');
+  if (!root) return;
+  var BOARDS = JSON.parse(root.getAttribute('data-boards'));
+  var TOP = 25;
+  var rows = root.querySelector('[data-lb-rows]'), subsBox = root.querySelector('.ldr-subs');
+  var cat = Object.keys(BOARDS)[0], sub = BOARDS[cat].subs[0].key;
+  var data = null, failed = false, loading = null, built = root.getAttribute('data-built'), builtRows = rows.innerHTML;
+  function isFirst() { return cat === Object.keys(BOARDS)[0] && sub === BOARDS[cat].subs[0].key; }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function subOf(c, k) { return BOARDS[c].subs.filter(function (s) { return s.key === k; })[0] || BOARDS[c].subs[0]; }
+  function range(r) {
+    var n = (String(r || '').match(/\d+/g) || []).map(Number).sort(function (a, b) { return a - b; });
+    return n.length < 2 || n[0] === n[n.length - 1] ? '' : n[0] + '\u2013' + n[n.length - 1];
+  }
+  function row(m, agent) {
+    var score = String(m.score || '').replace(/^Score:\s*/, '');
+    var second = String(m.secondary || '');
+    if (!agent) second = second.replace(/\s*votes$/, '');
+    var num = parseFloat(score.replace(/[^0-9.-]/g, '')) || 0;
+    var w = agent ? Math.min(Math.max(num * 4.5, 10), 100) : Math.min(Math.max((num - 1000) / 800 * 100, 15), 100);
+    var sign = function (v) { return agent ? (v.charAt(0) === '-' ? ' ldr-down' : ' ldr-up') : ''; };
+    var small = function (v) { return v ? '<span class="ldr-margin">' + esc(v) + '</span>' : ''; };
+    var rank = +m.rank || 0, rng = range(m.rank_range);
+    return '<tr><td class="ldr-rank"><span class="ldr-pill' + (rank > 0 && rank <= 3 ? ' is-top' : '') + '">' + rank + '</span>' +
+      (rng ? '<span class="ldr-range"><span class="sr-only">could rank </span>' + rng + '</span>' : '') + '</td>' +
+      '<td class="ldr-model"><b>' + esc(m.name) + '</b><span>' + esc(m.lab) + '</span></td>' +
+      '<td class="ldr-num' + sign(score) + '"><span class="ldr-val">' + esc(score) + '</span><i class="ldr-bar" style="--w:' + Math.round(w) + '%" aria-hidden="true"></i>' + small(m.score_margin) + '</td>' +
+      '<td class="ldr-num' + sign(second) + '"><span class="ldr-val">' + esc(second) + '</span>' + small(m.secondary_margin) + '</td>' +
+      '<td class="ldr-lic"><span>' + esc(m.license || 'Proprietary') + '</span></td></tr>';
+  }
+  function state(html) { rows.innerHTML = '<tr class="ldr-state"><td colspan="5">' + html + '</td></tr>'; }
+  function day(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  }
+  // what the board's lines say, then its rows (from the loaded rankings; until they come, a line that says so)
+  function show(announce) {
+    var b = BOARDS[cat], s = subOf(cat, sub), agent = cat === 'agent';
+    var list = data && data.categories && data.categories[cat] && data.categories[cat].subcategories[s.key];
+    var models = list && list.models ? list.models.slice(0, TOP) : null;
+    var total = (list && list.total_models) || s.total, n = models ? models.length : Math.min(TOP, total);
+    root.querySelector('[data-lb-h1]').textContent = agent ? 'Net improvement' : 'Score';
+    root.querySelector('[data-lb-h2]').textContent = agent ? 'Confirmed success' : 'Votes';
+    root.querySelector('[data-lb-desc]').textContent = s.desc;
+    root.querySelector('[data-lb-count]').textContent = 'Top ' + n + ' of ' + total + ' models';
+    root.querySelector('[data-lb-caption]').textContent = b.title + ': ' + s.title + ', top ' + n + ' of ' + total + ' models';
+    var link = root.querySelector('[data-lb-link]');
+    if (s.url) link.href = s.url;
+    if (models) rows.innerHTML = models.map(function (m) { return row(m, agent); }).join('');
+    else if (isFirst()) rows.innerHTML = builtRows;
+    else if (failed) state('The latest rankings could not be loaded. <button type="button" class="ldr-retry" data-lb-retry>Try again</button>');
+    else state('Loading the latest rankings\u2026');
+    if (announce) root.querySelector('[data-lb-status]').textContent = models || isFirst() ? b.title + ': ' + s.title + ', ' + n + ' models' : '';
+  }
+  // a new kind of model gets its boards' buttons; within one, the buttons stay (so the one pressed keeps the focus)
+  function subButtons(fresh) {
+    var subs = BOARDS[cat].subs;
+    subsBox.hidden = subs.length < 2;
+    if (fresh) subsBox.innerHTML = subs.map(function (s) {
+      return '<button type="button" data-lb-sub="' + esc(s.key) + '" aria-pressed="' + (s.key === sub) + '">' + esc(s.title) + '</button>';
+    }).join('');
+    else subsBox.querySelectorAll('[data-lb-sub]').forEach(function (x) { x.setAttribute('aria-pressed', String(x.getAttribute('data-lb-sub') === sub)); });
+  }
+  function remember() { try { history.replaceState(null, '', '#' + sub); } catch (e) {} }
+  function load() {
+    if (loading) return loading;
+    failed = false;
+    loading = fetch(new URL('../../../data/arena_leaderboard.json', location.href), { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        if (!d || !d.categories) throw new Error('no rankings');
+        data = d;
+        var t = root.querySelector('[data-lb-day]'), newer = d.updated_at && d.updated_at !== built;
+        // a newer day than the build's: its date, and the board on show again; a board that waited for them: its rows
+        if (newer) { t.textContent = day(d.updated_at); t.setAttribute('datetime', String(d.updated_at).slice(0, 10)); }
+        if (newer || !isFirst()) show(!isFirst());
+      })
+      .catch(function () { failed = true; loading = null; if (!isFirst()) show(true); });
+    return loading;
+  }
+  function pick(c, k, announce) {
+    var fresh = c !== cat;
+    cat = c; sub = subOf(c, k).key;
+    root.querySelectorAll('[data-lb-cat]').forEach(function (x) {
+      var on = x.getAttribute('data-lb-cat') === cat;
+      x.setAttribute('aria-pressed', String(on)); x.classList.toggle('is-active', on);
+    });
+    subButtons(fresh);
+    if (!data && !isFirst()) load();
+    show(announce);
+  }
+  root.addEventListener('click', function (ev) {
+    var t = ev.target.closest('button');
+    if (!t) return;
+    if (t.hasAttribute('data-lb-cat')) { var c = t.getAttribute('data-lb-cat'); if (c !== cat) { pick(c, BOARDS[c].subs[0].key, true); remember(); } }
+    else if (t.hasAttribute('data-lb-sub')) { if (t.getAttribute('data-lb-sub') !== sub) { pick(cat, t.getAttribute('data-lb-sub'), true); remember(); } }
+    else if (t.hasAttribute('data-lb-retry')) { load(); show(false); }
+  });
+  // a link to one board (#webdev)
+  var want = decodeURIComponent(location.hash.slice(1));
+  Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, false); }); });
+  // the rankings load once the page has, while it is idle, so a later choice shows at once
+  var later = function () { ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(load, { timeout: 2000 }); };
+  if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
+})();
+</script>
+</main>
+<aside class="rail"><div class="rail-body"><div class="r-card r-card-open glow-tile">
+      <span class="glow-tile-face" aria-hidden="true"></span>
+      <div class="r-status-pill">
+        <span class="live-dot-wrap">
+          <span class="live-dot-ping"></span>
+          <span class="live-dot-core"></span>
+        </span>
+        <span class="r-status-label">Available for work</span>
+      </div>
+      <h3 class="r-card-title">Open to new conversations</h3>
+      <p class="r-card-desc">AI-native software engineer. Always happy to talk products, collaborations and consultations.</p>
+      <a class="r-cta-btn" href="../../contact/">
+        <span>Let's talk</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="r-btn-arrow"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <script>
+function glowTrack(card, x, y) {
+  card._tx = x; card._ty = y;
+  if (card._x === undefined) { card._x = x; card._y = y; }
+  if (card._raf) return;
+  (function step() {
+    card._x += (card._tx - card._x) * 0.2; card._y += (card._ty - card._y) * 0.2;
+    card.style.setProperty("--mx", card._x + "px"); card.style.setProperty("--my", card._y + "px");
+    card._raf = (Math.abs(card._tx - card._x) > 0.5 || Math.abs(card._ty - card._y) > 0.5) ? requestAnimationFrame(step) : null;
+  })();
+}
+document.addEventListener("pointermove", function (ev) {
+  var card = ev.target.closest && ev.target.closest(".glow-tile");
+  if (!card) return;
+  var r = card.getBoundingClientRect();
+  glowTrack(card, ev.clientX - r.left, ev.clientY - r.top);
+});
+</script><div class="r-card"><div class="r-card-head"><div class="r-head-title"><span class="r-head-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Who to follow</span></div></div><div class="follow-list"><div class="f-row"><span class="av p-img" style="background-image:url(../../uploads/people/ahmed-shamim-hassan-shaon.webp)"><span class="plat"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span></span><div class="p-id" title="Software architect and Laravel contributor; clear thinking on building and leading teams."><b title="Software architect and Laravel contributor; clear thinking on building and leading teams.">Ahmed Shamim Hassan Shaon</b><small>CEO of Megaminds Learning, software architect and Laravel contributor</small></div><a class="f-btn" href="https://x.com/me_shaon" target="_blank" rel="noopener noreferrer">Follow</a></div><div class="f-row"><span class="av p-img" style="background-image:url(../../uploads/people/mohammad-emran-hasan.webp)"><span class="plat"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span></span><div class="p-id" title="Decades of real-world experience in building and shipping SaaS products."><b title="Decades of real-world experience in building and shipping SaaS products.">Mohammad Emran Hasan</b><small>Building SaaS at klasio.com and helping teams ship Laravel products at figlab.io</small></div><a class="f-btn" href="https://x.com/phpfour" target="_blank" rel="noopener noreferrer">Follow</a></div><div class="f-row"><span class="av p-img" style="background-image:url(../../uploads/people/hm-nayem.webp)"><span class="plat"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span></span><div class="p-id" title="Founder of Stack Learner, full-stack developer and trainer"><b title="Founder of Stack Learner, full-stack developer and trainer">HM Nayem</b><small>Founder of Stack Learner, full-stack developer and trainer</small></div><a class="f-btn" href="https://github.com/mrhm-dev" target="_blank" rel="noopener noreferrer">Follow</a></div></div><a class="see-all-people" href="../../people/"><span class="see-all-label">See all 11 people <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></span><span class="see-all-avs"><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(../../uploads/people/sumit-saha.jpg);background-size:cover;background-position:center;display:inline-block;"></span><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(../../uploads/people/jhankar-mahbub.jpg);background-size:cover;background-position:center;display:inline-block;"></span><span class="av p-img" style="width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--surface);background-image:url(../../uploads/people/karpathy.jpg);background-size:cover;background-position:center;display:inline-block;"></span><span class="av-more" style="width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px var(--surface);border:1px solid var(--line);margin-left:-8px;">+5</span></span></a></div><div class="r-card"><div class="r-card-head"><div class="r-head-title"><span class="r-head-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><span>Find me on</span></div></div><div class="find-list"><a href="https://github.com/MehediHasan228" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span><span class="find-info"><b>GitHub</b><small>@MehediHasan228</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://linkedin.com/in/mehedi-hasan-2859383b4" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></span><span class="find-info"><b>LinkedIn</b><small>in/mehedi-hasan-2859383b4</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></span><span class="find-info"><b>WhatsApp</b><small>+880 1799-447594</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="mailto:mehedihasan228.cse@gmail.com" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="find-info"><b>Email</b><small>mehedihasan228.cse@gmail.com</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a><a href="https://mehedi.pro.bd" target="_blank" rel="noopener noreferrer" class="find-item"><span class="find-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><span class="find-info"><b>Portfolio</b><small>mehedi.pro.bd</small></span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="find-arr"><path d="M7 17L17 7M7 7h10v10"/></svg></a></div><div class="find-foot"><a class="see-all-profiles" href="../../contact/"><span>See all contact channels</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a></div></div></aside>
+</div>
+<div class="bottom-nav" role="navigation" aria-label="Quick navigation"><span class="bn-pill" aria-hidden="true"></span><a href="../../"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="bn-label">Home</span></a><a href="../../profile/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg></span><span class="bn-label">Profile</span></a><a href="../../people/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span><span class="bn-label">People</span></a><a href="../../library/" aria-current="page"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg></span><span class="bn-label">Library</span></a></div>
+</div>
+<script src="../../nx/nx.js?v=f11f87661d"></script>
+<script src="../../nx/proj-dots.js?v=fc0faf8946"></script>
+
+<script>
+(function () {
+  var btn = document.querySelector('[data-share]');
+  if (!btn) return;
+  var panel = btn.parentNode.querySelector('.share-panel');
+  var url = location.href.split('#')[0], title = document.title;
+  var desc = (document.querySelector('meta[name="description"]') || {}).content || '';
+  var enc = encodeURIComponent;
+  var NETS = {
+    linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + enc(url),
+    x: 'https://x.com/intent/post?url=' + enc(url) + '&text=' + enc(title),
+    facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + enc(url),
+    whatsapp: 'https://wa.me/?text=' + enc(title + ' ' + url),
+    email: 'mailto:?subject=' + enc(title) + '&body=' + enc(desc + '\n\n' + url)
+  };
+  panel.querySelectorAll('[data-net]').forEach(function (a) { a.href = NETS[a.dataset.net]; });
+  panel.querySelector('[data-share-url]').textContent = url.replace(/^https?:\/\//, '');
+  document.body.appendChild(panel);
+  function place() {
+    var r = btn.getBoundingClientRect();
+    panel.style.top = (r.bottom + 10) + 'px';
+    panel.style.right = Math.max(8, innerWidth - r.right) + 'px';
+  }
+  function open(on) { if (on) place(); panel.hidden = !on; btn.setAttribute('aria-expanded', String(on)); }
+  addEventListener('resize', function () { if (!panel.hidden) place(); });
+  addEventListener('scroll', function () { if (!panel.hidden) open(false); }, { passive: true });
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+      navigator.share({ title: title, text: desc, url: url }).catch(function () {});
+      return;
+    }
+    open(panel.hidden);
+  });
+  panel.querySelector('[data-share-copy]').addEventListener('click', function () {
+    var b = this;
+    var done = function () { b.textContent = 'Copied \u2713'; b.classList.add('is-done'); setTimeout(function () { b.textContent = 'Copy link'; b.classList.remove('is-done'); }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
+  });
+  document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) open(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { open(false); btn.focus(); } });
+})();
+</script>
+<div style="text-align: center; padding-bottom: 2rem; display: none;">
+    </div>
+
+    <!-- the terminal is an easter egg: the ` / ~ key or the footer's Terminal button opens it; closed, it is inert -->
+    <div id="cli-terminal" class="hidden-overlay" role="dialog" aria-modal="true" aria-label="Terminal" inert style="background: rgba(0,0,0,0.95); z-index: 2000000000 !important;">
+        <div class="cli-container">
+            <div class="cli-header draggable-header">
+                <span>root@mehedi.pro:~</span>
+                <button type="button" class="hover-sound" id="close-cli" aria-label="Close terminal" style="cursor:pointer; color:#ef4444; background:none; border:0; padding:0; font-size:inherit;"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+            <div class="cli-output" id="cli-output">
+                <div>Mehedi.pro OS v2.0.4 loaded.</div>
+                <div>Type <span style="color:var(--accent-1);">help</span> for a list of available commands.</div>
+            </div>
+            <div class="cli-input-line">
+                <span class="cli-prompt">root@mehedi.pro:~$</span>
+                <input aria-label="Terminal command" type="text" id="cli-input" autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
+        <div class="footer-copy" style="margin-top: 12px;">
+            <a href="https://www.dmca.com/Protection/Status.aspx?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa&amp;refurl=https%3A%2F%2Fmehedi.pro.bd%2F"
+                title="DMCA.com Protection Status" target="_blank" rel="noopener" class="dmca-badge"><img
+                    src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
+                    alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
+        </div>
+        <div class="footer-egg">
+            <button type="button" class="footer-cli hover-sound" data-cli-open>Terminal</button>
+        </div>
+    </footer>
+    <div id="ai-chat-widget" class="chat-collapsed hover-sound">
+        <div class="chat-header" id="chat-header">
+            <button type="button" class="chat-header-content" id="chat-toggle" aria-label="Ask My AI" aria-expanded="false" aria-controls="chat-body chat-input-area">
+                <span class="grok-bot-avatar ai-orb-avatar" aria-hidden="true">
+                    <ai-orb-mascot id="chat-mascot" expression="idle"></ai-orb-mascot>
+                </span>
+                <span class="chat-header-text"><span class="chat-header-title">Ask My AI</span><span class="chat-header-name">Mehedi's AI</span><span class="chat-header-sub"><i class="chat-live" aria-hidden="true"></i>Online · replies in seconds</span></span>
+            </button>
+            <button type="button" class="chat-head-btn chat-lang-btn" id="chat-lang" lang="bn" title="বাংলায় দেখুন" aria-label="বাংলায় দেখুন">বাং</button>
+            <button type="button" class="chat-head-btn" id="chat-reset" title="New chat" aria-label="Start a new chat"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 10a6 6 0 1 0 1.8-4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 3.5v3.2h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <i class="fa-solid fa-chevron-up" id="chat-toggle-icon" aria-hidden="true"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Dynamic chat messages rendered via JS -->
+        </div>
+        <div class="chat-input-area" id="chat-input-area">
+            <textarea aria-label="Message the AI assistant" id="chat-input" rows="1" placeholder="Ask about projects, stack, hiring…" autocomplete="off" enterkeyhint="send" maxlength="500"></textarea>
+            <button type="button" id="voice-btn" class="hover-sound"
+                style="background:transparent; border:none; color:var(--accent-1); padding:0 8px; cursor:pointer;"
+                title="Voice input" aria-label="Voice input"><i class="fa-solid fa-microphone" aria-hidden="true"></i></button>
+            <button id="chat-send" class="hover-sound" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
+        </div>
+        <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
+    </div>
+    <script src="../../focus/focus-boot.js?v=0d8852d1a8" defer></script>
+    <script src="../../ai-orb-mascot.js?v=d987e524cd" defer></script>
+    <script src="../../script~9e1709.js?v=9d5819e7e9" defer></script>
+
+    <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
+         placed above the hero it held the parser there, so the first frame showed the header without the hero -->
+    <script>
+    /* the phone menu is a modal dialog and this is its only code. Closed, the drawer is inert and hidden from screen
+       readers. Open, focus moves into it, Tab goes round inside it and the rest of the page is inert; Esc, the close
+       button and the backdrop close it and give focus back to the menu button (a link just closes it) */
+    (function () {
+        var toggle = document.getElementById('mobile-menu-toggle');
+        var drawer = document.getElementById('mobile-menu-drawer');
+        var backdrop = document.getElementById('mobile-menu-backdrop');
+        var closer = document.getElementById('mobile-menu-close');
+        if (!toggle || !drawer) return;
+        var muted = [];   /* what opening made inert: closing wakes only these, never what was inert already (the terminal) */
+        function isOpen() { return drawer.classList.contains('drawer-open'); }
+        function stops() {
+            return [].filter.call(drawer.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+                function (el) { return el.getClientRects().length > 0; });
+        }
+        function open() {
+            if (isOpen()) return;
+            drawer.inert = false; drawer.removeAttribute('aria-hidden');
+            drawer.classList.add('drawer-open');
+            if (backdrop) backdrop.classList.add('active');
+            document.body.classList.add('drawer-open');
+            toggle.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-label', 'Close menu');
+            /* the page goes inert and focus moves in just after the drawer's first frame: making every part of a long page
+               inert restyles all of it, and done in the tap it held the tap's paint back (the backdrop covers the page
+               meanwhile, and the keydown handler keeps Tab inside) */
+            requestAnimationFrame(function () {
+                setTimeout(function () {
+                    if (!isOpen()) return;
+                    [].forEach.call(document.body.children, function (el) {
+                        if (el === drawer || el === backdrop || el.inert || el.tagName === 'SCRIPT') return;
+                        el.inert = true; muted.push(el);
+                    });
+                    var first = stops()[0];
+                    if (first && !drawer.contains(document.activeElement)) first.focus({ preventScroll: true });
+                }, 0);
+            });
+        }
+        /* backFocus false: a link was followed, or the menu closed itself; focus stays where it is. The page wakes just
+           after the drawer's first frame out, as it went inert (above) */
+        function close(e, backFocus) {
+            if (e && e.type) { if (e.cancelable) e.preventDefault(); e.stopPropagation(); }
+            if (!isOpen()) return;
+            drawer.classList.remove('drawer-open');
+            if (backdrop) backdrop.classList.remove('active');
+            document.body.classList.remove('drawer-open');
+            toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open menu');
+            requestAnimationFrame(function () {
+                setTimeout(function () {
+                    if (isOpen()) return;
+                    muted.forEach(function (el) { el.inert = false; }); muted = [];
+                    if (backFocus !== false) toggle.focus({ preventScroll: true });
+                    drawer.inert = true; drawer.setAttribute('aria-hidden', 'true');
+                }, 0);
+            });
+        }
+        toggle.addEventListener('click', function (e) {
+            if (e.cancelable) e.preventDefault();
+            e.stopPropagation();
+            if (isOpen()) close(); else open();
+        });
+        if (closer) closer.addEventListener('click', close);
+        if (backdrop) { backdrop.addEventListener('click', close); backdrop.addEventListener('touchend', close); }
+        [].forEach.call(drawer.querySelectorAll('.nav-links a'), function (a) {
+            a.addEventListener('click', function () { close(null, false); });
+        });
+        /* registered before the page's other scripts, so the menu has Esc first and nothing under it closes too */
+        document.addEventListener('keydown', function (e) {
+            if (!isOpen()) return;
+            if (e.key === 'Escape') { e.stopImmediatePropagation(); close(); return; }
+            if (e.key !== 'Tab') return;
+            var list = stops();
+            if (!list.length) return;
+            var first = list[0], last = list[list.length - 1], at = document.activeElement;
+            if (!drawer.contains(at)) { e.preventDefault(); first.focus(); }
+            else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+        });
+        /* the drawer only exists on phone widths: turned or resized past them, it closes and the page wakes */
+        var phone = window.matchMedia('(max-width: 768px)');
+        var onWidth = function (m) { if (!m.matches) close(null, false); };
+        if (phone.addEventListener) phone.addEventListener('change', onWidth); else if (phone.addListener) phone.addListener(onWidth);
+    })();
+    /* bottom tab bar: a pill that slides to the tapped tab; tapping the current tab scrolls to the top */
+    document.addEventListener('DOMContentLoaded', function () {
+        var bar = document.querySelector('.bottom-nav'); if (!bar) return;
+        var pill = bar.querySelector('.bn-pill');
+        function place(a, animate) {
+            if (!pill || !a) return;
+            var svg = a.querySelector('svg'); if (!svg) return;
+            var b = bar.getBoundingClientRect(), s = svg.getBoundingClientRect();
+            pill.style.transition = animate ? '' : 'none';
+            pill.style.transform = 'translate(' + (s.left - b.left + s.width / 2 - 28) + 'px,' + (s.top - b.top + s.height / 2 - 16) + 'px)';
+            pill.style.opacity = '1';
+        }
+        function current() { return bar.querySelector('a[aria-current="page"]'); }
+        function reset() {
+            bar.querySelectorAll('a.is-pending').forEach(function (x) { x.classList.remove('is-pending'); });
+            place(current(), false);
+        }
+        requestAnimationFrame(reset);
+        window.addEventListener('resize', reset);
+        window.addEventListener('orientationchange', reset);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(reset);
+        window.addEventListener('load', reset);
+        /* any later change in the bar's size or the tabs' layout re-centres the pill under the active icon */
+        if ('ResizeObserver' in window) {
+            var rt = 0;
+            var ro = new ResizeObserver(function () { cancelAnimationFrame(rt); rt = requestAnimationFrame(function () { if (!bar.querySelector('a.is-pending')) place(current(), false); }); });
+            ro.observe(bar);
+            bar.querySelectorAll('a').forEach(function (x) { ro.observe(x); });
+        }
+        /* the page may come back from the back/forward cache with the tapped tab still pending */
+        window.addEventListener('pageshow', function (ev) { if (ev.persisted) reset(); });
+        /* press feedback: only a light haptic tick, no ripple or shading */
+        bar.addEventListener('pointerdown', function (e) {
+            if (!e.target.closest('a')) return;
+            if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
+        });
+        bar.addEventListener('click', function (e) {
+            var a = e.target.closest('a'); if (!a) return;
+            if (a.getAttribute('aria-current') === 'page') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+            /* visual feedback only; aria-current stays with the page that is actually shown */
+            a.classList.add('is-pending'); place(a, true);
+            showSkeleton();
+        });
+        /* while the next page loads, the content area shows placeholder cards; the header and tab bar stay put */
+        function showSkeleton() {
+            if (document.getElementById('page-skeleton')) return;
+            var sk = document.createElement('div');
+            sk.id = 'page-skeleton'; sk.setAttribute('aria-hidden', 'true');
+            sk.innerHTML = '<div class="sk-hero"><i class="sk-av"></i><i class="sk-l w60"></i><i class="sk-l w40"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w80"></i><i class="sk-l w95"></i><i class="sk-l w70"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w60"></i><i class="sk-l w90"></i><i class="sk-l w50"></i></div>'
+                + '<div class="sk-card"><i class="sk-l w75"></i><i class="sk-l w85"></i></div>';
+            document.body.appendChild(sk);
+            requestAnimationFrame(function () { sk.classList.add('is-on'); });
+        }
+        window.addEventListener('pageshow', function () { var s = document.getElementById('page-skeleton'); if (s) s.remove(); });
+    });
+    /* once per release: re-fetch the main pages so the browser drops any old copies it kept
+       (before HTML was served with no-cache, browsers could keep showing an outdated home page) */
+    /* who is a first-time visitor is read now, before the page's scripts run: the mascot saves its greeting (greet:last)
+       before load, and read at load every first visit looked like a returning one and refetched ten pages */
+    /* site storage can be blocked (then reading it throws): these never throw, and a blocked visitor counts as new */
+    function stored(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function keep(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    var RELEASE = '2026-10-13b';
+    var refreshed = stored('pages_refreshed') === RELEASE;
+    var firstVisit = !stored('pages_refreshed') && !stored('greet:last') && !stored('mehedi_theme');
+    window.addEventListener('load', function () {
+        if (refreshed) return;
+        /* first-time visitors have nothing stale to clear: mark it done and spend no bandwidth */
+        if (firstVisit) { keep('pages_refreshed', RELEASE); return; }
+        var logo = document.querySelector('a.logo-link'); if (!logo || !window.fetch) return;
+        var root = new URL(logo.getAttribute('href'), location.href); root = root.href.replace(/index\.html$/, '');
+        var pages = ['', 'index.html', 'profile/', 'projects/', 'people/', 'contact/', 'library/',
+                     'library/skills/', 'library/bookmarks/', 'library/watch-listen/'];
+        var i = 0;
+        function next() {
+            if (i >= pages.length) { keep('pages_refreshed', RELEASE); return; }
+            var p = pages[i++];
+            var run = function () { fetch(root + p, { cache: 'reload', credentials: 'same-origin' }).catch(function () {}).then(next); };
+            if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 4000 }); else setTimeout(run, 400);
+        }
+        setTimeout(next, 3000);   /* after the page has settled */
+    });
+    /* phones: hide the header while scrolling down, bring it back when scrolling up */
+    (function () {
+        /* the first scroll sets the starting point: reading scrollY while the page loads would lay it all out early */
+        var last = null, ticking = false, mq = window.matchMedia('(max-width: 768px)');
+        window.addEventListener('scroll', function () {
+            if (ticking) return; ticking = true;
+            requestAnimationFrame(function () {
+                var nav = document.querySelector('nav[aria-label="Main navigation"]'), y = window.scrollY;
+                if (last === null) last = y;
+                if (nav && mq.matches && !document.body.classList.contains('drawer-open')) {
+                    if (y > last + 6 && y > 80) nav.classList.add('nav-hidden');
+                    else if (y < last - 6 || y <= 80) nav.classList.remove('nav-hidden');
+                }
+                last = y; ticking = false;
+            });
+        }, { passive: true });
+    })();
+    </script>
+
+    <!-- Instant page changes: 3 s after the page has loaded (so they never compete with it), the main pages are
+         prerendered in the background (Chrome, Edge); any other browser prefetches a link the moment it is touched or hovered -->
+    <script>
+    (function () {
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                if (!(HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules'))) return;
+                var rules = document.createElement('script');
+                rules.type = 'speculationrules';
+                rules.textContent = JSON.stringify({
+                    prerender: [{ source: 'list', urls: ['/', '/profile/', '/people/', '/library/'], eagerness: 'eager' },
+                                { where: { href_matches: '/*' }, eagerness: 'moderate' }],
+                    prefetch: [{ source: 'list', urls: ['/projects/', '/contact/'], eagerness: 'eager' }]
+                });
+                document.head.appendChild(rules);
+            }, 3000);
+        });
+    })();
+    </script>
+    <script>
+    (function () {
+        var done = {};
+        function fetchIn(href) {
+            if (done[href] || href === location.href.split('#')[0]) return;
+            done[href] = 1;
+            var l = document.createElement('link'); l.rel = 'prefetch'; l.href = href; document.head.appendChild(l);
+        }
+        /* 3 s after the page has loaded, quietly fetch the tab pages so a tap opens them from cache */
+        window.addEventListener('load', function () {
+            var go = function () { document.querySelectorAll('.bottom-nav a[href]').forEach(function (a) { fetchIn(a.href.split('#')[0]); }); };
+            setTimeout(function () { if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else go(); }, 3000);
+        });
+        function warm(e) {
+            var a = e.target.closest && e.target.closest('a[href]');
+            if (!a || a.target === '_blank' || a.origin !== location.origin) return;
+            fetchIn(a.href.split('#')[0]);
+        }
+        document.addEventListener('touchstart', warm, { passive: true });
+        document.addEventListener('pointerover', warm, { passive: true });
+        document.addEventListener('focusin', warm);
+    })();
+    </script>
+</body>
+
+</html>
