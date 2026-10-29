@@ -276,21 +276,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     makeDraggable(document.getElementById('sys-monitor'), document.querySelector('#sys-monitor .mon-title'));
 
     /* ==========================================
-       5. 3D TILT
-    ========================================== */
-    document.querySelectorAll('.tilt-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const tiltX = ((e.clientY - rect.top - (rect.height / 2)) / (rect.height / 2)) * -8;
-            const tiltY = ((e.clientX - rect.left - (rect.width / 2)) / (rect.width / 2)) * 8;
-            card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-        });
-    });
-
-    /* ==========================================
        5.1 APPLE CINEMATIC 3D DEPTH CONTROLLER (PARALLAX + GYROSCOPE)
     ========================================== */
     function initCinematicDepth() {
@@ -1906,27 +1891,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     /* ==========================================
-       9.4 WORK WITH ME: SERVICE CARDS FEED THE ONE CONTACT FORM
-    ========================================== */
-    (function () {
-        const cards = [...document.querySelectorAll('.svc2-card')];
-        const field = document.getElementById('svc2-services');
-        const picked = document.getElementById('svc2-picked');
-        if (!cards.length || !field) return;
-        const sync = () => {
-            const chosen = cards.filter((c) => c.getAttribute('aria-pressed') === 'true').map((c) => c.dataset.service);
-            field.value = chosen.join(', ');
-            if (picked) picked.textContent = chosen.length ? 'You picked: ' + chosen.join(', ') + '.' : 'Not sure what you need? Just describe it below.';
-            if (picked) picked.classList.toggle('has-pick', chosen.length > 0);
-        };
-        cards.forEach((c) => c.addEventListener('click', () => {
-            c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
-            if (typeof playSound === 'function') playSound('pop');
-            sync();
-        }));
-    })();
-
-    /* ==========================================
        9.5 FORMSPREE AJAX SUBMISSION (REPLACING REACT LOGIC)
     ========================================== */
     const fpForms = document.querySelectorAll('form[action^="https://formspree.io/f/"]');
@@ -2285,52 +2249,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* ==========================================
-       15. LIVE DYNAMIC PROJECT FILTERS
-    ========================================== */
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('.project-card');
-
-    if (filterBtns.length > 0) {
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (typeof playSound === 'function') playSound('click');
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const filter = (btn.dataset.filter || 'all').toLowerCase();
-                let matchCount = 0;
-
-                projectCards.forEach(card => {
-                    const stack = (card.dataset.stack || '').toLowerCase();
-                    const isMatch = filter === 'all' || stack.includes(filter);
-
-                    if (isMatch) {
-                        card.classList.remove('is-filtered-out');
-                        card.classList.add('show');
-                        card.classList.remove('hidden');
-                        card.style.display = '';
-                        card.style.opacity = '0';
-                        card.style.transform = 'perspective(1000px) scale3d(0.94, 0.94, 0.94) translateY(12px)';
-
-                        const delay = Math.min(matchCount * 30, 160);
-                        matchCount++;
-
-                        setTimeout(() => {
-                            card.style.transition = 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
-                            card.style.opacity = '1';
-                            card.style.transform = 'perspective(1000px) scale3d(1, 1, 1) translateY(0)';
-                        }, delay);
-                    } else {
-                        card.classList.add('is-filtered-out');
-                        card.style.opacity = '0';
-                        card.style.transform = 'perspective(1000px) scale3d(0.85, 0.85, 0.85)';
-                    }
-                });
-            });
-        });
-    }
-
-    /* ==========================================
        17. DISTRIBUTED ARCHITECTURE TOPOLOGY MESH
     ========================================== */
     const topoNodes = document.querySelectorAll('.topo-node');
@@ -2626,157 +2544,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         
         insightsObserver.observe(insightsSection);
     }
-
-    // ==========================================
-    // 26. MOBILE APP CAROUSEL SLIDERS & TABS (ARCH, ETHICAL & DEEP TECH)
-    // ==========================================
-    function setupMobileAppCarousel(gridSelector, cardSelector, tabContainerSelector, dotContainerSelector) {
-        const grid = document.querySelector(gridSelector);
-        if (!grid) return;
-        const cards = grid.querySelectorAll(cardSelector);
-        if (cards.length === 0) return;
-
-        const tabContainer = document.querySelector(tabContainerSelector);
-        const tabs = tabContainer ? tabContainer.querySelectorAll('.arch-tab-btn') : [];
-        const dotContainer = document.querySelector(dotContainerSelector);
-        const dots = dotContainer ? dotContainer.querySelectorAll('.arch-dot') : [];
-
-        // atStart: the first tab already sits at the left edge, so it is not measured and centred (that would lay the page out mid start-up)
-        function setActiveItem(index, triggerScroll = false, atStart = false) {
-            if (index < 0 || index >= cards.length) return;
-
-            cards.forEach((card, i) => {
-                if (i === index) {
-                    card.classList.add('is-active', 'sci-fi-active');
-                } else {
-                    card.classList.remove('is-active', 'sci-fi-active');
-                }
-            });
-
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-
-            const activePillar = cards[index].dataset.pillar;
-            if (activePillar) {
-                tabs.forEach(tab => {
-                    if (tab.dataset.pillar === activePillar) {
-                        tab.classList.add('active');
-                        // Scroll tab pill horizontally inside tabContainer so active tab is always centered
-                        if (!atStart && tabContainer && tabContainer.scrollWidth > tabContainer.clientWidth) {
-                            const tabLeft = tab.offsetLeft;
-                            const tabWidth = tab.offsetWidth;
-                            const containerWidth = tabContainer.clientWidth;
-                            tabContainer.scrollTo({
-                                left: tabLeft - (containerWidth / 2) + (tabWidth / 2),
-                                behavior: 'smooth'
-                            });
-                        }
-                    } else {
-                        tab.classList.remove('active');
-                    }
-                });
-            }
-
-            // Scroll carousel card horizontally inside grid ONLY when user triggers scroll
-            if (triggerScroll && window.innerWidth <= 860) {
-                const cardLeft = cards[index].offsetLeft;
-                const cardWidth = cards[index].offsetWidth;
-                const gridWidth = grid.clientWidth;
-                grid.scrollTo({
-                    left: cardLeft - (gridWidth / 2) + (cardWidth / 2),
-                    behavior: 'smooth'
-                });
-            }
-        }
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const pillar = tab.dataset.pillar;
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                if (typeof playSound === 'function') playSound('type');
-
-                const targetIdx = Array.from(cards).findIndex(c => c.dataset.pillar === pillar);
-                if (targetIdx !== -1) {
-                    setActiveItem(targetIdx, true);
-                }
-            });
-        });
-
-        dots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                if (typeof playSound === 'function') playSound('click');
-                setActiveItem(i, true);
-            });
-        });
-
-        let scrollTimeout = null;
-        grid.addEventListener('scroll', () => {
-            if (window.innerWidth > 860) return;
-
-            if (scrollTimeout) clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                const gridRect = grid.getBoundingClientRect();
-                const gridCenter = gridRect.left + gridRect.width / 2;
-
-                let closestIdx = 0;
-                let minDistance = Infinity;
-
-                cards.forEach((card, i) => {
-                    if (card.classList.contains('is-hidden') || card.style.display === 'none') return;
-                    const cardRect = card.getBoundingClientRect();
-                    const cardCenter = cardRect.left + cardRect.width / 2;
-                    const distance = Math.abs(gridCenter - cardCenter);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestIdx = i;
-                    }
-                });
-
-                setActiveItem(closestIdx, false);
-            }, 45);
-        }, { passive: true });
-
-        cards.forEach((card, i) => {
-            card.addEventListener('click', (e) => {
-                if (window.innerWidth <= 860 && !card.classList.contains('is-active')) {
-                    if (e.target.closest('a, button, .cyber-overlay-btn')) {
-                        e.preventDefault();
-                    }
-                    if (typeof playSound === 'function') playSound('click');
-                    setActiveItem(i, true);
-                }
-            });
-        });
-
-        // Initialize first visible card as active
-        const firstVisibleIdx = Array.from(cards).findIndex(c => !c.classList.contains('is-hidden') && c.style.display !== 'none');
-        setActiveItem(firstVisibleIdx !== -1 ? firstVisibleIdx : 0, false, firstVisibleIdx <= 0);
-    }
-
-    // Initialize the Mobile App Carousel Sliders (Deployments, Ethical/Philosophy)
-    setupMobileAppCarousel('.projects-grid', '.project-card', '.projects-mobile-tabs', '#projectsCarouselDots');
-    setupMobileAppCarousel('#ethicalGrid', '.ethical-card', '.ethical-mobile-tabs', '#ethicalDots');
-
-    // The carousels start snapping with the visitor's first touch, wheel or key (html.snap-ready in the stylesheet).
-    // A snap counts as a scroll, and Chrome stops measuring the largest paint (LCP) at the first scroll, so it must never
-    // happen on its own: on a slow first paint a timed snap landed before the hero was measured and the score had no LCP.
-    const snapReady = () => document.documentElement.classList.add('snap-ready');
-    ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(t => window.addEventListener(t, snapReady, { once: true, passive: true }));
-
-    // Project screenshots (data-bg) load as the projects section comes near, not with the first screen.
-    const previews = document.querySelectorAll('.project-preview[data-bg]');
-    const showPreviews = () => previews.forEach(el => { el.style.backgroundImage = `url('${el.dataset.bg}')`; });
-    const projectsGrid = document.querySelector('.projects-grid');
-    if (previews.length && projectsGrid && 'IntersectionObserver' in window) {
-        const previewObserver = new IntersectionObserver((entries) => {
-            if (!entries.some(e => e.isIntersecting)) return;
-            previewObserver.disconnect();
-            showPreviews();
-        }, { rootMargin: '800px 0px' });
-        previewObserver.observe(projectsGrid);
-    } else showPreviews();
 
     // Animations that loop forever cost a style pass every frame even off screen (the live dots far down the page, cover
     // blobs). After load each one rests while its element is off screen (.anim-rest in the stylesheet).

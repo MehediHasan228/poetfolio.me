@@ -15,9 +15,21 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://mehedi.pro.bd/karbar/">
     <link rel="icon" href="./karbar-mark.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Hind+Siliguri:wght@400;500;600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <!-- the site's own fonts, self-hosted: Poppins for words, Fira Code for labels. The page also shows Bangla, so Hind
+         Siliguri is loaded for Bengali glyphs only (its unicode-range); Latin text never reaches it (DESIGN.md, Typography) -->
+    <link rel="preload" href="/vendor/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/vendor/fonts/poppins-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/poppins-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/poppins-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/vendor/fonts/poppins-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/poppins-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/poppins-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/vendor/fonts/poppins-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Fira Code';font-style:normal;font-weight:400 600;font-display:swap;src:url(/vendor/fonts/fira-code-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Hind Siliguri';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/hind-siliguri-400-bengali.woff2) format('woff2');unicode-range:U+0964-0965, U+0980-09FE, U+200C-200D, U+25CC}
+    @font-face{font-family:'Hind Siliguri';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/hind-siliguri-600-bengali.woff2) format('woff2');unicode-range:U+0964-0965, U+0980-09FE, U+200C-200D, U+25CC}
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -74,21 +86,21 @@
                         radial-gradient(circle at 85% 20%, var(--glow-2), transparent 40%),
                         var(--bg);
             color: var(--text);
-            /* system-ui before Hind Siliguri: while Plus Jakarta Sans loads, Latin text waits in a font of similar width
-               instead of Hind's narrower Latin, which rewrapped the heading and moved the page. Bangla still reaches Hind. */
-            font-family: 'Plus Jakarta Sans', system-ui, 'Hind Siliguri', sans-serif;
+            /* Poppins for Latin; Bengali glyphs aren't in it and fall through to Hind Siliguri (Bengali-only faces above).
+               While Poppins loads, Latin waits in system-ui, never in Hind's narrower Latin */
+            font-family: 'Poppins', 'Hind Siliguri', system-ui, sans-serif;
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        .bn { font-family: 'Hind Siliguri', sans-serif; }
-        .mono { font-family: 'Fira Code', monospace; }
+        .bn { font-family: 'Hind Siliguri', 'Poppins', system-ui, sans-serif; }
+        .mono { font-family: 'Fira Code', ui-monospace, monospace; }
         a { color: inherit; }
 
         .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
 
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
-        nav a.back { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+        nav a.back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--muted); text-decoration: none; font-size: 0.9rem; }
         nav a.back:hover { color: var(--cyan); }
 
         .hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; padding: 40px 0 56px; }
@@ -96,7 +108,7 @@
         .brand img { width: 56px; height: 56px; }
         .brand span { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); }
 
-        h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; font-weight: 800; }
+        h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; font-weight: 700; }
         h1 .grad { color: var(--cyan); }   /* one solid colour: the site has no gradient text */
         .tagline { color: var(--muted); margin: 16px 0 8px; font-size: 1.05rem; }
         .tagline.bn { font-size: 1.1rem; color: var(--text-2); }
@@ -124,13 +136,6 @@
         .mock { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; backdrop-filter: blur(8px); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }
         .mock-bar { display: flex; gap: 6px; margin-bottom: 14px; }
         .mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--dot-bar); }
-        .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .kpi { background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-        .kpi small { color: var(--muted); font-size: 0.72rem; display: block; }
-        .kpi b { font-size: 1.25rem; }
-        .kpi .up { color: var(--green); font-size: 0.72rem; }
-        .bars { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-top: 14px; padding: 10px; background: rgba(15, 23, 42, 0.7); border-radius: 12px; border: 1px solid var(--border); }
-        .bars span { flex: 1; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--cyan), var(--indigo)); opacity: 0.85; }
 
         section { padding: 36px 0; }
         h2 { font-size: 1.6rem; margin-bottom: 6px; }
@@ -206,7 +211,7 @@
             <div class="mock" aria-hidden="true" style="padding: 12px; overflow: hidden;">
                 <div class="mock-bar" style="margin-bottom: 10px; align-items: center;">
                     <i></i><i></i><i></i>
-                    <span style="font-size: 0.72rem; color: var(--muted); margin-left: 8px; font-family: monospace;">admin.karbar.demo / ড্যাশবোর্ড</span>
+                    <span class="mono" style="font-size: 12px; color: var(--muted); margin-left: 8px;">admin.karbar.demo / <span class="bn">ড্যাশবোর্ড</span></span>
                 </div>
                 <img src="../karbar_erp_preview.webp" alt="Karbar ERP Live Dashboard" width="1280" height="800" style="width: 100%; height: auto; border-radius: 10px; display: block; box-shadow: 0 12px 35px rgba(0,0,0,0.6);">
             </div>

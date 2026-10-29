@@ -28,17 +28,35 @@ REDIRECTS = {
 }
 
 
-def redirect_page(to: str, canonical: str, title: str) -> str:
+# the forwarding page paints the visitor's saved theme (the same colours as DESIGN.md) for the moment before it moves
+# on, so a Light or Mint visitor never sees a dark frame; with JS off it shows the site's default (Dark) and the link
+REDIRECT_CSS = (
+    "html{background:#0b1120;color:#f8fafc;color-scheme:dark;font:16px/1.6 system-ui,sans-serif}"
+    "html[data-theme=cyberpunk]{background:#09090b;color:#fbbf24}"
+    "html[data-theme=light]{background:#f8fafc;color:#0f172a;color-scheme:light}"
+    "html[data-theme=mint]{background:#f4faf7;color:#0f172a;color-scheme:light}"
+    "html[data-theme=god-mode]{background:#000;color:#00ff00}"
+    "body{margin:0;padding:48px 20px}a{color:#00f2fe}"
+    "[data-theme=cyberpunk] a{color:#fb7185}[data-theme=light] a{color:#1d4ed8}"
+    "[data-theme=mint] a{color:#047857}[data-theme=god-mode] a{color:#00ff00}"
+    "html.fwd body{visibility:hidden}"
+)
+
+
+def redirect_page(to: str, canonical: str, title: str, doc_title: str = "", keep_query: bool = False) -> str:
     """A page that has moved: it forwards at once (meta refresh, and location.replace so Back skips it), tells search
-    engines where the page is now (canonical, noindex), and shows the link for anyone it doesn't forward."""
+    engines where the page is now (canonical, noindex), and shows the link for anyone it doesn't forward. With JS on,
+    it paints only the saved theme's page colour while it forwards (the text is for JS-off visitors).
+    keep_query: carry ?query and #hash over to the new address (shared links like ?play= keep working)."""
     t = html_mod.escape(title)
+    where = f'"{to}" + location.search + location.hash' if keep_query else f'"{to}"'
     return (f'<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8">\n'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-            f'<title>{t} | Mehedi Hasan</title>\n<meta name="robots" content="noindex">\n'
+            f'<title>{html_mod.escape(doc_title) if doc_title else t} | Mehedi Hasan</title>\n<meta name="robots" content="noindex">\n'
             f'<link rel="canonical" href="{canonical}">\n<meta http-equiv="refresh" content="0; url={to}">\n'
-            f'<script>location.replace("{to}");</script>\n'
-            f'<style>html{{background:#0b1120;color:#e2e8f0;font:16px/1.6 system-ui,sans-serif}}body{{margin:0;padding:48px 20px}}'
-            f'a{{color:#00f2fe}}</style></head>\n'
+            f'<style>{REDIRECT_CSS}</style>\n'
+            f'<script>var d=document.documentElement;try{{var t=localStorage.getItem("mehedi_theme");if(t)d.setAttribute("data-theme",t)}}catch(e){{}}'
+            f'd.className="fwd";location.replace({where});</script></head>\n'
             f'<body><p>This page has moved to <a href="{to}">{t}</a>.</p></body></html>\n')
 
 
@@ -106,11 +124,8 @@ def main() -> None:
 
     # ---- home: unchanged full page, only the top nav is swapped ----
     home = swap_nav(src, "./")
-    # the home page is a dashboard: under the hero, one tile per page in place of the pages' full sections
-    # (those pages are built by build_nx_pages)
+    # the home page is a dashboard: under the hero, one tile per page (the pages themselves are built by build_nx_pages)
     import build_nx_pages
-    for sid in ("projects", "contact"):
-        home = re.sub(rf'\s*<section id="{sid}".*?</section>', '', home, count=1, flags=re.S)
     home = home.replace("</header>", "</header>\n" + build_nx_pages.home_dashboard(), 1)
     tail_idx = home.index('<div style="text-align: center; padding-bottom: 2rem;">')
     home = home[:tail_idx] + "</main>\n\n    " + bottom_nav(None, prefix="./") + "\n" + home[tail_idx:]

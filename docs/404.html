@@ -8,39 +8,77 @@
     <meta name="robots" content="noindex">
     <title>404 — Page not found | Mehedi Hasan</title>
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon/icon-96.png">
+    <!-- a plain dashboard card in the site's tokens (DESIGN.md): Poppins for words, Fira Code for the figure and labels -->
     <style>
-        :root { --bg:#0b1120; --text:#e5e7eb; --muted:#94a3b8; --accent:#00f2fe; --on-accent:#0b1120; }
-        :root[data-theme="cyberpunk"] { --bg:#09090b; --text:#fbbf24; --muted:#a1a1aa; --accent:#fb7185; --on-accent:#09090b; }
-        :root[data-theme="light"] { --bg:#f8fafc; --text:#0f172a; --muted:#475569; --accent:#1d4ed8; --on-accent:#ffffff; }
-        :root[data-theme="mint"] { --bg:#f4faf7; --text:#0f172a; --muted:#475569; --accent:#047857; --on-accent:#ffffff; }
-        :root[data-theme="god-mode"] { --bg:#000000; --text:#bbf7d0; --muted:#4ade80; --accent:#00ff00; --on-accent:#000000; }
+        @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/poppins-400-latin.woff2) format('woff2')}
+        @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/poppins-600-latin.woff2) format('woff2')}
+        @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/vendor/fonts/poppins-700-latin.woff2) format('woff2')}
+        @font-face{font-family:'Fira Code';font-style:normal;font-weight:400 600;font-display:swap;src:url(/vendor/fonts/fira-code-latin.woff2) format('woff2')}
+        :root { --bg:#0b1120; --surface:#101a2e; --surface-2:#17223a; --line:#1d2a45; --line-strong:#2b3b5e; --ink:#f8fafc; --ink-2:#cbd5e1; --ink-3:#94a3b8;
+                --link:#00f2fe; --fill:linear-gradient(135deg,#00f2fe,#4facfe); --on-fill:#0b1120; --shade:rgba(0,0,0,.45); color-scheme:dark; }
+        :root[data-theme="cyberpunk"] { --bg:#09090b; --surface:#130a10; --surface-2:#1e0f18; --line:#3a1824; --line-strong:#52202f; --ink:#fbbf24; --ink-2:#dcbf86; --ink-3:#a1a1aa;
+                --link:#fb7185; --fill:linear-gradient(135deg,#f43f5e,#eab308); --on-fill:#09090b; --shade:rgba(0,0,0,.5); }
+        :root[data-theme="light"] { --bg:#f8fafc; --surface:#ffffff; --surface-2:#f1f5f9; --line:#e2e8f0; --line-strong:#cbd5e1; --ink:#0f172a; --ink-2:#334155; --ink-3:#5e6e83;
+                --link:#1d4ed8; --fill:linear-gradient(135deg,#1d4ed8,#2563eb); --on-fill:#ffffff; --shade:rgba(15,23,42,.16); color-scheme:light; }
+        :root[data-theme="mint"] { --bg:#f4faf7; --surface:#ffffff; --surface-2:#eaf6f0; --line:#d1fae5; --line-strong:#a7f3d0; --ink:#0f172a; --ink-2:#2d3748; --ink-3:#5e6e83;
+                --link:#047857; --fill:linear-gradient(135deg,#34d399,#10b981); --on-fill:#022c22; --shade:rgba(15,23,42,.16); color-scheme:light; }
+        :root[data-theme="god-mode"] { --bg:#000000; --surface:#060f08; --surface-2:#0b1a0f; --line:#163d20; --line-strong:#1f5a2c; --ink:#00ff00; --ink-2:#4ade80; --ink-3:#22c55e;
+                --link:#00ff00; --fill:linear-gradient(135deg,#00ff00,#00cc00); --on-fill:#000000; --shade:rgba(0,0,0,.6); }
         * { box-sizing:border-box; margin:0; }
-        body { min-height:100vh; display:grid; place-items:center; padding:24px 16px; background:var(--bg); color:var(--text);
-               font-family:"Fira Code",ui-monospace,SFMono-Regular,Menlo,monospace; }
-        main { max-width:560px; width:100%; }
-        .code { font-size:clamp(4rem,18vw,7rem); font-weight:700; color:var(--accent); line-height:1; }
-        h1 { font-size:1.15rem; margin:12px 0 8px; letter-spacing:.04em; }
-        p { color:var(--muted); line-height:1.6; }
-        .prompt { margin:20px 0; padding:14px 16px; border:1px dashed color-mix(in srgb,var(--accent) 50%,transparent); border-radius:10px; font-size:.9rem; overflow-wrap:anywhere; }
-        .prompt span { color:var(--accent); }
-        nav { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-        a { color:var(--on-accent); background:var(--accent); padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600; font-size:.9rem; }
-        a.ghost { background:transparent; color:var(--accent); border:1px solid var(--accent); }
-        a:focus-visible { outline:2px solid var(--text); outline-offset:3px; }
+        body { min-height:100vh; min-height:100dvh; display:grid; place-items:center; padding:24px 16px; background:var(--bg); color:var(--ink);
+               font:400 14px/1.6 'Poppins',system-ui,sans-serif; }
+        main { width:100%; max-width:560px; padding:28px 24px 24px; background:var(--surface); border:1px solid var(--line); border-radius:22px;
+               box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 6%,transparent) inset, 0 18px 40px -18px var(--shade); }
+        .label { font:600 12.5px/1.4 'Fira Code',ui-monospace,monospace; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-3); }
+        .code { margin:6px 0 2px; font:600 clamp(3.25rem,14vw,4.5rem)/1 'Fira Code',ui-monospace,monospace; color:var(--link); }
+        h1 { font-size:1.5rem; font-weight:600; line-height:1.3; }
+        .lede { margin-top:8px; color:var(--ink-2); }
+        .addr { margin-top:12px; color:var(--ink-3); font-size:13px; overflow-wrap:anywhere; }
+        .addr[hidden] { display:none; }
+        .addr code { font:500 12.5px/1.6 'Fira Code',ui-monospace,monospace; color:var(--ink-2); background:var(--surface-2);
+                     border:1px solid var(--line); border-radius:6px; padding:1px 8px; }
+        .home { display:inline-flex; align-items:center; justify-content:center; min-height:44px; margin-top:22px; padding:10px 22px; border-radius:999px;
+                background:var(--fill); color:var(--on-fill); font:700 14px/1.2 'Poppins',system-ui,sans-serif; text-decoration:none;
+                box-shadow:0 6px 16px -8px var(--shade); }
+        nav { margin-top:24px; padding-top:18px; border-top:1px solid var(--line); }
+        nav ul { list-style:none; padding:0; margin-top:10px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+        nav a { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:44px; padding:0 14px; border-radius:12px;
+                background:var(--surface-2); border:1px solid var(--line); color:var(--ink); font-weight:600; text-decoration:none; }
+        nav a::after { content:"›"; color:var(--ink-3); font-size:18px; line-height:1; }
+        nav a:hover { border-color:color-mix(in srgb,var(--link) 55%,transparent); color:var(--link); }
+        .home:hover { box-shadow:0 10px 22px -10px var(--shade); }
+        a:focus-visible { outline:2px solid var(--link); outline-offset:3px; }
+        nav li:last-child:nth-child(odd) { grid-column:1 / -1; }
+        @media (max-width:420px) { main { padding:24px 18px 18px; } nav ul { grid-template-columns:minmax(0,1fr); } }
+        @media (prefers-reduced-motion:no-preference) { a { transition:border-color .2s ease, color .2s ease, box-shadow .2s ease; } }
     </style>
 </head>
 <body>
-<main>
-    <div class="code" aria-hidden="true">404</div>
-    <h1>ROUTE_NOT_FOUND</h1>
-    <p>The page you were looking for doesn't exist or has moved.</p>
-    <div class="prompt"><span>root@mehedi.pro:~$</span> cd <span id="path"></span><br>bash: no such file or directory</div>
-    <nav>
-        <a href="/">Back to home</a>
-        <a class="ghost" href="/projects/">Projects</a>
-        <a class="ghost" href="/contact/">Contact</a>
+<main aria-labelledby="nf-title">
+    <p class="label">Error code</p>
+    <p class="code">404</p>
+    <h1 id="nf-title">Page not found</h1>
+    <p class="lede">The page you were looking for doesn't exist or has moved.</p>
+    <p class="addr" id="nf-addr" hidden>Nothing lives at <code id="nf-path"></code></p>
+    <a class="home" href="/">Back to home</a>
+    <nav aria-labelledby="nf-pages">
+        <h2 class="label" id="nf-pages">Main pages</h2>
+        <ul>
+            <li><a href="/profile/">Profile</a></li>
+            <li><a href="/projects/">Projects</a></li>
+            <li><a href="/people/">People</a></li>
+            <li><a href="/contact/">Contact</a></li>
+            <li><a href="/library/">Library</a></li>
+        </ul>
     </nav>
 </main>
-<script>document.getElementById('path').textContent = location.pathname;</script>
+<script>
+    (function () {
+        var p = location.pathname;
+        if (!p || p === '/404.html') return;   /* the page opened by its own name has no wrong address to show */
+        document.getElementById('nf-path').textContent = p;
+        document.getElementById('nf-addr').hidden = false;
+    })();
+</script>
 </body>
 </html>

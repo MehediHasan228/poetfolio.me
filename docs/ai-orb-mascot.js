@@ -424,10 +424,10 @@
         const KEY = 'vs:v1';
         const TECH = /\b(kafka|nestjs|nest|langgraph|langchain|mcp|rag|pgvector|postgres(ql)?|redis|rabbitmq|docker|kubernetes|k8s|aws|react|next\.?js|typescript|python|fastapi|laravel|flutter|ollama|claude|openai|gemini|llm|agent|microservices?|erp|n8n|whisper|vat|payroll)\b/i;
         const ITEMS = [
-            ['.project-card, .proj, .work2-row', 'project'],
+            ['.proj, .work2-row', 'project'],
             ['.exp-item-modern', 'experience'],
             ['.edu, .cert-card', 'education'],
-            ['.svc2-card, .svc-card, .home-svc', 'service'],
+            ['.svc-card, .home-svc', 'service'],
             ['.person', 'person'],
             ['.nl-card, .nl-bm, .nl-ch, .nl-feature', 'library'],
             ['.arch-unified-card', 'architecture'],
@@ -447,7 +447,7 @@
                 const co = sub && sub.firstChild && sub.firstChild.nodeType === 3 ? sub.firstChild.textContent.trim() : '';
                 return ((t ? t.textContent.trim() : 'a role') + (co ? ' at ' + co : '')).slice(0, 60);
             }
-            const h = el.querySelector('h3, h4, .nl-card-title, .svc2-title, b, strong');
+            const h = el.querySelector('h3, h4, .nl-card-title, b, strong');
             return (h ? h.textContent : el.textContent).replace(/\s+/g, ' ').trim().slice(0, 48);
         }
 
@@ -537,12 +537,12 @@
                 chipAt = Date.now(); st.chips[c.dataset.ask] = (st.chips[c.dataset.ask] || 0) + 1; save();
             }, { passive: true });
             document.addEventListener('click', (e) => {
-                const a = e.target.closest && e.target.closest('a[href], [data-discuss], .chat-fit-card, .svc2-card');
+                const a = e.target.closest && e.target.closest('a[href], [data-discuss], .chat-fit-card');
                 if (!a) return;
                 const h = a.getAttribute('href') || '';
                 const k = /\.pdf/i.test(h) ? 'cv' : /github\.com/i.test(h) ? 'github' : /linkedin\.com/i.test(h) ? 'linkedin'
                     : /wa\.me|whatsapp/i.test(h) ? 'whatsapp' : /^mailto:/i.test(h) ? 'email'
-                    : a.matches('[data-discuss], .chat-fit-card') ? 'discuss' : a.matches('.svc2-card') ? 'service' : '';
+                    : a.matches('[data-discuss], .chat-fit-card') ? 'discuss' : '';
                 if (k) { st.clicks[k] = (st.clicks[k] || 0) + 1; save(); }
             }, true);
         }
@@ -626,7 +626,7 @@
         const IDLE = 20000, DAY = 864e5;
         const widget = () => document.getElementById('ai-chat-widget');
         const isChatOpen = () => { const w = widget(); return !!(w && w.classList.contains('chat-expanded')); };
-        const phone = window.matchMedia('(max-width: 767px)');
+        const phone = window.matchMedia('(max-width: 767.98px)');
         const still = window.matchMedia('(prefers-reduced-motion: reduce)');
         const rootHref = (() => { const l = document.querySelector('a.logo-link'); return l ? new URL(l.getAttribute('href'), location.href).href.replace(/index\.html$/, '') : '/'; })();
 

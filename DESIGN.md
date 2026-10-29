@@ -156,7 +156,9 @@ Mint fills, white on Light's.
 ## Typography
 
 **Body / UI Font:** Poppins (400, 600, 700), self-hosted. **Code Font:** Fira Code, for figures, labels and badges.
-No other webfonts.
+No other webfonts, with one exception: a page that shows Bangla text (today only /karbar/) may load Hind Siliguri
+(400, 600, self-hosted) for Bengali glyphs only, its `@font-face` limited by `unicode-range` to the Bengali block
+(U+0964-0965, U+0980-09FE, U+200C-200D, U+25CC). Poppins comes first in the stack, so Latin never reaches it.
 
 ### Hierarchy
 - **Display** (700, 4rem desktop, clamp to ~2.2rem on phones): the hero name only.
@@ -178,13 +180,15 @@ No other webfonts.
   from 861px; the home hero starts below it at every window size (115px top padding from 861px, 93px below).
 
 **The Floating Controls Rule.** Two layouts, whose media queries are each other's exact complement:
-- With a tab bar, `(max-width: 767px), (min-width: 768px) and (max-width: 1023px) and (min-height: 600px)`: the folded
-  chat is the bar's last tab and WhatsApp does not float (it is in the drawer, on Contact and in the hero's "Book a
-  Call"). The page ends above the bar.
-- Without one, `(min-width: 1024px), (min-width: 768px) and (max-height: 599px)` (desktops, and short windows such as
-  a phone held sideways): the round face bottom right, WhatsApp bottom left. Below 1280px the body keeps an 88px
-  margin on each side so neither ever sits on content; the fixed header keeps the full width.
-Nothing floating may cover text, a link or a button at any window size.
+- With a tab bar, `(max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px)`: the
+  folded chat is the bar's last tab and WhatsApp does not float (it is in the drawer, on Contact and in the hero's "Book
+  a Call"). The page ends above the bar.
+- Without one, `(min-width: 1024px), (min-width: 768px) and (max-height: 599.98px)` (desktops, and short windows such
+  as a phone held sideways): the round face bottom right, WhatsApp bottom left. Below 1280px (`max-width: 1279.98px`)
+  the body keeps an 88px margin on each side so neither ever sits on content; the fixed header keeps the full width.
+Every query that picks between the two layouts ends its `max-` side at `.98px`: with browser zoom a window can be
+767.5px wide, where `max-width: 767px` and `min-width: 768px` both miss. Nothing floating may cover text, a link or a
+button at any window size.
 
 ## Elevation & Depth
 
@@ -219,7 +223,7 @@ the portrait frame 36px (26px on phones). Buttons and header controls are full p
   take `--accent-ink`.
 - **Theme menu:** a 180px card under its button (surface, line-strong border, 14px radius, lift). Rows of 40px: a
   swatch (the theme's accent on its page colour), the name (Dark, Red, Light, Mint; God mode once unlocked), a check
-  on the current one. ARIA menu button: arrows, Home/End, first letter, Esc returns focus. Every change goes through
+  on the current one. On phones and touch screens the rows are 44px. ARIA menu button: arrows, Home/End, first letter, Esc returns focus. Every change goes through
   `setTheme()` (transitions off for that frame).
 
 ### Buttons
@@ -250,14 +254,26 @@ the portrait frame 36px (26px on phones). Buttons and header controls are full p
   it on hover or focus. With the tab bar: its last tab (face over "Ask My AI"), so it never covers the page. See the
   Floating Controls Rule.
 - Open: a solid panel (`--chat-panel`), an opaque header above a message list that clips its own content; user
-  bubbles in the fill gradient with a plain drop shadow.
+  bubbles in the fill gradient with a plain drop shadow. On phones and touch screens the header (it folds the chat) and
+  the send button are 44px.
+- Greeting: the bubble that comes after a while on the page sits above the folded chat (beside the face on a short
+  window) and never reaches the header or the tab bar; when it is taller than the room, it scrolls inside.
+
+### 404 page
+- The site's card on the page colour, in the saved theme: a Fira Code label and figure ("404" in the accent text),
+  the title, one line of explanation, the address that was asked for, the primary "Back to home" and a list of the main
+  pages as 44px rows. No terminal prompt.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** take every colour from the tokens above; add a theme by adding values, not rules.
 - **Do** keep focus visible: a 2px `--accent-1` outline, 2-3px offset (inset on menu rows).
-- **Do** keep touch targets at least 24px, and 44px for the phone's menu, theme and chat controls.
+- **Do** keep every target at least 24px, and 44px tall for the phone's primary controls: tab bar, header buttons,
+  drawer links and close, theme rows, chat send and fold, main calls to action (`min-height: 44px` on the button
+  system). Grow the target, never shrink a neighbour: a round 40px button takes a `::before` 3px past its 1px border;
+  a text link takes `padding-block` with an equal negative `margin-block`, so its line doesn't move. Inline links in
+  running text are exempt (WCAG 2.5.8).
 - **Do** respect reduced motion: no float, slide or breathing animation when it is set; the dot network stays still.
 
 ### Don't:

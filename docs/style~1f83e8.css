@@ -767,33 +767,6 @@ section {
     margin-bottom: 1rem;
 }
 
-
-.filter-btn {
-    background: transparent;
-    border: 1px solid #334155;
-    color: var(--text-secondary);
-    padding: 0.6rem 1.5rem;
-    border-radius: 30px;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    transition: all 0.3s ease;
-    font-family: 'Fira Code', monospace;
-}
-
-.filter-btn:hover {
-    border-color: var(--accent-1);
-    color: var(--accent-ink);
-    background: rgba(0, 242, 254, 0.05);
-}
-
-.filter-btn.active {
-    background: var(--accent-1);
-    color: #000;
-    border-color: var(--accent-1);
-    box-shadow: none;
-}
-
 /* ==========================================
    DASHBOARD GRID (API & TELEMETRY)
 ========================================== */
@@ -994,63 +967,7 @@ section {
 /* ==========================================
    PROJECT CARDS & CASE STUDY MODALS
 ========================================== */
-.projects-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: center;
-    align-items: stretch;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-}
 
-.project-card {
-    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    width: 100%;
-    max-width: 380px;
-    flex: 1 1 340px;
-    background: var(--card-bg);
-    border-radius: 12px;
-    border: 1px solid rgba(150, 150, 150, 0.2);
-    backdrop-filter: blur(16px);
-    overflow: hidden;
-    transform-style: preserve-3d;
-    transform: perspective(1000px);
-    display: flex;
-    flex-direction: column;
-}
-
-.project-card.is-filtered-out {
-    display: none !important;
-}
-
-
-.tilt-card {
-    margin: 0;
-}
-
-.project-preview {
-    width: 100%;
-    height: 155px;
-    background: #000;
-    position: relative;
-    border-bottom: 1px solid rgba(150, 150, 150, 0.2);
-    overflow: hidden;
-}
-
-.project-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: all 0.5s ease;
-    filter: brightness(0.85) grayscale(20%);
-}
-
-.project-card:hover .project-preview img {
-    transform: scale(1.08);
-    filter: brightness(1) grayscale(0%);
-}
 
 .tag {
     background: rgba(150, 150, 150, 0.1);
@@ -1820,17 +1737,26 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
 
 
 .ai-orb-bubble-close {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin: -4px -6px -4px 0;   /* a 32px button (44px tap area on touch) in the space of the old 18px cross */
     background: transparent !important;
     border: none !important;
     color: var(--text-secondary, #94a3b8) !important;
     font-size: 1.15rem !important;
     line-height: 1 !important;
     cursor: pointer !important;
-    padding: 0 4px !important;
-    border-radius: 4px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
     transition: color 0.2s ease, transform 0.2s ease !important;
 }
 
+@media (max-width: 767.98px), (pointer: coarse) {
+    .ai-orb-bubble-close::before { content: ""; position: absolute; inset: -6px; }
+}
 .ai-orb-bubble-close:hover {
     color: var(--text-primary, #ffffff) !important;
     transform: scale(1.15) !important;
@@ -1851,9 +1777,10 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     align-items: center !important;
     justify-content: center !important;
     gap: 5px !important;
+    min-height: 32px;
     padding: 6px 10px !important;
     border-radius: 10px !important;
-    font-size: 0.72rem !important;
+    font-size: 12.5px !important;
     font-weight: 600 !important;
     cursor: pointer !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -1988,7 +1915,7 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     }
     .ai-orb-bubble-btn {
         padding: 5px 8px !important;
-        font-size: 0.68rem !important;
+        font-size: 12.5px !important;
     }
 }
 
@@ -2124,7 +2051,7 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
         flex-direction: column; 
         gap: 15px;
     }
-    
+
     .control-btn {
         width: 40px;
         height: 40px;
@@ -2132,7 +2059,7 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     }
 
     /* Hero Text Scaling */
-    
+
     .hero-role-lead, .hero-role {
         font-size: 1rem !important;
     }
@@ -2570,41 +2497,6 @@ footer {
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 }
 
-/* Telemetry Subgroups & Ethical Core */
-
-.ethical-card {
-    background: linear-gradient(145deg, rgba(16, 185, 129, 0.05), rgba(15, 23, 42, 0.65)) !important;
-    border: 1px solid rgba(16, 185, 129, 0.25) !important;
-    position: relative;
-    overflow: hidden;
-}
-
-.ethical-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(to bottom, #10b981, #059669);
-    z-index: 2;
-}
-
-.ethical-card:hover {
-    border-color: #10b981 !important;
-    background: rgba(16, 185, 129, 0.09) !important;
-    box-shadow: 0 10px 25px -5px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .ethical-card {
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .ethical-card:hover {
-    border-color: #10b981 !important;
-    box-shadow: 0 10px 25px -5px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
 
 /* ==========================================
    ENHANCED RESPONSIVE MOBILE ARCHITECTURE
@@ -2711,17 +2603,6 @@ footer {
         margin-bottom: 1.4rem !important;
     }
 
-    /* Adjust Dashboard and Project Grids */
-
-    .projects-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .project-card {
-        width: 100%;
-        max-width: 100%;
-    }
 
     /* UI Controls Mobile Placement: Vertical stack on bottom-left (উপরে নিচে) */
     .ui-controls {
@@ -3009,25 +2890,6 @@ footer {
 
     /* API Sandbox */
 
-    /* Project Filters: Scrollable row */
-
-    .filter-btn {
-        flex-shrink: 0;
-        padding: 0.5rem 1rem;
-        font-size: 0.72rem;
-    }
-
-    /* Projects Grid */
-    .projects-grid {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .project-card {
-        width: 100%;
-        max-width: 100%;
-        flex: 1 1 auto;
-    }
 
     /* AI Dropzone */
     .ai-dropzone {
@@ -3210,206 +3072,18 @@ footer {
 
 /* Mobile Segmented Control Tabs */
 
-.projects-mobile-tabs {
-    display: none;
-}
-
-.arch-tab-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
-    border-radius: 9px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--text-secondary);
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.76rem;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    user-select: none;
-}
-
-.arch-tab-btn:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.04);
-}
-
-.arch-tab-btn.active {
-    background: var(--accent-gradient, linear-gradient(135deg, #00f2fe, #4facfe));
-    color: var(--accent-active-color, #0b1120) !important;
-    font-weight: 700;
-    border-color: var(--accent-1, rgba(0, 242, 254, 0.4));
-    box-shadow: 0 4px 14px var(--shade, rgba(0, 0, 0, 0.4));
-}
 
 @media (max-width: 768px) {
 
     /* 2x2 Smart Metrics Matrix */
 
-    /* Smart App Segmented Control Tabs (Equal 4-Column Grid, 100% Full-Width) */
-
-    .arch-tab-btn {
-        width: 100% !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 8px 3px !important;
-        font-size: 0.72rem !important;
-        gap: 5px !important;
-        white-space: nowrap !important;
-        text-align: center !important;
-        border-radius: 8px !important;
-        box-sizing: border-box !important;
-    }
-
-    /* Mobile Carousel Indicator Dots */
-
-    .arch-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        background: rgba(148, 163, 184, 0.3);
-        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        cursor: pointer;
-    }
-
-    .arch-dot.active {
-        width: 22px;
-        background: var(--accent-1, #00f2fe);
-        box-shadow: none;
-    }
 
     /* Pipeline Wrap on Mobile */
 
-    /* Archives Segmented Mobile Tabs */
-
-    .ethical-mobile-tabs {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-
-    .ethical-card.is-active {
-        border-color: rgba(16, 185, 129, 0.6) !important;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55) !important;
-    }
 
     /* Mobile Carousel Indicator Dots for Archives */
 
-    /* Production Deployments Segmented Mobile Tabs */
-    .projects-mobile-tabs {
-        display: flex !important;
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        gap: 6px !important;
-        padding: 5px 6px !important;
-        background: rgba(15, 23, 42, 0.75);
-        border: 1px solid rgba(148, 163, 184, 0.16);
-        border-radius: 12px;
-        backdrop-filter: blur(14px);
-        box-sizing: border-box !important;
-        margin: 0.25rem 0 1rem 0 !important;
-        max-width: 100% !important;
-    }
 
-    .projects-mobile-tabs .arch-tab-btn {
-        flex: 0 0 auto !important;
-        width: auto !important;
-        padding: 7px 12px !important;
-        font-size: 0.74rem !important;
-    }
-
-    .projects-mobile-tabs::-webkit-scrollbar {
-        display: none;
-    }
-
-
-    /* Production Deployments Center-Peeking 3D App Carousel with Depth Blur */
-    .projects-grid {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory !important;
-        scroll-padding: 0 24px !important;
-        padding: 0.5rem 24px 1rem 24px !important;
-        gap: 14px !important;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        scroll-behavior: smooth;
-        max-width: 100% !important;
-        margin: 0 !important;
-        justify-content: flex-start !important;
-        align-items: stretch !important;
-        box-sizing: border-box !important;
-    }
-
-    .projects-grid::-webkit-scrollbar {
-        display: none;
-    }
-
-    .project-card {
-        min-height: auto !important;
-        min-width: calc(100vw - 72px) !important;
-        max-width: calc(100vw - 72px) !important;
-        flex: 0 0 calc(100vw - 72px) !important;
-        scroll-snap-align: center !important;
-        scroll-snap-stop: always;
-        border-radius: 18px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        box-sizing: border-box !important;
-        transition: transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                    filter 0.42s ease, 
-                    opacity 0.42s ease, 
-                    border-color 0.3s ease, 
-                    box-shadow 0.42s ease !important;
-        filter: blur(3px) brightness(0.75) !important;
-        -webkit-filter: blur(3px) brightness(0.75) !important;
-        opacity: 0.38 !important;
-        transform: scale(0.90) !important;
-        user-select: none;
-        cursor: pointer;
-    }
-
-    .project-preview {
-        height: 165px !important;
-    }
-
-
-    .project-card.is-active {
-        filter: blur(0px) brightness(1) !important;
-        -webkit-filter: blur(0px) brightness(1) !important;
-        opacity: 1 !important;
-        transform: scale(1) !important;
-        border-color: rgba(0, 242, 254, 0.55) !important;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55) !important;
-        z-index: 3 !important;
-    }
-
-    .project-card:active {
-        transform: scale(0.96) !important;
-    }
-
-}
-
-@media (max-width: 480px) {
-    .arch-tab-btn {
-        font-size: 0.68rem !important;
-        padding: 7px 2px !important;
-        gap: 3.5px !important;
-    }
-}
-
-@media (max-width: 360px) {
-    .arch-tab-btn {
-        font-size: 0.63rem !important;
-        padding: 6px 1px !important;
-        gap: 2.5px !important;
-    }
 }
 
 /* =========================================================
@@ -3470,26 +3144,8 @@ footer {
 }
 
 
-/* --- 3. FILTER BUTTONS & SELECTION BUTTONS (Selected button color WHITE) --- */
-:is([data-theme="light"], [data-theme="mint"]) .filter-btn {
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    color: #475569 !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .filter-btn:hover {
-    background: #eff6ff !important;
-    border-color: #2563eb !important;
-    color: #2563eb !important;
-}
-
 /* Selected/Active button must have crisp white text */
-:is([data-theme="light"], [data-theme="mint"]) .filter-btn.active {
-    background: #2563eb !important;
-    color: #ffffff !important;
-    border-color: #2563eb !important;
-    box-shadow: 0 4px 14px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
+
 
 :is([data-theme="light"], [data-theme="mint"]) .primary-btn {
     background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
@@ -3508,43 +3164,6 @@ footer {
     background: #eff6ff !important;
     border-color: #2563eb !important;
     color: #2563eb !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .projects-mobile-tabs {
-    background: #f1f5f9 !important;
-    border-color: #cbd5e1 !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .arch-tab-btn {
-    color: var(--pf-ink-3) !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .arch-tab-btn:hover {
-    color: #0f172a !important;
-    background: rgba(0, 0, 0, 0.04) !important;
-}
-
-[data-theme="light"] .arch-tab-btn.active {
-    background: linear-gradient(135deg, #0284c7, #2563eb) !important;
-    color: #ffffff !important;
-    border-color: transparent !important;
-    box-shadow: 0 4px 12px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
-
-[data-theme="mint"] .arch-tab-btn.active {
-    background: linear-gradient(135deg, #10b981, #059669) !important;
-    color: #ffffff !important;
-    border-color: transparent !important;
-    box-shadow: 0 4px 12px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .arch-dot {
-    background: #cbd5e1 !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .arch-dot.active {
-    background: #0284c7 !important;
-    box-shadow: none !important;
 }
 
 /* --- 6. TERMINAL FEED / LIVE SYSTEM LOGS (Light Theme) --- */
@@ -3963,61 +3582,8 @@ footer {
 }
 
 
-/* Hover-Revealed Center Action (Clean Thumbnail on Idle) */
-
-
-.cyber-overlay-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-family: 'Fira Code', monospace;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 0.48rem 1.15rem;
-    border-radius: 9999px;
-    background: linear-gradient(135deg, var(--accent-1, #00f2fe) 0%, var(--accent-2, #0284c7) 100%);
-    color: #ffffff;
-    box-shadow: 0 6px 20px var(--shade, rgba(0, 0, 0, 0.4));
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    cursor: pointer;
-}
-
-.cyber-overlay-btn:hover {
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 10px 28px var(--shade, rgba(0, 0, 0, 0.4));
-    filter: brightness(1.1);
-}
-
-
-/* Cyberpunk Theme Overrides */
-[data-theme="cyberpunk"] .cyber-overlay-btn {
-    background: #f43f5e !important;
-    box-shadow: 0 4px 18px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
-
-
-/* Cyberpunk Active Tabs & Buttons (Desktop, Tablet, Mobile) */
-
-[data-theme="cyberpunk"] .arch-tab-btn.active {
-    background: linear-gradient(135deg, #f43f5e 0%, #eab308 100%) !important;
-    color: #09090b !important;
-    border-color: #f43f5e !important;
-    box-shadow: 0 4px 14px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
-
 /* Blueprint Badge Styling */
 
-/* God-Mode Active Tabs & Buttons (Desktop, Tablet, Mobile) */
-
-[data-theme="god-mode"] .arch-tab-btn.active {
-    background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%) !important;
-    color: #000000 !important;
-    border-color: #00ff00 !important;
-    box-shadow: 0 4px 14px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-}
 
 /* ==========================================================================
    MINT / EMERALD PASTEL THEME COMPONENT & WIDGET OVERRIDES
@@ -4211,7 +3777,6 @@ footer {
 /* faint resting trace, like the phosphor grid of a monitor */
 
 /* bright beam that sweeps along the trace */
-
 
 
 /* Cyberpunk: rose + gold (theme gradient pair) instead of two pinks */
@@ -4485,6 +4050,10 @@ html #ai-chat-widget #chat-send {
     box-shadow: 0 6px 14px -6px var(--shade, rgba(0, 0, 0, 0.4));
 }
 html #ai-chat-widget #chat-send:hover { transform: translateY(-1px) scale(1.04); box-shadow: 0 8px 18px -6px var(--shade, rgba(0, 0, 0, 0.4)); }
+@media (max-width: 767.98px), (pointer: coarse) {
+    html #ai-chat-widget #chat-send { width: 44px; height: 44px; border-radius: 14px; }
+    html body #ai-chat-widget.chat-expanded:not(#_ai) #chat-toggle { min-height: 44px; }
+}
 
 /* ==========================================================
    CHAT CONTRAST FIX — explicit, readable text colours per theme
@@ -4506,8 +4075,6 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 /* ==========================================================================
    MINT THEME ACCENT HARMONIZATION (Built on Light Theme Architecture)
    ========================================================================== */
-[data-theme="mint"] .arch-tab-btn.active,
-[data-theme="mint"] .filter-btn.active,
 [data-theme="mint"] .primary-btn,
 [data-theme="mint"] .btn-primary {
     background: var(--gradient-accent) !important;
@@ -4515,7 +4082,6 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     border-color: #10b981 !important;
     box-shadow: 0 4px 14px var(--shade, rgba(0, 0, 0, 0.4)) !important;
 }
-
 
 
 [data-theme="mint"] .tag-rag,
@@ -4691,11 +4257,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 }
 
 @media (max-width: 768px) {
-    /* Hide the floating bottom-left controls on mobile so they don't cover .bottom-nav */
-    .ui-controls {
-        display: none !important;
-    }
-
+    /* (whether the floating WhatsApp button shows is decided once, by the FLOATING CONTROLS rule below) */
     nav {
         padding: 10px 20px !important;
         flex-direction: row !important;
@@ -4703,7 +4265,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         justify-content: space-between !important;
         height: auto !important;
     }
-    
+
     nav.nav-scrolled {
         width: 100% !important;
         min-width: 100% !important;
@@ -4727,7 +4289,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         bottom: 95px !important;
         right: 15px !important;
     }
-    
+
     .ai-orb-speech-bubble {
         bottom: 175px !important;
         right: 15px !important;
@@ -4746,7 +4308,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         align-items: center;
         gap: 12px;
     }
-    
+
     .mobile-contact-btn {
         background: var(--accent-1);
         color: var(--bg-color) !important;
@@ -4761,7 +4323,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         transform: scale(1.05);
         background: var(--accent-2);
     }
-    
+
     .mobile-menu-toggle {
         background: transparent;
         border: none;
@@ -4846,7 +4408,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     nav .nav-links {
         display: none !important;
     }
-    
+
     /* Frosted Blurry Glass Side Menu Drawer */
     #mobile-menu-drawer,
     .mobile-menu-drawer {
@@ -4865,7 +4427,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         z-index: 100006 !important;
         transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
-    
+
     #mobile-menu-drawer.drawer-open,
     .mobile-menu-drawer.drawer-open {
         right: 0 !important;
@@ -4898,7 +4460,7 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
         border-left: 1px solid rgba(0, 255, 0, 0.4) !important;
         box-shadow: -15px 0 45px var(--shade, rgba(0, 0, 0, 0.4)), inset 1px 0 0 rgba(0, 255, 0, 0.3) !important;
     }
-    
+
     .mobile-menu-drawer .nav-links {
         display: flex !important;
         flex-direction: column !important;
@@ -5036,7 +4598,7 @@ html :is(.dash-fp-pick, .fx-search, .fx-sleep, .cli-container) :is(input, select
 .footer-cli:hover { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent-ink) 50%, transparent); }
 
 /* phones: the tab bar is the footer, so the row is hidden (the footer stays as the space above the bar) */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     footer .footer-row { display: none; }
     footer { padding: 0 0 calc(64px + env(safe-area-inset-bottom)); border-top: 0; }
 }
@@ -5053,15 +4615,16 @@ html :is(.dash-fp-pick, .fx-search, .fx-sleep, .cli-container) :is(input, select
     #mobile-menu-drawer .drawer-brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; }
     #mobile-menu-drawer .drawer-brand span { display: flex; flex-direction: column; line-height: 1.25; }
     #mobile-menu-drawer .drawer-brand b { font-size: 15px; font-weight: 700; color: var(--text-color, inherit); }
-    #mobile-menu-drawer .drawer-brand small { font-size: 12px; opacity: 0.6; }
-    #mobile-menu-drawer .mobile-menu-close { top: 20px !important; right: 18px !important; width: 34px !important; height: 34px !important; }
+    #mobile-menu-drawer .drawer-brand small { font-size: 12px; color: var(--pf-ink-3); }
+    #mobile-menu-drawer .mobile-menu-close { top: 17px !important; right: 15px !important; width: 40px !important; height: 40px !important; }
+    #mobile-menu-drawer .mobile-menu-close::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; }
 
-    /* section labels */
-    #mobile-menu-drawer .nav-links::before { content: "Menu"; display: block; padding: 0 12px 6px; font-size: 11px; font-weight: 700;
-        letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.5; }
+    /* section labels (muted text is ink-3, never ink at a lower opacity) */
+    #mobile-menu-drawer .nav-links::before { content: "Menu"; display: block; padding: 0 12px 6px; font-size: 12px; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase; color: var(--pf-ink-3); }
     #mobile-menu-drawer .nav-links .nav-sep { display: block !important; height: auto !important; margin: 14px 0 0 !important; padding: 14px 12px 6px !important;
         background: none !important; opacity: 1 !important; border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
-    #mobile-menu-drawer .nav-links .nav-sep::before { content: "Explore"; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.5; }
+    #mobile-menu-drawer .nav-links .nav-sep::before { content: "Explore"; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pf-ink-3); }
 
     /* items: sentence case, even rhythm, soft active pill (no underline) */
     #mobile-menu-drawer .nav-links { gap: 2px !important; }
@@ -5114,6 +4677,7 @@ html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .dash-btn.i
   transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, color .2s ease !important;
 }
 html body :is(.btn.btn-secondary, .btn.secondary-btn, .dash-btn.is-ghost, .nl-more):not(#_btn) { padding: 10px 20px !important; font-size: 14px !important; }
+html body :is(.btn.btn-primary, .btn.primary-btn, .btn.btn-secondary, .btn.secondary-btn, .dash-btn, .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta, .nl-more):not(.btn-sm):not(#_btn) { min-height: 44px; }
 html body :is(.btn-rail-top, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) { padding: 7px 14px !important; font-size: 13px !important; }
 html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .dash-btn.is-ghost, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
   transform: translateY(-1px) !important; color: var(--accent-ink) !important;
@@ -5231,8 +4795,8 @@ nav[aria-label="Main navigation"] .brand-name { display: none; }
     border: 1px solid color-mix(in srgb, var(--text-primary, #fff) 16%, transparent) !important;
     background: color-mix(in srgb, var(--text-primary, #fff) 6%, transparent) !important; color: var(--text-primary, #fff) !important;
   }
-  /* the tap area stays 44px even though the circle is 40px */
-  html body nav[aria-label="Main navigation"] .mobile-menu-toggle::before { content: ""; position: absolute; inset: -2px; }
+  /* the tap area stays 44px even though the circle is 40px (inset counts from inside the 1px border) */
+  html body nav[aria-label="Main navigation"] .mobile-menu-toggle::before { content: ""; position: absolute; inset: -3px; }
   .mm-bars { position: relative; display: block; width: 18px; height: 12px; }
   .mm-bars i { position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor;
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, top 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -5328,8 +4892,16 @@ html body nav[aria-label="Main navigation"] .nav-links a.nav-link-item:is(.activ
   html body nav[aria-label="Main navigation"] .mobile-contact-btn:not(#_btn) { padding: 0 12px !important; }
   html body nav[aria-label="Main navigation"] #sound-toggler { display: none; }
   html body nav[aria-label="Main navigation"] .hdr-btn { font-size: 1.05rem; }
-  html body nav[aria-label="Main navigation"] .hdr-btn::before { content: ""; position: absolute; inset: -2px; border-radius: 50%; }
+  html body nav[aria-label="Main navigation"] .hdr-btn::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; }
   .theme-menu { top: calc(100% + 10px); right: -48px; }
+  /* the logo link and the 36px Contact pill answer a 44px-tall tap too (the pill's ::before reaches past its border) */
+  html body nav[aria-label="Main navigation"] .logo-link { min-height: 44px; }
+  html body nav[aria-label="Main navigation"] .mobile-contact-btn:not(#_btn) { position: relative; }
+  html body nav[aria-label="Main navigation"] .mobile-contact-btn:not(#_btn)::before { content: ""; position: absolute; inset: -5px -1px; border-radius: 999px; }
+}
+/* touch screens: the theme menu's rows are 44px */
+@media (max-width: 768px), (pointer: coarse) {
+  .theme-menu button { min-height: 44px; }
 }
 /* narrow phones: the logo alone stands for the name, so the three controls keep their size */
 @media (max-width: 380px) {
@@ -5337,7 +4909,7 @@ html body nav[aria-label="Main navigation"] .nav-links a.nav-link-item:is(.activ
 }
 
 /* ================= bottom tab bar: 64px glass bar, sliding pill, muted inactive tabs ================= */
-@media (max-width: 1023px) {
+@media (max-width: 1023.98px) {
   html body .bottom-nav:not(#_bn) {
     height: calc(64px + env(safe-area-inset-bottom)) !important; padding: 0 6px env(safe-area-inset-bottom) !important; box-sizing: border-box !important;
     align-items: center !important; border-radius: 0 !important;
@@ -5362,7 +4934,7 @@ html body nav[aria-label="Main navigation"] .nav-links a.nav-link-item:is(.activ
 }
 /* tablets (768-1023px): same tab bar as phones, fixed to the bottom, with room reserved below the content */
 /* (portrait-height only: phones held sideways already show the desktop menu) */
-@media (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+@media (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
   html body .bottom-nav:not(#_bn) { display: flex !important; position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
     z-index: 9990 !important; justify-content: space-around !important; }
   html body .bottom-nav:not(#_bn) a { flex: 0 1 120px !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; }
@@ -5371,7 +4943,7 @@ html body nav[aria-label="Main navigation"] .nav-links a.nav-link-item:is(.activ
 }
 
 /* tab press feedback: no grey browser flash; ripple and a small icon squeeze, like a native tab bar */
-@media (max-width: 1023px) {
+@media (max-width: 1023.98px) {
   html body .bottom-nav:not(#_bn) a { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none; user-select: none; }
   html body .bottom-nav:not(#_bn) a:active { transform: none !important; }
   .bottom-nav .bn-ico { position: relative; display: grid; place-items: center; width: 56px; height: 32px; border-radius: 999px; overflow: hidden; isolation: isolate;
@@ -5397,7 +4969,7 @@ html body #ai-orb-speech-bubble.is-dm:not(#_ai) { width: 300px !important; max-w
 #ai-orb-speech-bubble .dm-avatar::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 9px; height: 9px; border-radius: 50%;
   background: #22c55e; box-shadow: 0 0 0 2px var(--bg-color, #0b1120); }
 #ai-orb-speech-bubble .dm-who b { display: block; font-size: 13.5px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
-#ai-orb-speech-bubble .dm-who small { display: block; font-size: 11.5px; color: var(--text-secondary); line-height: 1.2; }
+#ai-orb-speech-bubble .dm-who small { display: block; font-size: 12px; color: var(--text-secondary); line-height: 1.2; }
 #ai-orb-speech-bubble .dm-thread { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 10px 0 2px; }
 #ai-orb-speech-bubble .dm-msg { margin: 0; max-width: 100%; padding: 7px 12px; border-radius: 16px 16px 16px 6px; font-size: 13.5px; line-height: 1.45;
   color: var(--text-primary); background: color-mix(in srgb, var(--text-primary) 8%, transparent); animation: dm-in .28s cubic-bezier(.16,1,.3,1); }
@@ -5411,7 +4983,7 @@ html body #ai-orb-speech-bubble.is-dm:not(#_ai) { width: 300px !important; max-w
 @keyframes dm-dot { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-3px); opacity: 1; } }
 #ai-orb-speech-bubble .dm-chips { margin-top: 10px; }
 #ai-orb-speech-bubble .dm-chips[hidden], #ai-orb-speech-bubble .dm-cta[hidden] { display: none !important; }
-#ai-orb-speech-bubble .dm-chips-label { margin: 0 0 6px; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); }
+#ai-orb-speech-bubble .dm-chips-label { margin: 0 0 6px; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
 #ai-orb-speech-bubble .dm-chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
 #ai-orb-speech-bubble .dm-chip { padding: 6px 12px; border-radius: 999px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
   color: var(--accent-ink); background: color-mix(in srgb, var(--accent-1) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent-1) 40%, transparent);
@@ -5429,7 +5001,7 @@ html body #ai-orb-speech-bubble.is-dm:not(#_ai) { width: 300px !important; max-w
   background: #ef4444; box-shadow: 0 0 0 2px var(--bg-color, #0b1120); }
 
 /* tablets: the pill and greeting sit above the tab bar */
-@media (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+@media (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
   html body #ai-chat-widget.chat-collapsed:not(#_ai) { bottom: calc(80px + env(safe-area-inset-bottom)) !important; right: 20px !important; }
   html body #ai-chat-widget.chat-expanded:not(#_ai) { bottom: calc(80px + env(safe-area-inset-bottom)) !important; right: 20px !important; left: auto !important;
     width: 380px !important; height: min(70vh, 560px) !important; }
@@ -5437,7 +5009,7 @@ html body #ai-orb-speech-bubble.is-dm:not(#_ai) { width: 300px !important; max-w
 }
 
 /* phones: just the orb above the tab bar; tucks away on scroll down; the chat opens as a bottom sheet */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   html body #ai-chat-widget.chat-collapsed:not(#_ai) { bottom: calc(76px + env(safe-area-inset-bottom)) !important; right: 14px !important;
     transition: transform .3s cubic-bezier(.16,1,.3,1), opacity .25s ease !important; }
   html body #ai-chat-widget.chat-collapsed.ai-tucked:not(#_ai) { transform: translateY(160%) !important; opacity: 0 !important; pointer-events: none !important; }
@@ -5553,7 +5125,7 @@ html body #ai-chat-widget:not(#_ai) #chat-input:is(:focus, :focus-visible) { out
 
 /* composer: send lights up only when there is something to send */
 html body #ai-chat-widget:not(#_ai) #chat-send { transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, filter .2s ease, box-shadow .2s ease; }
-html body #ai-chat-widget:not(.has-text):not(#_ai) #chat-send { opacity: .45; filter: saturate(.4); box-shadow: none; transform: scale(.92); }
+html body #ai-chat-widget:not(.has-text):not(#_ai) #chat-send { opacity: .45; filter: saturate(.4); box-shadow: none; }
 html body #ai-chat-widget.is-busy:not(#_ai) #chat-send { opacity: .45; pointer-events: none; }
 html body #ai-chat-widget.has-text:not(#_ai) #chat-send i { animation: chatSendPop .3s cubic-bezier(.34,1.56,.64,1); }
 @keyframes chatSendPop { from { transform: translateY(4px); opacity: .4; } to { transform: none; opacity: 1; } }
@@ -5564,7 +5136,7 @@ html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-foot {
 }
 
 /* phones: a touch roomier taps, one-column starters on very narrow screens */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-foot { margin-bottom: max(9px, env(safe-area-inset-bottom)); }
 }
 @media (max-width: 340px) { #ai-chat-widget .chat-starters { grid-template-columns: 1fr; } }
@@ -5816,19 +5388,7 @@ html body #ai-chat-widget.chat-collapsed:is(.ai-tucked, .ai-dodge):not(#_ai):has
 /* ==========================================================
    WORK WITH ME — four services you can pick, one plain form
    ========================================================== */
-.svc2-card {
-    position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 18px 16px 16px; text-align: left; cursor: pointer;
-    border: 1px solid rgba(var(--accent-1-rgb), .16); border-radius: 18px; font: inherit; color: var(--text-primary);
-    background: linear-gradient(180deg, rgba(var(--accent-1-rgb), .06), rgba(var(--accent-1-rgb), .015));
-    transition: transform .25s cubic-bezier(.16,1,.3,1), border-color .2s ease, box-shadow .25s ease, background .2s ease;
-}
-.svc2-card:hover { transform: translateY(-3px); border-color: rgba(var(--accent-1-rgb), .45); box-shadow: 0 14px 30px -18px var(--shade, rgba(0, 0, 0, 0.4)); }
-.svc2-card:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; }
-.svc2-card[aria-pressed="true"] { border-color: var(--accent-1); background: linear-gradient(180deg, rgba(var(--accent-1-rgb), .16), rgba(var(--accent-1-rgb), .05)); box-shadow: 0 0 0 1px var(--accent-1) inset, 0 14px 30px -18px var(--shade, rgba(0, 0, 0, 0.4)); }
-.svc2-title { font-weight: 700; font-size: 1rem; line-height: 1.3; }
 
-.svc2-picked { margin: 0; font-size: .88rem; color: var(--text-secondary); }
-.svc2-picked.has-pick { color: var(--accent-ink); font-weight: 600; }
 .form-note { margin: 0; font-size: .88rem; }
 .form-note.is-error { color: #ef4444; }
 .form-done { display: grid; justify-items: center; gap: 8px; padding: 1.6rem 1rem; text-align: center; color: var(--text-primary); }
@@ -5836,10 +5396,6 @@ html body #ai-chat-widget.chat-collapsed:is(.ai-tucked, .ai-dodge):not(#_ai):has
 .form-done h3 { margin: 6px 0 0; font-size: 1.15rem; }
 .form-done p { margin: 0; max-width: 420px; color: var(--text-secondary); font-size: .92rem; line-height: 1.6; }
 .form-done a { color: var(--accent-ink); }
-@media (max-width: 520px) {
-    .svc2-card { padding: 14px 12px; }
-    .svc2-title { font-size: .92rem; }
-}
 
 /* ==========================================================
    CINEMATIC BACKGROUND — three large soft lights in the theme's colours
@@ -5927,17 +5483,18 @@ html body .nx:not(#_bg) { background: transparent !important; }
 }
 
 /* FLOATING CONTROLS, ONE RULE. Two layouts, and their media queries are each other's exact complement:
-     tab bar:    (max-width: 767px), (min-width: 768px) and (max-width: 1023px) and (min-height: 600px)
-     no tab bar: (min-width: 1024px), (min-width: 768px) and (max-height: 599px)
+     tab bar:    (max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px)
+     no tab bar: (min-width: 1024px), (min-width: 768px) and (max-height: 599.98px)
+   (the .98 ends leave no gap at fractional widths from browser zoom)
    With a tab bar, the folded chat is the bar's last tab and WhatsApp is not floating (it is in the drawer and on
    Contact). Without one, the chat is the round face bottom right and WhatsApp the round button bottom left, and the page
    keeps a margin for both wherever the window doesn't already leave one (below 1280px). */
-@media (max-width: 767px), (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+@media (max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
     html body .ui-controls:not(#_u) { display: none !important; }
 }
 /* Phones, and tablets with the tab bar: the folded chat is the tab bar's last tab (its face over "Ask My AI"), so it
    never sits on the page. The bar keeps that end free for it. */
-@media (max-width: 767px), (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+@media (max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
     html body .bottom-nav:not(#_bn):not(#_dock) { padding-right: calc(76px + env(safe-area-inset-right)) !important; }
     html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) {
         top: auto !important; left: auto !important;
@@ -5967,7 +5524,7 @@ html body .nx:not(#_bg) { background: transparent !important; }
 
 /* No tab bar: the folded chat is the round face alone (56 px) in the corner, out of the content's lane; "Ask My AI"
    slides out beside it under the pointer or keyboard focus. The page's end and every focused control stay clear of it. */
-@media (min-width: 1024px), (min-width: 768px) and (max-height: 599px) {
+@media (min-width: 1024px), (min-width: 768px) and (max-height: 599.98px) {
     html { scroll-padding-bottom: 96px; }
     html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) {
         top: auto !important; left: auto !important; right: 24px !important; bottom: 24px !important;
@@ -5991,13 +5548,13 @@ html body .nx:not(#_bg) { background: transparent !important; }
     /* the footer's row ends above the face */
     footer { padding-bottom: 96px; }
 }
-@media (min-width: 1024px) and (prefers-reduced-motion: reduce), (min-width: 768px) and (max-height: 599px) and (prefers-reduced-motion: reduce) {
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce), (min-width: 768px) and (max-height: 599.98px) and (prefers-reduced-motion: reduce) {
     html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header-title { transition: none; transform: translate(0, -50%); }
 }
 
 /* No tab bar and under 1280px: the content would run under the two round buttons (the dashboard tiles at 1024px, the
    hero on a short window), so the page keeps an 88px margin on each side for them (24px inset + 56px face + 8px). */
-@media (min-width: 1024px) and (max-width: 1279px), (min-width: 768px) and (max-width: 1023px) and (max-height: 599px) {
+@media (min-width: 1024px) and (max-width: 1279.98px), (min-width: 768px) and (max-width: 1023.98px) and (max-height: 599.98px) {
     html body:not(#_lane) { padding-left: 88px; padding-right: 88px; }
     html body > nav { left: 0; }   /* the fixed header keeps the full width (it took its place from the body's padding) */
 }
@@ -6028,7 +5585,7 @@ html[data-theme="cyberpunk"] body #ai-chat-widget.chat-expanded:not(#_ai) { back
 html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header { position: relative; z-index: 2; background-color: var(--chat-panel, #0d1526) !important; }
 html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-body { position: relative; contain: paint; -webkit-mask-image: none !important; mask-image: none !important; overscroll-behavior: contain; }
 /* phones: the panel's small print is 12px at least (the Bangla button 13px, where Bengali glyphs stay legible) */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     html body #ai-chat-widget.chat-expanded:not(#_ai) :is(.chat-header-sub, .chat-foot, .cs-text small) { font-size: 12px !important; }
     html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-lang-btn { font-size: 13px !important; }
 }
@@ -6069,7 +5626,7 @@ html body .bottom-nav:not(#_bn) a { transition: none !important; }
    ========================================================== */
 @view-transition { navigation: auto; }
 html body .bottom-nav { view-transition-name: tabbar; }
-@media (max-width: 767px) { html body > nav { view-transition-name: topbar; } }
+@media (max-width: 767.98px) { html body > nav { view-transition-name: topbar; } }
 ::view-transition-old(tabbar), ::view-transition-new(tabbar),
 ::view-transition-old(topbar), ::view-transition-new(topbar) { animation: none; mix-blend-mode: normal; }
 ::view-transition-old(root) { animation: 120ms ease-out both vtFadeOut; }
@@ -6107,8 +5664,22 @@ html[data-theme="mint"] #page-skeleton { --sk: #dcefe6; --sk-hi: #eef8f3; backgr
 html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton .sk-card { background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, .05), inset 0 0 0 1px #e2e8f0; }
 
 /* Phones: the greeting never covers more than ~40% of the screen */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     html body #ai-orb-speech-bubble:not(#_ai) { max-height: 42vh; max-height: 42dvh; overflow-y: auto; }
+}
+/* Elsewhere the greeting stays between the header (99px, 77px at 769-860px) and what it sits on, and scrolls inside
+   rather than reach the header: above the round face on a desktop, above the tab bar on a tablet. On a short window
+   (a phone held sideways, 900x500) there is no room above the face, so it sits beside it. */
+@media (min-width: 1024px) and (min-height: 600px) {
+    html body #ai-orb-speech-bubble:not(#_ai) { max-height: calc(100vh - 199px); max-height: calc(100dvh - 199px); overflow-y: auto; overscroll-behavior: contain; }
+}
+@media (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
+    html body #ai-orb-speech-bubble:not(#_ai) { max-height: calc(100vh - 261px); max-height: calc(100dvh - 261px); overflow-y: auto; overscroll-behavior: contain; }
+}
+@media (min-width: 768px) and (max-height: 599.98px) {
+    html body #ai-orb-speech-bubble:not(#_ai) { bottom: 24px !important; right: 92px !important; max-height: calc(100vh - 135px); max-height: calc(100dvh - 135px);
+        overflow-y: auto; overscroll-behavior: contain; transform-origin: bottom right; }
+    html body #ai-orb-speech-bubble:not(#_ai) .ai-orb-bubble-arrow { display: none !important; }
 }
 /* greeting chips that are links (CV, WhatsApp) look like the other chips */
 #ai-orb-speech-bubble a.dm-chip { display: inline-flex; align-items: center; text-decoration: none; }
@@ -6442,7 +6013,7 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     flex-shrink: 0;
     padding: 2px 9px;
     border-radius: 999px;
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
     color: var(--accent-ink);
@@ -6685,7 +6256,7 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     max-width: 100%;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 11.5px;
+    font-size: 12px;
     color: var(--pf-glass-ink-2);
 }
 .dash-flow li:not(.is-front) .dash-glass :is(.dash-pill, .dash-kinds) { display: none; }
@@ -6778,7 +6349,7 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
     position: absolute;
     transform: translateX(-50%);
     font-family: 'Fira Code', monospace;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--pf-ink-3);
 }
 .dash-ticks span::before {
@@ -7449,6 +7020,8 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    padding-block: 6px;      /* a 32px-tall target without moving the line */
+    margin-block: -6px;
     font-size: 13px;
     color: var(--pf-ink-3);
     text-decoration: none;
@@ -7611,6 +7184,7 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
     height: 14px;
 }
 button.dash-tool {
+    min-height: 28px;
     border: 0;
     font-family: inherit;
     cursor: pointer;
@@ -7628,7 +7202,7 @@ button.dash-tool:focus-visible { outline: 2px solid var(--accent-ink); outline-o
     align-items: center;
     gap: 6px;
     margin: 10px 0 0;
-    font-size: 11.5px;
+    font-size: 12px;
     color: var(--pf-ink-3);
 }
 .dash-ask-hint i { font-size: 11px; color: var(--accent-ink); }

@@ -504,7 +504,7 @@ body.nx-page[data-page="profile"] .nx {
 }
 
 /* Mobile App Native Flush Bottom Nav */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   .nx .bottom-nav,
   .bottom-nav {
     position: fixed !important;
@@ -1140,7 +1140,7 @@ body.nx-page[data-page="profile"] .nx .rail {
   .exp-stat-card .exp-stat-num { font-size: 30px; }
   .exp-stat-card .exp-stat-cap { font-size: 13px; }
   .exp-more-li { display: block; }
-  .exp-more-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 0; margin: 0; color: var(--link); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .exp-more-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 6px 0; margin: -6px 0; color: var(--link); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
   .exp-more-btn svg { transition: transform 0.2s ease; }
   .exp-item-modern.is-expanded .exp-more-btn svg { transform: rotate(180deg); }
   .bullet-rest { display: none; }
@@ -1189,7 +1189,7 @@ body.nx-page[data-page="profile"] .nx .rail {
 .extra-card { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
 .extra-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); box-shadow: 0 14px 30px -14px var(--shade, rgba(0, 0, 0, 0.4)); }
 .extra-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; min-height: 40px; }
-.extra-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--link); padding-top: 4px; }
+.extra-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--link); padding-top: 4px; }
 .extra-stat { text-align: right; white-space: nowrap; flex-shrink: 0; }
 .extra-stat b { display: block; font-size: 22px; font-weight: 800; line-height: 1.1; color: var(--ink); }
 .extra-stat span { font-size: 12px; color: var(--ink-3); }
@@ -1223,7 +1223,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-head-text { min-width: 0; }
 .nl-head-text h2, .nl-head-text h1 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
 .nl-head-text p { margin: 3px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-3); }
-.nl-seeall { margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600;
+.nl-seeall { margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding-block: 6px; margin-block: -6px; font-size: 14px; font-weight: 600;
   color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color 0.2s ease; }
 .nl-seeall:hover { color: var(--link); }
 .nl-more { align-self: center; margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px;
@@ -1269,7 +1269,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-card-head { display: flex; align-items: flex-start; gap: 12px; }
 .nl-card-title { min-width: 0; flex: 1; }
 .nl-card-title h3 { margin: 0; font-size: 17px; line-height: 1.35; overflow-wrap: anywhere; }
-.nl-card-title h3 a { color: var(--ink); text-decoration: none; }
+.nl-card-title h3 a { display: inline-block; min-height: 24px; color: var(--ink); text-decoration: none; }
 .nl-card-title code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 600; }
 .nl-card-title code span { color: var(--link); }
 .nl-by { display: flex; align-items: center; gap: 6px; margin-top: 5px; font-size: 13.5px; color: var(--ink-3); }
@@ -1277,7 +1277,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-count { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
   color: var(--ink-2); border: 1px solid var(--line); background: var(--surface-2); }
 .nl-count i { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
-.nl-open { flex-shrink: 0; color: var(--ink-3); display: inline-flex; transition: color 0.2s ease; }
+.nl-open { flex-shrink: 0; color: var(--ink-3); display: inline-flex; padding: 7px; margin: -7px; border-radius: 10px; transition: color 0.2s ease; }
 .nl-open:hover { color: var(--link); }
 .nl-card > p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
 .nl-cmd { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 16px; border: 1px solid var(--line);
@@ -1339,7 +1339,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-bm-badges .nl-top svg { color: #34d399; }
 .nl-bm-body { display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 12px; flex: 1; }
 .nl-bm-body h3 { margin: 0; font-size: 16.5px; font-weight: 700; }
-.nl-bm-body h3 a { color: var(--ink); text-decoration: none; }
+.nl-bm-body h3 a { display: inline-block; min-height: 24px; color: var(--ink); text-decoration: none; }
 .nl-bm-body > p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
 .nl-domain { display: flex; align-items: center; gap: 8px; margin-top: auto !important; padding-top: 8px; font-size: 13px !important; color: var(--ink-3) !important; }
 .nl-domain span { flex: 1; }
@@ -1505,7 +1505,7 @@ a.nl-ch-big:hover { transform: none; }
 .nl-artist-head h3 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 16px; font-weight: 700; color: var(--ink); }
 .nl-artist-head h3 img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 .nl-artist-head h3 span { font-size: 13px; font-weight: 500; color: var(--ink-3); }
-.nl-artist-head a { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); text-decoration: none; }
+.nl-artist-head a { display: inline-flex; align-items: center; gap: 6px; padding-block: 6px; margin-block: -6px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); text-decoration: none; }
 .nl-artist-head a:hover { color: var(--link); }
 
 @media (max-width: 767px) {
@@ -1560,7 +1560,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   outline: 2px solid var(--accent-1) !important; outline-offset: 3px !important;
 }
 /* ================= bottom tab bar: 64px glass bar, sliding pill, muted inactive tabs ================= */
-@media (max-width: 1023px) {
+@media (max-width: 1023.98px) {
   html body .bottom-nav:not(#_bn) {
     height: calc(64px + env(safe-area-inset-bottom)) !important; padding: 0 6px env(safe-area-inset-bottom) !important; box-sizing: border-box !important;
     align-items: center !important; border-radius: 0 !important;
@@ -1585,7 +1585,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 }
 /* tablets (768-1023px): same tab bar as phones, fixed to the bottom, with room reserved below the content */
 /* (portrait-height only: phones held sideways already show the desktop menu) */
-@media (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+@media (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
   html body .bottom-nav:not(#_bn) { display: flex !important; position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
     z-index: 9990 !important; justify-content: space-around !important; }
   html body .bottom-nav:not(#_bn) a { flex: 0 1 120px !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; }
@@ -1593,7 +1593,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   html body.drawer-open .bottom-nav:not(#_bn):not(#_bn2) { display: none !important; }
 }
 /* tab press feedback: no grey browser flash; ripple and a small icon squeeze, like a native tab bar */
-@media (max-width: 1023px) {
+@media (max-width: 1023.98px) {
   html body .bottom-nav:not(#_bn) a { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none; user-select: none; }
   html body .bottom-nav:not(#_bn) a:active { transform: none !important; }
   .bottom-nav .bn-ico { position: relative; display: grid; place-items: center; width: 56px; height: 32px; border-radius: 999px; overflow: hidden; isolation: isolate;
@@ -1629,10 +1629,13 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   .nl-vids.fade-r { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }
   .nl-vids.fade-l { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px); mask-image: linear-gradient(to right, transparent, #000 40px); }
   .nl-vids.fade-l.fade-r { -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
-  .nl-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
-  .nl-dots button { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 999px; cursor: pointer;
-    background: color-mix(in srgb, var(--ink) 22%, transparent); transition: width .25s ease, background .25s ease; }
-  .nl-dots button.is-on { width: 18px; background: var(--brand); }
+  .nl-dots { display: flex; justify-content: center; gap: 0; margin-top: 3px; }
+  .nl-dots button { position: relative; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 999px; cursor: pointer; background: none; }
+  .nl-dots button::before { content: ""; position: absolute; top: 9px; left: 9px; width: 6px; height: 6px; border-radius: 999px;
+    background: color-mix(in srgb, var(--ink) 22%, transparent); transition: width .25s ease, left .25s ease, background .25s ease; }
+  .nl-dots button.is-on { width: 30px; }
+  .nl-dots button.is-on::before { left: 6px; width: 18px; background: var(--brand); }
+  .nl-dots button:focus-visible { outline: 2px solid var(--link); outline-offset: -2px; }
 }
 .chip-solid { background: var(--surface-2); color: var(--ink-2); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; border: 1px solid var(--line); }
 
@@ -2107,7 +2110,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   gap: 5px;
   padding: 4px 8.5px;
   border-radius: 7px;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   background: var(--surface-2);
   border: 1px solid var(--line);
@@ -2960,7 +2963,7 @@ html body.nx-page .nx .cover-banner-wrap [data-slats-canvas] { transition: opaci
 }
 
 /* phones: just enough space at the bottom to clear the tab bar (the footer is empty here) */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   html body.nx-page .nx:not(#_pb) { padding-bottom: calc(64px + 20px + env(safe-area-inset-bottom)) !important; }
   html body.nx-page .nx .main:not(#_pb) { padding-bottom: 0 !important; }
   html body.nx-page footer:not(#_pb) { display: none !important; }
@@ -3378,7 +3381,7 @@ html.fx-view-on, html.fx-view-on body { overflow: hidden !important; }
 /* sleep timer, in the timer strip */
 .nx .fx-sleep { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 999px; font-size: 13px; color: var(--ink-2);
   background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; }
-.nx .fx-sleep select { appearance: none; -webkit-appearance: none; border: 0; outline: 0; padding: 0; font: inherit; font-weight: 600; color: var(--ink); background: transparent; cursor: pointer; }
+.nx .fx-sleep select { align-self: stretch; appearance: none; -webkit-appearance: none; border: 0; outline: 0; padding: 0; font: inherit; font-weight: 600; color: var(--ink); background: transparent; cursor: pointer; }
 .nx .fx-sleep select option { color: #0b1120; }
 .nx .fx-sleep:focus-within { box-shadow: inset 0 0 0 2px var(--brand); }
 .nx .fx-sleep b { font-weight: 600; color: var(--link); font-variant-numeric: tabular-nums; }
@@ -5799,7 +5802,7 @@ PAGES_CSS = """
 .nx .nl-stat-wide > span:not(.nl-stat-ico) { flex: 1; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
 .nx .nl-stat-wide > svg { flex-shrink: 0; color: var(--ink-3); }
 .nx .ldr-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: -6px 0 18px; font-size: 13.5px; color: var(--ink-3); }
-.nx .ldr-meta a, .nx .ldr-about a { display: inline-flex; align-items: center; gap: 5px; color: var(--ink-2); text-decoration: underline;
+.nx .ldr-meta a, .nx .ldr-about a { display: inline-flex; align-items: center; gap: 5px; padding-block: 3px; margin-block: -3px; color: var(--ink-2); text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--ink-2) 40%, transparent); text-underline-offset: 3px; }
 .nx .ldr-meta a:hover, .nx .ldr-about a:hover { color: var(--link); }
 .nx .ldr-cats { margin-bottom: 12px; }
@@ -5886,11 +5889,7 @@ def main():
 
 
 def redirect_page(to, canonical, title):
-    return (f'<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8"><title>{e(title)} · Library | {NAME}</title>\n'
-            f'<meta name="robots" content="noindex"><link rel="canonical" href="{canonical}">\n'
-            f'<meta http-equiv="refresh" content="0; url={to}">\n'
-            f'<script>location.replace("{to}" + location.search + location.hash);</script></head>\n'
-            f'<body><p>This page has moved to <a href="{to}">{e(title)}</a>.</p></body></html>\n')
+    return build_pages.redirect_page(to, canonical, title, doc_title=f"{title} · Library", keep_query=True)
 
 
 if __name__ == "__main__":
