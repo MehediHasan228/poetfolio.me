@@ -13,6 +13,10 @@
         @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/vendor/fonts/poppins-400-latin.woff2) format('woff2')}
         @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/vendor/fonts/poppins-600-latin.woff2) format('woff2')}
         @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/vendor/fonts/poppins-700-latin.woff2) format('woff2')}
+        /* Arial (or a metric twin) sized and spaced like Poppins at each weight, so text keeps its place when Poppins arrives */
+        @font-face{font-family:'Poppins Fallback';font-weight:400;src:local('Arial'),local('ArialMT'),local('Liberation Sans'),local('Helvetica Neue'),local('Roboto');size-adjust:112.25%;ascent-override:93.54%;descent-override:31.18%;line-gap-override:8.91%}
+        @font-face{font-family:'Poppins Fallback';font-weight:600;src:local('Arial Bold'),local('Arial-BoldMT'),local('Liberation Sans Bold'),local('Helvetica Neue Bold'),local('Roboto Bold');size-adjust:104.2%;ascent-override:100.77%;descent-override:33.59%;line-gap-override:9.6%}
+        @font-face{font-family:'Poppins Fallback';font-weight:700;src:local('Arial Bold'),local('Arial-BoldMT'),local('Liberation Sans Bold'),local('Helvetica Neue Bold'),local('Roboto Bold');size-adjust:106.42%;ascent-override:98.67%;descent-override:32.89%;line-gap-override:9.4%}
         @font-face{font-family:'Fira Code';font-style:normal;font-weight:400 600;font-display:swap;src:url(/vendor/fonts/fira-code-latin.woff2) format('woff2')}
         :root { --bg:#0b1120; --surface:#101a2e; --surface-2:#17223a; --line:#1d2a45; --line-strong:#2b3b5e; --ink:#f8fafc; --ink-2:#cbd5e1; --ink-3:#94a3b8;
                 --link:#00f2fe; --fill:linear-gradient(135deg,#00f2fe,#4facfe); --on-fill:#0b1120; --shade:rgba(0,0,0,.45); color-scheme:dark; }
@@ -26,7 +30,7 @@
                 --link:#00ff00; --fill:linear-gradient(135deg,#00ff00,#00cc00); --on-fill:#000000; --shade:rgba(0,0,0,.6); }
         * { box-sizing:border-box; margin:0; }
         body { min-height:100vh; min-height:100dvh; display:grid; place-items:center; padding:24px 16px; background:var(--bg); color:var(--ink);
-               font:400 14px/1.6 'Poppins',system-ui,sans-serif; }
+               font:400 14px/1.6 'Poppins','Poppins Fallback',system-ui,sans-serif; }
         main { width:100%; max-width:560px; padding:28px 24px 24px; background:var(--surface); border:1px solid var(--line); border-radius:22px;
                box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 6%,transparent) inset, 0 18px 40px -18px var(--shade); }
         .label { font:600 12.5px/1.4 'Fira Code',ui-monospace,monospace; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-3); }
@@ -38,7 +42,7 @@
         .addr code { font:500 12.5px/1.6 'Fira Code',ui-monospace,monospace; color:var(--ink-2); background:var(--surface-2);
                      border:1px solid var(--line); border-radius:6px; padding:1px 8px; }
         .home { display:inline-flex; align-items:center; justify-content:center; min-height:44px; margin-top:22px; padding:10px 22px; border-radius:999px;
-                background:var(--fill); color:var(--on-fill); font:700 14px/1.2 'Poppins',system-ui,sans-serif; text-decoration:none;
+                background:var(--fill); color:var(--on-fill); font:700 14px/1.2 'Poppins','Poppins Fallback',system-ui,sans-serif; text-decoration:none;
                 box-shadow:0 6px 16px -8px var(--shade); }
         nav { margin-top:24px; padding-top:18px; border-top:1px solid var(--line); }
         nav ul { list-style:none; padding:0; margin-top:10px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }

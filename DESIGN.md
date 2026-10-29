@@ -164,6 +164,9 @@ Mint fills, white on Light's.
 No other webfonts, with one exception: a page that shows Bangla text (today only /karbar/) may load Hind Siliguri
 (400, 600, self-hosted) for Bengali glyphs only, its `@font-face` limited by `unicode-range` to the Bengali block
 (U+0964-0965, U+0980-09FE, U+200C-200D, U+25CC). Poppins comes first in the stack, so Latin never reaches it.
+Every Poppins stack names `'Poppins Fallback'` second: local Arial (or Liberation Sans, its metric twin) with
+`size-adjust` and ascent/descent/line-gap overrides per weight (400, 600, 700, measured on the site's own text), so
+text keeps its size and place when Poppins arrives instead of jumping (mobile CLS 0.028 → 0.001).
 
 ### Hierarchy
 - **Display** (700, 4rem desktop, clamp to ~2.2rem on phones): the hero name only, alone in the h1.

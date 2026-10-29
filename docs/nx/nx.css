@@ -49,7 +49,7 @@
 :root {
     --brand-soft: rgba(var(--brand-rgb), .14);
     --shadow-btn: 0 6px 16px -8px rgba(0, 0, 0, .55), inset 0 1px 6px rgba(255, 255, 255, .22);
-    --font: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font: 'Poppins', 'Poppins Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
