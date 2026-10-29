@@ -930,11 +930,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 1400);
         }, { passive: true });
 
+        // On the tab-bar layout the open chat is a sheet over the page: what it covers goes inert, so Tab stays in the chat
+        // and the header above it (the menu's drawer and backdrop are the menu's to manage). Like the phone menu, it wakes only
+        // what it made inert, and only after the panel's first frame (an inert long page restyles all of it). A turn to the
+        // floating layout wakes the page too.
+        const chatSheetMQ = window.matchMedia('(max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px)');
+        let chatMuted = [];
+        function syncChatCover() {
+            const cover = chatWidget.classList.contains('chat-expanded') && chatSheetMQ.matches;
+            if (cover && !chatMuted.length) {
+                [].forEach.call(document.body.children, (el) => {
+                    if (el === chatWidget || el.tagName === 'NAV' || el.tagName === 'SCRIPT' || el.inert || el.id.startsWith('mobile-menu-')) return;
+                    el.inert = true; chatMuted.push(el);
+                });
+            } else if (!cover && chatMuted.length) {
+                chatMuted.forEach((el) => { el.inert = false; }); chatMuted = [];
+            }
+        }
+        chatSheetMQ.addEventListener('change', syncChatCover);
+
         // Folded, the panel's parts are inert, so Tab passes the widget by; the toggle says whether it is open
         function syncChatState() {
             const open = chatWidget.classList.contains('chat-expanded');
             if (chatToggle) chatToggle.setAttribute('aria-expanded', String(open));
             chatWidget.querySelectorAll('.chat-body, .chat-input-area, .chat-mode-bar, .chat-foot').forEach((el) => { el.inert = !open; });
+            requestAnimationFrame(() => setTimeout(syncChatCover, 0));
         }
 
         // fromKeyboard: opened with Enter or Space, so the message box takes focus at once (with a mouse it does too, a

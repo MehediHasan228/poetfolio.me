@@ -50,7 +50,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../../style~1f83e8.css?v=5956c873a0">
+    <link rel="stylesheet" href="../../style~1f83e8.css?v=e9170acb71">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -502,10 +502,15 @@
     else if (t.hasAttribute('data-lb-sub')) { if (t.getAttribute('data-lb-sub') !== sub) { pick(cat, t.getAttribute('data-lb-sub'), true); remember(); } }
     else if (t.hasAttribute('data-lb-retry')) { load(); show(false); }
   });
-  // a link to one board (#webdev)
-  var want = '';
-  try { want = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* a malformed #%: no board asked for */ }
-  Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, false); }); });
+  // a link to one board (#webdev), on arrival or typed into the address bar later (choices here use replaceState, which
+  // fires no hashchange)
+  function follow(announce) {
+    var want = '';
+    try { want = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* a malformed #%: no board asked for */ }
+    Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, announce); }); });
+  }
+  follow(false);
+  addEventListener('hashchange', function () { follow(true); });
   // the rankings load once the page has, while it is idle, so a later choice shows at once
   var later = function () { ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(load, { timeout: 2000 }); };
   if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
@@ -656,7 +661,7 @@ document.addEventListener("pointermove", function (ev) {
     </div>
     <script src="../../focus/focus-boot.js?v=4ac494b09c" defer></script>
     <script src="../../ai-orb-mascot.js?v=b8ad72b93a" defer></script>
-    <script src="../../script~9e1709.js?v=85c1f03f0e" defer></script>
+    <script src="../../script~9e1709.js?v=6d79b9e791" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

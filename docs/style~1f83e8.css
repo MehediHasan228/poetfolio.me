@@ -5110,6 +5110,9 @@ html body .nx:not(#_bg) { background: transparent !important; }
     }
     html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle:is(:hover, :focus-visible) .chat-header-title { opacity: 1; transform: translate(0, -50%); }
     html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle:focus-visible { outline: 2px solid var(--accent-ink) !important; outline-offset: 3px !important; }
+    /* the open chat stays under the header on a short window: header (99px from 900px wide, 77px below) + 24px inset + 12px */
+    html body #ai-chat-widget.chat-expanded:not(#_ai) { max-height: calc(100dvh - 135px) !important; }
+    @media (max-width: 899.98px) { html body #ai-chat-widget.chat-expanded:not(#_ai) { max-height: calc(100dvh - 113px) !important; } }
     /* the footer's row ends above the face */
     footer { padding-bottom: 96px; }
 }

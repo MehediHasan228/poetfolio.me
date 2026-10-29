@@ -5127,10 +5127,15 @@ LB_JS = """<script>
     else if (t.hasAttribute('data-lb-sub')) { if (t.getAttribute('data-lb-sub') !== sub) { pick(cat, t.getAttribute('data-lb-sub'), true); remember(); } }
     else if (t.hasAttribute('data-lb-retry')) { load(); show(false); }
   });
-  // a link to one board (#webdev)
-  var want = '';
-  try { want = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* a malformed #%: no board asked for */ }
-  Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, false); }); });
+  // a link to one board (#webdev), on arrival or typed into the address bar later (choices here use replaceState, which
+  // fires no hashchange)
+  function follow(announce) {
+    var want = '';
+    try { want = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* a malformed #%: no board asked for */ }
+    Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, announce); }); });
+  }
+  follow(false);
+  addEventListener('hashchange', function () { follow(true); });
   // the rankings load once the page has, while it is idle, so a later choice shows at once
   var later = function () { ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(load, { timeout: 2000 }); };
   if (document.readyState === 'complete') later(); else addEventListener('load', later, { once: true });
