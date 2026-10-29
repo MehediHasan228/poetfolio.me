@@ -50,7 +50,6 @@
             --on-btn: #f8fafc;
             --soft: rgba(0, 242, 254, 0.1);
             --chip: rgba(15, 23, 42, 0.6);
-            --dot-bar: #334155;
             --cta: linear-gradient(135deg, rgba(79, 70, 229, 0.25), rgba(6, 182, 212, 0.15));
         }
         /* the site's other themes (the visitor's choice, saved by the main site) */
@@ -58,7 +57,7 @@
             --bg: #09090b; --card: rgba(30, 10, 18, 0.6); --border: rgba(244, 63, 94, 0.2); --text: #fbbf24; --text-2: #dcbf86;
             --muted: #a1a1aa; --cyan: #fb7185; --indigo: #be123c; --amber: #eab308; --glow-1: rgba(244, 63, 94, 0.2); --glow-2: rgba(234, 179, 8, 0.1);
             --btn: linear-gradient(135deg, #9f1239, #be123c); --btn-shadow: rgba(0, 0, 0, 0.5); --on-btn: #ffffff;
-            --soft: rgba(244, 63, 94, 0.12); --chip: rgba(30, 10, 18, 0.7); --dot-bar: #52202f;
+            --soft: rgba(244, 63, 94, 0.12); --chip: rgba(30, 10, 18, 0.7);
             --cta: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(234, 179, 8, 0.1));
         }
         :root[data-theme="light"], :root[data-theme="mint"] {
@@ -66,7 +65,7 @@
             --muted: #475569; --cyan: #1d4ed8; --indigo: #4338ca; --green: #15803d; --amber: #b45309;
             --glow-1: rgba(79, 70, 229, 0.1); --glow-2: rgba(14, 116, 144, 0.08); --btn: linear-gradient(135deg, #4338ca, #1d4ed8);
             --btn-shadow: rgba(15, 23, 42, 0.18); --on-btn: #ffffff; --soft: rgba(29, 78, 216, 0.08);
-            --chip: #f1f5f9; --dot-bar: #cbd5e1; --cta: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(14, 116, 144, 0.06));
+            --chip: #f1f5f9; --cta: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(14, 116, 144, 0.06));
         }
         :root[data-theme="mint"] {
             --bg: #f4faf7; --cyan: #047857; --indigo: #065f46; --btn: linear-gradient(135deg, #065f46, #047857); --btn-shadow: rgba(15, 23, 42, 0.18); --soft: rgba(4, 120, 87, 0.1); --chip: #eaf6f0; --glow-1: rgba(16, 185, 129, 0.1); --glow-2: rgba(4, 120, 87, 0.06);
@@ -76,7 +75,7 @@
             --bg: #000000; --card: rgba(0, 20, 0, 0.7); --border: rgba(0, 255, 0, 0.22); --text: #bbf7d0; --text-2: #86efac; --muted: #4ade80;
             --cyan: #00ff00; --indigo: #15803d; --glow-1: rgba(0, 255, 0, 0.08); --glow-2: rgba(0, 255, 0, 0.05);
             --btn: linear-gradient(135deg, #00cc00, #00ff00); --btn-shadow: rgba(0, 0, 0, 0.6); --on-btn: #000000;
-            --soft: rgba(0, 255, 0, 0.1); --chip: rgba(0, 20, 0, 0.8); --dot-bar: #14532d; --cta: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 120, 0, 0.08));
+            --soft: rgba(0, 255, 0, 0.1); --chip: rgba(0, 20, 0, 0.8); --cta: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 120, 0, 0.08));
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -135,7 +134,6 @@
 
         .mock { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; backdrop-filter: blur(8px); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }
         .mock-bar { display: flex; gap: 6px; margin-bottom: 14px; }
-        .mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--dot-bar); }
 
         section { padding: 36px 0; }
         h2 { font-size: 1.6rem; margin-bottom: 6px; }
@@ -210,8 +208,7 @@
 
             <div class="mock" aria-hidden="true" style="padding: 12px; overflow: hidden;">
                 <div class="mock-bar" style="margin-bottom: 10px; align-items: center;">
-                    <i></i><i></i><i></i>
-                    <span class="mono" style="font-size: 12px; color: var(--muted); margin-left: 8px;">admin.karbar.demo / <span class="bn">ড্যাশবোর্ড</span></span>
+                    <span class="mono" style="font-size: 12px; color: var(--muted);">admin.karbar.demo / <span class="bn">ড্যাশবোর্ড</span></span>
                 </div>
                 <img src="../karbar_erp_preview.webp" alt="Karbar ERP Live Dashboard" width="1280" height="800" style="width: 100%; height: auto; border-radius: 10px; display: block; box-shadow: 0 12px 35px rgba(0,0,0,0.6);">
             </div>
