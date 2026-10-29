@@ -952,7 +952,7 @@
 #tube-dock .td-text span { font-size: 11px; font-weight: 500; color: var(--text-secondary, #94a3b8); }
 #tube-dock .td-main { width: 34px; height: 34px; margin: 0 2px; font-size: 13px; color: var(--accent-active-color, #0b1120);
   background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 6px 16px -6px var(--accent-glow, rgba(0, 0, 0, .35)); }
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 6px 16px -6px var(--shade, rgba(0, 0, 0, 0.4)); }
 #tube-dock .td-main:hover { color: var(--accent-active-color, #0b1120); background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe)); filter: brightness(1.06); }
 #tube-dock .td-vol { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 #tube-dock .td-range { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; margin: 0 6px 0 0; border-radius: 4px; cursor: pointer;

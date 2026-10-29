@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (clearance >= 4) {
                 clrDisplay.innerText = "LVL MAX (ROOT)";
                 clrDisplay.style.color = "#ef4444";
-                clrDisplay.style.textShadow = "0 0 8px #ef4444";
             }
         }
     }

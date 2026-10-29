@@ -34,9 +34,8 @@
             --glow-1: rgba(79, 70, 229, 0.25);
             --glow-2: rgba(0, 242, 254, 0.12);
             --btn: linear-gradient(135deg, #4f46e5, #06b6d4);
-            --btn-shadow: rgba(79, 70, 229, 0.35);
+            --btn-shadow: rgba(0, 0, 0, 0.45);   /* a plain shadow under the filled button, never a coloured one */
             --on-btn: #f8fafc;
-            --grad-2: #818cf8;
             --soft: rgba(0, 242, 254, 0.1);
             --chip: rgba(15, 23, 42, 0.6);
             --dot-bar: #334155;
@@ -46,7 +45,7 @@
         :root[data-theme="cyberpunk"] {
             --bg: #09090b; --card: rgba(30, 10, 18, 0.6); --border: rgba(244, 63, 94, 0.2); --text: #fbbf24; --text-2: #dcbf86;
             --muted: #a1a1aa; --cyan: #fb7185; --indigo: #be123c; --amber: #eab308; --glow-1: rgba(244, 63, 94, 0.2); --glow-2: rgba(234, 179, 8, 0.1);
-            --btn: linear-gradient(135deg, #9f1239, #be123c); --btn-shadow: rgba(244, 63, 94, 0.3); --on-btn: #ffffff; --grad-2: #fbbf24;
+            --btn: linear-gradient(135deg, #9f1239, #be123c); --btn-shadow: rgba(0, 0, 0, 0.5); --on-btn: #ffffff;
             --soft: rgba(244, 63, 94, 0.12); --chip: rgba(30, 10, 18, 0.7); --dot-bar: #52202f;
             --cta: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(234, 179, 8, 0.1));
         }
@@ -54,18 +53,17 @@
             --bg: #f8fafc; --card: rgba(255, 255, 255, 0.9); --border: rgba(15, 23, 42, 0.12); --text: #0f172a; --text-2: #334155;
             --muted: #475569; --cyan: #1d4ed8; --indigo: #4338ca; --green: #15803d; --amber: #b45309;
             --glow-1: rgba(79, 70, 229, 0.1); --glow-2: rgba(14, 116, 144, 0.08); --btn: linear-gradient(135deg, #4338ca, #1d4ed8);
-            --btn-shadow: rgba(67, 56, 202, 0.25); --on-btn: #ffffff; --grad-2: #4338ca; --soft: rgba(29, 78, 216, 0.08);
+            --btn-shadow: rgba(15, 23, 42, 0.18); --on-btn: #ffffff; --soft: rgba(29, 78, 216, 0.08);
             --chip: #f1f5f9; --dot-bar: #cbd5e1; --cta: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(14, 116, 144, 0.06));
         }
         :root[data-theme="mint"] {
-            --bg: #f4faf7; --cyan: #047857; --indigo: #065f46; --btn: linear-gradient(135deg, #065f46, #047857); --btn-shadow: rgba(4, 120, 87, 0.25);
-            --grad-2: #065f46; --soft: rgba(4, 120, 87, 0.1); --chip: #eaf6f0; --glow-1: rgba(16, 185, 129, 0.1); --glow-2: rgba(4, 120, 87, 0.06);
+            --bg: #f4faf7; --cyan: #047857; --indigo: #065f46; --btn: linear-gradient(135deg, #065f46, #047857); --btn-shadow: rgba(15, 23, 42, 0.18); --soft: rgba(4, 120, 87, 0.1); --chip: #eaf6f0; --glow-1: rgba(16, 185, 129, 0.1); --glow-2: rgba(4, 120, 87, 0.06);
             --cta: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(4, 120, 87, 0.06));
         }
         :root[data-theme="god-mode"] {
             --bg: #000000; --card: rgba(0, 20, 0, 0.7); --border: rgba(0, 255, 0, 0.22); --text: #bbf7d0; --text-2: #86efac; --muted: #4ade80;
             --cyan: #00ff00; --indigo: #15803d; --glow-1: rgba(0, 255, 0, 0.08); --glow-2: rgba(0, 255, 0, 0.05);
-            --btn: linear-gradient(135deg, #00cc00, #00ff00); --btn-shadow: rgba(0, 255, 0, 0.25); --on-btn: #000000; --grad-2: #bbf7d0;
+            --btn: linear-gradient(135deg, #00cc00, #00ff00); --btn-shadow: rgba(0, 0, 0, 0.6); --on-btn: #000000;
             --soft: rgba(0, 255, 0, 0.1); --chip: rgba(0, 20, 0, 0.8); --dot-bar: #14532d; --cta: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 120, 0, 0.08));
         }
 
@@ -99,13 +97,13 @@
         .brand span { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); }
 
         h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; font-weight: 800; }
-        h1 .grad { background: linear-gradient(135deg, var(--cyan), var(--grad-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        h1 .grad { color: var(--cyan); }   /* one solid colour: the site has no gradient text */
         .tagline { color: var(--muted); margin: 16px 0 8px; font-size: 1.05rem; }
         .tagline.bn { font-size: 1.1rem; color: var(--text-2); }
 
         .status { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-size: 0.85rem; margin: 20px 0; }
         .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
-        .status.live .dot { background: var(--green); box-shadow: 0 0 12px var(--green); animation: pulse 1.6s infinite; }
+        .status.live .dot { background: var(--green); animation: pulse 1.6s infinite; }
         .status.offline .dot { background: var(--amber); }
         @keyframes pulse { 50% { opacity: 0.4; } }
 
@@ -114,7 +112,7 @@
         .hero .actions { display: grid; grid-template-columns: repeat(2, max-content); justify-items: start; }
         .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 12px; font: inherit; font-weight: 700; color: inherit; text-decoration: none; border: 1px solid var(--border); transition: transform 0.15s, box-shadow 0.15s; }
         .btn:hover { transform: translateY(-2px); }
-        .btn.primary { background: var(--btn); color: var(--on-btn); border: none; box-shadow: 0 10px 30px var(--btn-shadow); }
+        .btn.primary { background: var(--btn); color: var(--on-btn); border: none; box-shadow: 0 8px 20px -8px var(--btn-shadow); }
         .btn.primary:disabled { opacity: 0.45; pointer-events: none; }
         .btn.ghost { background: var(--card); }
         .note { display: grid; color: var(--muted); font-size: 0.85rem; margin-top: 14px; }

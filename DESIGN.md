@@ -97,8 +97,11 @@ components:
 The site reads like the home page's "At a glance" dashboard and the Profile page: dark navy surfaces, one cyan accent,
 hairline borders and plain shadows. It is a working portfolio, so structure beats spectacle: the signature motion is
 the dot network behind the home hero, and the one character is the round AI face. Everything else is quiet, flat and
-legible. God mode's surfaces are still the Dark ones; its own palette comes with the light/mint/god-mode slice. The source of truth in code is the `--pf-*` tokens in `docs/style~1f83e8.css` and the nx tokens in
-`docs/nx/nx.css` (`--bg`, `--surface`, `--ink`, `--brand`...); they hold the same values.
+legible. The source of truth in code is the `--pf-*` tokens (and `--accent-ink`, `--accent-active-color`,
+`--gradient-accent`, `--shade`) in `docs/style~1f83e8.css` and the nx tokens in `docs/nx/nx.css` (`--bg`, `--surface`,
+`--ink`, `--brand`, `--link`, `--on-brand`, `--grad`...); they hold the same values. In `nx.css` a theme block is written
+`:root[data-theme="x"]`: the build scopes that to `[data-theme="x"] .nx`, while a bare `[data-theme="x"] .y` would
+become `.nx [data-theme="x"] .y` and match nothing.
 
 **Key Characteristics:**
 - Dark first (Dark is the default theme), cyan accent, Poppins for words and Fira Code for figures and labels.
@@ -122,23 +125,33 @@ One accent per theme, used for links, the current page, figures and the primary 
 | Role | Dark | Red (`cyberpunk`) | Light | Mint | God mode |
 |---|---|---|---|---|---|
 | bg | #0b1120 | #09090b | #f8fafc | #f4faf7 | #000000 |
-| surface | #101a2e | #130a10 | #ffffff | #ffffff | #101a2e |
-| surface-2 | #17223a | #1e0f18 | #f1f5f9 | #eaf6f0 | #17223a |
-| line | #1d2a45 | #3a1824 | #e2e8f0 | #d1fae5 | #1d2a45 |
-| line-strong | #2b3b5e | #52202f | #cbd5e1 | #a7f3d0 | #2b3b5e |
+| surface | #101a2e | #130a10 | #ffffff | #ffffff | #060f08 |
+| surface-2 | #17223a | #1e0f18 | #f1f5f9 | #eaf6f0 | #0b1a0f |
+| surface-3 | #202d49 | #2b1521 | #e2e8f0 | #d8ece2 | #112516 |
+| line | #1d2a45 | #3a1824 | #e2e8f0 | #d1fae5 | #163d20 |
+| line-strong | #2b3b5e | #52202f | #cbd5e1 | #a7f3d0 | #1f5a2c |
 | ink | #f8fafc | #fbbf24 (gold) | #0f172a | #0f172a | #00ff00 |
-| ink-3 | #94a3b8 | #a1a1aa | #5e6e83 | #5e6e83 | #008800 |
+| ink-2 | #cbd5e1 | #dcbf86 | #334155 | #2d3748 | #4ade80 |
+| ink-3 | #94a3b8 | #a1a1aa | #5e6e83 | #5e6e83 | #22c55e |
 | brand | #00f2fe | #f43f5e (rose) | #2563eb | #10b981 | #00ff00 |
-| accent as text (`--accent-ink`) | #00f2fe | #f43f5e | #2563eb | #047857 | #00ff00 |
-| fill gradient | #00f2fe → #4facfe | #f43f5e → #eab308 | #2563eb → #3b82f6 | #10b981 → #059669 | #00ff00 → #00cc00 |
+| accent as text (`--accent-ink`, nx `--link`) | #00f2fe | #fb7185 | #1d4ed8 | #047857 | #00ff00 |
+| fill gradient | #00f2fe → #4facfe | #f43f5e → #eab308 | #1d4ed8 → #2563eb | #34d399 → #10b981 | #00ff00 → #00cc00 |
+| text on a fill (`--accent-active-color`, nx `--on-brand`) | #0b1120 | #09090b | #ffffff | #022c22 | #000000 |
+| shadow colour (`--shade`) | black 45% | black 50% | navy 16% | navy 16% | black 60% |
+
+Every text pair above passes 4.5:1, on the page, on surface-2 and on the fill (God mode's ink-3 is 7.9:1 on its
+cards; Light's accent text 5.3:1 even on its own blue tints). Muted text is the ink-3 token, never ink at a lower
+opacity: opacity fell under 4.5:1 in Light and Mint.
 
 God mode is listed in the theme menu only after the Konami code unlocks it (`mehedi_godmode` in storage).
 
 **The One Accent Rule.** A screen uses its theme's accent for state and emphasis only: the current page, links, one
 filled button per group, key figures. Project badges (green, purple, amber) are the only other hues.
 
-**The Accent-as-Text Rule.** Text or icons in the accent use `--accent-ink`, never the raw brand: Mint's brand green is
-too light on white (2.5:1), so it reads in deep green there.
+**The Accent-as-Text Rule.** Text, icons and focus outlines in the accent use `--accent-ink` (nx `--link`), never
+the raw brand: Mint's brand green is too light on white (2.5:1), so it reads in deep green there, and Light's in a
+deeper blue. A filled control takes the fill gradient with `--accent-active-color` text: dark text on Dark, Red and
+Mint fills, white on Light's.
 
 ## Typography
 
@@ -159,8 +172,19 @@ No other webfonts.
 - Content width 1200px (dashboard), 1400px for the nx shell (main column plus the right rail). Desktop side padding
   `max(5%, 204px)` on the home hero and header.
 - Grid: 12 columns, 16px gaps on the dashboard. Rhythm in 8px steps (6, 8, 16, 24, 48).
-- Breakpoints: 768/769px (phone header and drawer below), 1024px (tab bar below; the round chat face above), 1200px.
-- Phones: the bottom tab bar (64px) is the footer; the top bar is 56px.
+- Breakpoints: 768/769px (phone header and drawer below), 1024px (tab bar below; the round chat face above), 1200px,
+  1280px (below it, windows without a tab bar keep side margins for the round buttons).
+- Phones: the bottom tab bar (64px) is the footer; the top bar is 56px. The header is 77px at 769-860px and 99px
+  from 861px; the home hero starts below it at every window size (115px top padding from 861px, 93px below).
+
+**The Floating Controls Rule.** Two layouts, whose media queries are each other's exact complement:
+- With a tab bar, `(max-width: 767px), (min-width: 768px) and (max-width: 1023px) and (min-height: 600px)`: the folded
+  chat is the bar's last tab and WhatsApp does not float (it is in the drawer, on Contact and in the hero's "Book a
+  Call"). The page ends above the bar.
+- Without one, `(min-width: 1024px), (min-width: 768px) and (max-height: 599px)` (desktops, and short windows such as
+  a phone held sideways): the round face bottom right, WhatsApp bottom left. Below 1280px the body keeps an 88px
+  margin on each side so neither ever sits on content; the fixed header keeps the full width.
+Nothing floating may cover text, a link or a button at any window size.
 
 ## Elevation & Depth
 
@@ -170,9 +194,13 @@ Flat by default; depth from plain dark shadows, never coloured light.
 - **Lift** (`--pf-lift`, three stacked dark shadows): cards that float, menus, the portrait frame.
 - **Drop** (`--b3-drop`, `0 6px 16px -8px rgba(0,0,0,.55)`; lighter in Light and Mint): filled buttons, round
   controls. `--b3-drop-hover` under the pointer, `--b3-drop-press` when pressed.
+- **Shade** (`--shade`): the one shadow colour for anything else (black, navy-grey in Light and Mint). Mint's lift is
+  navy-grey too, not green.
 
 **The No-Glow Rule.** No shadow, filter or text-shadow takes the accent colour. A shadow is black (or navy-grey in
-Light and Mint). This holds in every theme, Red included.
+Light and Mint). This holds in every theme, Red included. A ring without blur (`0 0 0 1px`, the avatar's 2px ring
+behind a surface gap, the selected orbit logo) is a border, not a glow; a soft accent halo (`0 0 0 3px` at low
+opacity) is a glow.
 
 ## Shapes
 
@@ -182,7 +210,8 @@ the portrait frame 36px (26px on phones). Buttons and header controls are full p
 ## Components
 
 ### Header (top bar, every page)
-- Fixed. Background: the page colour at 78% with an 18px blur, a 1px hairline below. Desktop: logo left; Profile,
+- Fixed. Background: the page colour at 90% with an 18px blur (the tab bar 94%), a 1px hairline below: at 78% a
+  bright cover or thumbnail passing behind pulled the links under 4.5:1. Desktop: logo left; Profile,
   Projects, People, Contact, Library pushed right; a divider; then the sound toggle and the theme button. The current
   page's link is in `--accent-ink` with a 2px solid underline.
 - Phones (≤768px): logo and name, the Contact pill, the theme button, the menu button. Sound lives in the menu.
@@ -198,7 +227,7 @@ the portrait frame 36px (26px on phones). Buttons and header controls are full p
   Hover lifts 2px with `--b3-drop-hover`; pressed sinks.
 - **Secondary:** pill, the page colour inside a gradient hairline border, ink text; hover turns the text to the accent.
 - **Round control:** 44px circle on surface with a line-strong ring, accent icon. The floating WhatsApp button
-  (bottom left, desktop only) and the menu's WhatsApp and sound buttons. WhatsApp's icon stays green.
+  (bottom left, only where there is no tab bar) and the menu's WhatsApp and sound buttons. WhatsApp's icon stays green.
 
 ### Cards / Containers
 - Surface, 1px line border, 22px radius, 22px 24px padding, a faint lit top edge. The pointer may light the border
@@ -217,8 +246,9 @@ the portrait frame 36px (26px on phones). Buttons and header controls are full p
   (an outlined Fira Code chip that opens the CLI) right. Hidden on phones, where the tab bar is the footer.
 
 ### Chat
-- Folded: the round AI face. Desktop: a 56px face in the bottom-right corner, "Ask My AI" slides out beside it on hover
-  or focus. Phones and tablets: the last tab of the tab bar (face over "Ask My AI"), so it never covers the page.
+- Folded: the round AI face. Without a tab bar: a 56px face in the bottom-right corner, "Ask My AI" slides out beside
+  it on hover or focus. With the tab bar: its last tab (face over "Ask My AI"), so it never covers the page. See the
+  Floating Controls Rule.
 - Open: a solid panel (`--chat-panel`), an opaque header above a message list that clips its own content; user
   bubbles in the fill gradient with a plain drop shadow.
 
