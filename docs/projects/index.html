@@ -50,7 +50,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=e9170acb71">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=14d405d684">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -58,12 +58,6 @@
 </head>
 
 <body class="subpage nx-page" data-page="projects">
-    <!-- the one floating button, bottom left on desktop (theme and sound live in the header) -->
-    <div class="ui-controls">
-        <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
-            aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
-    </div>
-
     <nav aria-label="Main navigation">
         <a href="../" class="logo-link">
             <picture>
@@ -82,21 +76,21 @@
             <li><a href="../library/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
         </ul>
 
-        <!-- the header's controls: Contact and the menu button on phones; sound on desktop (on phones it is in the menu);
-             the theme menu everywhere. Theme changes go through setTheme() in script~ -->
+        <!-- the header's controls: Contact and the menu button on phones; the theme and sound menu everywhere (sound is its
+             last row, a checkbox). Theme changes go through setTheme() in script~, sound through its [data-sound-toggle] -->
         <div class="mobile-header-right nav-tools">
             <a href="../contact/" class="mobile-contact-btn hover-sound" aria-label="Contact"><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>Contact</span></a>
-            <button type="button" id="sound-toggler" class="hdr-btn sound-btn hover-sound" aria-label="Sound" aria-pressed="false" title="Sound"><i
-                    class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
             <div class="theme-pick">
-                <button type="button" id="theme-menu-btn" class="hdr-btn hover-sound" aria-label="Theme" title="Theme" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu"><i
+                <button type="button" id="theme-menu-btn" class="hdr-btn hover-sound" aria-label="Theme and sound" title="Theme and sound" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu"><i
                         class="fa-solid fa-palette" aria-hidden="true"></i></button>
-                <ul id="theme-menu" class="theme-menu" role="menu" aria-label="Theme" hidden>
+                <ul id="theme-menu" class="theme-menu" role="menu" aria-label="Theme and sound" hidden>
                     <li role="none"><button type="button" role="menuitemradio" aria-checked="true" tabindex="-1" data-theme-set="dark"><span class="tm-swatch" aria-hidden="true"></span>Dark<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
                     <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="cyberpunk"><span class="tm-swatch" aria-hidden="true"></span>Red<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
                     <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="light"><span class="tm-swatch" aria-hidden="true"></span>Light<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
                     <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="mint"><span class="tm-swatch" aria-hidden="true"></span>Mint<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
                     <li role="none" data-god hidden><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="god-mode"><span class="tm-swatch" aria-hidden="true"></span>God mode<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="separator" class="tm-sep"></li>
+                    <li role="none"><button type="button" role="menuitemcheckbox" aria-checked="false" tabindex="-1" class="tm-sound" data-sound-toggle><i class="fa-solid fa-volume-xmark tm-ico" aria-hidden="true"></i>Sound<span class="tm-switch" aria-hidden="true"></span></button></li>
                 </ul>
             </div>
             <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
@@ -125,8 +119,6 @@
         <div class="drawer-controls">
             <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
                 aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
-            <button type="button" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
-                    class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
         </div>
         <p class="drawer-copy">© 2026 Mehedi Hasan</p>
     </div>
@@ -312,7 +304,7 @@ document.addEventListener("pointermove", function (ev) {
     </div>
     <script src="../focus/focus-boot.js?v=4ac494b09c" defer></script>
     <script src="../ai-orb-mascot.js?v=b8ad72b93a" defer></script>
-    <script src="../script~9e1709.js?v=6d79b9e791" defer></script>
+    <script src="../script~9e1709.js?v=373ca0b498" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

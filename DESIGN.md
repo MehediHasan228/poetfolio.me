@@ -21,11 +21,11 @@ typography:
     fontSize: "4rem"
     fontWeight: 700
     lineHeight: 1.2
-  code-display:
-    fontFamily: "Fira Code, monospace"
-    fontSize: "2rem"
-    fontWeight: 500
-    lineHeight: 1.5
+  subtitle:
+    fontFamily: "Poppins, sans-serif"
+    fontSize: "1.75rem"
+    fontWeight: 600
+    lineHeight: 1.3
   title:
     fontFamily: "Poppins, sans-serif"
     fontSize: "17px"
@@ -47,7 +47,7 @@ rounded:
   menu: "14px"
   list: "16px"
   tile: "22px"
-  portrait: "36px"
+  portrait: "26px"
   pill: "999px"
 spacing:
   xs: "6px"
@@ -66,6 +66,11 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.pill}"
     padding: "10px 20px"
+  button-quiet:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink-2}"
+    rounded: "{rounded.pill}"
+    padding: "10px 16px"
   header-button:
     backgroundColor: "{colors.surface-2}"
     textColor: "{colors.ink}"
@@ -161,8 +166,10 @@ No other webfonts, with one exception: a page that shows Bangla text (today only
 (U+0964-0965, U+0980-09FE, U+200C-200D, U+25CC). Poppins comes first in the stack, so Latin never reaches it.
 
 ### Hierarchy
-- **Display** (700, 4rem desktop, clamp to ~2.2rem on phones): the hero name only.
-- **Code display** (Fira Code, 2rem): "Hi, I'm" and the hero role line.
+- **Display** (700, 4rem desktop, clamp to ~2.2rem on phones): the hero name only, alone in the h1.
+- **Subtitle** (Poppins 600, 28px on desktop, down to ~20px beside the photo, 18px on phones; line-height 1.3, in
+  `--accent-ink`): the hero's role line, the h2 under the name. One line at every width from 360px.
+- **Figures** (Fira Code 600, 26px): the dashboard's key numbers.
 - **Title** (600, 17px): card and section headings (`1.5rem` for section titles).
 - **Body** (400, 14px, line-height 1.6): card text, lists. Long text up to ~70 characters a line.
 - **Label** (Fira Code 600, 12-12.5px, uppercase allowed): badges, meta counts, the footer's Terminal button.
@@ -175,17 +182,19 @@ No other webfonts, with one exception: a page that shows Bangla text (today only
   `max(5%, 204px)` on the home hero and header.
 - Grid: 12 columns, 16px gaps on the dashboard. Rhythm in 8px steps (6, 8, 16, 24, 48).
 - Breakpoints: 768/769px (phone header and drawer below), 1024px (tab bar below; the round chat face above), 1200px,
-  1280px (below it, windows without a tab bar keep side margins for the round buttons).
+  1280px (below it, windows without a tab bar keep side margins for the round chat face).
 - Phones: the bottom tab bar (64px) is the footer; the top bar is 56px. The header is 77px at 769-860px and 99px
   from 861px; the home hero starts below it at every window size (115px top padding from 861px, 93px below).
 
-**The Floating Controls Rule.** Two layouts, whose media queries are each other's exact complement:
+**The Floating Controls Rule.** The folded chat is the only floating control: WhatsApp never floats (it is in the phone
+menu, on Contact and in the hero's "Book a Call"), and theme and sound live in the header. Two layouts, whose media
+queries are each other's exact complement:
 - With a tab bar, `(max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px)`: the
-  folded chat is the bar's last tab and WhatsApp does not float (it is in the drawer, on Contact and in the hero's "Book
-  a Call"). The page ends above the bar.
+  folded chat is the bar's last tab. The page ends above the bar.
 - Without one, `(min-width: 1024px), (min-width: 768px) and (max-height: 599.98px)` (desktops, and short windows such
-  as a phone held sideways): the round face bottom right, WhatsApp bottom left. Below 1280px (`max-width: 1279.98px`)
-  the body keeps an 88px margin on each side so neither ever sits on content; the fixed header keeps the full width.
+  as a phone held sideways): the round face bottom right. Below 1280px (`max-width: 1279.98px`) the body keeps an 88px
+  margin on each side (both sides, so the content stays centred) so the face never sits on content; the fixed header
+  keeps the full width.
 Every query that picks between the two layouts ends its `max-` side at `.98px`: with browser zoom a window can be
 767.5px wide, where `max-width: 767px` and `min-width: 768px` both miss. Nothing floating may cover text, a link or a
 button at any window size.
@@ -195,7 +204,7 @@ button at any window size.
 Flat by default; depth from plain dark shadows, never coloured light.
 
 ### Shadow Vocabulary
-- **Lift** (`--pf-lift`, three stacked dark shadows): cards that float, menus, the portrait frame.
+- **Lift** (`--pf-lift`, three stacked dark shadows): cards that float, menus, the hero portrait.
 - **Drop** (`--b3-drop`, `0 6px 16px -8px rgba(0,0,0,.55)`; lighter in Light and Mint): filled buttons, round
   controls. `--b3-drop-hover` under the pointer, `--b3-drop-press` when pressed.
 - **Shade** (`--shade`): the one shadow colour for anything else (black, navy-grey in Light and Mint). Mint's lift is
@@ -209,33 +218,57 @@ opacity) is a glow.
 ## Shapes
 
 Rounded, never sharp, never pill-shaped containers: chips 6px, menu rows 10px, menus 14px, lists 16px, tiles 22px,
-the portrait frame 36px (26px on phones). Buttons and header controls are full pills or circles. Borders are 1px.
+the hero portrait 26px. Buttons and header controls are full pills or circles. Borders are 1px.
 
 ## Components
 
 ### Header (top bar, every page)
 - Fixed. Background: the page colour at 90% with an 18px blur (the tab bar 94%), a 1px hairline below: at 78% a
   bright cover or thumbnail passing behind pulled the links under 4.5:1. Desktop: logo left; Profile,
-  Projects, People, Contact, Library pushed right; a divider; then the sound toggle and the theme button. The current
-  page's link is in `--accent-ink` with a 2px solid underline.
-- Phones (≤768px): logo and name, the Contact pill, the theme button, the menu button. Sound lives in the menu.
+  Projects, People, Contact, Library pushed right; a divider; then the one round button, "Theme and sound" (a
+  palette). The current page's link is in `--accent-ink` with a 2px solid underline.
+- Phones (≤768px): logo and name, the Contact pill, the same "Theme and sound" button, the menu button. Sound has one
+  home on every size: the last row of that button's menu (the phone drawer has no sound button).
 - **Header buttons:** 40px circles (44px tap area on phones), a faint ink tint and a 1px ring; on, open or hovered they
   take `--accent-ink`.
-- **Theme menu:** a 180px card under its button (surface, line-strong border, 14px radius, lift). Rows of 40px: a
-  swatch (the theme's accent on its page colour), the name (Dark, Red, Light, Mint; God mode once unlocked), a check
-  on the current one. On phones and touch screens the rows are 44px. ARIA menu button: arrows, Home/End, first letter, Esc returns focus. Every change goes through
-  `setTheme()` (transitions off for that frame).
+- **Theme and sound menu:** a 180px card under its button (surface, line-strong border, 14px radius, lift). Rows of
+  40px: a swatch (the theme's accent on its page colour), the name (Dark, Red, Light, Mint; God mode once unlocked), a
+  check on the current one. After a 1px line-strong separator, the last row is **Sound**, a `menuitemcheckbox`: a speaker
+  where the swatch goes (crossed out while off, in the accent while on) and a small switch where the check goes (off:
+  surface-2 track in a line-strong ring, Ink 3 knob; on: the fill gradient with an `--accent-active-color` knob).
+  Toggling Sound keeps the menu open with focus on the row; picking a theme closes it. Sound is off until the visitor
+  turns it on (`mehedi_muted` in storage). On phones and touch screens the rows are 44px. ARIA menu button: arrows,
+  Home/End and first letter move over every row, Sound included; Esc returns focus; Tab or a click outside closes it.
+  Every theme change goes through `setTheme()` (transitions off for that frame).
 
 ### Buttons
 - **Primary:** pill, the theme's fill gradient with a soft top gloss, dark or white text, 10px 20px, Poppins 700 14px.
   Hover lifts 2px with `--b3-drop-hover`; pressed sinks.
 - **Secondary:** pill, the page colour inside a gradient hairline border, ink text; hover turns the text to the accent.
-- **Round control:** 44px circle on surface with a line-strong ring, accent icon. The floating WhatsApp button
-  (bottom left, only where there is no tab bar) and the menu's WhatsApp and sound buttons. WhatsApp's icon stays green.
+- **Quiet:** no fill and no ring, Ink 2 text with its icon, Poppins 600 14px, 10px 16px, 44px tall, pill-shaped only
+  under the pointer (a 7% ink tint, accent text). Used beside a primary and a secondary, as the third and least
+  important action (the hero's Download CV).
+- **Round control:** 44px circle on surface with a line-strong ring, accent icon: the phone menu's WhatsApp button.
+  WhatsApp's icon stays green.
 
 ### Cards / Containers
 - Surface, 1px line border, 22px radius, 22px 24px padding, a faint lit top edge. The pointer may light the border
   (dashboard tiles); that light is the accent at low opacity on the border only.
+
+### Home hero
+- Left (desktop) or under the photo, centred (phones and below 861px): the name as the h1 (Display, Ink), the role as
+  its subtitle (Subtitle, accent text) 10px under it (4px on phones), and right under the role one quiet line of
+  specialities, "LLM integration · Autonomous agents · Full-stack architecture" (Poppins 400, 15px, 13px on phones,
+  Ink 2), 6px under it (4px on phones). No height is reserved for any of them, so nothing leaves an empty band. The
+  specialities break only between phrases: where the text column is under 470px (a container query) the last phrase
+  takes its own line without its dot.
+- Then the highlights list, then one row of three actions: See my work (primary), Book a Call (secondary, WhatsApp),
+  Download CV (quiet, with its icon). Phones: the two filled buttons share the first line and Download CV takes the
+  whole second line, its label centred. Beside the photo in a column under 480px (1024px, a short 900px window): the
+  two filled ones, then Download CV on the next line with its icon on the column's edge. Stacked and centred
+  (769-860px): the row is centred too.
+- The portrait: the photo itself wears the frame, one 1px hairline in the theme's `line` colour, 26px radius, the lift
+  shadow. No outer ring or card around it; the box that floats it is transparent.
 
 ### Chips and badges
 - Chips: surface-2 with a 1px line ring, 999px or 6px radius, Ink 2 text. Project badges in the hero: Fira Code 12px,

@@ -58,23 +58,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     const savedMute = local.get('mehedi_muted');
     let isMuted = savedMute === null ? true : savedMute === 'true';
 
-    // the buttons are toggles: pressed while sound is on
+    // Sound's one control is the last row of the header's theme menu, a menuitemcheckbox: checked while sound is on, its
+    // speaker icon showing the same. Toggling it leaves the menu open, with focus on the row.
     function updateSoundIcons() {
-        const iconHtml = isMuted ? '<i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>' : '<i class="fa-solid fa-volume-high" aria-hidden="true"></i>';
-        document.querySelectorAll('#sound-toggler, .sound-btn').forEach(btn => {
-            btn.innerHTML = iconHtml;
-            btn.setAttribute('aria-pressed', String(!isMuted));
+        document.querySelectorAll('[data-sound-toggle]').forEach((item) => {
+            item.setAttribute('aria-checked', String(!isMuted));
+            const ico = item.querySelector('.tm-ico');
+            if (ico) ico.className = 'fa-solid ' + (isMuted ? 'fa-volume-xmark' : 'fa-volume-high') + ' tm-ico';
         });
     }
     updateSoundIcons();
 
     document.addEventListener('click', (e) => {
-        const soundBtn = e.target.closest('#sound-toggler, .sound-btn');
+        const soundBtn = e.target.closest('[data-sound-toggle]');
         if (soundBtn) {
             e.preventDefault();
             isMuted = !isMuted;
             local.set('mehedi_muted', isMuted);
             updateSoundIcons();
+            // Safari doesn't focus a clicked button: the row keeps the menu's focus either way
+            if (document.activeElement !== soundBtn) soundBtn.focus({ preventScroll: true });
             // turned on, the audio engine starts just after this click has painted: starting it (the browser's audio
             // service, the first time) held the button's new state back
             if (!audioCtx && !isMuted) requestAnimationFrame(() => setTimeout(() => { if (!audioCtx && !isMuted) audioCtx = new AudioContext(); }, 0));
@@ -2003,14 +2006,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-swap')));
     }
 
-    /* The header's theme menu, a WAI-ARIA menu button. It lists the themes by name and marks the current one; God mode
-       is listed once the Konami code has unlocked it. Enter, Space or Down opens it on the current theme, Up on the last;
-       inside, the arrows, Home and End move, a letter jumps, Enter or Space picks, and Esc closes it and hands focus back
-       to the button. Tab, or a click anywhere else, closes it. */
+    /* The header's theme and sound menu, a WAI-ARIA menu button. It lists the themes by name and marks the current one
+       (God mode is listed once the Konami code has unlocked it); after a separator, Sound is its last row, a checkbox.
+       Enter, Space or Down opens it on the current theme, Up on the last row; inside, the arrows, Home and End move over
+       every row, a letter jumps, Enter or Space picks a theme (and closes the menu) or toggles Sound (it stays open), and
+       Esc closes it and hands focus back to the button. Tab, or a click anywhere else, closes it. */
     const themeBtn = document.getElementById('theme-menu-btn');
     const themeMenu = document.getElementById('theme-menu');
     function themeItems() {
-        return themeMenu ? [...themeMenu.querySelectorAll('[role="menuitemradio"]')].filter((b) => !b.closest('[hidden]')) : [];
+        return themeMenu ? [...themeMenu.querySelectorAll('[role^="menuitem"]')].filter((b) => !b.closest('[hidden]')) : [];
     }
     function markTheme(t) {
         if (themeMenu) themeMenu.querySelectorAll('[role="menuitemradio"]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeSet === t)));
@@ -2025,17 +2029,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     // is listed here as well
     new MutationObserver(() => markTheme(document.documentElement.getAttribute('data-theme')))
         .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    // a theme picked in another tab is taken here too (pages without the Focus player have no focus.js to do it)
+    // a theme picked in another tab is taken here too (pages without the Focus player have no focus.js to do it), and
+    // so is Sound, or this tab's next toggle would write back the state it still holds
     window.addEventListener('storage', (e) => {
         if (e.key === 'mehedi_godmode' && e.newValue === '1') unlockGodTheme();
         if (e.key === 'mehedi_theme' && e.newValue && e.newValue !== document.documentElement.getAttribute('data-theme')) setTheme(e.newValue);
+        if (e.key === 'mehedi_muted' && e.newValue !== null) { isMuted = e.newValue === 'true'; updateSoundIcons(); }
     });
 
     function openThemeMenu(which) {
         themeMenu.hidden = false;
         themeBtn.setAttribute('aria-expanded', 'true');
         const list = themeItems();
-        const current = list.findIndex((b) => b.getAttribute('aria-checked') === 'true');
+        const current = list.findIndex((b) => b.dataset.themeSet && b.getAttribute('aria-checked') === 'true');
         const i = which === 'last' ? list.length - 1 : Math.max(0, current);
         if (list[i]) list[i].focus({ preventScroll: true });
     }

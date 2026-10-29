@@ -153,16 +153,6 @@ html {
 }
 
 /* --- UI CONTROLS & MONITOR --- */
-.ui-controls {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 101;
-}
-
 .control-btn {
     background: var(--card-bg);
     border: 1px solid var(--accent-1);
@@ -489,7 +479,8 @@ section {
     padding-right: 24px;
 }
 
-/* the portrait: a simple rounded frame on the card surface, lifted by a plain shadow (no glow, no corner marks) */
+/* the portrait's box: it floats and holds the photo. No frame of its own (the photo wears one hairline, below); its
+   padding is only a transparent margin, and its 1px border stays transparent, so the photo keeps its size at every width */
 .hero-image-wrapper {
     position: relative;
     width: 100%;
@@ -497,9 +488,9 @@ section {
     margin: 0 auto;
     padding: 12px;
     border-radius: 36px;
-    background: var(--pf-surface);
-    border: 1px solid var(--pf-line-strong);
-    box-shadow: var(--pf-lift);
+    background: none;
+    border: 1px solid transparent;
+    box-shadow: none;
     animation: floatProfile 6s ease-in-out infinite;
     perspective: 1200px;
     isolation: isolate;
@@ -510,18 +501,15 @@ section {
     animation-play-state: paused;
 }
 
-/* the hero's words: "Hi, I'm" quiet in the code face, the name in one solid colour, the role in the accent */
-.hero-hi {
-    font-family: 'Fira Code', monospace;
-    color: var(--text-secondary);
-}
-.hero-hi .hero-name {
-    display: inline-block;
+/* the hero's words: the name in one solid colour, the role under it in the accent (both Poppins; sizes and spacing in
+   "The hero's words" further down) */
+.hero-name {
     font-weight: 700;
     color: var(--text-primary);
 }
 .hero-role {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
     color: var(--accent-ink);
 }
 /* the accent as text or icon colour: mint's brand green is too light for that, so it takes its deep green */
@@ -607,8 +595,8 @@ section {
     isolation: isolate;
     z-index: 10;
     background: #090d16;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+    border: 1px solid var(--pf-line);   /* the portrait's one frame: a hairline in the theme's line colour */
+    box-shadow: var(--pf-lift);
     transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
     will-change: transform;
     cursor: grab;
@@ -1710,24 +1698,10 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
 @media (max-width: 768px) {
     /* Hero container width guard */
 
-    /* Floating Controls: Vertical stack for mobile */
-    .ui-controls {
-        bottom: 20px; 
-        left: 20px;
-        flex-direction: column; 
-        gap: 15px;
-    }
-
     .control-btn {
         width: 40px;
         height: 40px;
         font-size: 1rem;
-    }
-
-    /* Hero Text Scaling */
-
-    .hero-role-lead, .hero-role {
-        font-size: 1rem !important;
     }
 
     .telemetry-card { padding: 1.5rem !important; }
@@ -2270,26 +2244,6 @@ footer {
     }
 
 
-    /* UI Controls Mobile Placement: Vertical stack on bottom-left (উপরে নিচে) */
-    .ui-controls {
-        position: fixed !important;
-        bottom: 16px !important;
-        left: 14px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 10px !important;
-        z-index: 999 !important;
-    }
-
-    .ui-controls .control-btn {
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 1rem !important;
-        padding: 0 !important;
-        border-radius: 50% !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
-    }
-
     .sys-monitor {
         display: none;
     }
@@ -2581,16 +2535,7 @@ footer {
     #cli-input { font-size: 0.8rem; }
     .cli-output { font-size: 0.8rem; }
 
-    /* UI Controls Placement: vertical stack on bottom-left (উপরে নিচে) */
-    .ui-controls {
-        position: fixed !important;
-        bottom: 16px !important;
-        left: 14px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 10px !important;
-        z-index: 999 !important;
-    }
+    /* the drawer's round WhatsApp button */
     .control-btn {
         width: 40px !important;
         height: 40px !important;
@@ -3299,42 +3244,32 @@ footer {
     font-size: 1.05rem;
 }
 
-.hero-cta-links {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    padding-left: 2px;
-}
-
-.hero-text-link {
+/* Download CV: the row's third button, the quiet one: no fill and no ring, its icon and label in Ink 2, 44px tall like
+   the two beside it; under the pointer the accent and a faint tint. Focus shows the site's ring (:focus-visible). */
+.hero-cta-ghost {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--text-secondary, #94a3b8);
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    color: var(--pf-ink-2);
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    padding-bottom: 1px;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-.hero-text-link:hover,
-.hero-text-link:focus-visible {
+.hero-cta-ghost:hover {
     color: var(--accent-ink);
-    border-bottom-color: currentColor;
+    background: color-mix(in srgb, var(--pf-ink) 7%, transparent);
 }
-
-
-:is([data-theme="light"], [data-theme="mint"]) .hero-text-link {
-    color: #475569;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .hero-text-link:hover,
-:is([data-theme="light"], [data-theme="mint"]) .hero-text-link:focus-visible {
-    color: #2563eb;
-}
+.hero-cta-ghost:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) { .hero-cta-ghost:active { transform: none; } }
 
 /* Terminal badge: borderless dual-strand ECG monitor sweep (theme colours) */
 
@@ -3358,8 +3293,10 @@ footer {
     }
 
 
+    /* phones: the two filled buttons share the first line; Download CV takes the whole second line, its label centred */
     .hero-cta-row {
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
+        row-gap: 6px;
         width: 100%;
     }
 
@@ -3370,13 +3307,8 @@ footer {
         font-size: 0.78rem;
     }
 
-    .hero-cta-links {
-        justify-content: center;
-        padding-left: 0;
-    }
-
-    .hero-text-link {
-        min-height: 36px;
+    .hero-cta-ghost {
+        flex: 1 1 100%;
     }
 }
 
@@ -3747,27 +3679,8 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     .bottom-nav { display: none !important; }
 }
 
-/* ========================================================
-   UI CONTROLS - FLOATING BOTTOM-LEFT (WEB & TABLET)
-   ======================================================== */
-.ui-controls {
-    position: fixed !important;
-    bottom: 24px !important;
-    left: 24px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 14px !important;
-    z-index: 1000 !important;
-    width: auto !important;
-    height: auto !important;
-    background: transparent !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    pointer-events: auto !important;
-}
-
-/* The round control buttons (the floating WhatsApp button; WhatsApp and sound in the phone menu): the card surface in a
-   hairline ring, the accent for the icon, one recipe for every theme and no glow. WhatsApp keeps its green. */
+/* The round control button (WhatsApp in the phone menu): the card surface in a hairline ring, the accent for the icon,
+   one recipe for every theme and no glow. WhatsApp keeps its green. */
 .control-btn {
     display: flex;
     justify-content: center;
@@ -3822,7 +3735,6 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 }
 
 @media (max-width: 768px) {
-    /* (whether the floating WhatsApp button shows is decided once, by the FLOATING CONTROLS rule below) */
     nav {
         padding: 10px 20px !important;
         flex-direction: row !important;
@@ -4449,13 +4361,29 @@ html body nav[aria-label="Main navigation"] .nav-links a.nav-link-item:is(.activ
 [data-theme-set="light"] .tm-swatch { --sw-bg: #f8fafc; --sw-on: #2563eb; }
 [data-theme-set="mint"] .tm-swatch { --sw-bg: #f4faf7; --sw-on: #10b981; }
 [data-theme-set="god-mode"] .tm-swatch { --sw-bg: #000000; --sw-on: #00ff00; }
+/* after a hairline, Sound (a checkbox): its speaker where a theme has its swatch, a small switch where a theme has its
+   check. On: the speaker in the accent, the switch in the theme's fill with its knob to the right */
+.tm-sep { height: 1px; margin: 6px 4px; background: var(--pf-line-strong); }
+.theme-menu .tm-ico { flex: none; width: 18px; text-align: center; font-size: 14px; color: var(--pf-ink-2); }
+.theme-menu .tm-sound[aria-checked="true"] { font-weight: 500; }
+.theme-menu .tm-sound[aria-checked="true"] .tm-ico { color: var(--accent-ink); }
+.tm-switch {
+  position: relative; flex: none; margin-left: auto; width: 28px; height: 16px; border-radius: 999px;
+  background: var(--pf-surface-2); box-shadow: inset 0 0 0 1px var(--pf-line-strong);
+}
+.tm-switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--pf-ink-3); transition: transform 0.18s ease;
+}
+.tm-sound[aria-checked="true"] .tm-switch { background: var(--gradient-accent, var(--accent-1)); box-shadow: none; }
+.tm-sound[aria-checked="true"] .tm-switch::after { transform: translateX(12px); background: var(--accent-active-color, #0b1120); }
+@media (prefers-reduced-motion: reduce) { .tm-switch::after { transition: none; } }
 
-/* phones: Contact, the theme button and the menu button; sound is in the menu. The two round buttons are 40 px circles
-   with a 44 px tap area, like the menu button */
+/* phones: Contact, the theme and sound button and the menu button. The two round buttons are 40 px circles with a 44 px
+   tap area */
 @media (max-width: 768px) {
   html body nav[aria-label="Main navigation"] .mobile-header-right { gap: 8px !important; }
   html body nav[aria-label="Main navigation"] .mobile-contact-btn:not(#_btn) { padding: 0 12px !important; }
-  html body nav[aria-label="Main navigation"] #sound-toggler { display: none; }
   html body nav[aria-label="Main navigation"] .hdr-btn { font-size: 1.05rem; }
   html body nav[aria-label="Main navigation"] .hdr-btn::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; }
   .theme-menu { top: calc(100% + 10px); right: -48px; }
@@ -4944,7 +4872,6 @@ html #ai-chat-widget .chat-src-list a:hover { background: rgba(var(--accent-1-rg
 @media (max-width: 767px) {
     html body .hero-image-wrapper:not(#_h) { max-width: 172px !important; width: 46vw !important; padding: 6px !important; border-radius: 22px !important; }
     html body .hero-image-side:not(#_h) { margin: 0 0 2px !important; }
-    html body .hero-text-side h2:not(#_h) { text-wrap: balance; min-height: 1.5em; }
 }
 html body #ai-chat-widget.chat-collapsed.ai-dodge:not(#_ai) { opacity: 0 !important; pointer-events: none !important; transition: opacity .2s ease !important; }
 /* the orb's toggle is a Tab stop: while it has keyboard focus it stays in sight, even where it would tuck away or dodge */
@@ -5047,16 +4974,13 @@ html body .nx:not(#_bg) { background: transparent !important; }
     .hl-tag { flex-basis: 4.4rem; }
 }
 
-/* FLOATING CONTROLS, ONE RULE. Two layouts, and their media queries are each other's exact complement:
+/* FLOATING CONTROLS, ONE RULE. The folded chat is the only floating control (WhatsApp lives in the phone menu, on
+   Contact and in the hero's "Book a Call"). Two layouts, and their media queries are each other's exact complement:
      tab bar:    (max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px)
      no tab bar: (min-width: 1024px), (min-width: 768px) and (max-height: 599.98px)
    (the .98 ends leave no gap at fractional widths from browser zoom)
-   With a tab bar, the folded chat is the bar's last tab and WhatsApp is not floating (it is in the drawer and on
-   Contact). Without one, the chat is the round face bottom right and WhatsApp the round button bottom left, and the page
-   keeps a margin for both wherever the window doesn't already leave one (below 1280px). */
-@media (max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
-    html body .ui-controls:not(#_u) { display: none !important; }
-}
+   With a tab bar, the folded chat is the bar's last tab. Without one, it is the round face bottom right, and the page
+   keeps a margin for it wherever the window doesn't already leave one (below 1280px). */
 /* Phones, and tablets with the tab bar: the folded chat is the tab bar's last tab (its face over "Ask My AI"), so it
    never sits on the page. The bar keeps that end free for it. */
 @media (max-width: 767.98px), (min-width: 768px) and (max-width: 1023.98px) and (min-height: 600px) {
@@ -5120,8 +5044,8 @@ html body .nx:not(#_bg) { background: transparent !important; }
     html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header-title { transition: none; transform: translate(0, -50%); }
 }
 
-/* No tab bar and under 1280px: the content would run under the two round buttons (the dashboard tiles at 1024px, the
-   hero on a short window), so the page keeps an 88px margin on each side for them (24px inset + 56px face + 8px). */
+/* No tab bar and under 1280px: the content would run under the round face (the dashboard tiles at 1024px, the hero on
+   a short window), so the page keeps an 88px margin (24px inset + 56px face + 8px), on both sides so it stays centred. */
 @media (min-width: 1024px) and (max-width: 1279.98px), (min-width: 768px) and (max-width: 1023.98px) and (max-height: 599.98px) {
     html body:not(#_lane) { padding-left: 88px; padding-right: 88px; }
     html body > nav { left: 0; }   /* the fixed header keeps the full width (it took its place from the body's padding) */
@@ -5259,16 +5183,46 @@ html:is([data-theme="light"], [data-theme="mint"]) #page-skeleton .sk-card { bac
    script~ after load). Every running animation costs the page a style pass each frame. */
 .anim-rest, .anim-rest::before, .anim-rest::after { animation-play-state: paused !important; }
 
-/* The subtitle holds its height from the first paint: two lines on desktop and on the narrowest phones, where it can
-   wrap; the centred hero never jumps. On desktop the height is set outright, so a fallback font that wraps differently
-   cannot change it either. */
-@media (min-width: 769px) { html body .hero-text-side h2:not(#_h) { min-height: 3em; height: 3em; } }
-@media (max-width: 380px) { html body .hero-text-side h2:not(#_h) { min-height: 3.2em; } }
-/* The other roles, as one quiet line under the subtitle, in the body font (preloaded, so it doesn't re-wrap when fonts
-   land); its height is held like the subtitle's: one line on desktop, two on phones, where it wraps. On phones it tucks
-   into the gaps around it, so the buttons stay above the tab bar. */
-html body .hero-text-side .hero-roles { margin: 0.35rem 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); text-wrap: balance; min-height: 1.5em; }
-@media (max-width: 768px) { html body .hero-text-side .hero-roles { margin: -0.55rem 0 -0.45rem; font-size: 0.75rem; line-height: 1.4; min-height: 2.8em; } }
+/* The hero's words: the name (h1), the role as its subtitle (accent, Poppins 600), and right under the role one quiet
+   line of specialities (Ink 2, Poppins 400). No height is held for any of them: they are all Poppins, preloaded at every
+   width, so the first paint wraps them as the final font does (the old held heights, kept for the code font, left an
+   empty band under the role on wide screens). The role stays on one line down to 360px; the specialities wrap only
+   between phrases. The phone h2 rule (font size and margins, !important) is overridden here on purpose. */
+html body .hero-text-side .hero-role:not(#_h) {
+    margin: 10px 0 0 !important; min-height: 0; height: auto;
+    font-size: clamp(1.25rem, 0.45rem + 1.75vw, 1.75rem) !important; line-height: 1.3; letter-spacing: -0.005em; text-wrap: balance;
+}
+html body .hero-text-side .hero-roles:not(#_h) {
+    margin: 6px 0 0; min-height: 0;
+    font-family: 'Poppins', sans-serif; font-size: 0.9375rem; font-weight: 400; line-height: 1.5; color: var(--pf-ink-2); text-wrap: balance;
+}
+.hero-roles > span:not(.hr-sep) { white-space: nowrap; }   /* the dot after "agents" may still end a line, if it must */
+@media (max-width: 768px) {
+    html body .hero-text-side .hero-role:not(#_h) { margin: 4px 0 0 !important; font-size: 1.125rem !important; }
+    html body .hero-text-side .hero-roles:not(#_h) { margin: 4px 0 0; font-size: 0.8125rem; line-height: 1.45; }
+}
+/* The text column is a size container, so the specialities and the buttons can follow its width, whatever sets it (the
+   window, the 88px lanes, the photo beside it). Its width never comes from its content (a fixed or shared flex basis, or
+   the full width when stacked), so the containment changes nothing else. Under 470px the one line doesn't fit: the
+   last phrase takes its own line, without its dot, instead of a wrap that starts a line with "·". */
+.hero-text-side { container: hero-text / inline-size; }
+@container hero-text (max-width: 470px) {
+    .hero-roles .hr-sep { display: none; }
+    .hero-roles .hr-last { display: block; }
+}
+/* Side by side with the photo, a column too narrow for the three buttons (1024px, a short 900px window): the two filled
+   ones on the first line, Download CV on the next, its icon on the column's edge like every line above it (its padding
+   reaches out into the margin) rather than 16px in */
+@media (min-width: 861px) {
+    @container hero-text (max-width: 480px) {
+        .hero-cta-row { display: grid; grid-template-columns: repeat(2, max-content); column-gap: 0.75rem; row-gap: 4px; }
+        .hero-cta-ghost { grid-column: 1 / -1; justify-self: start; margin-left: -16px; }
+    }
+}
+/* Stacked and centred (769-860px): the buttons are centred under the centred text too */
+@media (min-width: 769px) and (max-width: 860px) {
+    .hero-cta-v2, .hero-cta-row { align-items: center; justify-content: center; }
+}
 
 /* Loops that ran on the main thread every frame now run on the GPU (each forced a layout pass, which also slows the
    page's Speed Index). The mascot's idle breathing moves from its SVG group to the <svg> box: the same motion
@@ -5289,13 +5243,8 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
 }
 
 /* The hero's text column is centred in its row, so a height that came from a font's own metrics moved the whole column
-   when the web fonts swapped in (PageSpeed desktop: CLS 0.06 on the heading). These heights come from the stylesheet now:
-   the CV link takes Poppins' own line height (1.5), and the name, alone on the heading's second line on desktop, sits at
-   the line's top instead of on the first font's baseline. */
-.hero-text-link { line-height: 1.5; }
-@media (min-width: 769px) {
-    .hero-hi .hero-name { vertical-align: top; }
-}
+   when the web fonts swapped in (PageSpeed desktop: CLS 0.06 on the heading). Every line in it now has a line height
+   from the stylesheet (the name 1.2, the role 1.3, the specialities and the Download CV button 1.5). */
 
 /* ==========================================================================
    Profile look on the home page: the same tokens as the profile (nx.css), so a

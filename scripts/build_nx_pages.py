@@ -3651,7 +3651,7 @@ def scope_css(css):
 
 
 # the shell below is what makes the page the same as the home page: shared stylesheet,
-# shared nav bar, SYS_MONITOR, WhatsApp / sound / theme buttons, Ask-My-AI widget and script
+# shared nav bar (with the theme and sound menu), the phone drawer, Ask-My-AI widget and script
 _src = (ROOT / "scripts/site_src/index.full.html").read_text(encoding="utf-8").replace("\r\n", "\n")
 _head = _src[:_src.index("<body>")]
 _head = re.sub(r'<script type="application/ld\+json">.*?</script>', "", _head, flags=re.S)
