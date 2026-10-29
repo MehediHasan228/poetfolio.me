@@ -103,7 +103,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="./vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=7b5870dc1e">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=beeec316e9">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -131,13 +131,10 @@
 </head>
 
 <body>
+    <!-- the one floating button, bottom left on desktop (theme and sound live in the header) -->
     <div class="ui-controls">
         <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
             aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
-        <button type="button" id="sound-toggler" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
-                class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
-        <button type="button" id="theme-toggler" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
-                class="fa-solid fa-palette" aria-hidden="true"></i></button>
     </div>
 
     <nav aria-label="Main navigation">
@@ -158,8 +155,23 @@
             <li><a href="./library/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
         </ul>
 
-        <div class="mobile-header-right">
+        <!-- the header's controls: Contact and the menu button on phones; sound on desktop (on phones it is in the menu);
+             the theme menu everywhere. Theme changes go through setTheme() in script~ -->
+        <div class="mobile-header-right nav-tools">
             <a href="./contact/" class="mobile-contact-btn hover-sound" aria-label="Contact"><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>Contact</span></a>
+            <button type="button" id="sound-toggler" class="hdr-btn sound-btn hover-sound" aria-label="Sound" aria-pressed="false" title="Sound"><i
+                    class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
+            <div class="theme-pick">
+                <button type="button" id="theme-menu-btn" class="hdr-btn hover-sound" aria-label="Theme" title="Theme" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu"><i
+                        class="fa-solid fa-palette" aria-hidden="true"></i></button>
+                <ul id="theme-menu" class="theme-menu" role="menu" aria-label="Theme" hidden>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="true" tabindex="-1" data-theme-set="dark"><span class="tm-swatch" aria-hidden="true"></span>Dark<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="cyberpunk"><span class="tm-swatch" aria-hidden="true"></span>Red<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="light"><span class="tm-swatch" aria-hidden="true"></span>Light<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="mint"><span class="tm-swatch" aria-hidden="true"></span>Mint<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none" data-god hidden><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="god-mode"><span class="tm-swatch" aria-hidden="true"></span>God mode<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                </ul>
+            </div>
             <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
                 <span class="mm-bars" aria-hidden="true"><i></i><i></i><i></i></span>
             </button>
@@ -188,8 +200,6 @@
                 aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
             <button type="button" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
                     class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
-            <button type="button" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
-                    class="fa-solid fa-palette" aria-hidden="true"></i></button>
         </div>
         <p class="drawer-copy">© 2026 Mehedi Hasan</p>
     </div>
@@ -202,45 +212,20 @@
             <div class="hero-layout">
 
                 <div class="hero-text-side">
-                    <h1 class="decrypt-text">Hi, I'm <span
-                            class="gradient-text">Mehedi Hasan</span></h1>
-                    <h2><span class="prefix-text">I am an</span> <span class="typing-text">AI-Native Software Engineer</span></h2>
+                    <h1 class="hero-hi">Hi, I'm <span class="hero-name">Mehedi Hasan</span></h1>
+                    <h2><span class="hero-role-lead">I am an</span> <span class="hero-role">AI-Native Software Engineer</span></h2>
                     <p class="hero-roles">LLM Integration Specialist · Autonomous Agent Developer · Full-Stack System Architect</p>
 
-                    <div class="terminal-feed" id="terminal-feed" role="region" aria-label="Highlights from my work">
-                        <div class="terminal-header">
-                            <div class="terminal-header-left">
-                                <div class="terminal-window-dots">
-                                    <span class="dot dot-red"></span>
-                                    <span class="dot dot-yellow"></span>
-                                    <span class="dot dot-green"></span>
-                                </div>
-                                <div class="terminal-title">
-                                    <span class="term-prompt"><i class="fa-solid fa-terminal"></i></span>
-                                    <span class="term-uri"><span class="term-protocol">~/</span><span class="term-host">mehedi/highlights</span></span>
-                                </div>
-                            </div>
-                            <div class="terminal-live-badge is-simulated is-pulse" title="Highlights from my work">
-                                <svg class="term-pulse" width="64" height="18" viewBox="0 0 64 18" aria-hidden="true" focusable="false">
-                                    <g class="term-pulse-track">
-                                        <path class="term-pulse-base term-pulse-a" d="M-32.00,9.0 L-25.00,9.00 Q-23.50,7.20 -22.00,9.00 L-20.00,9.00 L-19.00,10.60 L-17.50,2.00 L-16.00,14.00 L-14.50,9.00 L-12.00,9.00 Q-9.50,6.00 -7.00,9.00 L0.00,9.00 L7.00,9.00 Q8.50,7.20 10.00,9.00 L12.00,9.00 L13.00,10.60 L14.50,2.00 L16.00,14.00 L17.50,9.00 L20.00,9.00 Q22.50,6.00 25.00,9.00 L32.00,9.00 L39.00,9.00 Q40.50,7.20 42.00,9.00 L44.00,9.00 L45.00,10.60 L46.50,2.00 L48.00,14.00 L49.50,9.00 L52.00,9.00 Q54.50,6.00 57.00,9.00 L64.00,9.00 L71.00,9.00 Q72.50,7.20 74.00,9.00 L76.00,9.00 L77.00,10.60 L78.50,2.00 L80.00,14.00 L81.50,9.00 L84.00,9.00 Q86.50,6.00 89.00,9.00 L96.00,9.00" />
-                                        <path class="term-pulse-base term-pulse-b" d="M-29.80,9.0 L-22.80,9.00 Q-21.30,7.52 -19.80,9.00 L-17.80,9.00 L-16.80,10.31 L-15.30,3.26 L-13.80,13.10 L-12.30,9.00 L-9.80,9.00 Q-7.30,6.54 -4.80,9.00 L2.20,9.00 L9.20,9.00 Q10.70,7.52 12.20,9.00 L14.20,9.00 L15.20,10.31 L16.70,3.26 L18.20,13.10 L19.70,9.00 L22.20,9.00 Q24.70,6.54 27.20,9.00 L34.20,9.00 L41.20,9.00 Q42.70,7.52 44.20,9.00 L46.20,9.00 L47.20,10.31 L48.70,3.26 L50.20,13.10 L51.70,9.00 L54.20,9.00 Q56.70,6.54 59.20,9.00 L66.20,9.00 L73.20,9.00 Q74.70,7.52 76.20,9.00 L78.20,9.00 L79.20,10.31 L80.70,3.26 L82.20,13.10 L83.70,9.00 L86.20,9.00 Q88.70,6.54 91.20,9.00 L98.20,9.00" />
-                                        <path class="term-pulse-beam term-pulse-a" pathLength="100" d="M-32.00,9.0 L-25.00,9.00 Q-23.50,7.20 -22.00,9.00 L-20.00,9.00 L-19.00,10.60 L-17.50,2.00 L-16.00,14.00 L-14.50,9.00 L-12.00,9.00 Q-9.50,6.00 -7.00,9.00 L0.00,9.00 L7.00,9.00 Q8.50,7.20 10.00,9.00 L12.00,9.00 L13.00,10.60 L14.50,2.00 L16.00,14.00 L17.50,9.00 L20.00,9.00 Q22.50,6.00 25.00,9.00 L32.00,9.00 L39.00,9.00 Q40.50,7.20 42.00,9.00 L44.00,9.00 L45.00,10.60 L46.50,2.00 L48.00,14.00 L49.50,9.00 L52.00,9.00 Q54.50,6.00 57.00,9.00 L64.00,9.00 L71.00,9.00 Q72.50,7.20 74.00,9.00 L76.00,9.00 L77.00,10.60 L78.50,2.00 L80.00,14.00 L81.50,9.00 L84.00,9.00 Q86.50,6.00 89.00,9.00 L96.00,9.00" />
-                                        <path class="term-pulse-beam term-pulse-b" pathLength="100" d="M-29.80,9.0 L-22.80,9.00 Q-21.30,7.52 -19.80,9.00 L-17.80,9.00 L-16.80,10.31 L-15.30,3.26 L-13.80,13.10 L-12.30,9.00 L-9.80,9.00 Q-7.30,6.54 -4.80,9.00 L2.20,9.00 L9.20,9.00 Q10.70,7.52 12.20,9.00 L14.20,9.00 L15.20,10.31 L16.70,3.26 L18.20,13.10 L19.70,9.00 L22.20,9.00 Q24.70,6.54 27.20,9.00 L34.20,9.00 L41.20,9.00 Q42.70,7.52 44.20,9.00 L46.20,9.00 L47.20,10.31 L48.70,3.26 L50.20,13.10 L51.70,9.00 L54.20,9.00 Q56.70,6.54 59.20,9.00 L66.20,9.00 L73.20,9.00 Q74.70,7.52 76.20,9.00 L78.20,9.00 L79.20,10.31 L80.70,3.26 L82.20,13.10 L83.70,9.00 L86.20,9.00 Q88.70,6.54 91.20,9.00 L98.20,9.00" />
-                                    </g>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="terminal-body" id="terminal-ticker">
-                            <p class="log-line"><span class="log-time">$</span> <span class="log-tag tag-rag">SAWAB</span> <span class="log-msg">NGO ERP on Frappe + Next.js: <b class="metric-hl">10 modules</b>, live demo</span></p>
-                            <p class="log-line"><span class="log-time">$</span> <span class="log-tag tag-ai">JIBIKA</span> <span class="log-msg">AI in HR &amp; payroll software used by <b class="metric-hl">300+ companies</b> • ~50% less manual work</span></p>
-                            <p class="log-line"><span class="log-time">$</span> <span class="log-tag tag-stream">KARBAR</span> <span class="log-msg">ERP for Bangladesh: NBR VAT (Mushak 6.3, 6.5, 9.1), payroll &amp; TDS</span></p>
-                        </div>
-                    </div>
+                    <!-- three highlights, each with its project badge -->
+                    <ul class="hero-highlights" aria-label="Highlights from my work">
+                        <li><span class="hl-tag tag-rag">SAWAB</span> <span class="hl-msg">NGO ERP on Frappe + Next.js: <b>10 modules</b>, live demo</span></li>
+                        <li><span class="hl-tag tag-ai">JIBIKA</span> <span class="hl-msg">AI in HR &amp; payroll software used by <b>300+ companies</b> • ~50% less manual work</span></li>
+                        <li><span class="hl-tag tag-stream">KARBAR</span> <span class="hl-msg">ERP for Bangladesh: NBR VAT (Mushak 6.3, 6.5, 9.1), payroll &amp; TDS</span></li>
+                    </ul>
 
                     <div class="hero-cta-v2">
                         <div class="hero-cta-row">
-                            <a href="#projects" id="hero-cta-explore" class="btn primary-btn hero-cta-primary glow-effect hover-sound">
+                            <a href="#projects" id="hero-cta-explore" class="btn primary-btn hero-cta-primary hover-sound">
                                 <i class="fa-solid fa-layer-group"></i> See my work
                             </a>
                             <a href="https://wa.me/8801799447594?text=Hi%20Mehedi%2C%20I%27d%20like%20to%20book%20a%20call%20about%20a%20project." id="hero-cta-call" target="_blank" rel="noopener noreferrer"
@@ -324,16 +309,18 @@
         </div>
     </div>
 
-    <footer>
-        <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
-        <div class="footer-copy" style="margin-top: 12px;">
-            <a href="https://www.dmca.com/Protection/Status.aspx?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa&amp;refurl=https%3A%2F%2Fmehedi.pro.bd%2F"
-                title="DMCA.com Protection Status" target="_blank" rel="noopener" class="dmca-badge"><img
-                    src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
-                    alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
-        </div>
-        <div class="footer-egg">
-            <button type="button" class="footer-cli hover-sound" data-cli-open>Terminal</button>
+    <!-- one line: the copyright on the left, the DMCA badge and the Terminal easter egg on the right (phones: the tab bar
+         is the footer, so this row is hidden there) -->
+    <footer class="site-footer">
+        <div class="footer-row">
+            <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
+            <div class="footer-links">
+                <a href="https://www.dmca.com/Protection/Status.aspx?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa&amp;refurl=https%3A%2F%2Fmehedi.pro.bd%2F"
+                    title="DMCA.com Protection Status" target="_blank" rel="noopener" class="dmca-badge"><img
+                        src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
+                        alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
+                <button type="button" class="footer-cli hover-sound" data-cli-open><i class="fa-solid fa-terminal" aria-hidden="true"></i> Terminal</button>
+            </div>
         </div>
     </footer>
     <!-- ==========================================
@@ -436,7 +423,7 @@
     </div>
     <script src="./focus/focus.js?v=fd6cb93124" defer></script>
     <script src="./ai-orb-mascot.js?v=d987e524cd" defer></script>
-    <script src="./script~9e1709.js?v=1785345a39" defer></script>
+    <script src="./script~9e1709.js?v=9a0954a98f" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

@@ -892,23 +892,7 @@ body.nx-page #sys-monitor-dock {
   display: none !important;
 }
 
-/* Active Nav Links */
-.nav-links a.active,
-.nav-links a[aria-current="page"] {
-  color: var(--accent-1, #00f2fe) !important;
-  position: relative;
-}
-.nav-links a.active::after,
-.nav-links a[aria-current="page"]::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, #00f2fe, #4facfe);
-}
+/* the active page's link in the header is styled in style~, the same on every page */
 
 /* Unified Subpage Header Bar */
 .sub-header-bar {
@@ -1822,12 +1806,12 @@ html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-c
   font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.01em !important; text-transform: none !important; text-decoration: none !important;
   color: var(--accent-active-color, #0b1120) !important;
   background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0) 55%), var(--gradient-accent, var(--accent-1)) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 18px -6px var(--accent-glow, rgba(0,0,0,0.35)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), var(--b3-drop, 0 6px 16px -8px rgba(0,0,0,0.55)) !important;
   transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, filter .2s ease !important;
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
   transform: translateY(-2px) !important; filter: brightness(1.06) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 12px 26px -8px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), var(--b3-drop-hover, 0 10px 22px -10px rgba(0,0,0,0.6)) !important;
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) * { color: inherit !important; }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) svg { stroke: currentColor !important; }
@@ -1847,7 +1831,7 @@ html body :is(.btn.btn-secondary, .btn.secondary-btn, .nl-more):not(#_btn) { pad
 html body :is(.btn-rail-top, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) { padding: 7px 14px !important; font-size: 13px !important; }
 html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
   transform: translateY(-1px) !important; color: var(--accent-1) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 3px color-mix(in srgb, var(--accent-1) 14%, transparent), 0 8px 20px -10px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--b3-drop, 0 6px 16px -8px rgba(0,0,0,0.55)) !important;
 }
 html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .lib-cta, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):active { transform: scale(0.97) !important; }
 html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):focus-visible {
@@ -1864,7 +1848,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   }
   html body .bottom-nav:not(#_bn) a {
     position: relative; z-index: 1; height: 56px !important; min-width: 44px; gap: 4px !important; padding: 0 !important; background: transparent !important;
-    font-size: 11px !important; font-weight: 500 !important; letter-spacing: 0.01em;
+    font-size: 12px !important; font-weight: 500 !important; letter-spacing: 0.01em;   /* phone text never under 12px */
     color: color-mix(in srgb, var(--text-primary, #fff) 72%, transparent) !important; transition: color .2s ease, transform .15s ease !important;
   }
   html body .bottom-nav:not(#_bn) a svg { width: 24px !important; height: 24px !important; padding: 0 !important; background: none !important; box-sizing: content-box !important; }

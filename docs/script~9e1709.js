@@ -881,7 +881,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (cliClose) cliClose.addEventListener('click', closeCli);
 
         const cliCommands = {
-            'help': 'Available commands: help, about, skills, projects, clear, exit, vault, solarsmash, hw-scan',
+            'help': 'Available commands: help, about, skills, projects, theme, clear, exit, vault, solarsmash, hw-scan',
             'about': 'I am a Full-Stack Web Developer, AI Automation Engineer, and Digital Efficiency Architect with 4+ years of production experience building intelligent web systems, distributed microservices (NestJS, Postgres, Kafka, Redis), and autonomous LLM workflows.',
             'skills': 'Languages: PHP, JavaScript, SQL, Liquid.\nFrameworks: Tailwind, Laravel.\nTools: Git, VS Code, Cloudflare, openclaw, Antigravity, claude.',
             'projects': 'Accessing secure database... Use the GUI interface on the main portal to view VIP projects.',
@@ -934,6 +934,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                         }
                     }, 600);
 
+                } else if (val === 'theme' || val.startsWith('theme ')) {
+                    // `theme` lists the themes and marks the current one; `theme <name>` switches, like the header's menu
+                    const name = val.slice(5).trim();
+                    const line = document.createElement('div');
+                    line.style.color = '#d4d4d4';
+                    if (!name) {
+                        const cur = Object.keys(THEME_KEYS).find((n) => THEME_KEYS[n] === document.documentElement.getAttribute('data-theme'));
+                        line.textContent = 'Themes: ' + cliThemeNames().map((n) => (n === cur ? n + ' (current)' : n)).join(', ') + '. Usage: theme <name>';
+                    } else if (cliTheme(name)) {
+                        line.textContent = 'Theme set to ' + name + '.';
+                    } else {
+                        line.className = 'err';
+                        line.textContent = 'theme: unknown theme "' + name + '". Try: ' + cliThemeNames().join(', ');
+                    }
+                    cliOutput.append(line);
                 } else if (cliCommands[val]) {
                     cliOutput.innerHTML += `<div style="color:#d4d4d4;">${cliCommands[val].replace(/\n/g, '<br>')}</div>`;
                     if (val === 'vault') updateClearance(2);
@@ -2112,6 +2127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function activateGodMode() {
         playSound('success');
+        // from now on the theme menu lists God mode too
+        local.set('mehedi_godmode', '1');
+        unlockGodTheme();
         setTheme('god-mode');
         local.set('mehedi_theme', 'god-mode');
         updateClearance(2);
@@ -2122,37 +2140,113 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ==========================================
        11. THEME SWITCHER
     ========================================== */
-    const themes = ['dark', 'cyberpunk', 'light', 'mint', 'god-mode'];
-
     let savedTheme = local.get('mehedi_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
     // The new theme is painted with transitions off (html.theme-swap, style~): otherwise every element starts its own
     // colour transitions, over a thousand of them, and the click takes up to a second on a slow phone. They come back
-    // once that frame is out.
+    // once that frame is out. Every theme change (the header's menu, the terminal's `theme` command, the Konami code)
+    // comes through here.
     function setTheme(t) {
         const root = document.documentElement;
         root.classList.add('theme-swap');
         root.setAttribute('data-theme', t);
+        markTheme(t);
         requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-swap')));
     }
 
-    function cycleTheme() {
-        const current = document.documentElement.getAttribute('data-theme') || savedTheme;
-        let idx = themes.indexOf(current);
-        if (idx === -1) idx = 0;
-        do { idx = (idx + 1) % themes.length; } while (themes[idx] === 'god-mode');
-        setTheme(themes[idx]);
-        local.set('mehedi_theme', themes[idx]);
+    /* The header's theme menu, a WAI-ARIA menu button. It lists the themes by name and marks the current one; God mode
+       is listed once the Konami code has unlocked it. Enter, Space or Down opens it on the current theme, Up on the last;
+       inside, the arrows, Home and End move, a letter jumps, Enter or Space picks, and Esc closes it and hands focus back
+       to the button. Tab, or a click anywhere else, closes it. */
+    const themeBtn = document.getElementById('theme-menu-btn');
+    const themeMenu = document.getElementById('theme-menu');
+    function themeItems() {
+        return themeMenu ? [...themeMenu.querySelectorAll('[role="menuitemradio"]')].filter((b) => !b.closest('[hidden]')) : [];
+    }
+    function markTheme(t) {
+        if (themeMenu) themeMenu.querySelectorAll('[role="menuitemradio"]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeSet === t)));
+    }
+    function unlockGodTheme() {
+        const god = themeMenu && themeMenu.querySelector('[data-god]');
+        if (god) god.hidden = false;
+    }
+    if (local.get('mehedi_godmode') === '1' || savedTheme === 'god-mode') unlockGodTheme();
+    markTheme(savedTheme);
+
+    function openThemeMenu(which) {
+        themeMenu.hidden = false;
+        themeBtn.setAttribute('aria-expanded', 'true');
+        const list = themeItems();
+        const current = list.findIndex((b) => b.getAttribute('aria-checked') === 'true');
+        const i = which === 'last' ? list.length - 1 : Math.max(0, current);
+        if (list[i]) list[i].focus({ preventScroll: true });
+    }
+    function closeThemeMenu(backFocus) {
+        if (themeMenu.hidden) return;
+        themeMenu.hidden = true;
+        themeBtn.setAttribute('aria-expanded', 'false');
+        if (backFocus) themeBtn.focus({ preventScroll: true });
+    }
+    if (themeBtn && themeMenu) {
+        themeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (themeMenu.hidden) openThemeMenu(); else closeThemeMenu(false);
+        });
+        themeBtn.addEventListener('keydown', (e) => {
+            if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+            e.preventDefault();
+            openThemeMenu(e.key === 'ArrowUp' ? 'last' : null);
+        });
+        themeMenu.addEventListener('click', (e) => {
+            const item = e.target.closest('[role="menuitemradio"]');
+            if (!item) return;
+            const t = item.dataset.themeSet;
+            closeThemeMenu(true);
+            if (t !== document.documentElement.getAttribute('data-theme')) {
+                setTheme(t);
+                local.set('mehedi_theme', t);
+            }
+        });
+        themeMenu.addEventListener('keydown', (e) => {
+            const list = themeItems(), at = list.indexOf(document.activeElement);
+            let next = -1;
+            if (e.key === 'ArrowDown') next = (at + 1) % list.length;
+            else if (e.key === 'ArrowUp') next = (at - 1 + list.length) % list.length;
+            else if (e.key === 'Home') next = 0;
+            else if (e.key === 'End') next = list.length - 1;
+            else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeThemeMenu(true); return; }
+            else if (e.key === 'Tab') { closeThemeMenu(false); return; }
+            else if (e.key.length === 1 && /\S/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                const k = e.key.toLowerCase();
+                for (let n = 1; n <= list.length; n++) {
+                    const b = list[(at + n) % list.length];
+                    if (b.textContent.trim().toLowerCase().startsWith(k)) { next = (at + n) % list.length; break; }
+                }
+            }
+            if (next < 0) return;
+            e.preventDefault();
+            list[next].focus({ preventScroll: true });
+        });
+        document.addEventListener('pointerdown', (e) => {
+            if (!themeMenu.hidden && !e.target.closest('.theme-pick')) closeThemeMenu(false);
+        });
+        // focus that leaves the menu another way (a screen reader's own navigation) closes it too
+        themeMenu.addEventListener('focusout', (e) => {
+            if (e.relatedTarget && !e.relatedTarget.closest('.theme-pick')) closeThemeMenu(false);
+        });
     }
 
-    document.addEventListener('click', (e) => {
-        const tBtn = e.target.closest('#theme-toggler, .theme-btn, [data-theme-toggle]');
-        if (tBtn) {
-            e.preventDefault();
-            cycleTheme();
-        }
-    });
+    // the terminal's `theme` command: the names the menu shows (red is the cyberpunk theme in code)
+    const THEME_KEYS = { dark: 'dark', red: 'cyberpunk', light: 'light', mint: 'mint', 'god-mode': 'god-mode' };
+    const godUnlocked = () => local.get('mehedi_godmode') === '1' || document.documentElement.getAttribute('data-theme') === 'god-mode';
+    const cliThemeNames = () => Object.keys(THEME_KEYS).filter((n) => n !== 'god-mode' || godUnlocked());
+    function cliTheme(name) {
+        if (!cliThemeNames().includes(name)) return false;
+        setTheme(THEME_KEYS[name]);
+        local.set('mehedi_theme', THEME_KEYS[name]);
+        return true;
+    }
 
     /* The hero's dot network. The hero-net script in the head drew its first still frame; here the dots drift, shy
        away from the mouse and rest while the hero is scrolled away. Phones draw every other frame (~30 fps) and move
@@ -3479,41 +3573,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         
         insightsObserver.observe(insightsSection);
     }
-
-    // ==========================================
-    // 24b. PHONES: THE CHAT ORB STEPS ASIDE WHILE IT WOULD COVER THE HERO BUTTONS
-    // ==========================================
-    (function () {
-        const orb = document.getElementById('ai-chat-widget');
-        const targets = [...document.querySelectorAll('.hero-cta-v2 a, .hero-cta-v2 button')];
-        if (!orb || !targets.length) return;
-        const phone = window.matchMedia('(max-width: 767px)');
-        let raf = 0;
-        // instead of hiding, the orb lifts just above the hero buttons while they would sit under it;
-        // it is measured only when the page is still (never mid-scroll), so the orb never bobs while scrolling
-        const check = () => {
-            raf = 0;
-            orb.classList.remove('ai-dodge');
-            if (!phone.matches || !orb.classList.contains('chat-collapsed') || window.scrollY > 400) { orb.style.removeProperty('--ai-lift'); return; }
-            const cur = parseFloat(orb.style.getPropertyValue('--ai-lift')) || 0;
-            const o = orb.getBoundingClientRect(), top = o.top + cur, bottom = o.bottom + cur;   // where it sits without the lift
-            let lift = 0;
-            targets.forEach((t) => {
-                const r = t.getBoundingClientRect();
-                if (!(o.left > r.right || o.right < r.left || top > r.bottom || bottom < r.top)) lift = Math.max(lift, bottom - r.top + 10);
-            });
-            if (lift) orb.style.setProperty('--ai-lift', Math.min(lift, 140) + 'px'); else orb.style.removeProperty('--ai-lift');
-        };
-        const queue = () => { if (!raf) raf = requestAnimationFrame(check); };
-        let settle = 0;
-        const afterScroll = () => { clearTimeout(settle); settle = setTimeout(queue, 150); };
-        if ('onscrollend' in window) addEventListener('scrollend', queue, { passive: true });
-        else addEventListener('scroll', afterScroll, { passive: true });
-        addEventListener('resize', queue);
-        setTimeout(check, 400);
-        // the greeting bubble points at the orb, so the orb comes back while it is open and re-checks when it closes
-        new MutationObserver(queue).observe(document.body, { childList: true });
-    })();
 
     // ==========================================
     // 26. MOBILE APP CAROUSEL SLIDERS & TABS (ARCH, ETHICAL & DEEP TECH)

@@ -50,7 +50,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=7b5870dc1e">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=beeec316e9">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -61,17 +61,14 @@
 "sameAs":["https://github.com/MehediHasan228"],"email":"mehedihasan228.cse@gmail.com",
 "address":{"@type":"PostalAddress","addressLocality":"Dhaka","addressCountry":"BD"}}
 </script>
-<link rel="stylesheet" href="../nx/nx.scoped.css?v=3b5efc95ab">
+<link rel="stylesheet" href="../nx/nx.scoped.css?v=0d7ec35b5b">
 </head>
 
 <body class="subpage nx-page" data-page="contact">
+    <!-- the one floating button, bottom left on desktop (theme and sound live in the header) -->
     <div class="ui-controls">
         <a href="https://wa.me/8801799447594" target="_blank" rel="noopener noreferrer" class="control-btn whatsapp-btn"
             aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
-        <button type="button" id="sound-toggler" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
-                class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
-        <button type="button" id="theme-toggler" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
-                class="fa-solid fa-palette" aria-hidden="true"></i></button>
     </div>
 
     <nav aria-label="Main navigation">
@@ -92,8 +89,23 @@
             <li><a href="../library/" class="hover-sound nav-link-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg> <span>Library</span></a></li>
         </ul>
 
-        <div class="mobile-header-right">
+        <!-- the header's controls: Contact and the menu button on phones; sound on desktop (on phones it is in the menu);
+             the theme menu everywhere. Theme changes go through setTheme() in script~ -->
+        <div class="mobile-header-right nav-tools">
             <a href="../contact/" class="mobile-contact-btn hover-sound" aria-label="Contact"><i class="fa-regular fa-envelope" aria-hidden="true"></i><span>Contact</span></a>
+            <button type="button" id="sound-toggler" class="hdr-btn sound-btn hover-sound" aria-label="Sound" aria-pressed="false" title="Sound"><i
+                    class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
+            <div class="theme-pick">
+                <button type="button" id="theme-menu-btn" class="hdr-btn hover-sound" aria-label="Theme" title="Theme" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu"><i
+                        class="fa-solid fa-palette" aria-hidden="true"></i></button>
+                <ul id="theme-menu" class="theme-menu" role="menu" aria-label="Theme" hidden>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="true" tabindex="-1" data-theme-set="dark"><span class="tm-swatch" aria-hidden="true"></span>Dark<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="cyberpunk"><span class="tm-swatch" aria-hidden="true"></span>Red<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="light"><span class="tm-swatch" aria-hidden="true"></span>Light<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none"><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="mint"><span class="tm-swatch" aria-hidden="true"></span>Mint<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                    <li role="none" data-god hidden><button type="button" role="menuitemradio" aria-checked="false" tabindex="-1" data-theme-set="god-mode"><span class="tm-swatch" aria-hidden="true"></span>God mode<i class="fa-solid fa-check tm-check" aria-hidden="true"></i></button></li>
+                </ul>
+            </div>
             <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle hover-sound" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
                 <span class="mm-bars" aria-hidden="true"><i></i><i></i><i></i></span>
             </button>
@@ -122,8 +134,6 @@
                 aria-label="Message on WhatsApp" title="Message on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
             <button type="button" class="control-btn sound-btn" aria-label="Sound" aria-pressed="false" title="Sound"><i
                     class="fa-solid fa-volume-xmark" aria-hidden="true"></i></button>
-            <button type="button" class="control-btn theme-btn" aria-label="Change theme" title="Change theme"><i
-                    class="fa-solid fa-palette" aria-hidden="true"></i></button>
         </div>
         <p class="drawer-copy">© 2026 Mehedi Hasan</p>
     </div>
@@ -280,16 +290,18 @@
         </div>
     </div>
 
-    <footer>
-        <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
-        <div class="footer-copy" style="margin-top: 12px;">
-            <a href="https://www.dmca.com/Protection/Status.aspx?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa&amp;refurl=https%3A%2F%2Fmehedi.pro.bd%2F"
-                title="DMCA.com Protection Status" target="_blank" rel="noopener" class="dmca-badge"><img
-                    src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
-                    alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
-        </div>
-        <div class="footer-egg">
-            <button type="button" class="footer-cli hover-sound" data-cli-open>Terminal</button>
+    <!-- one line: the copyright on the left, the DMCA badge and the Terminal easter egg on the right (phones: the tab bar
+         is the footer, so this row is hidden there) -->
+    <footer class="site-footer">
+        <div class="footer-row">
+            <p class="footer-copy">© 2026 Engineered by Mehedi Hasan. All Rights Reserved.</p>
+            <div class="footer-links">
+                <a href="https://www.dmca.com/Protection/Status.aspx?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa&amp;refurl=https%3A%2F%2Fmehedi.pro.bd%2F"
+                    title="DMCA.com Protection Status" target="_blank" rel="noopener" class="dmca-badge"><img
+                        src="https://images.dmca.com/Badges/dmca-badge-w100-5x1-09.png?ID=19354eb1-4488-4a4c-8546-2b968bcb1caa"
+                        alt="DMCA.com Protection Status" width="100" height="20" loading="lazy"></a>
+                <button type="button" class="footer-cli hover-sound" data-cli-open><i class="fa-solid fa-terminal" aria-hidden="true"></i> Terminal</button>
+            </div>
         </div>
     </footer>
     <!-- ==========================================
@@ -392,7 +404,7 @@
     </div>
     <script src="../focus/focus-boot.js?v=0d8852d1a8" defer></script>
     <script src="../ai-orb-mascot.js?v=d987e524cd" defer></script>
-    <script src="../script~9e1709.js?v=1785345a39" defer></script>
+    <script src="../script~9e1709.js?v=9a0954a98f" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

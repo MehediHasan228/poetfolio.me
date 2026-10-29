@@ -332,10 +332,6 @@ html {
     -webkit-text-fill-color: transparent;
 }
 
-.typing-text {
-    font-family: 'Fira Code', monospace;
-    color: var(--accent-1);
-}
 
 @keyframes blink {
 
@@ -349,20 +345,6 @@ html {
     }
 }
 
-.whatsapp-btn {
-    background: #25d366 !important;
-    color: white !important;
-    border-color: #25d366 !important;
-}
-
-.whatsapp-btn:hover {
-    box-shadow: 0 0 20px #25d366 !important;
-}
-
-.decrypt-text {
-    font-family: 'Fira Code', monospace;
-    transition: color 0.3s;
-}
 
 h1 {
     font-size: 4rem;
@@ -551,56 +533,77 @@ section {
     padding-right: 24px;
 }
 
+/* the portrait: a simple rounded frame on the card surface, lifted by a plain shadow (no glow, no corner marks) */
 .hero-image-wrapper {
     position: relative;
     width: 100%;
     max-width: 410px;
     margin: 0 auto;
-    padding: 16px;
-    border-radius: 40px;
-    background: rgba(var(--accent-1-rgb, 0, 242, 254), 0.04);
-    border: 1.5px dashed var(--accent-1);
-    box-shadow: 0 0 35px rgba(var(--accent-1-rgb, 0, 242, 254), 0.22), 0 20px 50px rgba(0, 0, 0, 0.6);
+    padding: 12px;
+    border-radius: 36px;
+    background: var(--pf-surface);
+    border: 1px solid var(--pf-line-strong);
+    box-shadow: var(--pf-lift);
     animation: floatProfile 6s ease-in-out infinite;
     perspective: 1200px;
     isolation: isolate;
     z-index: 10;
-    transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
 }
 
 .hero-image-wrapper:hover {
     animation-play-state: paused;
-    border-color: var(--accent-1);
-    box-shadow: 0 0 45px rgba(var(--accent-1-rgb, 0, 242, 254), 0.45), 0 25px 60px rgba(0, 0, 0, 0.7);
-    background: rgba(var(--accent-1-rgb, 0, 242, 254), 0.07);
 }
 
-/* Tactical Corner Targeting Reticles on the Cyber Grid Frame */
-.hero-image-wrapper::before,
-.hero-image-wrapper::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    pointer-events: none;
-    z-index: 25;
-    transition: all 0.3s ease;
+/* the hero's words: "Hi, I'm" quiet in the code face, the name in one solid colour, the role in the accent */
+.hero-hi {
+    font-family: 'Fira Code', monospace;
+    color: var(--text-secondary);
 }
-
-.hero-image-wrapper::before {
-    top: -2px;
-    left: -2px;
-    border-top: 3px solid var(--accent-1);
-    border-left: 3px solid var(--accent-1);
-    border-top-left-radius: 10px;
+.hero-hi .hero-name {
+    display: inline-block;
+    font-weight: 700;
+    color: var(--text-primary);
 }
+.hero-role {
+    font-family: 'Fira Code', monospace;
+    color: var(--accent-ink);
+}
+/* the accent as text or icon colour: mint's brand green is too light for that, so it takes its deep green */
+:root { --accent-ink: var(--accent-1); }
+:root[data-theme="mint"] { --accent-ink: #047857; }
 
-.hero-image-wrapper::after {
-    bottom: -2px;
-    right: -2px;
-    border-bottom: 3px solid var(--accent-1);
-    border-right: 3px solid var(--accent-1);
-    border-bottom-right-radius: 10px;
+/* the three highlights: a plain list, each line led by its project's badge */
+.hero-highlights {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 1.5rem 0 1.75rem;
+    padding: 14px 16px;
+    border: 1px solid var(--pf-line);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--pf-surface) 84%, transparent);
+    text-align: left;
+}
+.hero-highlights li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--pf-ink-2);
+}
+.hero-highlights b { font-weight: 600; color: var(--pf-ink); }
+.hl-msg { text-wrap: pretty; }
+.hl-tag {
+    flex: 0 0 4.6rem;
+    padding: 1px 0;
+    border-radius: 6px;
+    text-align: center;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
 }
 
 /* --- TABLET LANDSCAPE & COMPACT DESKTOP HERO HARMONIZATION --- */
@@ -657,11 +660,6 @@ section {
 
 .cinematic-depth-card:active {
     cursor: grabbing;
-}
-
-.hero-image-wrapper:hover .cinematic-depth-card {
-    border-color: rgba(var(--accent-1-rgb, 0, 242, 254), 0.35);
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), 0 0 16px rgba(var(--accent-1-rgb, 0, 242, 254), 0.2);
 }
 
 .cinematic-layer {
@@ -762,168 +760,19 @@ section {
 }
 
 /* --- TERMINAL FEED & FILTERS --- */
-.terminal-feed {
-    background: rgba(10, 15, 29, 0.85);
-    border: 1px solid rgba(0, 242, 254, 0.3);
-    border-radius: 12px;
-    padding: 0.85rem 1rem;
-    margin: 1.5rem 0;
-    font-family: 'Fira Code', monospace;
-    font-size: 0.8rem;
-    height: 155px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 242, 254, 0.05);
-    backdrop-filter: blur(14px);
-}
 
-.terminal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.55rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding-bottom: 0.45rem;
-}
-
-.terminal-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.terminal-window-dots {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-left: 2px;
-}
-
-.terminal-window-dots .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    cursor: pointer;
-    transition: opacity 0.15s ease;
-}
 
 /* Authentic macOS Traffic Lights (Red, Yellow, Green) with border */
-.dot-red {
-    background: #ff5f56;
-    border: 0.5px solid #e0443e;
-}
 
-.dot-yellow {
-    background: #ffbd2e;
-    border: 0.5px solid #dea123;
-}
-
-.dot-green {
-    background: #27c93f;
-    border: 0.5px solid #1aab29;
-}
 
 .dot:hover {
     opacity: 0.82;
 }
 
-.terminal-title {
-    font-size: 0.74rem;
-    font-family: 'Fira Code', monospace;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 2px 9px;
-    border-radius: 6px;
-    letter-spacing: 0.2px;
-    user-select: none;
-}
-
-.term-prompt {
-    color: var(--accent-1);
-    font-weight: 700;
-}
-
-.term-uri {
-    display: inline-flex;
-    align-items: center;
-}
-
-.term-protocol {
-    color: var(--accent-1);
-    font-weight: 700;
-    opacity: 0.95;
-}
-
-.term-host {
-    color: #f1f5f9;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-}
-
-.terminal-live-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 2px 7px;
-    border-radius: 20px;
-}
-
-.terminal-body {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    overflow-y: hidden;
-}
-
-.log-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-    line-height: 1.45;
-    font-size: 0.76rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.3s ease;
-}
-
-.log-time {
-    color: #64748b;
-    font-size: 0.7rem;
-    flex-shrink: 0;
-}
-
-.log-tag {
-    font-size: 0.62rem;
-    font-weight: 700;
-    padding: 1px 5px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
-}
 
 .tag-ai { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
 .tag-stream { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
 .tag-rag { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-
-.log-msg {
-    color: #e2e8f0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.log-msg .metric-hl {
-    color: var(--accent-1);
-    font-weight: 700;
-}
 
 
 .ai-dropzone {
@@ -1853,7 +1702,7 @@ section {
     z-index: 10000;
     overflow: hidden;
     backdrop-filter: blur(24px);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55), 0 0 24px rgba(0, 242, 254, 0.12);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
     transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 border-radius 0.35s ease,
@@ -2667,7 +2516,6 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     align-self: flex-end;
     border-radius: 16px 16px 4px 16px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(var(--accent-1-rgb, 0, 242, 254), 0.25);
 }
 
 /* Smart Question Buttons (Inside Messages) */
@@ -2756,7 +2604,7 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
 
     /* Hero Text Scaling */
     
-    .prefix-text, .typing-text {
+    .hero-role-lead, .hero-role {
         font-size: 1rem !important;
     }
 
@@ -3076,7 +2924,7 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     font-family: 'Fira Code', monospace;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 50px rgba(0, 242, 254, 0.2);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
 }
 
 .cli-header {
@@ -3171,12 +3019,25 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     transform: translateY(0);
 }
 
+/* the footer: one row under a hairline, the copyright on the left, the DMCA badge and the Terminal button on the right */
 footer {
-    text-align: center;
-    padding: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
+    padding: 28px 5%;
+    border-top: 1px solid var(--pf-line);
 }
+.footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.footer-row .footer-copy { margin: 0; font-size: 13px; line-height: 1.5; color: var(--pf-ink-3); }
+.footer-links { display: flex; align-items: center; gap: 16px; }
+.footer-links .dmca-badge { display: inline-flex; }
+.footer-links .dmca-badge img { display: block; }
 
 /* --- AI SYSTEM LEADERBOARD WIDGET --- */
 #leaderboard-widget {
@@ -4063,9 +3924,6 @@ footer {
         margin: 0.35rem 0 0.85rem !important;
     }
 
-    .decrypt-text {
-        word-break: break-word;
-    }
 
     /* ========================================================
        SMART MOBILE HERO BUTTONS (Ergonomic, Pushed Down, Elegant)
@@ -4080,130 +3938,10 @@ footer {
     /* ========================================================
        SMART TERMINAL FEED (Responsive Header, Aligned STREAMING)
        ======================================================== */
-    .terminal-feed {
-        font-size: 0.7rem !important;
-        height: auto !important;
-        min-height: 95px !important;
-        max-height: 120px !important;
-        margin: 1.2rem 0 !important;
-        padding: 0.55rem 0.75rem !important;
-        overflow: hidden !important;
-    }
 
-    .terminal-header {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        flex-wrap: nowrap !important;
-        gap: 8px !important;
-        min-height: 28px !important;
-        margin-bottom: 0.4rem !important;
-        padding-bottom: 0.35rem !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-    }
-
-    :is([data-theme="light"], [data-theme="mint"]) .terminal-header {
-        margin: -0.55rem -0.75rem 0.4rem -0.75rem !important;
-        padding: 0.45rem 0.75rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-        border-radius: 11px 11px 0 0 !important;
-    }
-
-    .terminal-header-left {
-        display: flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        min-width: 0 !important;
-        flex: 1 1 auto !important;
-        overflow: hidden !important;
-    }
-
-    .terminal-window-dots {
-        display: flex !important;
-        align-items: center !important;
-        gap: 4px !important;
-        flex-shrink: 0 !important;
-    }
-
-    .terminal-window-dots .dot {
-        width: 8px !important;
-        height: 8px !important;
-        flex-shrink: 0 !important;
-    }
-
-    .terminal-title {
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 4px !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-        overflow: hidden !important;
-        font-size: 0.62rem !important;
-        line-height: 1.2 !important;
-        padding: 2px 6px !important;
-        border-radius: 5px !important;
-    }
-
-    .term-prompt {
-        flex-shrink: 0 !important;
-    }
-
-    .term-uri {
-        display: inline-flex !important;
-        align-items: center !important;
-        min-width: 0 !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-    }
-
-    .term-protocol {
-        flex-shrink: 0 !important;
-    }
-
-    .term-host {
-        flex: 1 1 auto !important;
-        min-width: 0 !important;
-        max-width: clamp(70px, 24vw, 110px) !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-    }
 
     /* Fixed, Never-Misaligned STREAMING Live Badge */
-    .terminal-live-badge {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        align-self: center !important;
-        flex-shrink: 0 !important;
-        gap: 5px !important;
-        padding: 2px 7px !important;
-        border-radius: 20px !important;
-        margin-left: auto !important;
-        line-height: 1 !important;
-        white-space: nowrap !important;
-        height: 20px !important;
-        box-sizing: border-box !important;
-    }
 
-    .log-line {
-        font-size: 0.66rem !important;
-        gap: 6px !important;
-        line-height: 1.35 !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    .log-msg {
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-    }
 
     /* Tablet Navigation: keep row layout and adjust spacing */
     nav {
@@ -5161,7 +4899,6 @@ footer {
     h1 { font-size: clamp(1.65rem, 6.2vw, 2.2rem) !important; line-height: 1.2 !important; word-break: break-word; }
     h2 { font-size: clamp(0.95rem, 4vw, 1.25rem) !important; margin: 0.35rem 0 0.85rem !important; }
 
-    .decrypt-text { word-break: break-word; }
 
     section { padding: 2.2rem 5% 1.8rem; }
 
@@ -5382,14 +5119,6 @@ footer {
 
 /* Terminal Widget */
 
-.terminal-header {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
 
 .dot {
     width: 10px;
@@ -5398,20 +5127,6 @@ footer {
 }
 
 .dot.green { background: #22c55e; }
-
-.terminal-title {
-    font-size: 0.65rem;
-    color: #888;
-    font-family: 'Fira Code', monospace;
-}
-
-.terminal-body {
-    padding: 20px;
-    min-height: 120px;
-    font-size: 0.85rem;
-    color: #d1d5db;
-    line-height: 1.6;
-}
 
 
 /* Neural Status */
@@ -6161,41 +5876,6 @@ footer {
 }
 
 /* --- 6. TERMINAL FEED / LIVE SYSTEM LOGS (Light Theme) --- */
-:is([data-theme="light"], [data-theme="mint"]) .terminal-feed {
-    background: rgba(255, 255, 255, 0.96) !important;
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
-    backdrop-filter: blur(14px) !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .terminal-header {
-    background: #f8fafc !important;
-    border-bottom: 1px solid #e2e8f0 !important;
-    margin: -0.85rem -1rem 0.6rem -1rem !important;
-    padding: 0.6rem 1rem !important;
-    border-radius: 11px 11px 0 0 !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .terminal-title {
-    color: #0f172a !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .terminal-live-badge {
-    background: #eff6ff !important;
-    border: 1px solid #bfdbfe !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .log-msg {
-    color: #0f172a !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .log-time {
-    color: var(--pf-ink-3) !important;
-}
-
-:is([data-theme="light"], [data-theme="mint"]) .log-msg .metric-hl {
-    color: #2563eb !important;
-}
 
 
 :is([data-theme="light"], [data-theme="mint"]) .tag-ai {
@@ -6517,49 +6197,12 @@ footer {
 
 /* --- A. TERMINAL TITLE THEME COLORS --- */
 /* Default / Dark Theme */
-.term-prompt {
-    color: var(--accent-1);
-    font-weight: 700;
-}
-.term-protocol {
-    color: var(--accent-1);
-    font-weight: 700;
-    opacity: 0.95;
-}
-.term-host {
-    color: #f1f5f9;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-}
 
 /* Light Theme */
-:is([data-theme="light"], [data-theme="mint"]) .term-prompt {
-    color: #2563eb !important;
-}
-:is([data-theme="light"], [data-theme="mint"]) .term-protocol {
-    color: #2563eb !important;
-}
-:is([data-theme="light"], [data-theme="mint"]) .term-host {
-    color: #0f172a !important;
-}
 
 /* Cyberpunk Theme */
-[data-theme="cyberpunk"] .term-prompt {
-    color: #f43f5e !important;
-}
-[data-theme="cyberpunk"] .term-protocol {
-    color: #f43f5e !important;
-}
-[data-theme="cyberpunk"] .term-host {
-    color: #fbbf24 !important;
-}
 
 /* God-Mode Theme */
-[data-theme="god-mode"] .term-prompt,
-[data-theme="god-mode"] .term-protocol,
-[data-theme="god-mode"] .term-host {
-    color: #00ff00 !important;
-}
 
 /* --- B. SYS_MONITOR MULTI-THEME ENHANCEMENTS --- */
 /* Light Theme */
@@ -6822,7 +6465,7 @@ footer {
 [data-theme="cyberpunk"] #ai-chat-widget {
     background: rgba(20, 0, 10, 0.95) !important;
     border: 1px solid rgba(244, 63, 94, 0.5) !important;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7), 0 0 20px rgba(244, 63, 94, 0.2) !important;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7) !important;
 }
 
 [data-theme="cyberpunk"] .chat-header {
@@ -7638,76 +7281,18 @@ footer {
 }
 
 /* Terminal badge: borderless dual-strand ECG monitor sweep (theme colours) */
-.terminal-live-badge.is-pulse {
-    gap: 0 !important;
-    padding: 0 2px !important;
-    height: auto !important;
-    background: none !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    --pulse-a: var(--accent-1);
-    --pulse-b: var(--accent-3);
-}
 
-.term-pulse {
-    display: block;
-    width: 64px;
-    height: 18px;
-    flex-shrink: 0;
-    overflow: visible;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-}
-
-.term-pulse path {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.term-pulse-a { stroke: var(--pulse-a); }
-.term-pulse-b { stroke: var(--pulse-b); }
 
 /* faint resting trace, like the phosphor grid of a monitor */
-.term-pulse-base.term-pulse-a { stroke-width: 1.2; opacity: 0.22; }
-.term-pulse-base.term-pulse-b { stroke-width: 0.8; opacity: 0.16; }
 
 /* bright beam that sweeps along the trace */
-.term-pulse-beam {
-    stroke-dasharray: 26 74;
-    animation: termPulseSweep 2.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-}
 
-.term-pulse-beam.term-pulse-a {
-    stroke-width: 1.9;
-    filter: drop-shadow(0 0 2.5px var(--pulse-a)) drop-shadow(0 0 5px var(--pulse-a));
-}
 
-.term-pulse-beam.term-pulse-b {
-    stroke-width: 1.05;
-    animation-delay: -0.14s;
-    filter: drop-shadow(0 0 2px var(--pulse-b));
-}
-
-@keyframes termPulseSweep {
-    0%   { stroke-dashoffset: 0;    opacity: 0.4; }
-    20%  { opacity: 1; }
-    80%  { opacity: 1; }
-    100% { stroke-dashoffset: -100; opacity: 0.4; }
-}
 
 /* Cyberpunk: rose + gold (theme gradient pair) instead of two pinks */
-[data-theme="cyberpunk"] .terminal-live-badge.is-pulse { --pulse-b: var(--accent-2); }
 
 /* Light theme: royal blue + cyan, softer glow on white */
-:is([data-theme="light"], [data-theme="mint"]) .terminal-live-badge.is-pulse { --pulse-b: #06b6d4; }
-:is([data-theme="light"], [data-theme="mint"]) .term-pulse-base.term-pulse-a { opacity: 0.18; }
-:is([data-theme="light"], [data-theme="mint"]) .term-pulse-beam.term-pulse-a { filter: drop-shadow(0 0 1.5px rgba(37, 99, 235, 0.55)); }
-:is([data-theme="light"], [data-theme="mint"]) .term-pulse-beam.term-pulse-b { filter: none; }
 
-@media (prefers-reduced-motion: reduce) {
-    .term-pulse-beam { animation: none; stroke-dasharray: none; }
-}
 
 @media (max-width: 768px) {
     .hero-cta-v2 {
@@ -7922,7 +7507,7 @@ html #ai-chat-widget .user-msg {
     color: var(--chat-user-fg);
     font-weight: 600; font-size: 0.82rem;
     border-radius: 16px 4px 16px 16px;
-    box-shadow: 0 6px 16px -6px rgba(var(--accent-1-rgb), 0.55);
+    box-shadow: var(--b3-drop);
     animation: chatUserIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @keyframes chatUserIn { from { opacity: 0; transform: translate(10px, 6px) scale(0.97); } to { opacity: 1; transform: none; } }
@@ -8043,16 +7628,6 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
 
 [data-theme="mint"] .arch-matrix-cat-icon {
     box-shadow: 0 0 12px rgba(16, 185, 129, 0.15) !important;
-}
-
-
-[data-theme="mint"] .terminal-feed {
-    border-color: #d1fae5 !important;
-    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03) !important;
-}
-
-[data-theme="mint"] .log-msg .metric-hl {
-    color: #059669 !important;
 }
 
 
@@ -8196,141 +7771,36 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     pointer-events: auto !important;
 }
 
+/* The round control buttons (the floating WhatsApp button; WhatsApp and sound in the phone menu): the card surface in a
+   hairline ring, the accent for the icon, one recipe for every theme and no glow. WhatsApp keeps its green. */
 .control-btn {
-    background: var(--card-bg);
-    border: 1px solid var(--accent-1);
-    color: var(--accent-1);
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    font-size: 1.15rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.15rem;
     text-decoration: none;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    color: var(--accent-ink);
+    background: var(--pf-surface);
+    border: 1px solid var(--pf-line-strong);
+    box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.55);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, color 0.2s ease;
 }
-
-.control-btn:hover {
-    transform: scale(1.1);
-    background: var(--accent-1);
-    color: var(--bg-color);
-    box-shadow: 0 6px 20px var(--accent-glow);
-}
-
-/* Control buttons theme-specific contrast & visibility */
-[data-theme="light"] .control-btn {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid rgba(37, 99, 235, 0.35) !important;
-    color: #2563eb !important;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12), 0 1px 3px rgba(37, 99, 235, 0.15) !important;
-}
-[data-theme="light"] .control-btn:hover {
-    background: #2563eb !important;
-    color: #ffffff !important;
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35) !important;
-}
-[data-theme="light"] .control-btn.whatsapp-btn {
-    color: #16a34a !important;
-    border-color: rgba(22, 163, 74, 0.35) !important;
-}
-[data-theme="light"] .control-btn.whatsapp-btn:hover {
-    background: #16a34a !important;
-    color: #ffffff !important;
-}
-
-[data-theme="mint"] .control-btn {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid rgba(16, 185, 129, 0.4) !important;
-    color: #10b981 !important;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(16, 185, 129, 0.2) !important;
-}
-[data-theme="mint"] .control-btn:hover {
-    background: #10b981 !important;
-    color: #ffffff !important;
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35) !important;
-}
-[data-theme="mint"] .control-btn.whatsapp-btn {
-    color: #10b981 !important;
-    border-color: rgba(16, 185, 129, 0.4) !important;
-}
-[data-theme="mint"] .control-btn.whatsapp-btn:hover {
-    background: #10b981 !important;
-    color: #ffffff !important;
-}
-
-[data-theme="dark"] .control-btn,
-:root:not([data-theme]) .control-btn {
-    background: rgba(15, 23, 42, 0.88) !important;
-    border: 1px solid rgba(0, 242, 254, 0.4) !important;
-    color: #00f2fe !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 242, 254, 0.2) !important;
-}
-[data-theme="dark"] .control-btn:hover,
-:root:not([data-theme]) .control-btn:hover {
-    background: #00f2fe !important;
-    color: #0b1120 !important;
-    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.6) !important;
-}
-[data-theme="dark"] .control-btn.whatsapp-btn,
-:root:not([data-theme]) .control-btn.whatsapp-btn {
-    color: #22c55e !important;
-    border-color: rgba(34, 197, 94, 0.45) !important;
-}
-[data-theme="dark"] .control-btn.whatsapp-btn:hover,
-:root:not([data-theme]) .control-btn.whatsapp-btn:hover {
-    background: #22c55e !important;
-    color: #0b1120 !important;
-}
-
-[data-theme="cyberpunk"] .control-btn {
-    background: rgba(24, 4, 16, 0.92) !important;
-    border: 1px solid rgba(244, 63, 94, 0.5) !important;
-    color: #f43f5e !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(244, 63, 94, 0.3) !important;
-}
-[data-theme="cyberpunk"] .control-btn:hover {
-    background: #f43f5e !important;
-    color: #ffffff !important;
-    box-shadow: 0 6px 20px rgba(244, 63, 94, 0.7) !important;
-}
-[data-theme="cyberpunk"] .control-btn.whatsapp-btn {
-    color: #22c55e !important;
-    border-color: rgba(34, 197, 94, 0.5) !important;
-}
-[data-theme="cyberpunk"] .control-btn.whatsapp-btn:hover {
-    background: #22c55e !important;
-    color: #09090b !important;
-}
-
-[data-theme="god-mode"] .control-btn {
-    background: rgba(0, 20, 0, 0.92) !important;
-    border: 1px solid rgba(0, 255, 0, 0.5) !important;
-    color: #00ff00 !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 255, 0, 0.3) !important;
-}
-[data-theme="god-mode"] .control-btn:hover {
-    background: #00ff00 !important;
-    color: #000000 !important;
-    box-shadow: 0 6px 20px rgba(0, 255, 0, 0.7) !important;
-}
-[data-theme="god-mode"] .control-btn.whatsapp-btn {
-    color: #00ff00 !important;
-    border-color: rgba(0, 255, 0, 0.5) !important;
-}
-[data-theme="god-mode"] .control-btn.whatsapp-btn:hover {
-    background: #00ff00 !important;
-    color: #000000 !important;
-}
+.control-btn:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent-ink) 55%, transparent); }
+.control-btn:active { transform: translateY(1px); }
+.control-btn[aria-pressed="true"] { background: color-mix(in srgb, var(--accent-ink) 14%, var(--pf-surface)); border-color: color-mix(in srgb, var(--accent-ink) 45%, transparent); }
+.control-btn.whatsapp-btn { color: #22c55e; }
+.control-btn.whatsapp-btn:hover { border-color: rgba(34, 197, 94, 0.55); }
+:root:is([data-theme="light"], [data-theme="mint"]) .control-btn { box-shadow: 0 6px 16px -8px rgba(15, 23, 42, 0.25); }
+:root:is([data-theme="light"], [data-theme="mint"]) .control-btn.whatsapp-btn { color: #15803d; }
+@media (prefers-reduced-motion: reduce) { .control-btn:is(:hover, :active) { transform: none; } }
 
 /* ========================================================
    MOBILE MENU DRAWER & DRAWER CONTROLS
    ======================================================== */
-.mobile-header-right,
 .mobile-menu-drawer,
 .mobile-menu-close,
 .mobile-menu-backdrop,
@@ -8347,9 +7817,9 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     .mobile-menu-close,
     #mobile-menu-toggle,
     .mobile-menu-toggle,
-    .mobile-header-right,
+    .mobile-contact-btn,
     .drawer-controls {
-        display: none !important; 
+        display: none !important;
     }
     nav .nav-links a.nav-link-item svg {
         display: none !important;
@@ -8633,8 +8103,8 @@ html[data-theme="cyberpunk"] #ai-chat-widget .bot-msg strong { color: #fcd34d; }
     }
 
     .drawer-controls .control-btn {
-        width: 42px !important;
-        height: 42px !important;
+        width: 44px !important;
+        height: 44px !important;
         font-size: 1.1rem !important;
         flex-shrink: 0 !important;
     }
@@ -8682,25 +8152,29 @@ html :is(.dash-fp-pick, .fx-search, .fx-sleep, .cli-container) :is(input, select
     }
 }
 
-/* the footer's Terminal button opens the CLI easter egg; it reads like the footer's small print */
-.footer-egg { margin-top: 20px; }
+/* the footer's Terminal button opens the CLI easter egg: a small outlined chip in the code face */
 .footer-cli {
-    padding: 2px 6px;
-    border: 0;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--pf-line-strong);
+    border-radius: 999px;
     background: none;
-    font: inherit;
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    color: var(--text-secondary);
+    font-family: 'Fira Code', monospace;
+    font-size: 12.5px;
+    color: var(--pf-ink-3);
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
-.footer-cli:hover, .footer-cli:focus-visible { color: var(--accent-1); }
+.footer-cli i { font-size: 11px; }
+.footer-cli:hover { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent-ink) 50%, transparent); }
 
-/* phones: the bottom nav is the footer, so the copyright line and the Terminal button are hidden */
+/* phones: the tab bar is the footer, so the row is hidden (the footer stays as the space above the bar) */
 @media (max-width: 767px) {
-    footer .footer-copy, footer .footer-egg { display: none; }
+    footer .footer-row { display: none; }
+    footer { padding: 0 0 calc(64px + env(safe-area-inset-bottom)); border-top: 0; }
 }
 
 /* menu divider before Library and AI Insights: a line in the mobile drawer, invisible in the desktop bar */
@@ -8739,7 +8213,7 @@ html :is(.dash-fp-pick, .fx-search, .fx-sleep, .cli-container) :is(input, select
 
     /* footer */
     #mobile-menu-drawer .drawer-controls { margin-top: auto !important; justify-content: flex-start !important; gap: 10px !important; }
-    #mobile-menu-drawer .drawer-copy { margin: 12px 4px 0; font-size: 11.5px; opacity: 0.45; }
+    #mobile-menu-drawer .drawer-copy { margin: 12px 4px 0; font-size: 12px; color: var(--pf-ink-3); }
 }
 @media (min-width: 1025px) { #mobile-menu-drawer .drawer-brand, #mobile-menu-drawer .drawer-copy { display: none; } }
 
@@ -8750,16 +8224,16 @@ html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn
   font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.01em !important; text-transform: none !important; text-decoration: none !important;
   color: var(--accent-active-color, #0b1120) !important;
   background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0) 55%), var(--gradient-accent, var(--accent-1)) !important;
-  box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 6px 18px -6px var(--accent-glow, rgba(0,0,0,0.35)) !important;
+  box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), var(--b3-drop) !important;
   transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, filter .2s ease !important;
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
   transform: translateY(-2px) !important; filter: brightness(1.06) !important;
-  box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 12px 26px -8px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+  box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), var(--b3-drop-hover) !important;
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):active {
   transform: translateY(1px) scale(0.99) !important;
-  box-shadow: var(--b3-press), 0 2px 8px -4px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+  box-shadow: var(--b3-press), var(--b3-drop-press) !important;
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) * { color: inherit !important; }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .btn.primary-btn, .dash-btn:not(.is-ghost), .fx-btn.fx-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) svg { stroke: currentColor !important; }
@@ -8779,7 +8253,7 @@ html body :is(.btn.btn-secondary, .btn.secondary-btn, .dash-btn.is-ghost, .nl-mo
 html body :is(.btn-rail-top, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) { padding: 7px 14px !important; font-size: 13px !important; }
 html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .dash-btn.is-ghost, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
   transform: translateY(-1px) !important; color: var(--accent-1) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 3px color-mix(in srgb, var(--accent-1) 14%, transparent), 0 8px 20px -10px var(--accent-glow, rgba(0,0,0,0.4)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--b3-drop) !important;
 }
 html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .lib-cta, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):active { transform: scale(0.97) !important; }
 html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):focus-visible {
@@ -8788,7 +8262,7 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 
 /* ================= raised buttons: one 3D recipe ================= */
 /* Every filled button (the site button above, players' play buttons, the projects' arrows) wears the same face: a gloss on
-   the top half, a lit top edge, a darker bottom edge for thickness and its own glow; pressed, it sinks. The plain round
+   the top half, a lit top edge, a darker bottom edge for thickness and a plain drop shadow (no glow); pressed, it sinks. The plain round
    buttons beside them get the same idea, quieter. Each keeps its own colour; only the light and the edges are shared. */
 :root {
     --b3-gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 55%);
@@ -8799,8 +8273,15 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
     --b3-soft-rim: rgba(255, 255, 255, 0.09);
     --b3-soft-base: rgba(0, 0, 0, 0.35);
     --b3-soft-drop: 0 2px 4px -2px rgba(0, 0, 0, 0.45);
+    /* elevation without glow: a plain dark drop shadow, deeper under the pointer, close when pressed */
+    --b3-drop: 0 6px 16px -8px rgba(0, 0, 0, 0.55);
+    --b3-drop-hover: 0 10px 22px -10px rgba(0, 0, 0, 0.6);
+    --b3-drop-press: 0 2px 6px -3px rgba(0, 0, 0, 0.45);
 }
 :root:is([data-theme="light"], [data-theme="mint"]) {
+    --b3-drop: 0 6px 14px -8px rgba(15, 23, 42, 0.28);
+    --b3-drop-hover: 0 10px 20px -10px rgba(15, 23, 42, 0.32);
+    --b3-drop-press: 0 2px 6px -3px rgba(15, 23, 42, 0.25);
     --b3-base: rgba(15, 23, 42, 0.18);
     --b3-soft-sheen: rgba(255, 255, 255, 0.75);
     --b3-soft-rim: rgba(255, 255, 255, 0.95);
@@ -8810,31 +8291,31 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 
 /* filled */
 html :is(.dash-nav, .dash-fp-ctrl .is-main, .dash-yt-ctrl .is-main) {
-    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 6px 16px -6px var(--accent-glow, rgba(0, 0, 0, 0.35));
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), var(--b3-drop);
 }
 html :is(.dash-nav:hover:not(:disabled), .dash-fp-ctrl .is-main:hover, .dash-yt-ctrl .is-main:hover) {
-    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 12px 24px -8px var(--accent-glow, rgba(0, 0, 0, 0.4));
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), var(--b3-drop-hover);
 }
 html :is(.dash-nav:active:not(:disabled), .dash-fp-ctrl .is-main:active, .dash-yt-ctrl .is-main:active) {
     transform: translateY(1px) scale(0.97);
-    box-shadow: var(--b3-press), 0 2px 6px -3px var(--accent-glow, rgba(0, 0, 0, 0.35));
+    box-shadow: var(--b3-press), var(--b3-drop-press);
 }
 html #fp-pill .fp-play {
     background: var(--b3-gloss), var(--fp-grad);
-    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 8px 18px -8px rgba(var(--fp-acc-rgb), 0.8);
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), var(--b3-drop);
 }
 html #fp-pill .fp-play:hover {
     background: var(--b3-gloss), var(--fp-grad);
-    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 0 0 4px rgba(var(--fp-acc-rgb), 0.16), 0 10px 22px -8px rgba(var(--fp-acc-rgb), 0.9);
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), var(--b3-drop-hover);
 }
-html #fp-pill .fp-play:active { transform: translateY(1px) scale(0.96); box-shadow: var(--b3-press), 0 2px 6px -3px rgba(var(--fp-acc-rgb), 0.7); }
-html #tube-dock .td-main { box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), 0 6px 16px -6px var(--accent-glow, rgba(0, 0, 0, 0.35)); }
+html #fp-pill .fp-play:active { transform: translateY(1px) scale(0.96); box-shadow: var(--b3-press), var(--b3-drop-press); }
+html #tube-dock .td-main { box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -2px 0 var(--b3-base), var(--b3-drop); }
 html #tube-dock .td-main:active { transform: translateY(1px) scale(0.96); box-shadow: var(--b3-press); }
 html .nx .fx-play {
     background: var(--b3-gloss), var(--grad);
-    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -3px 0 var(--b3-base), 0 10px 24px -10px rgba(var(--brand-rgb), 0.75);
+    box-shadow: inset 0 1px 0 var(--b3-rim), inset 0 -3px 0 var(--b3-base), var(--b3-drop);
 }
-html .nx .fx-play:active { transform: translateY(1px) scale(0.97); box-shadow: var(--b3-press), 0 3px 8px -4px rgba(var(--brand-rgb), 0.6); }
+html .nx .fx-play:active { transform: translateY(1px) scale(0.97); box-shadow: var(--b3-press), var(--b3-drop-press); }
 
 /* plain round buttons beside them */
 html :is(.dash-fp-ctrl > :not(.is-main), .dash-yt-ctrl button:not(.is-main)) {
@@ -8861,35 +8342,10 @@ html #fp-pill .fp-btn:not(.fp-play):not(.fp-x):not(.fp-ghost):active {
     html :is(.dash-nav, .dash-fp-ctrl > *, .dash-yt-ctrl button, #fp-pill .fp-btn, #tube-dock .td-main, .nx .fx-play):active { transform: none; }
 }
 
-/* the floating controls (WhatsApp, sounds, theme) wear the soft raised face of the plain round buttons: a lit top edge,
-   a soft base and a shadow, lifting a little under the pointer and sinking when pressed. WhatsApp keeps its green. */
-html .ui-controls .control-btn {
-    color: var(--pf-brand) !important;
-    background: linear-gradient(180deg, var(--b3-soft-sheen), transparent 65%), var(--pf-surface) !important;
-    border: 0 !important;
-    box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 8px 18px -8px rgba(0, 0, 0, 0.5) !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    transition: translate 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, color 0.2s ease;
+/* tablets with the tab bar: the floating WhatsApp button sits above the bar, not on it */
+@media (min-width: 768px) and (max-width: 1023px) and (min-height: 600px) {
+    html body .ui-controls:not(#_u) { bottom: calc(64px + 20px + env(safe-area-inset-bottom)) !important; }
 }
-html .ui-controls .control-btn:hover {
-    translate: 0 -2px;
-    color: var(--pf-brand) !important;
-    background: linear-gradient(180deg, var(--b3-soft-sheen), transparent 65%), var(--pf-surface) !important;
-    box-shadow: inset 0 0 0 1px rgba(var(--pf-brand-rgb), 0.5), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 12px 22px -8px rgba(var(--pf-brand-rgb), 0.45) !important;
-}
-html .ui-controls .control-btn:active {
-    translate: 0 1px;
-    box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 2px 5px rgba(0, 0, 0, 0.25) !important;
-}
-html .ui-controls .control-btn.whatsapp-btn,
-html .ui-controls .control-btn.whatsapp-btn:hover { color: #25d366 !important; }
-html .ui-controls .control-btn.whatsapp-btn:hover {
-    box-shadow: inset 0 0 0 1px rgba(37, 211, 102, 0.55), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 12px 22px -8px rgba(37, 211, 102, 0.45) !important;
-}
-:root:is([data-theme="light"], [data-theme="mint"]) .ui-controls .control-btn.whatsapp-btn { color: #16a34a !important; }
-:root:is([data-theme="light"], [data-theme="mint"]) .ui-controls .control-btn { box-shadow: inset 0 0 0 1px var(--pf-line), inset 0 1px 0 var(--b3-soft-rim), inset 0 -2px 0 var(--b3-soft-base), 0 8px 18px -8px rgba(15, 23, 42, 0.25) !important; }
-@media (prefers-reduced-motion: reduce) { html .ui-controls .control-btn:is(:hover, :active) { translate: none; } }
 
 /* ================= mobile header: 56px, glass, brand + compact contact + menu button ================= */
 nav[aria-label="Main navigation"] .brand-name { display: none; }
@@ -8931,6 +8387,95 @@ nav[aria-label="Main navigation"] .brand-name { display: none; }
   html body nav[aria-label="Main navigation"] .brand-name { font-size: 14px; }
 }
 
+/* ================= header: one bar on every page, with the sound toggle and the theme menu ================= */
+/* desktop: the page colour as glass over a hairline, the links pushed right, then the controls after a divider */
+@media (min-width: 769px) {
+  html body nav[aria-label="Main navigation"] {
+    background: color-mix(in srgb, var(--bg-color, #0b1120) 78%, transparent) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 1px solid color-mix(in srgb, var(--text-primary, #fff) 9%, transparent);
+    box-shadow: none;
+  }
+  html body nav[aria-label="Main navigation"] .nav-links { margin-left: auto; }
+  /* the Contact pill is for phones; desktop has the Contact link */
+  html body nav[aria-label="Main navigation"] .mobile-contact-btn:not(#_btn):not(#_hdr) { display: none !important; }
+  html body nav[aria-label="Main navigation"] .nav-tools {
+    display: flex; align-items: center; gap: 8px;
+    margin-left: 24px; padding-left: 20px;
+    border-left: 1px solid color-mix(in srgb, var(--text-primary, #fff) 14%, transparent);
+  }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  html body nav[aria-label="Main navigation"] .nav-tools { margin-left: 16px; padding-left: 14px; }
+}
+/* the active page's link: the accent, with a solid underline */
+html body nav[aria-label="Main navigation"] .nav-links a.nav-link-item:is(.active, [aria-current="page"]) { color: var(--accent-ink) !important; position: relative; }
+html body nav[aria-label="Main navigation"] .nav-links a.nav-link-item:is(.active, [aria-current="page"])::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: currentColor !important;
+}
+
+/* the header's round buttons: 40 px on desktop, 44 px on phones; a quiet ring, the accent when on or open */
+.hdr-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 40px; height: 40px; padding: 0; border-radius: 50%; cursor: pointer;
+  font-size: 1rem; color: var(--text-primary, #fff);
+  background: color-mix(in srgb, var(--text-primary, #fff) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-primary, #fff) 16%, transparent);
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.hdr-btn:hover { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent-ink) 55%, transparent); }
+.hdr-btn:is([aria-pressed="true"], [aria-expanded="true"]) {
+  color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent-ink) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent-ink) 45%, transparent);
+}
+
+/* the theme menu: a small card under its button, one row per theme with its swatch, a check on the current one */
+.theme-pick { position: relative; display: flex; }
+.theme-menu {
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 2;
+  min-width: 180px; margin: 0; padding: 6px; list-style: none;
+  background: var(--pf-surface); border: 1px solid var(--pf-line-strong); border-radius: 14px;
+  box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.6);
+}
+.theme-menu[hidden], .theme-menu li[hidden] { display: none; }
+.theme-menu button {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 0 10px;
+  border: 0; border-radius: 10px; background: none; cursor: pointer; text-align: left;
+  font: 500 14px/1.2 'Poppins', sans-serif; color: var(--pf-ink);
+}
+.theme-menu button:hover { background: var(--pf-surface-2); }
+.theme-menu button:focus-visible { background: var(--pf-surface-2); outline: 2px solid var(--accent-ink) !important; outline-offset: -2px; }
+.theme-menu button[aria-checked="true"] { font-weight: 600; }
+.tm-check { margin-left: auto; font-size: 12px; color: var(--pf-ink); visibility: hidden; }
+.theme-menu button[aria-checked="true"] .tm-check { visibility: visible; }
+.tm-swatch {
+  flex: none; width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle, var(--sw-on) 0 34%, var(--sw-bg) 38%);
+  box-shadow: inset 0 0 0 1px rgba(127, 127, 127, 0.4);
+}
+[data-theme-set="dark"] .tm-swatch { --sw-bg: #0b1120; --sw-on: #00f2fe; }
+[data-theme-set="cyberpunk"] .tm-swatch { --sw-bg: #09090b; --sw-on: #f43f5e; }
+[data-theme-set="light"] .tm-swatch { --sw-bg: #f8fafc; --sw-on: #2563eb; }
+[data-theme-set="mint"] .tm-swatch { --sw-bg: #f4faf7; --sw-on: #10b981; }
+[data-theme-set="god-mode"] .tm-swatch { --sw-bg: #000000; --sw-on: #00ff00; }
+
+/* phones: Contact, the theme button and the menu button; sound is in the menu. The two round buttons are 40 px circles
+   with a 44 px tap area, like the menu button */
+@media (max-width: 768px) {
+  html body nav[aria-label="Main navigation"] .mobile-header-right { gap: 8px !important; }
+  html body nav[aria-label="Main navigation"] .mobile-contact-btn:not(#_btn) { padding: 0 12px !important; }
+  html body nav[aria-label="Main navigation"] #sound-toggler { display: none; }
+  html body nav[aria-label="Main navigation"] .hdr-btn { font-size: 1.05rem; }
+  html body nav[aria-label="Main navigation"] .hdr-btn::before { content: ""; position: absolute; inset: -2px; border-radius: 50%; }
+  .theme-menu { top: calc(100% + 10px); right: -48px; }
+}
+/* narrow phones: the logo alone stands for the name, so the three controls keep their size */
+@media (max-width: 380px) {
+  html body nav[aria-label="Main navigation"] .brand-name { display: none; }
+}
+
 /* ================= bottom tab bar: 64px glass bar, sliding pill, muted inactive tabs ================= */
 @media (max-width: 1023px) {
   html body .bottom-nav:not(#_bn) {
@@ -8942,7 +8487,7 @@ nav[aria-label="Main navigation"] .brand-name { display: none; }
   }
   html body .bottom-nav:not(#_bn) a {
     position: relative; z-index: 1; height: 56px !important; min-width: 44px; gap: 4px !important; padding: 0 !important; background: transparent !important;
-    font-size: 11px !important; font-weight: 500 !important; letter-spacing: 0.01em;
+    font-size: 12px !important; font-weight: 500 !important; letter-spacing: 0.01em;   /* phone text never under 12px */
     color: color-mix(in srgb, var(--text-primary, #fff) 72%, transparent) !important; transition: color .2s ease, transform .15s ease !important;
   }
   html body .bottom-nav:not(#_bn) a svg { width: 24px !important; height: 24px !important; padding: 0 !important; background: none !important; box-sizing: content-box !important; }
@@ -9199,14 +8744,14 @@ html #ai-chat-widget .bot-msg.is-streaming > :last-child::after { content: ""; d
     position: relative; display: flex; align-items: center; gap: 11px; width: 100%; padding: 12px 14px; text-align: left; cursor: pointer;
     border: none; border-radius: 16px; font: inherit; color: var(--chip-fg, var(--text-primary)); isolation: isolate;
     background: linear-gradient(135deg, rgba(var(--accent-1-rgb), .16), rgba(var(--accent-1-rgb), .04) 70%), var(--chat-bot-bg);
-    box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), .35), 0 10px 26px -16px rgba(var(--accent-1-rgb), .8);
+    box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), .35), var(--b3-drop);
     opacity: 0; animation: chatRise .45s cubic-bezier(.16,1,.3,1) .1s forwards;
     transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease;
 }
 #ai-chat-widget .chat-fit-card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; pointer-events: none;
     background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.10) 50%, transparent 65%) no-repeat; background-size: 250% 100%;
     background-position: 150% 0; animation: pillSheen 6s ease-in-out 1.2s infinite; }
-#ai-chat-widget .chat-fit-card:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), .6), 0 14px 30px -14px rgba(var(--accent-1-rgb), .9); }
+#ai-chat-widget .chat-fit-card:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--accent-1-rgb), .6), var(--b3-drop-hover); }
 #ai-chat-widget .chat-fit-card:active { transform: scale(.98); }
 #ai-chat-widget .chat-fit-card .cs-ico { width: 34px; height: 34px; border-radius: 11px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); }
 #ai-chat-widget .chat-fit-card .cs-ico .chip-ico { stroke: var(--chat-user-fg); width: 17px; height: 17px; }
@@ -9522,23 +9067,72 @@ html[data-theme="god-mode"] .gradient-text {
     background: radial-gradient(closest-side, color-mix(in srgb, var(--bg-color) 70%, transparent) 60%, transparent 100%);
 }
 
-/* The highlights box shows exactly three lines */
-#terminal-ticker { height: auto !important; min-height: 0 !important; }
-
-/* Active nav underline follows the theme (it was a fixed cyan-to-blue gradient everywhere) */
-html body nav a.nav-link-item.active::after,
-html body nav a.nav-link-item[aria-current="page"]::after {
-    background: linear-gradient(90deg, var(--accent-1), var(--accent-2, var(--accent-1))) !important;
+/* Phones: a larger portrait; the three highlights wrap in a compact list */
+@media (max-width: 767px) {
+    html body .hero-image-wrapper:not(#_h) { max-width: 176px !important; width: 46vw !important; padding: 8px !important; border-radius: 26px !important; }
+    .hero-highlights { gap: 6px; margin: 0.9rem 0 1rem; padding: 10px 12px; }
+    .hero-highlights li { gap: 8px; font-size: 0.8125rem; line-height: 1.4; }
+    .hl-tag { flex-basis: 4.4rem; }
 }
 
-/* Phones: a larger portrait, and the highlights box shows two full lines instead of a clipped third */
-@media (max-width: 767px) {
-    html body .hero-image-wrapper:not(#_h) { max-width: 214px !important; width: 58vw !important; }
-    html body #terminal-ticker .log-line:nth-child(n+3) { display: none !important; }
+/* Phones, and tablets with the tab bar: the folded chat is the tab bar's last tab (its face over "Ask My AI"), so it
+   never sits on the page. The bar keeps that end free for it. */
+@media (max-width: 767px), (max-width: 1023px) and (min-height: 600px) {
+    html body .bottom-nav:not(#_bn):not(#_dock) { padding-right: calc(76px + env(safe-area-inset-right)) !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) {
+        top: auto !important; left: auto !important;
+        right: max(4px, env(safe-area-inset-right)) !important; bottom: calc(4px + env(safe-area-inset-bottom)) !important;
+        width: 72px !important; height: 56px !important; min-width: 0 !important; padding: 0 !important;
+        border: 0 !important; border-radius: 14px !important; background: none !important; box-shadow: none !important;
+        -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+        translate: none !important; transform: none !important; animation: none !important;
+    }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header { width: 100%; height: 100%; padding: 0 !important; background: none !important; border: 0 !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle {
+        width: 100% !important; height: 100% !important; padding: 0 !important; flex-direction: column !important;
+        align-items: center !important; justify-content: center !important; gap: 3px !important; border-radius: 14px;
+    }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .grok-bot-avatar,
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-mascot { width: 32px !important; height: 32px !important; margin: 0 !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header-text { display: block !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header-title {
+        display: block !important; margin: 0 !important; font-size: 12px !important; font-weight: 500 !important; line-height: 1.1 !important;
+        letter-spacing: 0.01em !important; white-space: nowrap; color: color-mix(in srgb, var(--text-primary, #fff) 80%, transparent) !important;
+    }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) :is(.chat-header-sub, .chat-live, #chat-toggle-icon) { display: none !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle:focus-visible { outline: 2px solid var(--accent-1) !important; outline-offset: -2px !important; }
+    /* a tab stays put while the page scrolls (the floating orb used to tuck itself away) */
+    html body #ai-chat-widget.chat-collapsed.ai-tucked:not(#_ai):not(#_dock) { opacity: 1 !important; pointer-events: auto !important; }
 }
-/* phones: the orb lifts above the hero buttons instead of disappearing */
-@media (max-width: 767px) {
-    html body #ai-chat-widget.chat-collapsed:not(#_ai) { translate: 0 calc(var(--ai-lift, 0px) * -1); transition: translate .3s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1), opacity .25s ease !important; }
+
+/* Desktop: the folded chat is the round face alone (56 px) in the corner, out of the content's lane; "Ask My AI" slides
+   out beside it under the pointer or keyboard focus. The page's end and every focused control stay clear of it. */
+@media (min-width: 1024px) {
+    html { scroll-padding-bottom: 96px; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) {
+        top: auto !important; left: auto !important; right: 24px !important; bottom: 24px !important;
+        width: 56px !important; height: 56px !important; min-width: 0 !important; padding: 0 !important;
+        border: 0 !important; border-radius: 50% !important; background: none !important;
+        box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+        overflow: visible !important;
+    }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header { width: 100%; height: 100%; padding: 0 !important; background: none !important; border: 0 !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle { position: relative; width: 56px !important; height: 56px !important; padding: 0 !important; justify-content: center !important; border-radius: 50%; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) :is(.grok-bot-avatar, #chat-mascot) { width: 56px !important; height: 56px !important; margin: 0 !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle-icon { display: none !important; }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header-title {
+        position: absolute; right: calc(100% + 10px); top: 50%; display: flex !important; align-items: center; gap: 8px;
+        padding: 8px 14px; border-radius: 999px; white-space: nowrap; font-size: 13px !important; font-weight: 600 !important;
+        color: var(--pf-ink) !important; background: var(--pf-surface); box-shadow: inset 0 0 0 1px var(--pf-line-strong), var(--b3-drop);
+        opacity: 0; transform: translate(6px, -50%); pointer-events: none; transition: opacity .2s ease, transform .2s ease;
+    }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle:is(:hover, :focus-visible) .chat-header-title { opacity: 1; transform: translate(0, -50%); }
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) #chat-toggle:focus-visible { outline: 2px solid var(--accent-1) !important; outline-offset: 3px !important; }
+    /* the footer's row ends above the face */
+    footer { padding-bottom: 96px; }
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    html body #ai-chat-widget.chat-collapsed:not(#_ai):not(#_dock) .chat-header-title { transition: none; transform: translate(0, -50%); }
 }
 
 /* Open chat panel: a solid surface in dark themes, so the page behind no longer shows through and muddies the colours */
@@ -9549,8 +9143,21 @@ html:not([data-theme]) body #ai-chat-widget.chat-expanded:not(#_ai) {
 }
 html[data-theme="god-mode"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(0,255,0,.05), transparent 30%), #030803 !important; }
 html[data-theme="cyberpunk"] body #ai-chat-widget.chat-expanded:not(#_ai) { background: linear-gradient(180deg, rgba(244,63,94,.07), transparent 30%), #12040a !important; backdrop-filter: none !important; }
-/* the user's own bubble stays fully visible at the top edge instead of fading into the header */
-html #ai-chat-widget.chat-expanded .chat-body { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; mask-image: linear-gradient(to bottom, transparent 0, #000 6px, #000 calc(100% - 10px), transparent 100%) !important; }
+/* The open panel's header is opaque and sits above the message list, and the list clips what it scrolls (no fade mask:
+   a mask on a scrolling box let messages through behind the header on phones) */
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-header { position: relative; z-index: 2; background-color: var(--chat-panel, #0d1526) !important; }
+html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-body { position: relative; contain: paint; -webkit-mask-image: none !important; mask-image: none !important; overscroll-behavior: contain; }
+/* phones: the panel's small print is 12px at least (the Bangla button 13px, where Bengali glyphs stay legible) */
+@media (max-width: 767px) {
+    html body #ai-chat-widget.chat-expanded:not(#_ai) :is(.chat-header-sub, .chat-foot, .cs-text small) { font-size: 12px !important; }
+    html body #ai-chat-widget.chat-expanded:not(#_ai) .chat-lang-btn { font-size: 13px !important; }
+}
+#ai-chat-widget { --chat-panel: #0d1526; }
+/* the AI face casts a plain shadow, never a coloured halo, in every state and theme */
+html body #ai-chat-widget:not(#_ai):not(#_face) .grok-bot-avatar { filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45)) !important; }
+html:is([data-theme="light"], [data-theme="mint"]) body #ai-chat-widget:not(#_ai):not(#_face) .grok-bot-avatar { filter: drop-shadow(0 8px 14px rgba(15, 23, 42, 0.2)) !important; }
+html[data-theme="cyberpunk"] #ai-chat-widget { --chat-panel: #12040a; }
+html:is([data-theme="light"], [data-theme="mint"]) #ai-chat-widget { --chat-panel: #f8fafc; }
 
 /* Bottom tab bar: no shade or ripple on tap; the selection pill simply glides to the tapped tab */
 html body .bottom-nav:not(#_bn) a,
@@ -9565,10 +9172,11 @@ html body .bottom-nav:not(:has(a[aria-current="page"])) .bn-pill:not(#_bn) { opa
 html body .bottom-nav:not(#_bn) .bn-pill { display: none !important; }
 html body .bottom-nav:not(#_bn) a svg,
 html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { background: transparent !important; box-shadow: none !important; }
-html body .bottom-nav:not(#_bn) a { opacity: .7; transition: opacity .2s ease, color .2s ease; }   /* .7: the 11 px labels keep 4.5:1 contrast */
+html body .bottom-nav:not(#_bn) a { opacity: .7; transition: opacity .2s ease, color .2s ease; }   /* .7: the 12 px labels keep 4.5:1 in dark */
 html body .bottom-nav:not(#_bn) a[aria-current="page"],
 html body .bottom-nav:not(#_bn) a.is-pending { opacity: 1; color: var(--accent-1) !important; }
-html body .bottom-nav:not(#_bn) a[aria-current="page"] svg { filter: drop-shadow(0 0 6px rgba(var(--accent-1-rgb), .55)); }
+/* light, mint and god mode: the resting tabs are not dimmed at all (at .7 their labels fell under 4.5:1) */
+html:is([data-theme="light"], [data-theme="mint"], [data-theme="god-mode"]) body .bottom-nav:not(#_bn) a:not([aria-current="page"], .is-pending) { opacity: 1; }
 /* red theme: its gold text is darker than white, so the resting tabs dim less (4.9:1) */
 html[data-theme="cyberpunk"] body .bottom-nav:not(#_bn) a:not([aria-current="page"], .is-pending) { opacity: .85; }
 html[data-theme="cyberpunk"] .sidebar-title { color: #fb7185; }   /* rose #f43f5e is 4.2:1 on the panel */
@@ -9691,7 +9299,7 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
    the line's top instead of on the first font's baseline. */
 .hero-text-link { line-height: 1.5; }
 @media (min-width: 769px) {
-    .hero-text-side h1 .gradient-text { vertical-align: top; }
+    .hero-hi .hero-name { vertical-align: top; }
 }
 
 /* ==========================================================================
