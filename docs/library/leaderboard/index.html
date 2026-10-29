@@ -432,7 +432,7 @@
   // what the board's lines say, then its rows (from the loaded rankings; until they come, a line that says so)
   function show(announce) {
     var b = BOARDS[cat], s = subOf(cat, sub), agent = cat === 'agent';
-    var list = data && data.categories && data.categories[cat] && data.categories[cat].subcategories[s.key];
+    var list = data && data.categories && data.categories[cat] && (data.categories[cat].subcategories || {})[s.key];
     var models = list && list.models ? list.models.slice(0, TOP) : null;
     var total = (list && list.total_models) || s.total, n = models ? models.length : Math.min(TOP, total);
     root.querySelector('[data-lb-h1]').textContent = agent ? 'Net improvement' : 'Score';
@@ -444,7 +444,7 @@
     if (s.url) link.href = s.url;
     if (models) rows.innerHTML = models.map(function (m) { return row(m, agent); }).join('');
     else if (isFirst()) rows.innerHTML = builtRows;
-    else if (failed) state('The latest rankings could not be loaded. <button type="button" class="ldr-retry" data-lb-retry>Try again</button>');
+    else if (failed || data) state('The latest rankings could not be loaded. <button type="button" class="ldr-retry" data-lb-retry>Try again</button>');
     else state('Loading the latest rankings\u2026');
     if (announce) root.querySelector('[data-lb-status]').textContent = models || isFirst() ? b.title + ': ' + s.title + ', ' + n + ' models' : '';
   }
@@ -493,7 +493,8 @@
     else if (t.hasAttribute('data-lb-retry')) { load(); show(false); }
   });
   // a link to one board (#webdev)
-  var want = decodeURIComponent(location.hash.slice(1));
+  var want = '';
+  try { want = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* a malformed #%: no board asked for */ }
   Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, false); }); });
   // the rankings load once the page has, while it is idle, so a later choice shows at once
   var later = function () { ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(load, { timeout: 2000 }); };

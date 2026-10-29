@@ -4952,7 +4952,12 @@ def lb_heads(cat):
     return ("Net improvement", "Confirmed success") if cat == "agent" else ("Score", "Votes")
 
 
-def lb_range(rank, rng):
+def lb_https(url, fallback="https://arena.ai/leaderboard"):
+    """A link from the scraped file only when it is https (never javascript: or the like)."""
+    return url if re.match(r"https://", str(url or "")) else fallback
+
+
+def lb_range(rng):
     """Arena's rank range ("1 ↔ 8", sometimes the wrong way round) as "1–8"; nothing when it is the rank itself."""
     n = sorted(int(x) for x in re.findall(r"\d+", str(rng or "")))
     return "" if len(n) < 2 or n[0] == n[-1] else f"{n[0]}–{n[-1]}"
@@ -4962,11 +4967,14 @@ def lb_row(m, cat):
     agent = cat == "agent"
     score = re.sub(r"^Score:\s*", "", str(m.get("score") or ""))
     second = re.sub(r"\s*votes$", "", str(m.get("secondary") or "")) if not agent else str(m.get("secondary") or "")
-    num = float(re.sub(r"[^0-9.-]", "", score) or 0)
+    try:
+        num = float(re.sub(r"[^0-9.-]", "", score) or 0)
+    except ValueError:   # "-" or "—" in place of a number
+        num = 0
     width = min(max(num * 4.5, 10), 100) if agent else min(max((num - 1000) / 800 * 100, 15), 100)
     sign = lambda v: (" ldr-down" if v.startswith("-") else " ldr-up") if agent else ""
-    rng = lb_range(m.get("rank"), m.get("rank_range"))
-    rank = int(m.get("rank") or 0)
+    rng = lb_range(m.get("rank_range"))
+    rank = int(re.sub(r"\D", "", str(m.get("rank") or "")) or 0)
     small = lambda v: f'<span class="ldr-margin">{e(v)}</span>' if v else ""
     return (f'<tr><td class="ldr-rank"><span class="ldr-pill{" is-top" if 0 < rank <= 3 else ""}">{rank}</span>'
             + (f'<span class="ldr-range"><span class="sr-only">could rank </span>{rng}</span>' if rng else "")
@@ -4990,9 +4998,12 @@ def library_leaderboard():
     cats = data.get("categories") or {}
     # every board's name, line and size, so the buttons work before the rankings have loaded
     boards = {c: {"title": v.get("title") or c.title(),
-                  "subs": [{"key": k, "title": s.get("title") or k, "desc": s.get("description") or "", "url": s.get("url") or "",
+                  "subs": [{"key": k, "title": s.get("title") or k, "desc": s.get("description") or "", "url": lb_https(s.get("url")),
                             "total": s.get("total_models") or len(s.get("models") or [])}
                            for k, s in (v.get("subcategories") or {}).items()]} for c, v in cats.items()}
+    boards = {c: b for c, b in boards.items() if b["subs"]}   # a kind of model with no boards gets no button
+    if not boards:
+        raise SystemExit(f"{ARENA_FILE} has no boards: the leaderboard page needs at least one")
     cat = next(iter(boards))
     sub = boards[cat]["subs"][0]
     models = (cats[cat]["subcategories"][sub["key"]].get("models") or [])[:LB_TOP]
@@ -5008,7 +5019,7 @@ def library_leaderboard():
             f'<div class="nl-head"><span class="nl-tile">{nl_icon("trophy", 20)}</span><div class="nl-head-text"><h2>AI Leaderboard</h2>'
             f'<p>{e(LB_ABOUT)}</p></div></div>'
             f'<p class="ldr-meta"><span>Updated <time data-lb-day datetime="{iso}">{e(day)}</time></span>'
-            f'<a href="{e(data.get("source") or "https://arena.ai/leaderboard")}" target="_blank" rel="noopener noreferrer">Source: Arena (arena.ai)'
+            f'<a href="{e(lb_https(data.get("source")))}" target="_blank" rel="noopener noreferrer">Source: Arena (arena.ai)'
             f'{nl_icon("out", 13)}</a></p>'
             f'<div class="nl-chips ldr-cats" role="group" aria-label="Kind of model">{cat_btns}</div>'
             f'<div class="ldr-subs" role="group" aria-label="Board"{"" if len(boards[cat]["subs"]) > 1 else " hidden"}>{sub_btns}</div>'
@@ -5064,7 +5075,7 @@ LB_JS = """<script>
   // what the board's lines say, then its rows (from the loaded rankings; until they come, a line that says so)
   function show(announce) {
     var b = BOARDS[cat], s = subOf(cat, sub), agent = cat === 'agent';
-    var list = data && data.categories && data.categories[cat] && data.categories[cat].subcategories[s.key];
+    var list = data && data.categories && data.categories[cat] && (data.categories[cat].subcategories || {})[s.key];
     var models = list && list.models ? list.models.slice(0, TOP) : null;
     var total = (list && list.total_models) || s.total, n = models ? models.length : Math.min(TOP, total);
     root.querySelector('[data-lb-h1]').textContent = agent ? 'Net improvement' : 'Score';
@@ -5076,7 +5087,7 @@ LB_JS = """<script>
     if (s.url) link.href = s.url;
     if (models) rows.innerHTML = models.map(function (m) { return row(m, agent); }).join('');
     else if (isFirst()) rows.innerHTML = builtRows;
-    else if (failed) state('The latest rankings could not be loaded. <button type="button" class="ldr-retry" data-lb-retry>Try again</button>');
+    else if (failed || data) state('The latest rankings could not be loaded. <button type="button" class="ldr-retry" data-lb-retry>Try again</button>');
     else state('Loading the latest rankings\\u2026');
     if (announce) root.querySelector('[data-lb-status]').textContent = models || isFirst() ? b.title + ': ' + s.title + ', ' + n + ' models' : '';
   }
@@ -5125,7 +5136,8 @@ LB_JS = """<script>
     else if (t.hasAttribute('data-lb-retry')) { load(); show(false); }
   });
   // a link to one board (#webdev)
-  var want = decodeURIComponent(location.hash.slice(1));
+  var want = '';
+  try { want = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* a malformed #%: no board asked for */ }
   Object.keys(BOARDS).forEach(function (c) { BOARDS[c].subs.forEach(function (s) { if (s.key === want && !(c === cat && want === sub)) pick(c, want, false); }); });
   // the rankings load once the page has, while it is idle, so a later choice shows at once
   var later = function () { ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(load, { timeout: 2000 }); };
