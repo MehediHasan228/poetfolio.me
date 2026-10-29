@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <!-- the visitor's saved theme, as on every other page (the site's default is dark) -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
     <title>404 — Page not found | Mehedi Hasan</title>
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon/icon-96.png">
     <style>
-        :root { --bg:#050508; --text:#e5e7eb; --muted:#94a3b8; --accent:#00f2fe; }
-        @media (prefers-color-scheme: light) { :root { --bg:#f8fafc; --text:#0f172a; --muted:#475569; --accent:#0891b2; } }
+        :root { --bg:#0b1120; --text:#e5e7eb; --muted:#94a3b8; --accent:#00f2fe; --on-accent:#0b1120; }
+        :root[data-theme="cyberpunk"] { --bg:#09090b; --text:#fbbf24; --muted:#a1a1aa; --accent:#fb7185; --on-accent:#09090b; }
+        :root[data-theme="light"] { --bg:#f8fafc; --text:#0f172a; --muted:#475569; --accent:#1d4ed8; --on-accent:#ffffff; }
+        :root[data-theme="mint"] { --bg:#f4faf7; --text:#0f172a; --muted:#475569; --accent:#047857; --on-accent:#ffffff; }
+        :root[data-theme="god-mode"] { --bg:#000000; --text:#bbf7d0; --muted:#4ade80; --accent:#00ff00; --on-accent:#000000; }
         * { box-sizing:border-box; margin:0; }
         body { min-height:100vh; display:grid; place-items:center; padding:24px 16px; background:var(--bg); color:var(--text);
                font-family:"Fira Code",ui-monospace,SFMono-Regular,Menlo,monospace; }
@@ -19,7 +24,7 @@
         .prompt { margin:20px 0; padding:14px 16px; border:1px dashed color-mix(in srgb,var(--accent) 50%,transparent); border-radius:10px; font-size:.9rem; overflow-wrap:anywhere; }
         .prompt span { color:var(--accent); }
         nav { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-        a { color:var(--bg); background:var(--accent); padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600; font-size:.9rem; }
+        a { color:var(--on-accent); background:var(--accent); padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600; font-size:.9rem; }
         a.ghost { background:transparent; color:var(--accent); border:1px solid var(--accent); }
         a:focus-visible { outline:2px solid var(--text); outline-offset:3px; }
     </style>
