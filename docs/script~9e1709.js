@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Respect the OS "reduce motion" setting for the heavy decorative effects.
     const PREFERS_REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    // Hover-only effects (the hover sound, the portrait's mouse parallax, the chat face's hover reaction) run only with a
+    // mouse or trackpad. A tap on a touch screen fires mouseenter and mousemove too, and the effect would stay on until
+    // the next tap. Read at event time, so a device that switches between touch and mouse follows along.
+    const FINE_POINTER = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)') : { matches: true };
 
     // The browser may refuse site storage (blocked cookies, some private windows): then reading it throws. Every read and
     // write goes through these two, so the page works the same without it and only forgets the visitor's choices.
@@ -157,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     document.querySelectorAll('.hover-sound, a, button').forEach(el => {
-        el.addEventListener('mouseenter', () => playSound('hover'));
+        el.addEventListener('mouseenter', () => { if (FINE_POINTER.matches) playSound('hover'); });
         el.addEventListener('click', () => playSound('click'));
     });
 
@@ -368,13 +372,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 startRender();
             }
 
-            // 1. Direct card hover: full parallax (the photo sharpens with CSS :hover)
+            // 1. Direct card hover: full parallax (the photo sharpens with CSS :hover). Mouse only: a tap's mousemove
+            //    would leave the card tilted until the next tap (touch has its own handlers below)
             wrapper.addEventListener('mousemove', (e) => {
+                if (!FINE_POINTER.matches) return;
                 e.stopPropagation();
                 computeTargets(e.clientX, true);
             });
 
             wrapper.addEventListener('mouseleave', () => {
+                if (!FINE_POINTER.matches) return;
                 isDirectHover = false;
                 targetIntensity = 0.38;
                 startRender();
@@ -383,12 +390,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 2. Ambient parallax while the mouse moves anywhere over the hero
             if (heroSection) {
                 heroSection.addEventListener('mousemove', (e) => {
-                    if (!isDirectHover) {
+                    if (FINE_POINTER.matches && !isDirectHover) {
                         computeTargets(e.clientX, false);
                     }
                 });
 
-                heroSection.addEventListener('mouseleave', resetTargets);
+                heroSection.addEventListener('mouseleave', () => { if (FINE_POINTER.matches) resetTargets(); });
             }
 
             // 3. Mobile touch (drag & pan)
@@ -898,8 +905,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (nowhere && chatToggle) chatToggle.focus({ preventScroll: true });
         });
 
-        // Interactive AI Orb Mascot touch & hover feedback
+        // Interactive AI Orb Mascot touch & hover feedback (hover with a mouse only: a tap has the touch handlers below)
         chatWidget.addEventListener('mouseenter', () => {
+            if (!FINE_POINTER.matches) return;
             chatWidget.classList.add('grok-hovered');
             const mascot = getMascot();
             if (mascot && mascot.expression === 'idle') {
@@ -907,6 +915,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         chatWidget.addEventListener('mouseleave', () => {
+            if (!FINE_POINTER.matches) return;
             chatWidget.classList.remove('grok-hovered');
             const mascot = getMascot();
             if (mascot && mascot.expression === 'excited') {

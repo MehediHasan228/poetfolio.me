@@ -124,8 +124,11 @@
         });
     }
 
-    // Glass card cursor tracking spotlight (Smooth & precise 1:1 pixel tracking)
+    // Glass card cursor tracking spotlight (Smooth & precise 1:1 pixel tracking); a mouse or trackpad only, the light
+    // is a hover effect (a finger on a touch screen would drag it along while scrolling)
+    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
     document.addEventListener('pointermove', function (e) {
+        if (!finePointer.matches) return;
         var card = e.target.closest('.widget-location, .r-card-open, .people-hero, .cta-hero, .svc-card.wide');
         if (card) {
             var rect = card.getBoundingClientRect();

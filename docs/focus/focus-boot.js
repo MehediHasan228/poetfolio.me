@@ -27,6 +27,6 @@
     const resumable = !!st.active && ((st.mix && Object.keys(st.mix).length > 0) || !!st.radio) && Date.now() - (st.at || 0) < 6 * 3600000;
     if (!timer && !resumable) return;
     const s = document.createElement('script');
-    s.src = new URL('focus.js?v=95dd8d6586', document.currentScript ? document.currentScript.src : location.href).href;
+    s.src = new URL('focus.js?v=f79d7f79e0', document.currentScript ? document.currentScript.src : location.href).href;
     document.head.appendChild(s);
 })();

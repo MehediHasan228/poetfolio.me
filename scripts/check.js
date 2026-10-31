@@ -21,6 +21,8 @@
  *   internal links that don't answer 200, and #anchors that point nowhere
  *   a page that forwards (meta refresh: /stack/, /sandbox/) to a page that doesn't answer or a #part it doesn't have
  *   a ?v= on a CSS/JS reference that doesn't match the file's content hash (npm run stamp fixes these)
+ *   a :hover selector in the served CSS (stylesheets, inline <style>, stylesheets built in JS) outside a
+ *   (hover: hover) media condition: on a touch screen a tap sets :hover until the next tap, so the style would stick
  */
 const fs = require('fs');
 const path = require('path');
@@ -122,6 +124,88 @@ function checkStamps() {
             if (!isFile(target)) { failures.push({ type: 'stamp', key: `stamp|${where}|${ref}|missing`, detail: `${where}: ${ref} does not exist` }); continue; }
             const want = hashOf(target);
             if (m[3] !== want) failures.push({ type: 'stamp', key: `stamp|${where}|${ref}`, detail: `${where}: ${ref}?v=${m[3]} should be ?v=${want}` });
+        }
+    }
+    return failures;
+}
+
+// every :hover selector the site serves sits inside a (hover: hover) media condition, so only a mouse or trackpad ever
+// shows it: a tap on a touch screen sets :hover and it stays until the next tap, and a lifted or recoloured control
+// would stay that way (DESIGN.md, Touch). Read: every .css file, every inline <style>, and the stylesheets that a script
+// builds in a template literal (focus.js's player). :not(:hover) is not a hover style and passes.
+function hoverRules(css) {
+    const out = [];   // { selector, offset }
+    const skipString = (i) => { const q = css[i]; for (let j = i + 1; j < css.length; j++) { if (css[j] === '\\') j++; else if (css[j] === q) return j + 1; } return css.length; };
+    const skipComment = (i) => { const e = css.indexOf('*/', i + 2); return e < 0 ? css.length : e + 2; };
+    const walk = (from, to, gated) => {
+        let i = from;
+        while (i < to) {
+            if (/\s/.test(css[i])) { i++; continue; }
+            if (css.startsWith('/*', i)) { i = skipComment(i); continue; }
+            let j = i, depth = 0;
+            while (j < to) {
+                const c = css[j];
+                if (c === '"' || c === "'") { j = skipString(j); continue; }
+                if (css.startsWith('/*', j)) { j = skipComment(j); continue; }
+                if (c === '(' || c === '[') depth++;
+                else if (c === ')' || c === ']') depth--;
+                else if (depth === 0 && (c === '{' || c === ';' || c === '}')) break;
+                j++;
+            }
+            if (j >= to || css[j] !== '{') { i = j + 1; continue; }
+            let k = j, d = 0;
+            for (; k < to; k++) {
+                const c = css[k];
+                if (c === '"' || c === "'") { k = skipString(k) - 1; continue; }
+                if (css.startsWith('/*', k)) { k = skipComment(k) - 1; continue; }
+                if (c === '{') d++; else if (c === '}' && --d === 0) break;
+            }
+            const prelude = css.slice(i, j).replace(/\/\*[\s\S]*?\*\//g, '').trim();
+            if (/^@(media|supports|layer|container|document|scope)\b/i.test(prelude)) {
+                walk(j + 1, k, gated || (/^@media\b/i.test(prelude) && /\(\s*hover\s*:\s*hover\s*\)/i.test(prelude)));
+            } else if (!prelude.startsWith('@') && !gated) {
+                // a :hover that is not inside :not(…) makes the rule a hover style
+                const positive = prelude.replace(/:not\((?:[^()]|\([^()]*\))*\)/gi, '');
+                if (/:hover\b/i.test(positive)) out.push({ selector: prelude.replace(/\s+/g, ' '), offset: i });
+            }
+            i = k + 1;
+        }
+    };
+    walk(0, css.length, false);
+    return out;
+}
+
+function checkHover() {
+    const failures = [];
+    const files = [];
+    const walkDir = (dir) => {
+        for (const d of fs.readdirSync(dir, { withFileTypes: true })) {
+            const full = path.join(dir, d.name);
+            if (d.isDirectory()) { if (d.name !== 'vendor') walkDir(full); }
+            else if (/\.(css|html|js)$/.test(d.name)) files.push(full);
+        }
+    };
+    walkDir(DOCS);
+    for (const file of files) {
+        const text = fs.readFileSync(file, 'utf8');
+        const where = path.relative(ROOT, file);
+        const blocks = [];   // [start, end] of the CSS inside the file
+        if (file.endsWith('.css')) blocks.push([0, text.length]);
+        else if (file.endsWith('.html')) {
+            for (const m of text.matchAll(/<style\b[^>]*>/gi)) { const s = m.index + m[0].length; blocks.push([s, text.indexOf('</style>', s)]); }
+        } else {
+            // a template literal holding CSS: one with a rule that has :hover in its selector
+            for (const m of text.matchAll(/:hover\b[^{}'"`\n]*\{/g)) {
+                const s = text.lastIndexOf('`', m.index) + 1, e = text.indexOf('`', m.index);
+                if (s > 0 && e > 0 && !blocks.some(([a]) => a === s)) blocks.push([s, e]);
+            }
+        }
+        for (const [s, e] of blocks) {
+            const css = text.slice(s, e);
+            for (const r of hoverRules(css)) {
+                const line = text.slice(0, s + r.offset).split('\n').length;
+                failures.push({ type: 'hover', key: `hover|${where}|${r.selector.slice(0, 120)}`, detail: `${where}:${line}: ${r.selector.slice(0, 140)} is a :hover style outside @media (hover: hover) and (pointer: fine)` });
+            }
         }
     }
     return failures;
@@ -450,6 +534,10 @@ function launchOptions() {
     const stampFails = checkStamps();
     failures.push(...stampFails);
     step(`?v= stamps: ${stampFails.length} out of date`);
+
+    const hoverFails = checkHover();
+    failures.push(...hoverFails);
+    step(`:hover outside a (hover: hover) media condition: ${hoverFails.length}`);
 
     if (!QUICK) {
         const themeJobs = pages.flatMap((p) => Object.keys(VIEWPORTS).flatMap((v) => THEMES.filter((t) => t !== 'dark').map((t) => [p, v, t])));

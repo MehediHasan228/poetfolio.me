@@ -4,6 +4,7 @@
  */
 (function() {
   'use strict';
+  const FINE_POINTER = window.matchMedia('(hover: hover) and (pointer: fine)');
 
   function getThemeColors() {
     const root = document.documentElement;
@@ -101,8 +102,10 @@
       if (!animId) startLoop();
     }
 
-    card.addEventListener('pointerenter', handlePointer, { passive: true });
-    card.addEventListener('pointermove', handlePointer, { passive: true });
+    // the ripple follows a mouse or trackpad over the card; on a touch screen it starts from the tap (pointerdown) and
+    // runs while the card is open (.is-active, below), not under a finger that is only scrolling past
+    card.addEventListener('pointerenter', (e) => { if (FINE_POINTER.matches) handlePointer(e); }, { passive: true });
+    card.addEventListener('pointermove', (e) => { if (FINE_POINTER.matches) handlePointer(e); }, { passive: true });
     card.addEventListener('pointerdown', handlePointer, { passive: true });
 
     card.addEventListener('pointerleave', () => {

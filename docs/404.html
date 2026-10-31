@@ -2,8 +2,9 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <!-- the visitor's saved theme, as on every other page (the site's default is dark) -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <!-- the visitor's saved theme, as on every other page (the site's default is dark); and an empty touchstart listener,
+         without which iOS Safari never shows a link's :active (press) style -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}document.addEventListener("touchstart",function(){},{passive:true});</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
     <title>404 — Page not found | Mehedi Hasan</title>
@@ -49,12 +50,25 @@
         nav a { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:44px; padding:0 14px; border-radius:12px;
                 background:var(--surface-2); border:1px solid var(--line); color:var(--ink); font-weight:600; text-decoration:none; }
         nav a::after { content:"›"; color:var(--ink-3); font-size:18px; line-height:1; }
-        nav a:hover { border-color:color-mix(in srgb,var(--link) 55%,transparent); color:var(--link); }
-        .home:hover { box-shadow:0 10px 22px -10px var(--shade); }
+        @media (hover: hover) and (pointer: fine) {
+            nav a:hover { border-color:color-mix(in srgb,var(--link) 55%,transparent); color:var(--link); }
+            .home:hover { box-shadow:0 10px 22px -10px var(--shade); }
+        }
         a:focus-visible { outline:2px solid var(--link); outline-offset:3px; }
         nav li:last-child:nth-child(odd) { grid-column:1 / -1; }
         @media (max-width:420px) { main { padding:24px 18px 18px; } nav ul { grid-template-columns:minmax(0,1fr); } }
         @media (prefers-reduced-motion:no-preference) { a { transition:border-color .2s ease, color .2s ease, box-shadow .2s ease; } }
+        /* touch (DESIGN.md, Touch): no grey tap flash or double-tap wait; a pressed link dims at once and comes back over
+           150 ms, and shrinks a little (scale, so nothing else moves) */
+        a { -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+        @media (hover:none) and (pointer:coarse) {
+            a { transition:opacity .15s ease-out; }
+            a:active { opacity:.72; transition-duration:0s; }
+        }
+        @media (hover:none) and (pointer:coarse) and (prefers-reduced-motion:no-preference) {
+            a { transition:border-color .2s ease, color .2s ease, box-shadow .2s ease, opacity .15s ease-out, scale .15s ease-out; }
+            a:active { scale:.97; }
+        }
     </style>
 </head>
 <body>

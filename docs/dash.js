@@ -58,7 +58,7 @@
     }
 
     // a soft light follows the pointer inside each tile
-    if (matchMedia('(hover: hover)').matches && !still) {
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches && !still) {
         s.querySelectorAll('.dash-tile').forEach((tile) => {
             let raf = 0;
             tile.addEventListener('pointermove', (e) => {

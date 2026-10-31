@@ -601,7 +601,7 @@
     let pill = null, cssDone = false;
     function css() {
         if (cssDone) return; cssDone = true;
-        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=4ceedca21b', BASE).href;
+        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('focus.css?v=6dbd24826e', BASE).href;
         document.head.appendChild(l);
     }
     /* the same player as the Focus page's bar: the photo, the name (it opens the mix: each layer's volume and ✕), the volume,
@@ -922,7 +922,8 @@
   transition: opacity .2s ease .35s, transform .2s ease .35s; }
 #tube-dock .td-head { bottom: 100%; padding-bottom: 6px; transform: translateY(5px); }
 #tube-dock .td-bar { top: 100%; padding-top: 6px; transform: translateY(-5px); }
-#tube-dock:is(.td-show, :hover, :focus-within, .td-drag) :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; transition-delay: 0s; }
+#tube-dock:is(.td-show, :focus-within, .td-drag) :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; transition-delay: 0s; }
+@media (hover: hover) and (pointer: fine) { #tube-dock:hover :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; transition-delay: 0s; } }
 @media (hover: none) { #tube-dock :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; } }
 #tube-dock .td-pill { display: flex; align-items: center; gap: 2px; height: 42px; padding: 0 6px; border-radius: 14px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--text-primary, #f8fafc) 5%, transparent), transparent), var(--bg-color, #0b1120);
@@ -930,10 +931,10 @@
 #tube-dock .td-head .td-pill { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
 #tube-dock :is(button, a) { display: grid; flex-shrink: 0; place-items: center; width: 30px; height: 30px; padding: 0; border: 0;
   border-radius: 50%; font-size: 12px; color: var(--text-secondary, #94a3b8); text-decoration: none; cursor: pointer; background: none; }
-#tube-dock :is(button, a):hover { color: var(--accent-1, #00f2fe); background: color-mix(in srgb, var(--text-primary, #f8fafc) 8%, transparent); }
+@media (hover: hover) and (pointer: fine) { #tube-dock :is(button, a):hover { color: var(--accent-1, #00f2fe); background: color-mix(in srgb, var(--text-primary, #f8fafc) 8%, transparent); } }
 #tube-dock :is(button, a):focus-visible { outline: 2px solid var(--accent-1, #00f2fe); outline-offset: 2px; }
 #tube-dock .td-grip { width: 20px; color: var(--text-secondary, #94a3b8); cursor: grab; }
-#tube-dock .td-grip:hover { background: none; }
+@media (hover: hover) and (pointer: fine) { #tube-dock .td-grip:hover { background: none; } }
 #tube-dock .td-grip::before { content: ""; width: 10px; height: 15px; opacity: .75;
   background: radial-gradient(circle, currentColor 1.2px, transparent 1.6px) 0 0 / 5px 5px; }
 /* playing shows as moving bars beside the title; paused, they rest */
@@ -953,7 +954,7 @@
 #tube-dock .td-main { width: 34px; height: 34px; margin: 0 2px; font-size: 13px; color: var(--accent-active-color, #0b1120);
   background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 6px 16px -6px var(--shade, rgba(0, 0, 0, 0.4)); }
-#tube-dock .td-main:hover { color: var(--accent-active-color, #0b1120); background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe)); filter: brightness(1.06); }
+@media (hover: hover) and (pointer: fine) { #tube-dock .td-main:hover { color: var(--accent-active-color, #0b1120); background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 55%), var(--gradient-accent, var(--accent-1, #00f2fe)); filter: brightness(1.06); } }
 #tube-dock .td-vol { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 #tube-dock .td-range { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; margin: 0 6px 0 0; border-radius: 4px; cursor: pointer;
   background: linear-gradient(90deg, var(--accent-1, #00f2fe) var(--v, 100%), color-mix(in srgb, var(--text-primary, #f8fafc) 18%, transparent) var(--v, 100%)); }

@@ -381,7 +381,10 @@ function glowTrack(card, x, y) {
     card._raf = (Math.abs(card._tx - card._x) > 0.5 || Math.abs(card._ty - card._y) > 0.5) ? requestAnimationFrame(step) : null;
   })();
 }
+/* a hover light: a mouse or trackpad only (a finger scrolling past would drag it along) */
+var glowFine = matchMedia("(hover: hover) and (pointer: fine)");
 document.addEventListener("pointermove", function (ev) {
+  if (!glowFine.matches) return;
   var card = ev.target.closest && ev.target.closest(".glow-tile");
   if (!card) return;
   var r = card.getBoundingClientRect();
@@ -736,13 +739,15 @@ body.nx-page[data-page="profile"] .nx .rail {
   transition: all .25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   cursor: pointer !important;
 }
-.nx .btn-rail-top:hover,
-.nx .rail-top .btn-rail-top:hover {
-  background: color-mix(in srgb, var(--surface-3, #202d49) 80%, rgba(var(--brand-rgb, 0, 242, 254), 0.2)) !important;
-  border-color: var(--brand, #00f2fe) !important;
-  color: #ffffff !important;
-  box-shadow: 0 6px 20px -3px rgba(0, 0, 0, 0.55) !important;
-  transform: translateY(-1.5px) !important;
+@media (hover: hover) and (pointer: fine) {
+  .nx .btn-rail-top:hover,
+  .nx .rail-top .btn-rail-top:hover {
+    background: color-mix(in srgb, var(--surface-3, #202d49) 80%, rgba(var(--brand-rgb, 0, 242, 254), 0.2)) !important;
+    border-color: var(--brand, #00f2fe) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px -3px rgba(0, 0, 0, 0.55) !important;
+    transform: translateY(-1.5px) !important;
+  }
 }
 .nx .btn-rail-top .git-icon-wrap {
   width: 24px;
@@ -758,11 +763,13 @@ body.nx-page[data-page="profile"] .nx .rail {
   transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
   flex-shrink: 0;
 }
-.nx .btn-rail-top:hover .git-icon-wrap {
-  background: var(--brand, #00f2fe);
-  color: #050a14;
-  border-color: var(--brand, #00f2fe);
-  transform: scale(1.06);
+@media (hover: hover) and (pointer: fine) {
+  .nx .btn-rail-top:hover .git-icon-wrap {
+    background: var(--brand, #00f2fe);
+    color: #050a14;
+    border-color: var(--brand, #00f2fe);
+    transform: scale(1.06);
+  }
 }
 .nx .btn-rail-top .git-arr {
   color: var(--ink-3, #94a3b8);
@@ -770,9 +777,11 @@ body.nx-page[data-page="profile"] .nx .rail {
   flex-shrink: 0;
   margin-left: -2px;
 }
-.nx .btn-rail-top:hover .git-arr {
-  color: var(--brand, #00f2fe);
-  transform: translate(2px, -2px);
+@media (hover: hover) and (pointer: fine) {
+  .nx .btn-rail-top:hover .git-arr {
+    color: var(--brand, #00f2fe);
+    transform: translate(2px, -2px);
+  }
 }
 @media (max-width: 1239px) {
   .nx .rail {
@@ -970,10 +979,12 @@ body.nx-page[data-page="profile"] .nx .rail {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
   transition: background .2s ease, border-color .2s ease, transform .2s ease !important;
 }
-.nx .post:hover {
-  background: var(--surface-2) !important;
-  border-color: var(--brand) !important;
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .nx .post:hover {
+    background: var(--surface-2) !important;
+    border-color: var(--brand) !important;
+    transform: translateY(-2px);
+  }
 }
 .nx .post h3 {
   color: var(--ink) !important;
@@ -1005,10 +1016,12 @@ body.nx-page[data-page="profile"] .nx .rail {
   z-index: 10 !important;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease !important;
 }
-.nx .avatar:hover,
-.nx-hero .avatar:hover {
-  transform: translateY(-2px) scale(1.02) !important;
-  box-shadow: 0 0 0 4px var(--surface), 0 0 0 7px var(--brand), 0 20px 42px -6px rgba(0, 0, 0, 0.4) !important;
+@media (hover: hover) and (pointer: fine) {
+  .nx .avatar:hover,
+  .nx-hero .avatar:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 0 0 4px var(--surface), 0 0 0 7px var(--brand), 0 20px 42px -6px rgba(0, 0, 0, 0.4) !important;
+  }
 }
 @media (max-width: 767px) {
   .nx .avatar,
@@ -1105,10 +1118,12 @@ body.nx-page[data-page="profile"] .nx .rail {
 .exp-stat-card::before { content: ""; position: absolute; left: 20px; right: 20px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: linear-gradient(90deg, transparent, var(--brand), transparent); opacity: 0.8; pointer-events: none; }
 .exp-stat-card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
   background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 22%, transparent), transparent 65%); }
-.nx .widget-location.exp-stat-card:hover { transform: translateY(-5px) !important; border-color: color-mix(in srgb, var(--brand) 60%, transparent) !important;
-  box-shadow: 0 22px 44px -14px var(--shade, rgba(0, 0, 0, 0.4)), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important; }
-.nx .widget-location.exp-stat-card:hover::after { opacity: 1; }
-.nx .widget-location.exp-stat-card:hover .exp-stat-num { transform: scale(1.06); }
+@media (hover: hover) and (pointer: fine) {
+  .nx .widget-location.exp-stat-card:hover { transform: translateY(-5px) !important; border-color: color-mix(in srgb, var(--brand) 60%, transparent) !important;
+    box-shadow: 0 22px 44px -14px var(--shade, rgba(0, 0, 0, 0.4)), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important; }
+  .nx .widget-location.exp-stat-card:hover::after { opacity: 1; }
+  .nx .widget-location.exp-stat-card:hover .exp-stat-num { transform: scale(1.06); }
+}
 /* same pointer-following glow as the Open-to-conversations card, painted on the tile's own background */
 .chip-logo { display: inline-flex; align-items: center; gap: 6px; }
 .chip-core { font-weight: 600; color: var(--ink); }
@@ -1156,11 +1171,13 @@ body.nx-page[data-page="profile"] .nx .rail {
 .glow-tile-face { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
   z-index: 0; background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--brand) 40%, transparent), transparent 70%); }
 .glow-tile > *:not(.glow-tile-face) { position: relative; z-index: 1; }
-.nx .glow-tile.r-card:hover { transform: translateY(-4px) !important; border-color: color-mix(in srgb, var(--brand) 60%, transparent) !important; box-shadow: 0 22px 44px -14px var(--shade, rgba(0, 0, 0, 0.4)) !important; }
-.nx .glow-tile.r-card:hover .glow-tile-face { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .nx .glow-tile.r-card:hover { transform: translateY(-4px) !important; border-color: color-mix(in srgb, var(--brand) 60%, transparent) !important; box-shadow: 0 22px 44px -14px var(--shade, rgba(0, 0, 0, 0.4)) !important; }
+  .nx .glow-tile.r-card:hover .glow-tile-face { opacity: 1; }
+}
 /* glow painted on the card's own background, so it does not depend on the overlay element */
 .nx .glow-tile .r-cta-btn { transition: box-shadow 0.3s ease, transform 0.3s ease; }
-.nx .glow-tile .r-cta-btn:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent), 0 10px 28px -6px var(--shade, rgba(0, 0, 0, 0.4)) !important; }
+@media (hover: hover) and (pointer: fine) { .nx .glow-tile .r-cta-btn:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent), 0 10px 28px -6px var(--shade, rgba(0, 0, 0, 0.4)) !important; } }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-title { color: #0f172a !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-card-desc { color: #334155 !important; }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card .r-status-label { color: var(--link) !important; }
@@ -1176,18 +1193,18 @@ body.nx-page[data-page="profile"] .nx .rail {
 /* base surface: standard tint on dark themes, plain white in light and mint */
 .nx .glow-tile.r-card, .nx .widget-location.exp-stat-card { --tile-base: linear-gradient(120deg, color-mix(in srgb, var(--brand) 6%, var(--surface)) 0%, color-mix(in srgb, var(--brand) 12%, var(--surface)) 100%); }
 :is([data-theme="light"], [data-theme="mint"]) .nx .glow-tile.r-card, :is([data-theme="light"], [data-theme="mint"]) .nx .widget-location.exp-stat-card { --tile-base: linear-gradient(#ffffff, #ffffff); }
-.nx .glow-tile.r-card:hover, .nx .widget-location.exp-stat-card:hover { --glow: 1; }
+@media (hover: hover) and (pointer: fine) { .nx .glow-tile.r-card:hover, .nx .widget-location.exp-stat-card:hover { --glow: 1; } }
 /* certifications: theme-coloured cards in a responsive grid */
 .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
 .cert-card { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-.cert-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); box-shadow: 0 14px 30px -14px var(--shade, rgba(0, 0, 0, 0.4)); }
+@media (hover: hover) and (pointer: fine) { .cert-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); box-shadow: 0 14px 30px -14px var(--shade, rgba(0, 0, 0, 0.4)); } }
 .cert-ico { flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--link); }
 .cert-card h4 { margin: 0 0 4px; font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--ink); }
 .cert-card p { margin: 0; font-size: 13px; color: var(--ink-3); }
 /* additional: same card language as certifications, with a headline stat and tags */
 .extra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
 .extra-card { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-.extra-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); box-shadow: 0 14px 30px -14px var(--shade, rgba(0, 0, 0, 0.4)); }
+@media (hover: hover) and (pointer: fine) { .extra-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); box-shadow: 0 14px 30px -14px var(--shade, rgba(0, 0, 0, 0.4)); } }
 .extra-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; min-height: 40px; }
 .extra-kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--link); padding-top: 4px; }
 .extra-stat { text-align: right; white-space: nowrap; flex-shrink: 0; }
@@ -1225,11 +1242,11 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-head-text p { margin: 3px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-3); }
 .nl-seeall { margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding-block: 6px; margin-block: -6px; font-size: 14px; font-weight: 600;
   color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color 0.2s ease; }
-.nl-seeall:hover { color: var(--link); }
+@media (hover: hover) and (pointer: fine) { .nl-seeall:hover { color: var(--link); } }
 .nl-more { align-self: center; margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px;
   font-size: 14px; font-weight: 600; color: var(--ink); text-decoration: none; background: var(--surface); border: 1px solid var(--line);
   transition: border-color 0.2s ease, color 0.2s ease; }
-.nl-more:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-more:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); } }
 .nl-section { display: flex; flex-direction: column; }
 .nl-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 
@@ -1245,7 +1262,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .nl-stat { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 18px; border: 1px solid var(--line); text-decoration: none;
   background: color-mix(in srgb, var(--surface) 75%, transparent); transition: transform 0.25s ease, border-color 0.25s ease; }
-.nl-stat:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-stat:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, transparent); } }
 .nl-stat-ico { color: var(--link); display: inline-flex; margin-bottom: 6px; }
 .nl-stat b { font-size: 24px; font-weight: 800; line-height: 1.1; color: var(--ink); }
 .nl-stat > span:last-child { font-size: 13.5px; line-height: 1.35; color: var(--ink-2); }
@@ -1256,7 +1273,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-tabs a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; white-space: nowrap; text-decoration: none;
   font-size: 14px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); transition: all 0.2s ease; }
 .nl-tabs a b { font-weight: 600; color: var(--ink-3); }
-.nl-tabs a:hover { color: var(--ink); border-color: color-mix(in srgb, var(--brand) 45%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-tabs a:hover { color: var(--ink); border-color: color-mix(in srgb, var(--brand) 45%, transparent); } }
 .nl-tabs a.is-active { color: var(--bg); background: var(--ink); border-color: var(--ink); }
 .nl-tabs a.is-active b { color: color-mix(in srgb, var(--bg) 70%, transparent); }
 .nl-page > .nl-tabs + .nl-section { margin-top: -20px; }
@@ -1264,8 +1281,10 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 /* skill cards */
 .nl-card { display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-.nl-card:hover, .nl-bm:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 50%, transparent);
-  box-shadow: 0 18px 36px -20px var(--shade, rgba(0, 0, 0, 0.4)); }
+@media (hover: hover) and (pointer: fine) {
+  .nl-card:hover, .nl-bm:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 50%, transparent);
+    box-shadow: 0 18px 36px -20px var(--shade, rgba(0, 0, 0, 0.4)); }
+}
 .nl-card-head { display: flex; align-items: flex-start; gap: 12px; }
 .nl-card-title { min-width: 0; flex: 1; }
 .nl-card-title h3 { margin: 0; font-size: 17px; line-height: 1.35; overflow-wrap: anywhere; }
@@ -1278,7 +1297,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
   color: var(--ink-2); border: 1px solid var(--line); background: var(--surface-2); }
 .nl-count i { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
 .nl-open { flex-shrink: 0; color: var(--ink-3); display: inline-flex; padding: 7px; margin: -7px; border-radius: 10px; transition: color 0.2s ease; }
-.nl-open:hover { color: var(--link); }
+@media (hover: hover) and (pointer: fine) { .nl-open:hover { color: var(--link); } }
 .nl-card > p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
 .nl-cmd { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 16px; border: 1px solid var(--line);
   background: color-mix(in srgb, var(--ink) 5%, var(--surface)); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; }
@@ -1288,7 +1307,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
   display: grid; place-items: center; cursor: pointer; transition: color 0.2s ease, border-color 0.2s ease; }
 .nl-copy svg { grid-area: 1 / 1; transition: opacity 0.2s ease, transform 0.2s ease; }
 .nl-copy svg:last-child { opacity: 0; transform: scale(0.6); }
-.nl-copy:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-copy:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); } }
 .nl-copy.is-copied { color: var(--link); }
 .nl-copy.is-copied svg:first-child { opacity: 0; transform: scale(0.6); }
 .nl-copy.is-copied svg:last-child { opacity: 1; transform: none; }
@@ -1298,7 +1317,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-group-head h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--ink); }
 .nl-group-head p { margin: 2px 0 0; font-size: 13.5px; color: var(--ink-3); }
 .nl-group-head p a { color: inherit; text-decoration: none; }
-.nl-group-head p a:hover { color: var(--link); }
+@media (hover: hover) and (pointer: fine) { .nl-group-head p a:hover { color: var(--link); } }
 
 /* bookmarks */
 .nl-chips { position: relative; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 20px; scrollbar-width: none; scroll-behavior: smooth; }
@@ -1324,15 +1343,15 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-feature-body > p:not(.nl-badges):not(.nl-feature-by) { margin: 0 0 18px; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
 .nl-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 14px; font-size: 14px; font-weight: 700; text-decoration: none;
   background: var(--brand); color: color-mix(in srgb, var(--bg) 92%, #000); transition: transform 0.2s ease, box-shadow 0.2s ease; }
-.nl-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px var(--shade, rgba(0, 0, 0, 0.4)); }
+@media (hover: hover) and (pointer: fine) { .nl-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px var(--shade, rgba(0, 0, 0, 0.4)); } }
 .nl-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; text-decoration: none;
   color: var(--ink); background: var(--surface); border: 1px solid var(--line); transition: border-color 0.2s ease, color 0.2s ease; }
-.nl-ghost:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-ghost:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); } }
 .nl-bm { display: flex; flex-direction: column; padding: 6px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
 .nl-bm-thumb { position: relative; display: block; overflow: hidden; border-radius: 19px; background: var(--surface-2); }
 .nl-bm-thumb img { display: block; width: 100%; aspect-ratio: 960 / 504; object-fit: cover; transition: transform 0.4s ease; }
-.nl-bm:hover .nl-bm-thumb img { transform: scale(1.03); }
+@media (hover: hover) and (pointer: fine) { .nl-bm:hover .nl-bm-thumb img { transform: scale(1.03); } }
 .nl-bm-badges { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px; }
 .nl-bm-badges span { color: #fff; background: rgba(15, 23, 42, 0.78); border-color: transparent; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .nl-bm-badges .nl-top { color: #fff; }
@@ -1364,7 +1383,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-ext-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .nl-ext-list a { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; text-decoration: none; color: var(--ink-3);
   background: var(--surface); border: 1px solid var(--line); transition: border-color 0.2s ease; }
-.nl-ext-list a:hover { border-color: color-mix(in srgb, var(--brand) 50%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-ext-list a:hover { border-color: color-mix(in srgb, var(--brand) 50%, transparent); } }
 .nl-ext-ico img { display: block; width: 40px; height: 40px; border-radius: 10px; }
 .nl-ext-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .nl-ext-meta span:first-child { font-size: 15px; font-weight: 700; color: var(--ink); }
@@ -1378,7 +1397,7 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-screen-thumb, .nl-ep-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .nl-page .nl-play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 68px; height: 68px; border-radius: 50%; border: 0; cursor: pointer;
   display: grid; place-items: center; color: #fff !important; background: #ef233c !important; box-shadow: 0 10px 30px var(--shade, rgba(0, 0, 0, 0.4)); transition: transform 0.2s ease; padding: 0; }
-.nl-page .nl-play:hover { transform: scale(1.06); }
+@media (hover: hover) and (pointer: fine) { .nl-page .nl-play:hover { transform: scale(1.06); } }
 .nl-page .nl-play svg { margin-left: 4px; }
 .nl-frame, .nl-frame iframe, .nl-ep-screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .nl-frame { display: none; }
@@ -1401,17 +1420,17 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-player-ctrl { display: flex; gap: 8px; flex-shrink: 0; }
 .nl-player-ctrl button { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; color: var(--ink);
   background: var(--surface-2); border: 1px solid var(--line); transition: border-color 0.2s ease, color 0.2s ease; }
-.nl-player-ctrl button:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-player-ctrl button:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); } }
 .nl-tracks { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
 .nl-tracks button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 8px 12px 8px 8px; border-radius: 18px; cursor: pointer; text-align: left;
   font: inherit; color: inherit; background: transparent; border: 1px solid transparent; transition: background 0.2s ease, border-color 0.2s ease; }
-.nl-tracks button:hover { background: var(--surface); }
+@media (hover: hover) and (pointer: fine) { .nl-tracks button:hover { background: var(--surface); } }
 .nl-tracks button.is-current { background: var(--surface); border-color: var(--line); }
 .nl-n { width: 24px; text-align: center; font-size: 13px; color: var(--ink-3); flex-shrink: 0; }
 .nl-tthumb { position: relative; flex-shrink: 0; width: 80px; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: #000; }
 .nl-tthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nl-tthumb span { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; background: rgba(0, 0, 0, 0.35); opacity: 0; transition: opacity 0.2s ease; }
-.nl-tracks button:hover .nl-tthumb span { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .nl-tracks button:hover .nl-tthumb span { opacity: 1; } }
 .nl-tmeta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .nl-tmeta span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nl-tmeta span:first-child { font-size: 14.5px; font-weight: 600; color: var(--ink); }
@@ -1437,14 +1456,14 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-page .nl-play.nl-play-sm { width: 44px; height: 44px; }
 .nl-ch { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; text-decoration: none; color: var(--ink-3);
   background: var(--surface); border: 1px solid var(--line); transition: border-color 0.2s ease, transform 0.2s ease; }
-a.nl-ch:hover { border-color: color-mix(in srgb, var(--brand) 50%, transparent); transform: translateY(-2px); }
+@media (hover: hover) and (pointer: fine) { a.nl-ch:hover { border-color: color-mix(in srgb, var(--brand) 50%, transparent); transform: translateY(-2px); } }
 .nl-ch img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .nl-ch-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .nl-ch-meta b { font-size: 14.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nl-ch-meta small { font-size: 12px; color: var(--ink-3); }
 .nl-ch-meta span { font-size: 12.5px; line-height: 1.4; color: var(--ink-2); }
 .nl-ch-big { flex-direction: column; align-items: flex-start; height: 100%; padding: 6px; border: 0; background: transparent; }
-a.nl-ch-big:hover { transform: none; }
+@media (hover: hover) and (pointer: fine) { a.nl-ch-big:hover { transform: none; } }
 .nl-ch-big img { width: 56px; height: 56px; }
 .nl-ch-big .nl-ch-meta b { font-size: 17px; white-space: normal; }
 .nl-ch-big .nl-ch-meta span { font-size: 13.5px; margin-top: 6px; }
@@ -1473,7 +1492,7 @@ a.nl-ch-big:hover { transform: none; }
 .nl-shelf-visit { flex-shrink: 0; margin-left: auto; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 12px;
   font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; background: var(--surface-2); border: 1px solid var(--line); transition: border-color 0.2s ease, color 0.2s ease; }
 .nl-shelf-visit svg { color: #ef233c; }
-.nl-shelf-visit:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nl-shelf-visit:hover { color: var(--link); border-color: color-mix(in srgb, var(--brand) 55%, transparent); } }
 .nl-shelf-row { position: relative; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; scroll-behavior: smooth; }
 .nl-shelf-row::-webkit-scrollbar { display: none; }
 .nl-shelf-row .nl-vid { flex: 0 0 190px; scroll-snap-align: start; }
@@ -1506,7 +1525,7 @@ a.nl-ch-big:hover { transform: none; }
 .nl-artist-head h3 img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 .nl-artist-head h3 span { font-size: 13px; font-weight: 500; color: var(--ink-3); }
 .nl-artist-head a { display: inline-flex; align-items: center; gap: 6px; padding-block: 6px; margin-block: -6px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); text-decoration: none; }
-.nl-artist-head a:hover { color: var(--link); }
+@media (hover: hover) and (pointer: fine) { .nl-artist-head a:hover { color: var(--link); } }
 
 @media (max-width: 767px) {
   .nl-page { gap: 40px; }
@@ -1531,9 +1550,11 @@ html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-c
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), var(--b3-drop, 0 6px 16px -8px rgba(0,0,0,0.55)) !important;
   transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease, filter .2s ease !important;
 }
-html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
-  transform: translateY(-2px) !important; filter: brightness(1.06) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), var(--b3-drop-hover, 0 10px 22px -10px rgba(0,0,0,0.6)) !important;
+@media (hover: hover) and (pointer: fine) {
+  html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn):hover {
+    transform: translateY(-2px) !important; filter: brightness(1.06) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), var(--b3-drop-hover, 0 10px 22px -10px rgba(0,0,0,0.6)) !important;
+  }
 }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) * { color: inherit !important; }
 html body :is(.mobile-contact-btn, .btn.btn-primary, .nl-cta, .r-cta-btn, .lib-cta):not(#_btn) svg { stroke: currentColor !important; }
@@ -1551,9 +1572,11 @@ html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .
 }
 html body :is(.btn.btn-secondary, .btn.secondary-btn, .nl-more):not(#_btn) { padding: 10px 20px !important; font-size: 14px !important; }
 html body :is(.btn-rail-top, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn) { padding: 7px 14px !important; font-size: 13px !important; }
-html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
-  transform: translateY(-1px) !important; color: var(--accent-1) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--b3-drop, 0 6px 16px -8px rgba(0,0,0,0.55)) !important;
+@media (hover: hover) and (pointer: fine) {
+  html body :is(.btn-rail-top, .btn.btn-secondary, .btn.secondary-btn, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):hover {
+    transform: translateY(-1px) !important; color: var(--accent-1) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--b3-drop, 0 6px 16px -8px rgba(0,0,0,0.55)) !important;
+  }
 }
 html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .lib-cta, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):active { transform: scale(0.97) !important; }
 html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn):not(#_btn):focus-visible {
@@ -1592,22 +1615,19 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   html body:not(#_bn) { padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important; }
   html body.drawer-open .bottom-nav:not(#_bn):not(#_bn2) { display: none !important; }
 }
-/* tab press feedback: no grey browser flash; ripple and a small icon squeeze, like a native tab bar */
+/* tab press feedback: no grey browser flash; the icon squeezes at once and eases back, like a native tab bar (the tab
+   itself never shrinks: the touch layer's press scale skips it) */
 @media (max-width: 1023.98px) {
   html body .bottom-nav:not(#_bn) a { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none; user-select: none; }
   html body .bottom-nav:not(#_bn) a:active { transform: none !important; }
   .bottom-nav .bn-ico { position: relative; display: grid; place-items: center; width: 56px; height: 32px; border-radius: 999px; overflow: hidden; isolation: isolate;
     transition: transform .18s cubic-bezier(.2,.8,.2,1); }
-  .bottom-nav a.is-pressed .bn-ico { transform: scale(.88); }
+  .bottom-nav a:active .bn-ico { transform: scale(.88); transition-duration: 0s; }
   .bottom-nav .bn-ico svg { position: relative; z-index: 1; }
-  .bottom-nav .bn-ripple { position: absolute; z-index: 0; border-radius: 50%; pointer-events: none;
-    background: color-mix(in srgb, var(--accent-1) 30%, transparent); transform: scale(0); opacity: 1;
-    animation: bn-ripple .5s cubic-bezier(.2,.8,.2,1) forwards; }
-  @keyframes bn-ripple { to { transform: scale(1); opacity: 0; } }
   .bottom-nav .bn-label { line-height: 1.1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bottom-nav .bn-ico, .bottom-nav a.is-pressed .bn-ico { transition: none; transform: none; }
+  .bottom-nav .bn-ico, .bottom-nav a:active .bn-ico { transition: none; transform: none; }
 }
 /* phones: featured channels as compact shelves (one-row header, swipeable videos with dots) */
 .nl-dots { display: none; }
@@ -1764,7 +1784,6 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 }
 
 /* Universal Hover & Active Animation (Desktop Mouse + Mobile Touch & Tap) */
-.nx .proj:hover,
 .nx .proj:active,
 .nx .proj:focus-within,
 .nx .proj.is-active,
@@ -1772,7 +1791,12 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   transform: translateY(-4px);
   box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .85), 0 20px 40px -20px var(--shade, rgba(0, 0, 0, 0.4));
 }
-.nx .proj:hover .proj-img,
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj:hover {
+    transform: translateY(-4px);
+    box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), .85), 0 20px 40px -20px var(--shade, rgba(0, 0, 0, 0.4));
+  }
+}
 .nx .proj:active .proj-img,
 .nx .proj:focus-within .proj-img,
 .nx .proj.is-active .proj-img,
@@ -1780,7 +1804,12 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   transform: scale(1.05);
   filter: brightness(0.4);
 }
-.nx .proj:hover .proj-overlay,
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj:hover .proj-img {
+    transform: scale(1.05);
+    filter: brightness(0.4);
+  }
+}
 .nx .proj:active .proj-overlay,
 .nx .proj:focus-within .proj-overlay,
 .nx .proj.is-active .proj-overlay,
@@ -1789,7 +1818,13 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   opacity: 1 !important;
   visibility: visible !important;
 }
-.nx .proj:hover .proj-dots-canvas,
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj:hover .proj-overlay {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
 .nx .proj:active .proj-dots-canvas,
 .nx .proj:focus-within .proj-dots-canvas,
 .nx .proj.is-active .proj-dots-canvas,
@@ -1798,7 +1833,13 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   opacity: 1 !important;
   visibility: visible !important;
 }
-.nx .proj:hover .proj-center-btn,
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj:hover .proj-dots-canvas {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
 .nx .proj:active .proj-center-btn,
 .nx .proj:focus-within .proj-center-btn,
 .nx .proj.is-active .proj-center-btn,
@@ -1809,16 +1850,27 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   pointer-events: auto !important;
   transform: translate(-50%, -50%) scale(1);
 }
-.nx .proj-center-btn:hover {
-  background: rgba(10, 18, 34, 0.98) !important;
-  border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.9) !important;
-  transform: translate(-50%, -50%) scale(1.08) !important;
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.8) !important;
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj:hover .proj-center-btn {
+    display: inline-flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
-.nx .proj-center-btn:hover .btn-ico {
-  transform: translate(1px, -1px);
-  background: rgba(var(--brand-rgb, 0, 242, 254), 0.45) !important;
-  color: #ffffff;
+@media (hover: hover) and (pointer: fine) {
+  .nx .proj-center-btn:hover {
+    background: rgba(10, 18, 34, 0.98) !important;
+    border-color: rgba(var(--brand-rgb, 0, 242, 254), 0.9) !important;
+    transform: translate(-50%, -50%) scale(1.08) !important;
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(var(--brand-rgb, 0, 242, 254), 0.8) !important;
+  }
+  .nx .proj-center-btn:hover .btn-ico {
+    transform: translate(1px, -1px);
+    background: rgba(var(--brand-rgb, 0, 242, 254), 0.45) !important;
+    color: #ffffff;
+  }
 }
 
 /* AI Tools and Tech Stack Pills (Design Specified Soft Gradient Badges) */
@@ -1900,14 +1952,18 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 :is([data-theme="light"], [data-theme="mint"], .light) .nx .pill.ai::after {
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
 }
-.nx .pill.ai:hover::after {
-  left: 170%;
+@media (hover: hover) and (pointer: fine) {
+  .nx .pill.ai:hover::after {
+    left: 170%;
+  }
 }
 
 /* Hover: Elevation, Brand Glow Aura & Expansion */
-.nx .pill.ai:hover {
-  transform: translateY(-2.5px) scale(1.04);
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 80%, transparent), 0 10px 24px -3px var(--shade, rgba(0, 0, 0, 0.4));
+@media (hover: hover) and (pointer: fine) {
+  .nx .pill.ai:hover {
+    transform: translateY(-2.5px) scale(1.04);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 80%, transparent), 0 10px 24px -3px var(--shade, rgba(0, 0, 0, 0.4));
+  }
 }
 .nx .pill.ai:active {
   transform: translateY(0) scale(0.96);
@@ -1921,9 +1977,11 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   position: relative;
   z-index: 2;
 }
-.nx .pill.ai:hover img,
-.nx .pill.ai:hover svg {
-  transform: scale(1.18) rotate(5deg);
+@media (hover: hover) and (pointer: fine) {
+  .nx .pill.ai:hover img,
+  .nx .pill.ai:hover svg {
+    transform: scale(1.18) rotate(5deg);
+  }
 }
 
 /* Ambient Breathing Glow Keyframes */
@@ -1978,9 +2036,11 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   color: var(--ink);
   transition: all .25s ease;
 }
-.widget-location:hover {
-  border-color: color-mix(in srgb, var(--brand) 48%, transparent);
-  box-shadow: 0 12px 28px -6px var(--shade, rgba(0, 0, 0, 0.4));
+@media (hover: hover) and (pointer: fine) {
+  .widget-location:hover {
+    border-color: color-mix(in srgb, var(--brand) 48%, transparent);
+    box-shadow: 0 12px 28px -6px var(--shade, rgba(0, 0, 0, 0.4));
+  }
 }
 .widget-location .location-ico {
   color: var(--link);
@@ -2123,9 +2183,11 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   color: #10b981;
   flex-shrink: 0;
 }
-.work-chip:hover {
-  background: var(--surface-3, var(--surface-2));
-  border-color: rgba(var(--brand-rgb), 0.45);
+@media (hover: hover) and (pointer: fine) {
+  .work-chip:hover {
+    background: var(--surface-3, var(--surface-2));
+    border-color: rgba(var(--brand-rgb), 0.45);
+  }
 }
 .work-chip-cv {
   background: rgba(var(--brand-rgb), 0.1);
@@ -2133,9 +2195,11 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   color: var(--link);
   font-weight: 600;
 }
-.work-chip-cv:hover {
-  background: rgba(var(--brand-rgb), 0.18);
-  border-color: var(--brand);
+@media (hover: hover) and (pointer: fine) {
+  .work-chip-cv:hover {
+    background: rgba(var(--brand-rgb), 0.18);
+    border-color: var(--brand);
+  }
 }
 .work-chip-cv svg {
   color: var(--link);
@@ -2194,11 +2258,13 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   padding: 0;
   transition: all .2s ease;
 }
-.lang-audio-btn:hover {
-  background: rgba(var(--brand-rgb), 0.14);
-  border-color: var(--brand);
-  color: var(--link);
-  transform: scale(1.08);
+@media (hover: hover) and (pointer: fine) {
+  .lang-audio-btn:hover {
+    background: rgba(var(--brand-rgb), 0.14);
+    border-color: var(--brand);
+    color: var(--link);
+    transform: scale(1.08);
+  }
 }
 .lang-audio-btn.playing {
   animation: pulse-audio .6s ease infinite alternate;
@@ -2466,12 +2532,14 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   animation: 9s linear infinite halo-spin !important;
 }
 
-.nx .widget-location:hover .halo-glow,
-.nx .r-card-open:hover .halo-glow,
-.nx .people-hero:hover .halo-glow,
-.nx .cta-hero:hover .halo-glow,
-.nx .svc-card.wide:hover .halo-glow {
-  opacity: .55 !important;
+@media (hover: hover) and (pointer: fine) {
+  .nx .widget-location:hover .halo-glow,
+  .nx .r-card-open:hover .halo-glow,
+  .nx .people-hero:hover .halo-glow,
+  .nx .cta-hero:hover .halo-glow,
+  .nx .svc-card.wide:hover .halo-glow {
+    opacity: .55 !important;
+  }
 }
 
 /* Aurora Cover Layer */
@@ -2529,12 +2597,14 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   transition: opacity .35s ease !important;
 }
 
-.nx .widget-location:hover .halo-spot,
-.nx .r-card-open:hover .halo-spot,
-.nx .people-hero:hover .halo-spot,
-.nx .cta-hero:hover .halo-spot,
-.nx .svc-card.wide:hover .halo-spot {
-  opacity: 1 !important;
+@media (hover: hover) and (pointer: fine) {
+  .nx .widget-location:hover .halo-spot,
+  .nx .r-card-open:hover .halo-spot,
+  .nx .people-hero:hover .halo-spot,
+  .nx .cta-hero:hover .halo-spot,
+  .nx .svc-card.wide:hover .halo-spot {
+    opacity: 1 !important;
+  }
 }
 
 /* Foreground content stays crisp, vibrant & clickable */
@@ -2604,24 +2674,26 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   stroke: var(--aurora-title) !important;
   transition: transform 0.2s ease !important;
 }
-.nx .r-card-open .r-cta-btn:hover,
-.nx .svc-card.wide .btn-primary:hover {
-  background: var(--color-brand-400) !important;
-  color: var(--on-brand, #ffffff) !important;
-  border-color: var(--color-brand-400) !important;
-  box-shadow: 0 8px 22px -3px color-mix(in srgb, var(--color-brand-400) 50%, transparent) !important;
-  transform: translateY(-1.5px) !important;
-}
-.nx .r-card-open .r-cta-btn:hover span,
-.nx .svc-card.wide .btn-primary:hover span {
-  color: var(--on-brand, #ffffff) !important;
-}
-.nx .r-card-open .r-cta-btn:hover svg,
-.nx .svc-card.wide .btn-primary:hover i,
-.nx .svc-card.wide .btn-primary:hover svg {
-  color: var(--on-brand, #ffffff) !important;
-  stroke: var(--on-brand, #ffffff) !important;
-  transform: translateX(3px) !important;
+@media (hover: hover) and (pointer: fine) {
+  .nx .r-card-open .r-cta-btn:hover,
+  .nx .svc-card.wide .btn-primary:hover {
+    background: var(--color-brand-400) !important;
+    color: var(--on-brand, #ffffff) !important;
+    border-color: var(--color-brand-400) !important;
+    box-shadow: 0 8px 22px -3px color-mix(in srgb, var(--color-brand-400) 50%, transparent) !important;
+    transform: translateY(-1.5px) !important;
+  }
+  .nx .r-card-open .r-cta-btn:hover span,
+  .nx .svc-card.wide .btn-primary:hover span {
+    color: var(--on-brand, #ffffff) !important;
+  }
+  .nx .r-card-open .r-cta-btn:hover svg,
+  .nx .svc-card.wide .btn-primary:hover i,
+  .nx .svc-card.wide .btn-primary:hover svg {
+    color: var(--on-brand, #ffffff) !important;
+    stroke: var(--on-brand, #ffffff) !important;
+    transform: translateX(3px) !important;
+  }
 }
 
 /* Light Theme: Vibrant Royal Blue CTA Button with Crisp White Text (Standard Primary Button) */
@@ -2643,20 +2715,24 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   color: #ffffff !important;
   stroke: #ffffff !important;
 }
-:is([data-theme="light"], :root[data-theme="light"]) .nx .r-card-open .r-cta-btn:hover,
-:is([data-theme="light"], :root[data-theme="light"]) .nx .svc-card.wide .btn-primary:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
-  box-shadow: 0 8px 22px -3px var(--shade, rgba(0, 0, 0, 0.4)) !important;
-  transform: translateY(-2px) !important;
+@media (hover: hover) and (pointer: fine) {
+  :is([data-theme="light"], :root[data-theme="light"]) .nx .r-card-open .r-cta-btn:hover,
+  :is([data-theme="light"], :root[data-theme="light"]) .nx .svc-card.wide .btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    box-shadow: 0 8px 22px -3px var(--shade, rgba(0, 0, 0, 0.4)) !important;
+    transform: translateY(-2px) !important;
+  }
 }
 
 /* Hover elevation */
-.nx .widget-location:hover,
-.nx .r-card-open:hover,
-.nx .people-hero:hover,
-.nx .cta-hero:hover,
-.nx .svc-card.wide:hover {
-  transform: translateY(-2px) !important;
+@media (hover: hover) and (pointer: fine) {
+  .nx .widget-location:hover,
+  .nx .r-card-open:hover,
+  .nx .people-hero:hover,
+  .nx .cta-hero:hover,
+  .nx .svc-card.wide:hover {
+    transform: translateY(-2px) !important;
+  }
 }
 
 /* About Bio Read More / Clamp Across Mobile, Tablet & Web */
@@ -2711,12 +2787,14 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nx .about-toggle-btn:hover {
-  background: var(--brand);
-  color: var(--on-brand, #ffffff);
-  border-color: var(--brand);
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 14px -2px var(--shade, rgba(0, 0, 0, 0.4));
+@media (hover: hover) and (pointer: fine) {
+  .nx .about-toggle-btn:hover {
+    background: var(--brand);
+    color: var(--on-brand, #ffffff);
+    border-color: var(--brand);
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 14px -2px var(--shade, rgba(0, 0, 0, 0.4));
+  }
 }
 
 .nx .about-toggle-btn .about-btn-icon {
@@ -2734,10 +2812,12 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
   border-color: #bfdbfe !important;
   color: #2563eb !important;
 }
-:is([data-theme="light"], :root[data-theme="light"]) .nx .about-toggle-btn:hover {
-  background: #2563eb !important;
-  color: #ffffff !important;
-  border-color: #2563eb !important;
+@media (hover: hover) and (pointer: fine) {
+  :is([data-theme="light"], :root[data-theme="light"]) .nx .about-toggle-btn:hover {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+  }
 }
 /* ===== Profile hero: name, role, status, two actions, one row of tools ===== */
 .nx .nx-hero .facts { margin-top: 12px; font-size: 15px; }
@@ -2745,8 +2825,10 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 .nx .nx-hero .stack-row { margin: 0; justify-content: center; gap: 8px; }
 .nx .nx-hero button.pill { border: 0; font: inherit; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; position: relative;
   transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
-.nx .nx-hero button.pill:hover { transform: translateY(-1px); }
-.nx .nx-hero button.pill:not(.ai):hover { box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .5); }
+@media (hover: hover) and (pointer: fine) {
+  .nx .nx-hero button.pill:hover { transform: translateY(-1px); }
+  .nx .nx-hero button.pill:not(.ai):hover { box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .5); }
+}
 .nx .nx-hero button.pill:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .nx .nx-hero .ask-chip.is-extra { display: none; }
 .nx .nx-hero .stack-row.is-open .ask-chip.is-extra { display: inline-flex; animation: chipIn .3s ease both; }
@@ -2766,10 +2848,12 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 .nx .nx-hero .ask-chip.ultra:nth-child(2) { animation-delay: -1.1s; }
 .nx .nx-hero .ask-chip.ultra:nth-child(3) { animation-delay: -2.2s; }
 .nx .nx-hero .ask-chip.ultra:nth-child(4) { animation-delay: -3.3s; }
-.nx .nx-hero .ask-chip.ultra:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px -6px var(--shade, rgba(0, 0, 0, 0.4)), 0 0 0 3px color-mix(in srgb, var(--c) 12%, transparent);
-  animation-duration: 1.6s;
+@media (hover: hover) and (pointer: fine) {
+  .nx .nx-hero .ask-chip.ultra:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px -6px var(--shade, rgba(0, 0, 0, 0.4)), 0 0 0 3px color-mix(in srgb, var(--c) 12%, transparent);
+    animation-duration: 1.6s;
+  }
 }
 @keyframes ultraTurn { to { --ultra-a: 360deg; } }
 :is([data-theme="dark"], [data-theme="cyberpunk"], [data-theme="god-mode"]) .nx .nx-hero .ask-chip.ultra {
@@ -2798,7 +2882,8 @@ html body :is(.mobile-contact-btn, .btn, .nl-cta, .r-cta-btn, .btn-rail-top, .nl
 .nx .share-wrap { position: relative; }
 .nx .btn-share { width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--link);
   background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .3); transition: transform .2s ease, box-shadow .2s ease; }
-.nx .btn-share:hover, .nx .btn-share[aria-expanded="true"] { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .6), 0 8px 18px -10px var(--shade, rgba(0, 0, 0, 0.4)); }
+.nx .btn-share[aria-expanded="true"] { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .6), 0 8px 18px -10px var(--shade, rgba(0, 0, 0, 0.4)); }
+@media (hover: hover) and (pointer: fine) { .nx .btn-share:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .6), 0 8px 18px -10px var(--shade, rgba(0, 0, 0, 0.4)); } }
 .nx .btn-share:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .share-panel { position: fixed; z-index: 100004; width: 300px; padding: 14px; border-radius: 18px;
   background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -2814,7 +2899,7 @@ body .share-copy.is-done { background: #10b981; }
 body .share-nets { margin-top: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 body .share-nets a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 12px; font-size: 11px; color: var(--ink-2); text-decoration: none; transition: background .2s ease, color .2s ease; }
 body .share-nets a i, body .share-nets a svg { font-size: 18px; color: var(--text-primary); }
-body .share-nets a:hover { background: var(--surface-2); color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { body .share-nets a:hover { background: var(--surface-2); color: var(--ink); } }
 .nx .sub-header-right, .nx .rail-top { display: flex; align-items: center; gap: 10px; }
 
 /* status dot follows the theme in god-mode too */
@@ -2829,13 +2914,13 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
 .nx .work2-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .nx .work2-chip { border: 0; cursor: pointer; padding: 6px 14px; border-radius: 999px; font: inherit; font-size: 13.5px; font-weight: 600;
   color: var(--ink-2); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, color .2s ease; }
-.nx .work2-chip:hover { color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .nx .work2-chip:hover { color: var(--ink); } }
 .nx .work2-chip[aria-pressed="true"] { color: #fff; background: var(--brand); box-shadow: none; }
 .nx .work2-list { display: flex; flex-direction: column; gap: 12px; }
 .nx .work2-row { display: flex; gap: 16px; padding: 14px; border-radius: 20px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
   transition: box-shadow .2s ease, transform .2s ease; }
 .nx .work2-row[hidden] { display: none; }
-.nx .work2-row:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .45), 0 14px 30px -20px var(--shade, rgba(0, 0, 0, 0.4)); }
+@media (hover: hover) and (pointer: fine) { .nx .work2-row:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .45), 0 14px 30px -20px var(--shade, rgba(0, 0, 0, 0.4)); } }
 .nx .work2-thumb { flex-shrink: 0; width: 132px; height: 88px; object-fit: cover; object-position: top; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface-2); }
 .nx .work2-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .nx .work2-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -2854,7 +2939,7 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
 .nx .work2-acts { display: flex; gap: 6px; }
 .nx .work2-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border: 0; border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 600;
   text-decoration: none; color: var(--ink); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, color .2s ease; }
-.nx .work2-btn:hover { color: var(--link); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .5); }
+@media (hover: hover) and (pointer: fine) { .nx .work2-btn:hover { color: var(--link); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .5); } }
 .nx .work2-btn.is-ai { color: var(--link); background: var(--brand-soft); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), .3); }
 @media (max-width: 640px) {
   .nx .work2-row { flex-direction: column; gap: 10px; }
@@ -2876,11 +2961,13 @@ html body .nx .main:not(#_m) { border-left: 0 !important; border-right: 0 !impor
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
           mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 }
-.nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover::before { opacity: 1; }
-.nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover::after { opacity: 1; }
-.nx :is(.nl-hero, .nl-feature):hover { border-color: color-mix(in srgb, var(--brand) 55%, transparent) !important;
-  box-shadow: 0 22px 46px -18px var(--shade, rgba(0, 0, 0, 0.4)) !important; }
-.nx :is(.nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover { box-shadow: 0 16px 34px -16px var(--shade, rgba(0, 0, 0, 0.4)) !important; }
+@media (hover: hover) and (pointer: fine) {
+  .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover::before { opacity: 1; }
+  .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover::after { opacity: 1; }
+  .nx :is(.nl-hero, .nl-feature):hover { border-color: color-mix(in srgb, var(--brand) 55%, transparent) !important;
+    box-shadow: 0 22px 46px -18px var(--shade, rgba(0, 0, 0, 0.4)) !important; }
+  .nx :is(.nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch):hover { box-shadow: 0 16px 34px -16px var(--shade, rgba(0, 0, 0, 0.4)) !important; }
+}
 @media (hover: none) { .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::after, .nx :is(.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch)::before { display: none; } }
 
 /* the slat pattern is painted at once, so the cover is never empty before the animation starts */
@@ -3017,7 +3104,7 @@ html.fp-playing .nx .fx-live { display: inline-block; }
 .nx .fx-quote { margin: 14px 0 auto; display: flex; align-items: flex-start; gap: 10px; max-width: 560px; min-height: 3em; font-size: 15.5px; line-height: 1.5; font-style: italic; color: rgba(255, 255, 255, .86); text-shadow: 0 1px 3px rgba(0, 0, 0, .5); }
 .nx .fx-quote > i { margin-top: 5px; font-size: 11px; opacity: .7; }
 .nx .fx-quote-next { flex-shrink: 0; width: 28px; height: 28px; margin-top: -2px; display: grid; place-items: center; border-radius: 50%; font-size: 12px; font-style: normal; color: rgba(255, 255, 255, .8); transition: background .2s ease, color .2s ease, transform .3s ease; }
-.nx .fx-quote-next:hover { color: #fff; background: rgba(255, 255, 255, .16); transform: rotate(90deg); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-quote-next:hover { color: #fff; background: rgba(255, 255, 255, .16); transform: rotate(90deg); } }
 .nx .fx-ctrls { margin-top: 22px; display: flex; align-items: center; gap: 12px; }
 .nx .fx-state { display: flex; align-items: center; gap: 8px; }
 .nx .fx-page[data-live] .fx-state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #34d399; animation: fx-ping 1.8s ease-out infinite; }
@@ -3028,10 +3115,10 @@ html.fp-playing .nx .fx-live { display: inline-block; }
 .nx .fx-layer { display: inline-flex; border-radius: 999px; }
 .nx .fx-layer .fx-layer-pick { border-radius: 999px 0 0 999px; padding-right: 8px; }
 .nx .fx-now-chip.fx-layer-x { width: 28px; padding: 0 2px 0 0; justify-content: center; border-radius: 0 999px 999px 0; margin-left: -1px; font-size: 10px; color: rgba(255, 255, 255, .65); }
-.nx .fx-now-chip.fx-layer-x:hover { color: #fff; background: rgba(239, 68, 68, .6); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-now-chip.fx-layer-x:hover { color: #fff; background: rgba(239, 68, 68, .6); } }
 .nx .fx-layer.is-on .fx-now-chip { color: #0b1120; background: #fff; box-shadow: none; }
 .nx .fx-layer.is-on .fx-layer-x { color: rgba(11, 17, 32, .55); box-shadow: inset 1px 0 0 rgba(11, 17, 32, .12); }
-.nx .fx-layer.is-on .fx-layer-x:hover { color: #fff; background: #ef4444; }
+@media (hover: hover) and (pointer: fine) { .nx .fx-layer.is-on .fx-layer-x:hover { color: #fff; background: #ef4444; } }
 .nx .fx-layer.is-on .fx-layer-pick { cursor: default; }
 .nx .fx-now-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 .nx .fx-now-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; height: 30px; padding: 0 11px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
@@ -3039,10 +3126,10 @@ html.fp-playing .nx .fx-live { display: inline-block; }
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: background .2s ease; }
 .nx .fx-now-chip span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .nx .fx-now-chip i { font-size: 11px; opacity: .85; }
-.nx .fx-now-chip:hover { background: rgba(255, 255, 255, .24); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-now-chip:hover { background: rgba(255, 255, 255, .24); } }
 /* Quran radio: a random live reciter in one tap; once one plays, a round shuffle beside it picks another */
 .nx .fx-now-chip.fx-qr { color: #0b1120; background: #fbbf24; box-shadow: 0 6px 16px -8px var(--shade, rgba(0, 0, 0, 0.4)); }
-.nx .fx-now-chip.fx-qr:hover { background: #fcd34d; }
+@media (hover: hover) and (pointer: fine) { .nx .fx-now-chip.fx-qr:hover { background: #fcd34d; } }
 .nx .fx-now-chip.fx-qr i { opacity: 1; }
 .nx .fx-now-chip:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 /* the AI orb and the player bar take turns: wherever the bar would meet the orb (phones, tablets), the orb slides away;
@@ -3058,12 +3145,12 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
 .nx .fx-more { display: none; }
 .nx .fx-play { flex-shrink: 0; width: 68px; height: 68px; display: grid; place-items: center; border-radius: 50%; font-size: 22px; color: var(--on-brand); background: var(--grad); box-shadow: var(--shadow-btn); transition: transform .2s ease, box-shadow .2s ease; }
 .nx .fx-play .fa-play { margin-left: 3px; }
-.nx .fx-play:hover { transform: translateY(-1px) scale(1.04); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-play:hover { transform: translateY(-1px) scale(1.04); } }
 .nx .fx-play:active { transform: scale(.95); }
 .nx .fx-play.fx-play-sm { width: 48px; height: 48px; font-size: 16px; box-shadow: 0 8px 18px -8px var(--shade, rgba(0, 0, 0, 0.4)); }
 .nx .fx-glass { flex-shrink: 0; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; font-size: 15px; color: #fff; background: rgba(255, 255, 255, .14);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .24); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: background .2s ease, transform .15s ease, box-shadow .2s ease; }
-.nx .fx-glass:hover { background: rgba(255, 255, 255, .26); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-glass:hover { background: rgba(255, 255, 255, .26); } }
 .nx .fx-glass:active { transform: scale(.94); }
 .nx .fx-glass.fx-glass-lg { width: 64px; height: 64px; font-size: 20px; }
 .nx .fx-glass.is-active { color: #0b1120; background: #fff; box-shadow: 0 0 0 1px rgba(255, 255, 255, .5); }
@@ -3073,7 +3160,8 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
 .nx .fx-keys { margin-left: auto; display: flex; align-items: center; gap: 12px; min-width: 0; }
 .nx .fx-keys-btn { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 600;
   color: rgba(255, 255, 255, .82); transition: color .2s ease, background .2s ease; }
-.nx .fx-keys-btn:hover, .nx .fx-keys-btn[aria-expanded="true"] { color: #fff; background: rgba(255, 255, 255, .1); }
+.nx .fx-keys-btn[aria-expanded="true"] { color: #fff; background: rgba(255, 255, 255, .1); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-keys-btn:hover { color: #fff; background: rgba(255, 255, 255, .1); } }
 .nx .fx-keys-btn i { font-size: 11px; }
 .nx .fx-keys-arr { font-size: 9px !important; transition: transform .25s ease; }
 .nx .fx-keys-btn[aria-expanded="true"] .fx-keys-arr { transform: rotate(180deg); }
@@ -3095,10 +3183,15 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
   cursor: pointer; transition: background .2s ease, box-shadow .2s ease, transform .15s ease;
   border: 0; outline: none;
 }
-.nx .fx-presets-pill:hover,
 .nx .fx-presets-wrap.is-open .fx-presets-pill {
   background: rgba(255, 255, 255, .22);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .32), 0 8px 20px -6px rgba(0, 0, 0, .4);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nx .fx-presets-pill:hover {
+    background: rgba(255, 255, 255, .22);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .32), 0 8px 20px -6px rgba(0, 0, 0, .4);
+  }
 }
 .nx .fx-presets-pill:active { transform: scale(.96); }
 .nx .fx-presets-pill i.fa-layer-group { font-size: 11px; color: var(--brand, #00f2fe); }
@@ -3126,7 +3219,7 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
   color: #fff; background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   transition: background .2s ease, color .2s ease, transform .15s ease; }
 .nx .fx-chip i { font-size: 10.5px; opacity: .85; }
-.nx .fx-chip:hover { background: rgba(255, 255, 255, .24); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-chip:hover { background: rgba(255, 255, 255, .24); } }
 .nx .fx-chip:active { transform: scale(.96); }
 .nx .fx-chip[aria-pressed="true"] { color: #0b1120; background: #fff; box-shadow: 0 6px 16px -8px rgba(0, 0, 0, .6); }
 .nx .fx-chip:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
@@ -3140,7 +3233,8 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
 .nx .fx-ring-fg { stroke: var(--brand); stroke-linecap: round; stroke-dasharray: 339.3; transition: stroke-dashoffset .9s linear; }
 .nx .fx-tgo { position: relative; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; font-size: 13px; color: var(--ink); background: var(--surface-2); transition: background .2s ease, color .2s ease; }
 .nx .fx-tgo .fa-play { margin-left: 2px; }
-.nx .fx-tgo:hover, .nx .fx-timer.is-running .fx-tgo { color: var(--on-brand); background: var(--brand); }
+.nx .fx-timer.is-running .fx-tgo { color: var(--on-brand); background: var(--brand); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-tgo:hover { color: var(--on-brand); background: var(--brand); } }
 .nx .fx-timer-text { min-width: 0; display: flex; flex-direction: column; }
 .nx .fx-timer-text b { font-size: 26px; font-weight: 800; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
 .nx .fx-timer-text small { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -3148,14 +3242,14 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
 .nx .fx-phases button { padding: 7px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; color: var(--ink-2); transition: background .2s ease, color .2s ease; }
 .nx .fx-phases button b { font-weight: 700; color: var(--ink-3); }
 .nx .fx-phases button[aria-pressed="true"] b { color: inherit; opacity: .72; }   /* .72 keeps the minutes at 4.5:1 on the lit pill */
-.nx .fx-phases button:hover { color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-phases button:hover { color: var(--ink); } }
 .nx .fx-phases button[aria-pressed="true"] { color: var(--bg); background: var(--ink); }
 .nx .fx-icon { flex-shrink: 0; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; font-size: 14px; color: var(--ink-2); background: var(--surface-2);
   box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, color .2s ease, transform .15s ease; }
-.nx .fx-icon:hover { color: var(--ink); background: var(--surface-3); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-icon:hover { color: var(--ink); background: var(--surface-3); } }
 .nx .fx-icon:active { transform: scale(.94); }
 .nx .fx-icon.fx-ghost { color: var(--ink-3); background: transparent; box-shadow: none; }
-.nx .fx-icon.fx-ghost:hover { color: var(--ink); background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-icon.fx-ghost:hover { color: var(--ink); background: var(--surface-2); } }
 .nx .fx-icon.is-done { color: var(--on-brand); background: var(--brand); box-shadow: none; }
 
 /* volume: a pill that fills from the left */
@@ -3195,7 +3289,7 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
   color: var(--ink); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); transition: background .2s ease, box-shadow .2s ease; }
 .nx .fx-cat i { font-size: 12px; color: var(--tint); }
 .nx .fx-cat b { font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; }
-.nx .fx-cat:hover { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-strong); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-cat:hover { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-strong); } }
 .nx .fx-search { display: flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 14px; color: var(--ink-3); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .2s ease; }
 .nx .fx-search:focus-within { box-shadow: inset 0 0 0 2px var(--brand); }
 .nx .fx-search input { flex: 1; min-width: 0; height: 40px; border: 0; outline: 0; font: inherit; font-size: 14px; color: var(--ink); background: transparent; }
@@ -3213,7 +3307,7 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
   background: color-mix(in srgb, var(--surface) 72%, transparent); box-shadow: inset 0 0 0 1px var(--line); transition: background .25s ease, box-shadow .25s ease; }
 .nx .fx-tile::before { content: ""; position: absolute; inset: -30%; z-index: -1; pointer-events: none; opacity: .16; filter: blur(20px) saturate(1.15); transition: opacity .6s ease;
   background: radial-gradient(38% 42% at var(--x1) var(--y1), var(--a1), transparent 70%), radial-gradient(34% 40% at var(--x2) var(--y2), var(--a2), transparent 70%), radial-gradient(42% 36% at var(--x3) var(--y3), var(--a3), transparent 70%); }
-.nx .fx-tile:hover::before { opacity: .3; }
+@media (hover: hover) and (pointer: fine) { .nx .fx-tile:hover::before { opacity: .3; } }
 .nx .fx-tile.is-on { background: var(--surface); box-shadow: inset 0 0 0 2px var(--brand), 0 12px 28px -16px var(--shade, rgba(0, 0, 0, 0.4)); }
 .nx .fx-tile.is-on::before { opacity: .5; animation: fx-glow 18s ease-in-out infinite alternate; }
 @keyframes fx-glow { to { transform: translate(6%, -4%) rotate(8deg) scale(1.08); } }
@@ -3242,7 +3336,7 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
 .nx .fx-libtab svg { width: 16px; height: 16px; flex-shrink: 0; overflow: visible; }
 .nx .fx-libtab > span { white-space: nowrap; }
 .nx .fx-libtab b { font-size: 12.5px; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; }
-.nx .fx-libtab:hover { color: var(--ink); background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-libtab:hover { color: var(--ink); background: var(--surface-2); } }
 .nx .fx-libtab:not([aria-selected="true"]) .fx-tab-ico { color: var(--link); }
 .nx .fx-libtab[aria-selected="true"] { color: var(--on-brand); background: var(--grad); box-shadow: 0 8px 20px -10px var(--shade, rgba(0, 0, 0, 0.4)); }
 .nx .fx-libtab[aria-selected="true"] b { color: var(--on-brand); }   /* at 70% the count fell to 3.6:1 on Light's and Mint's fill */
@@ -3278,7 +3372,7 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
   display: flex; flex-direction: column; gap: 10px; font-size: 13px; line-height: 1.6; color: var(--ink-3); }
 .nx .fx-credits-body[hidden] { display: none; }
 .nx .fx-credits-body a { color: var(--link); }
-.nx .fx-credits-body a:hover { text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) { .nx .fx-credits-body a:hover { text-decoration: underline; } }
 .nx .fx-credits-body ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 18px; }
 
 /* the player bar, sticky at the bottom while there is a mix, and the mixer above it */
@@ -3289,9 +3383,10 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
 .nx .fx-page[data-mixed][data-bar] .fx-bar { pointer-events: auto; opacity: 1; transform: none; }
 .nx .fx-thumb { position: relative; isolation: isolate; flex-shrink: 0; width: 52px; height: 52px; overflow: hidden; border-radius: 18px; box-shadow: inset 0 0 0 1px var(--line); }
 .nx .fx-thumb-over { position: absolute; inset: 0; display: grid; place-items: center; font-size: 14px; color: #fff; background: rgba(0, 0, 0, .42); opacity: 0; transition: opacity .2s ease; }
-.nx .fx-thumb:hover .fx-thumb-over, .nx .fx-thumb:focus-visible .fx-thumb-over { opacity: 1; }
+.nx .fx-thumb:focus-visible .fx-thumb-over { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .nx .fx-thumb:hover .fx-thumb-over { opacity: 1; } }
 .nx .fx-now { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 16px; text-align: left; transition: background .2s ease; }
-.nx .fx-now:hover { background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-now:hover { background: var(--surface-2); } }
 .nx .fx-now-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .nx .fx-now-text b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 15px; font-weight: 700; color: var(--ink); }
 .nx .fx-now-text small { display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
@@ -3306,7 +3401,7 @@ html:is(.fx-orb-yields, .fx-orb-away) body #ai-chat-widget.chat-collapsed:not(#_
 .nx .fx-mixer-head { display: flex; align-items: center; gap: 2px; padding: 2px 2px 10px 6px; }
 .nx .fx-mixer-head b { flex: 1; font-size: 14px; font-weight: 700; color: var(--ink); }
 .nx .fx-text-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 13px; color: var(--ink-3); transition: background .2s ease, color .2s ease; }
-.nx .fx-text-btn:hover { color: var(--ink); background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-text-btn:hover { color: var(--ink); background: var(--surface-2); } }
 .nx .fx-text-btn.is-done { color: var(--link); }
 .nx .fx-layers { display: flex; flex-direction: column; gap: 6px; }
 .nx .fx-layers li { display: flex; align-items: center; gap: 10px; padding: 4px; border-radius: 14px; animation: fx-fade .2s ease both; }
@@ -3401,7 +3496,7 @@ html.fx-view-on, html.fx-view-on body { overflow: hidden !important; }
   transition: background .25s ease, box-shadow .25s ease, transform .15s ease; }
 .nx .fx-station::before { content: ""; position: absolute; inset: -30%; z-index: -1; pointer-events: none; opacity: .18; filter: blur(20px) saturate(1.15); transition: opacity .6s ease;
   background: radial-gradient(38% 42% at var(--x1) var(--y1), var(--a1), transparent 70%), radial-gradient(34% 40% at var(--x2) var(--y2), var(--a2), transparent 70%), radial-gradient(42% 36% at var(--x3) var(--y3), var(--a3), transparent 70%); }
-.nx .fx-station:hover::before { opacity: .34; }
+@media (hover: hover) and (pointer: fine) { .nx .fx-station:hover::before { opacity: .34; } }
 .nx .fx-station:active { transform: scale(.98); }
 .nx .fx-station:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .nx .fx-station-ico { flex-shrink: 0; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; font-size: 14px; color: var(--tint);
@@ -3444,7 +3539,7 @@ html.fx-view-on, html.fx-view-on body { overflow: hidden !important; }
 .nx .fx-radio-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
 .nx .fx-showmore { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px; font-size: 13px; font-weight: 650; color: var(--ink);
   background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .2s ease, background .2s ease; }
-.nx .fx-showmore:hover { background: var(--surface-2); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 45%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nx .fx-showmore:hover { background: var(--surface-2); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 45%, transparent); } }
 .nx .fx-showmore:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .nx .fx-showmore > i { font-size: 11px; color: var(--ink-3); }
 .nx .fx-addst-panel { display: flex; flex-direction: column; gap: 8px; animation: fx-fade .2s ease both; }
@@ -3630,7 +3725,9 @@ def scope_css(css):
         body = css[j + 1:k - 1]
         i = k
         if sel.startswith("@media"):
-            out.append(sel + "{" + scope_css(body) + "}")
+            inner = scope_css(body)
+            if inner.strip():   # a block whose rules were all dropped (the shell's own nav) is left out
+                out.append(sel + "{" + inner + "}")
         elif sel.startswith("@"):
             out.append(sel + "{" + body + "}")
         else:
@@ -4082,7 +4179,7 @@ HERO_JS = """<script>
     if (more) { more.closest('.stack-row').classList.add('is-open'); more.remove(); }
   });
   // where I use each tool, in a small tip above the chip (mouse and keyboard only; taps go straight to the AI)
-  if (matchMedia('(hover: hover)').matches) {
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     var tip = document.createElement('div'), timer;
     tip.className = 'hero-tip'; tip.setAttribute('aria-hidden', 'true');
     document.querySelector('.nx').appendChild(tip);
@@ -4122,7 +4219,10 @@ function glowTrack(card, x, y) {
     card._raf = (Math.abs(card._tx - card._x) > 0.5 || Math.abs(card._ty - card._y) > 0.5) ? requestAnimationFrame(step) : null;
   })();
 }
+/* a hover light: a mouse or trackpad only (a finger scrolling past would drag it along) */
+var expFine = matchMedia("(hover: hover) and (pointer: fine)");
 document.addEventListener("pointermove", function (ev) {
+  if (!expFine.matches) return;
   var card = ev.target.closest && ev.target.closest(".exp-stat-card");
   if (!card) return;
   var r = card.getBoundingClientRect();
@@ -5145,8 +5245,9 @@ LB_JS = """<script>
 
 LIB_JS = """<script>
 (function () {
-  // cards glow where the pointer is, like the cards elsewhere on the site
-  var SEL = '.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch';
+  // cards glow where the pointer is, like the cards elsewhere on the site: a mouse or trackpad only (on a touch screen
+  // the light is hidden, and a finger scrolling past would only keep it busy)
+  var SEL = '.nl-hero, .nl-feature, .nl-stat, .nl-card, .nl-bm, .nl-tile, .nl-ch', fine = matchMedia('(hover: hover) and (pointer: fine)');
   // the light eases after the pointer instead of jumping, so the movement reads clearly
   function follow(c) {
     if (c._raf) return;
@@ -5157,6 +5258,7 @@ LIB_JS = """<script>
     })();
   }
   document.addEventListener('pointermove', function (ev) {
+    if (!fine.matches) return;
     var c = ev.target.closest && ev.target.closest(SEL);
     if (!c) return;
     var r = c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
@@ -5164,6 +5266,7 @@ LIB_JS = """<script>
     c._tx = x; c._ty = y; follow(c);
   }, { passive: true });
   document.addEventListener('pointerover', function (ev) {
+    if (!fine.matches) return;
     var c = ev.target.closest && ev.target.closest(SEL);
     if (!c || c.contains(ev.relatedTarget)) return;
     var r = c.getBoundingClientRect();
@@ -5741,7 +5844,7 @@ PAGES_CSS = """
 .nx .smp-more summary { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 12px 6px 10px; border-radius: 10px;
   cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
 .nx .smp-more summary::-webkit-details-marker { display: none; }
-.nx .smp-more summary:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nx .smp-more summary:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent); } }
 .nx .smp-more summary svg { transform: rotate(-90deg); transition: transform .2s ease; }
 .nx .smp-more[open] summary svg { transform: none; }
 .nx .smp-steps { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
@@ -5782,7 +5885,7 @@ PAGES_CSS = """
   color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); transition: border-color .2s ease, color .2s ease; }
 .nx .arc-view i { font-size: 13px; color: var(--ink-3); }
 .nx .arc-view b { font-weight: 600; font-family: 'Fira Code', ui-monospace, monospace; font-size: 12.5px; color: var(--ink-3); }
-.nx .arc-view:hover { color: var(--ink); border-color: color-mix(in srgb, var(--brand) 45%, transparent); }
+@media (hover: hover) and (pointer: fine) { .nx .arc-view:hover { color: var(--ink); border-color: color-mix(in srgb, var(--brand) 45%, transparent); } }
 .nx .arc-view[aria-pressed="true"] { color: var(--bg); background: var(--ink); border-color: var(--ink); }
 .nx .arc-view[aria-pressed="true"] :is(i, b) { color: color-mix(in srgb, var(--bg) 75%, transparent); }
 .nx .arc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
@@ -5809,7 +5912,7 @@ PAGES_CSS = """
 .nx .ldr-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: -6px 0 18px; font-size: 13.5px; color: var(--ink-3); }
 .nx .ldr-meta a, .nx .ldr-about a { display: inline-flex; align-items: center; gap: 5px; padding-block: 3px; margin-block: -3px; color: var(--ink-2); text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--ink-2) 40%, transparent); text-underline-offset: 3px; }
-.nx .ldr-meta a:hover, .nx .ldr-about a:hover { color: var(--link); }
+@media (hover: hover) and (pointer: fine) { .nx .ldr-meta a:hover, .nx .ldr-about a:hover { color: var(--link); } }
 .nx .ldr-cats { margin-bottom: 12px; }
 .nx .ldr-cats button { min-height: 38px; }
 .nx .ldr-cats button[aria-pressed="true"] { color: var(--bg); background: var(--ink); border-color: var(--ink); }
@@ -5817,7 +5920,7 @@ PAGES_CSS = """
 .nx .ldr-subs[hidden] { display: none; }
 .nx .ldr-subs button { min-height: 32px; padding: 5px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--ink-2);
   background: var(--surface-2); border: 1px solid var(--line); cursor: pointer; }
-.nx .ldr-subs button:hover { color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .nx .ldr-subs button:hover { color: var(--ink); } }
 .nx .ldr-subs button[aria-pressed="true"] { color: var(--ink); background: var(--brand-soft); border-color: color-mix(in srgb, var(--brand) 60%, transparent); }
 .nx .ldr-about { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin: 0 0 14px; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
 .nx .ldr-about [data-lb-desc] { flex-basis: 100%; }

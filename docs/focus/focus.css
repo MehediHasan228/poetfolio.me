@@ -27,11 +27,11 @@
 /* the photo of the mix (the reciter's while the radio leads); it opens the Focus page */
 #fp-pill .fp-art { flex-shrink: 0; width: 52px; height: 52px; border-radius: 18px; background: var(--fp-grad) center / cover no-repeat;
     box-shadow: inset 0 0 0 1px var(--fp-line); transition: transform .15s ease; }
-#fp-pill .fp-art:hover { transform: scale(1.04); }
+@media (hover: hover) and (pointer: fine) { #fp-pill .fp-art:hover { transform: scale(1.04); } }
 /* the name: it opens the mix */
 #fp-pill .fp-now { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 0; border-radius: 16px; cursor: pointer;
     text-align: left; color: inherit; background: transparent; transition: background .2s ease; }
-#fp-pill .fp-now:hover { background: var(--fp-soft); }
+@media (hover: hover) and (pointer: fine) { #fp-pill .fp-now:hover { background: var(--fp-soft); } }
 #fp-pill .fp-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 #fp-pill .fp-info b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 15px; font-weight: 700; }
 #fp-pill .fp-info small { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 12px; font-weight: 500; color: var(--fp-ink-2); font-variant-numeric: tabular-nums; }
@@ -43,13 +43,13 @@
 #fp-pill .fp-btn { flex-shrink: 0; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 50%;
     cursor: pointer; font-size: 14px; color: var(--fp-ink-2); background: var(--fp-soft); box-shadow: inset 0 0 0 1px var(--fp-line);
     transition: background .2s ease, color .2s ease, transform .15s ease, box-shadow .2s ease; }
-#fp-pill .fp-btn:hover { color: var(--fp-ink); background: color-mix(in srgb, var(--fp-ink) 12%, transparent); }
+@media (hover: hover) and (pointer: fine) { #fp-pill .fp-btn:hover { color: var(--fp-ink); background: color-mix(in srgb, var(--fp-ink) 12%, transparent); } }
 #fp-pill .fp-btn:active { transform: scale(.92); }
 #fp-pill .fp-btn:disabled { opacity: .4; pointer-events: none; }
 #fp-pill :is(.fp-btn, .fp-now, .fp-art, .fp-tbtn, .fp-vol):focus-visible { outline: 2px solid var(--fp-acc); outline-offset: 2px; }
 #fp-pill .fp-play { width: 48px; height: 48px; font-size: 16px; color: var(--fp-on-acc); background: var(--fp-grad);
     box-shadow: 0 0 0 3px rgba(var(--fp-acc-rgb), .16), 0 8px 18px -8px rgba(var(--fp-acc-rgb), .8); }
-#fp-pill .fp-play:hover { color: var(--fp-on-acc); background: var(--fp-grad); box-shadow: 0 0 0 5px rgba(var(--fp-acc-rgb), .2), 0 10px 22px -8px rgba(var(--fp-acc-rgb), .9); }
+@media (hover: hover) and (pointer: fine) { #fp-pill .fp-play:hover { color: var(--fp-on-acc); background: var(--fp-grad); box-shadow: 0 0 0 5px rgba(var(--fp-acc-rgb), .2), 0 10px 22px -8px rgba(var(--fp-acc-rgb), .9); } }
 #fp-pill .fp-play .fa-play { margin-left: 2px; }
 #fp-pill .fp-btn.fp-x, #fp-pill .fp-btn.fp-ghost { background: transparent; box-shadow: none; }
 
@@ -83,7 +83,7 @@
 #fp-pill .fp-mixer-head b { flex: 1; font-size: 14px; font-weight: 700; }
 #fp-pill .fp-tbtn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 0; border-radius: 999px; cursor: pointer; font-size: 12.5px; font-weight: 500;
     color: var(--fp-ink-2); background: transparent; transition: background .2s ease, color .2s ease; }
-#fp-pill .fp-tbtn:hover { color: var(--fp-ink); background: var(--fp-soft); }
+@media (hover: hover) and (pointer: fine) { #fp-pill .fp-tbtn:hover { color: var(--fp-ink); background: var(--fp-soft); } }
 #fp-pill .fp-tbtn:disabled { opacity: .4; pointer-events: none; }
 #fp-pill .fp-layers { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 #fp-pill .fp-layers li { display: flex; align-items: center; gap: 10px; padding: 4px; border-radius: 14px; }

@@ -226,6 +226,25 @@ opacity) is a glow.
 Rounded, never sharp, never pill-shaped containers: chips 6px, menu rows 10px, menus 14px, lists 16px, tiles 22px,
 the hero portrait 26px. Buttons and header controls are full pills or circles. Borders are 1px.
 
+## Touch
+
+**The Hover-Is-For-A-Mouse Rule.** Every `:hover` style sits inside `@media (hover: hover) and (pointer: fine)`. On a
+touch screen a tap sets `:hover` and it stays until the next tap, so a hover lift or colour would stick to the tapped
+control (and on iOS a hover that shows something costs a second tap). `npm run check` fails on a `:hover` outside that
+condition. Hover-only scripts (the pointer-following card lights, the hover sound, the portrait's mouse parallax, the AI
+face's eyes and hover reaction) check the same media query; touch handlers stay.
+- **Press feedback,** under `(hover: none) and (pointer: coarse)` only (nothing changes with a mouse): a control dims to
+  0.72 the moment it is pressed and comes back on release, over 150ms unless it has a transition of its own; a box-like
+  one (button, chip, pill, tab, card, row) also shrinks to 0.97 with the `scale` property, never `transform`, and not
+  under reduced motion. A control that already presses in with its own transform (the button system, the player
+  controls) keeps only that, and a tab-bar item never shrinks: its icon squeezes to 0.88 instead, like a native tab bar.
+  Inline links in running text only dim; a native select presses with the label around it.
+- Whatever only a hover shows needs a touch path: a tap state (`.is-active`), `:focus-within`, or shown by default under
+  `(hover: none)`. The project cards' buttons open on a tap; the floating player's bars always show on touch.
+- No grey tap flash and no double-tap-zoom wait: every control has `-webkit-tap-highlight-color: transparent` and
+  `touch-action: manipulation`; an explicit `touch-action` (a slider's `pan-y`, a drag handle's `none`) wins. iOS shows
+  `:active` only when the page has a `touchstart` listener: the shared head adds an empty passive one.
+
 ## Components
 
 ### Header (top bar, every page)
@@ -336,6 +355,8 @@ the hero portrait 26px. Buttons and header controls are full pills or circles. B
   a text link takes `padding-block` with an equal negative `margin-block`, so its line doesn't move. Inline links in
   running text are exempt (WCAG 2.5.8).
 - **Do** respect reduced motion: no float, slide or breathing animation when it is set; the dot network stays still.
+- **Do** write every hover style inside `@media (hover: hover) and (pointer: fine)`, and give touch its own press
+  feedback (see Touch).
 
 ### Don't:
 - **Don't** use neon glow: no coloured `box-shadow`, `drop-shadow` or `text-shadow`, in any theme.

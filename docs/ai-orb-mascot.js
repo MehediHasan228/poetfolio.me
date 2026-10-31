@@ -16,6 +16,8 @@
        visit (this tab), ls the browser */
     const ss = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} } };
     const ls = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+    /* the eyes follow a mouse or trackpad only: on a touch screen every tap fires a mousemove, and the eyes would jump to it */
+    const FINE_POINTER = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)') : { matches: true };
 
     const ORB_SVG_TEMPLATE = `
 <svg class="ai-orb-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -375,6 +377,7 @@
         }
 
         _onMouseMove(e) {
+            if (!FINE_POINTER.matches) return;
             // Only perform subtle cursor tracking when in idle or thinking state
             if (this._expression !== 'idle' && this._expression !== 'thinking') {
                 this._setLookTarget(0, 0);

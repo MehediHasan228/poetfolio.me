@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme; and an empty touchstart
+         listener, without which iOS Safari never shows a control's :active (press) style -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}document.addEventListener("touchstart",function(){},{passive:true});</script>
     <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="robots" content="index, follow">
@@ -54,11 +55,11 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=9c34a405ac">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=4304bf6f98">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
-<link rel="stylesheet" href="../nx/nx.scoped.css?v=f0184aa87f">
+<link rel="stylesheet" href="../nx/nx.scoped.css?v=335f6b81e4">
 </head>
 
 <body class="subpage nx-page" data-page="projects">
@@ -191,7 +192,10 @@ function glowTrack(card, x, y) {
     card._raf = (Math.abs(card._tx - card._x) > 0.5 || Math.abs(card._ty - card._y) > 0.5) ? requestAnimationFrame(step) : null;
   })();
 }
+/* a hover light: a mouse or trackpad only (a finger scrolling past would drag it along) */
+var glowFine = matchMedia("(hover: hover) and (pointer: fine)");
 document.addEventListener("pointermove", function (ev) {
+  if (!glowFine.matches) return;
   var card = ev.target.closest && ev.target.closest(".glow-tile");
   if (!card) return;
   var r = card.getBoundingClientRect();
@@ -201,8 +205,8 @@ document.addEventListener("pointermove", function (ev) {
 </div>
 <div class="bottom-nav" role="navigation" aria-label="Quick navigation"><span class="bn-pill" aria-hidden="true"></span><a href="../"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="bn-label">Home</span></a><a href="../profile/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-2.832 8.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/></g></svg></span><span class="bn-label">Profile</span></a><a href="../people/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0-8 0M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2m1-17.87a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span><span class="bn-label">People</span></a><a href="../library/"><span class="bn-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h4v16H4zM10 4h4v16h-4zM15.5 5.2l3.9-1 3.6 14.6-3.9 1z"/></svg></span><span class="bn-label">Library</span></a></div>
 </div>
-<script src="../nx/nx.js?v=f11f87661d"></script>
-<script src="../nx/proj-dots.js?v=49e8da3458"></script>
+<script src="../nx/nx.js?v=a779f49c48"></script>
+<script src="../nx/proj-dots.js?v=4ab1ead112"></script>
 
 <script>
 (function () {
@@ -305,9 +309,9 @@ document.addEventListener("pointermove", function (ev) {
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="../focus/focus-boot.js?v=4ac494b09c" defer></script>
-    <script src="../ai-orb-mascot.js?v=b8ad72b93a" defer></script>
-    <script src="../script~9e1709.js?v=e9d34b5382" defer></script>
+    <script src="../focus/focus-boot.js?v=66ea1aa3ec" defer></script>
+    <script src="../ai-orb-mascot.js?v=83e81bcc3e" defer></script>
+    <script src="../script~9e1709.js?v=9627751eba" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->

@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- apply the saved theme before first paint, so navigating never flashes the default theme -->
-    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <!-- apply the saved theme before first paint, so navigating never flashes the default theme; and an empty touchstart
+         listener, without which iOS Safari never shows a control's :active (press) style -->
+    <script>try{var t=localStorage.getItem("mehedi_theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}document.addEventListener("touchstart",function(){},{passive:true});</script>
     <style>html{background:#0b1120}html[data-theme="light"]{background:#f8fafc}html[data-theme="mint"]{background:#f4faf7}html[data-theme="cyberpunk"]{background:#09090b}html[data-theme="god-mode"]{background:#000}</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <script id="hero-net">
