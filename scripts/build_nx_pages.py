@@ -4684,7 +4684,14 @@ def nl_tabs(cur):
     lis = "".join(
         f'<li><a href="../library/{lib_href(k) + "/" if k else ""}"{" class=\"is-active\" aria-current=\"page\"" if k == cur else ""}>'
         f'{nl_icon(ic, 16)}<span>{e(l)}</span>{f"<b>{n}</b>" if n is not None else ""}</a></li>' for k, l, ic, n in items)
-    return f'<div class="nl-tabs" role="navigation" aria-label="Library sections"><ul>{lis}</ul></div>'
+    # the row is centred on its tab (and its edges faded) the moment it is read, while only the header above it exists
+    # (a small layout), so no frame ever shows it otherwise: the browser may draw the half-read page, and a page change
+    # captures that first frame for its view transition. LIB_JS keeps it centred (fonts, resizes). Inside the row's div,
+    # so .nl-tabs + .nl-section still meet
+    centre = ('<script>(function () { var u = document.currentScript.previousElementSibling, a = u.querySelector(".is-active");'
+              ' if (!a) return; var m = u.scrollWidth - u.clientWidth, x = Math.min(Math.max(0, m), Math.max(0, Math.round(a.offsetLeft - (u.clientWidth - a.offsetWidth) / 2)));'
+              ' u.scrollTo({ left: x, behavior: "instant" }); u.classList.toggle("fade-l", x > 4); u.classList.toggle("fade-r", x < m - 4); })();</script>')
+    return f'<div class="nl-tabs" role="navigation" aria-label="Library sections"><ul>{lis}</ul>{centre}</div>'
 
 
 def nl_skill_card(it, group, show_by):
@@ -5400,7 +5407,7 @@ LIB_JS = """<script>
   function center(el, smooth) {
     var row = el.closest(".nl-chips, .nl-tabs ul");
     if (!row) return;
-    var left = el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2;
+    var left = Math.round(el.offsetLeft - (row.clientWidth - el.offsetWidth) / 2);   // whole pixels: the next page lands on the same
     row.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "instant" });   // "auto" would follow the row's smooth scrolling
   }
   rows.forEach(function (row) {
@@ -5412,19 +5419,73 @@ LIB_JS = """<script>
       e.preventDefault();
       row.scrollLeft += e.deltaY;
     }, { passive: false });
-    var active = row.querySelector(".is-active");
-    if (active) center(active, false);
-    fade(row);
   });
-  // the active tab is measured again once the web fonts have widened the tabs, and after a resize
+  /* every row's active chip to the middle and its edge fades: all the measuring first, then all the moving, so the page
+     is laid out once. It runs in the first frame, before that frame is painted: run while the page was still being read
+     (here), it laid out the half-read page and then again for each row (up to 0.4 s before the first paint on a slow
+     phone) */
   function settle() {
-    rows.forEach(function (row) { var a = row.querySelector(".is-active"); if (a) center(a, false); fade(row); });
+    var plan = [].map.call(rows, function (row) {
+      var a = row.matches(".nl-chips, .nl-tabs ul") && row.querySelector(".is-active"), max = row.scrollWidth - row.clientWidth;
+      var left = a ? Math.min(Math.max(0, max), Math.max(0, Math.round(a.offsetLeft - (row.clientWidth - a.offsetWidth) / 2))) : row.scrollLeft;
+      return { row: row, a: a, left: left, max: max };
+    });
+    plan.forEach(function (p) {
+      if (p.a) p.row.scrollTo({ left: p.left, behavior: "instant" });
+      p.row.classList.toggle("fade-l", p.left > 4);
+      p.row.classList.toggle("fade-r", p.left < p.max - 4);
+    });
   }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(settle);
+  requestAnimationFrame(settle);
+  // the active tab is measured again once the web fonts have widened the tabs, and after a resize
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { requestAnimationFrame(settle); });
   var resizeT = 0;
   window.addEventListener("resize", function () { clearTimeout(resizeT); resizeT = setTimeout(settle, 120); });
 
+  /* a section tab answers the tap at once: it takes the active look in the tap's own frame and comes to the middle of
+     the row (smoothly) while the next page loads. That page draws its row the same way, and its view transition leaves
+     the row out (style~: libtabs), so the row holds still. The colours change at once, without the tab's 0.2 s slide
+     and the 0.5 s colour ease every element has (style~, *): the next page often comes before a slide ends (it is
+     fetched ahead), the page is busy handing over meanwhile, and a slide cut short left a washed-out tab (pale text on
+     a pale pill) on screen until the swap. The page's own tab comes back when the page doesn't change after all
+     (another script took the click: while Focus plays, it opens pages in its frame), when the load is stopped, and
+     when the page comes back from the back/forward cache */
+  var tabRow = document.querySelector(".nl-tabs ul");
+  if (tabRow) {
+    var ownTab = tabRow.querySelector("a.is-active"), tappedAt = -1e9;
+    var still = function (on) { tabRow.querySelectorAll("a, a *").forEach(function (x) { x.style.transition = on ? "none" : ""; }); };
+    var markTab = function (a) {
+      still(true);
+      tabRow.querySelectorAll("a").forEach(function (x) {
+        x.classList.toggle("is-active", x === a);
+        if (x === a) x.setAttribute("aria-current", "page"); else x.removeAttribute("aria-current");
+      });
+    };
+    var ownBack = function () {
+      if (!ownTab || ownTab.classList.contains("is-active")) return;
+      markTab(ownTab); center(ownTab, false); fade(tabRow);
+      /* staying on this page: the tabs ease again under the pointer */
+      requestAnimationFrame(function () { setTimeout(function () { still(false); }, 0); });
+    };
+    tabRow.addEventListener("click", function (ev) {
+      var a = ev.target.closest && ev.target.closest("a[href]");
+      if (!a || a === ownTab || ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+      if ((a.target && a.target !== "_self") || a.hasAttribute("download") || a.origin !== location.origin) return;
+      if (a.pathname === location.pathname && a.search === location.search) return;
+      tappedAt = performance.now();
+      markTab(a);
+      center(a, !matchMedia("(prefers-reduced-motion: reduce)").matches);
+      setTimeout(function () { if (ev.defaultPrevented) ownBack(); }, 0);   /* asked after every listener has had the click */
+    });
+    addEventListener("pageshow", function (ev) { if (ev.persisted) ownBack(); });
+    /* a load that stops (Esc, the stop button); one replaced by a newer tap doesn't count */
+    if (window.navigation && navigation.addEventListener) {
+      navigation.addEventListener("navigateerror", function () { if (performance.now() - tappedAt > 400) ownBack(); });
+    }
+  }
+
   /* position dots under sideways video rows (shown on phones only, via CSS) */
+  var dotRows = [];
   document.querySelectorAll(".nl-vids, .nl-shelf-row").forEach(function (row) {
     var cards = row.children; if (cards.length < 2) return;
     var dots = document.createElement("div"); dots.className = "nl-dots"; dots.setAttribute("aria-hidden", "true");
@@ -5434,13 +5495,18 @@ LIB_JS = """<script>
       dots.appendChild(b);
     }
     row.insertAdjacentElement("afterend", dots);
-    function sync() {
+    function at() {
       var step = cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
       var max = row.scrollWidth - row.clientWidth;
-      var n = row.scrollLeft >= max - 4 ? cards.length - 1 : Math.round(row.scrollLeft / step);
-      [].forEach.call(dots.children, function (d, k) { d.classList.toggle("is-on", k === n); });
+      return row.scrollLeft >= max - 4 ? cards.length - 1 : Math.round(row.scrollLeft / step);
     }
-    row.addEventListener("scroll", sync, { passive: true }); sync();
+    function show(n) { [].forEach.call(dots.children, function (d, k) { d.classList.toggle("is-on", k === n); }); }
+    row.addEventListener("scroll", function () { show(at()); }, { passive: true });
+    dotRows.push({ at: at, show: show });
+  });
+  /* the first dot of each row lights in the first frame: every row measured before any changes (as settle() above) */
+  requestAnimationFrame(function () {
+    dotRows.map(function (r) { return r.at(); }).forEach(function (n, i) { dotRows[i].show(n); });
   });
 
   document.addEventListener("click", function (ev) {

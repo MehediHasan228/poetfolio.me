@@ -55,7 +55,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="../vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="../style~1f83e8.css?v=4304bf6f98">
+    <link rel="stylesheet" href="../style~1f83e8.css?v=171ddc1802">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     
@@ -328,7 +328,7 @@ document.addEventListener("pointermove", function (ev) {
     </div>
     <script src="../focus/focus-boot.js?v=66ea1aa3ec" defer></script>
     <script src="../ai-orb-mascot.js?v=83e81bcc3e" defer></script>
-    <script src="../script~9e1709.js?v=9627751eba" defer></script>
+    <script src="../script~9e1709.js?v=02a287b6bf" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->
@@ -518,37 +518,62 @@ document.addEventListener("pointermove", function (ev) {
     })();
     </script>
 
-    <!-- Instant page changes: 3 s after the page has loaded (so they never compete with it), the main pages are
-         prerendered in the background (Chrome, Edge); any other browser prefetches a link the moment it is touched or hovered -->
+    <!-- Instant page changes. Chrome and Edge get speculation rules; other browsers, and pages in Focus's frame (Chrome
+         ignores the rules in a frame), get a prefetch.
+         - A link the visitor touches, or rests the mouse on for 200 ms, starts to prerender (moderate), from load on.
+         - A Library page fetches the other Library sections as soon as it has loaded and is idle: the next tap is most
+           often one of them (HTML only, 18-30 kB each compressed).
+         - With a mouse, the tab bar's pages prerender 3 s after load (from Chrome 143 "eager" waits for a 10 ms hover).
+           A phone or tablet fetches them instead, once idle after load: on a phone "eager" prerenders whatever is on
+           screen (the tab bar always is), two at a time, and four heavy pages cost a phone more than they give.
+         - Any other browser fetches a link the moment it is touched, hovered or focused. -->
     <script>
     (function () {
-        window.addEventListener('load', function () {
-            setTimeout(function () {
-                if (!(HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules'))) return;
-                var rules = document.createElement('script');
-                rules.type = 'speculationrules';
-                rules.textContent = JSON.stringify({
-                    prerender: [{ source: 'list', urls: ['/', '/profile/', '/people/', '/library/'], eagerness: 'eager' },
-                                { where: { href_matches: '/*' }, eagerness: 'moderate' }],
-                    prefetch: [{ source: 'list', urls: ['/projects/', '/contact/'], eagerness: 'eager' }]
-                });
-                document.head.appendChild(rules);
-            }, 3000);
-        });
-    })();
-    </script>
-    <script>
-    (function () {
+        var spec = window.top === window && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules');
+        var mouse = matchMedia('(hover: hover) and (pointer: fine)').matches;
         var done = {};
+        var path = function (u) { return u.pathname.replace(/index\.html$/, ''); };
+        /* same-site pages linked from these places (and the given paths), each once, without this page */
+        function pages(sel, more) {
+            var out = [];
+            [].slice.call(document.querySelectorAll(sel)).concat((more || []).map(function (p) { return new URL(p, location.href); }))
+                .forEach(function (u) {
+                    if (u.origin !== location.origin || path(u) === path(location)) return;
+                    var h = u.href.split('#')[0];
+                    if (out.indexOf(h) < 0) out.push(h);
+                });
+            return out;
+        }
         function fetchIn(href) {
             if (done[href] || href === location.href.split('#')[0]) return;
             done[href] = 1;
             var l = document.createElement('link'); l.rel = 'prefetch'; l.href = href; document.head.appendChild(l);
         }
-        /* 3 s after the page has loaded, quietly fetch the tab pages so a tap opens them from cache */
+        function speculate(rules) {
+            var s = document.createElement('script'); s.type = 'speculationrules'; s.textContent = JSON.stringify(rules);
+            document.head.appendChild(s);
+        }
         window.addEventListener('load', function () {
-            var go = function () { document.querySelectorAll('.bottom-nav a[href]').forEach(function (a) { fetchIn(a.href.split('#')[0]); }); };
-            setTimeout(function () { if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else go(); }, 3000);
+            var soon = function () {
+                var lib = pages('.nl-tabs a[href], .nl-stats a[href]');
+                if (!spec) { lib.forEach(fetchIn); return; }
+                var bar = mouse ? [] : pages('.bottom-nav a[href]', ['/projects/', '/contact/']);
+                var rules = { prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }], prefetch: [] };
+                if (lib.length) rules.prefetch.push({ source: 'list', urls: lib });
+                if (bar.length) rules.prefetch.push({ source: 'list', urls: bar, eagerness: 'eager' });
+                lib.concat(bar).forEach(function (h) { done[h] = 1; });
+                speculate(rules);
+            };
+            if ('requestIdleCallback' in window) requestIdleCallback(soon, { timeout: 2000 }); else setTimeout(soon, 200);
+            setTimeout(function () {
+                if (spec && mouse) speculate({
+                    prerender: [{ source: 'list', urls: ['/', '/profile/', '/people/', '/library/'], eagerness: 'eager' }],
+                    prefetch: [{ source: 'list', urls: ['/projects/', '/contact/'], eagerness: 'eager' }]
+                });
+                /* the tab bar's pages, from cache when tapped (unless the rules above fetch them) */
+                var go = function () { pages('.bottom-nav a[href]').forEach(fetchIn); };
+                if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else go();
+            }, 3000);
         });
         function warm(e) {
             var a = e.target.closest && e.target.closest('a[href]');

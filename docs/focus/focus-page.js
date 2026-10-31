@@ -188,7 +188,21 @@
             else if (Object.keys(s.mix).length || s.radio) FP.play();
             else FP.usePreset(SUG.id);
         }
-        $('fx-play').addEventListener('click', toggleAll);
+        /* a transport tap paints first (play turns to pause at once) and then sets the sound going: starting the audio (the
+           sounds, the radio, the silent track an iPhone needs) took a slow phone 50-150 ms inside the tap and held its
+           frame back. A timer set in the tap still counts as the tap for Safari's autoplay rule (up to 1 s), and Chrome
+           runs it after the tap's frame; update() then shows what is true */
+        const afterTap = (fn) => () => { setTimeout(fn, 0); };
+        const playTap = () => {
+            const s = FP.state(), on = !(s.playing || (s.radio && s.radio.on));
+            [$('fx-play'), $('fx-bar-play'), $('fx-view-play')].forEach((b) => {
+                if (!b) return;
+                if (b.dataset.on !== String(on)) { b.dataset.on = String(on); b.innerHTML = ico(on ? 'pause' : 'play'); }
+                b.setAttribute('aria-label', (on ? 'Pause' : 'Play') + ' (Space)');
+            });
+            setTimeout(toggleAll, 0);
+        };
+        $('fx-play').addEventListener('click', playTap);
         function shuffleFront() {
             const s = FP.state();
             if (s.lead === 'radio' && s.radio && s.radio.track) {          /* a Bangla set: a surah picked at random */
@@ -198,7 +212,7 @@
             if (s.lead === 'radio' && s.radio) return quranRadio();
             FP.shuffle();
         }
-        $('fx-shuffle').addEventListener('click', shuffleFront);
+        $('fx-shuffle').addEventListener('click', afterTap(shuffleFront));
         $('fx-expand').addEventListener('click', (e) => openView(false, e.detail === 0));
         const quote = () => swap($('fx-quote'), line());
         $('fx-quote-next').addEventListener('click', quote);
@@ -206,8 +220,8 @@
         /* on the first screen the stage is the player, only mixer button here */
         $('fx-stage-mix').innerHTML = `<button type="button" class="fx-glass fx-mixbtn" id="fx-mixbtn" aria-controls="fx-mixer">${ico('sliders')}<b id="fx-mixcount"></b></button>`;
         $('fx-mixbtn').addEventListener('click', () => mixer(mixerEl.hidden));
-        $('fx-prev').addEventListener('click', () => FP.prev());
-        $('fx-next').addEventListener('click', () => FP.next());
+        $('fx-prev').addEventListener('click', afterTap(() => FP.prev()));
+        $('fx-next').addEventListener('click', afterTap(() => FP.next()));
         /* a short note on the stage, where the visualizer names its presets */
         let sayT = 0;
         function say(text) {
@@ -254,12 +268,13 @@
         stickAt(); addEventListener('resize', stickAt);
         const PANEL_OF = { 'fx-groups': 'sounds', 'fx-radio': 'radio' };
         const goTo = (id) => {
+            if (id === 'fx-groups') board();
             if (PANEL_OF[id]) { showTab(PANEL_OF[id]); id = 'fx-lib'; }          /* a chip for the radio opens its tab */
             $(id).scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
         };
         $('fx-more').addEventListener('click', () => goTo('fx-timer'));
         $('fx-now-chips').addEventListener('click', (e) => {
-            if (e.target.closest('[data-random]')) return quranRadio();
+            if (e.target.closest('[data-random]')) return afterTap(quranRadio)();
             const stop = e.target.closest('[data-stop]'); if (stop) return stopLayer(stop.dataset.stop);
             const front = e.target.closest('[data-front]'); if (front) return FP.setLead(front.dataset.front);
             const b = e.target.closest('[data-go]'); if (b) goTo(b.dataset.go);
@@ -361,15 +376,30 @@
         };
         const groups = FP.CATS.map(([k, l]) => ({ k, l, list: FP.SOUNDS.filter((s) => s.cat === k) }));
         $('fx-cats').innerHTML = groups.map((g) => `<a href="#fx-g-${g.k}" class="fx-cat" data-tint="${g.k}">${ico(CAT_ICON[g.k])}<span>${esc(g.l)}</span><b>${g.list.length}</b></a>`).join('');
-        $('fx-groups').innerHTML = groups.map((g) => `<div class="fx-group" id="fx-g-${g.k}" data-tint="${g.k}"><h3>${ico(CAT_ICON[g.k])}${esc(g.l)}</h3><div class="fx-tiles">`
+        /* the tiles (about a thousand elements, below the stage) are made when the board comes near the screen, when the
+           page is idle, or the moment something needs them (a search, a category, a chip that leads here); in sight from
+           the start, in the first frame. Made with the page, their styles and layout were most of the long task right
+           after the first paint (see the end of init) */
+        let tiles = [], made = 0;
+        const groupHtml = (g) => `<div class="fx-group" id="fx-g-${g.k}" data-tint="${g.k}"><h3>${ico(CAT_ICON[g.k])}${esc(g.l)}</h3><div class="fx-tiles">`
             + g.list.map((s) => `<div class="fx-tile" data-id="${s.id}" data-name="${esc((s.label + ' ' + s.hint + ' ' + g.l).toLowerCase())}" style="${spots(s.id)}">`
                 + `<button type="button" class="fx-tile-btn" aria-pressed="false"><span class="fx-tile-ico">${ico(s.icon)}</span>`
                 + `<span class="fx-tile-text"><b>${esc(s.label)}</b>${s.hint ? `<small>${esc(s.hint)}</small>` : ''}</span>`
                 + '<span class="fx-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>'
-                + slider(s.label + ' volume', 0.5) + '</div>').join('') + '</div></div>').join('');
-        const tiles = [...page.querySelectorAll('.fx-tile')];
+                + slider(s.label + ' volume', 0.5) + '</div>').join('') + '</div></div>';
+        /* every group still to make, or (one = true, while the page is idle) only the next one */
+        function board(one) {
+            if (made >= groups.length) return;
+            const box = $('fx-groups');
+            do box.insertAdjacentHTML('beforeend', groupHtml(groups[made++])); while (one !== true && made < groups.length);
+            tiles = [...page.querySelectorAll('.fx-tile')];
+            update();                                      /* which are on, playing and at what volume */
+        }
+        $('fx-cats').addEventListener('click', board, true);         /* before the link jumps to its group */
+        $('fx-search').addEventListener('focus', board);
         $('fx-groups').addEventListener('click', (e) => { const b = e.target.closest('.fx-tile-btn'); if (b) FP.toggleSound(b.parentElement.dataset.id); });
         $('fx-search').addEventListener('input', (e) => {
+            board();
             const q = e.target.value.trim().toLowerCase();
             const hit = (name) => name.split(/\s+/).some((_, i, all) => all.slice(i).join(' ').startsWith(q));     /* "rain" finds Light rain, not Train */
             tiles.forEach((t) => { t.hidden = !!q && !hit(t.dataset.name); });
@@ -453,7 +483,7 @@
         $('fx-scrim').addEventListener('click', () => mixer(false));
         $('fx-thumb').addEventListener('click', (e) => openView(false, e.detail === 0));
         $('fx-full').addEventListener('click', (e) => openView(true, e.detail === 0));
-        $('fx-bar-play').addEventListener('click', toggleAll);
+        $('fx-bar-play').addEventListener('click', playTap);
         $('fx-stop').addEventListener('click', () => FP.clear());
         $('fx-clear').addEventListener('click', () => FP.clear());
         $('fx-layers').addEventListener('click', (e) => {
@@ -589,9 +619,9 @@
             setTimeout(() => openFrom(viz), 0);
         }
         $('fx-view-full').addEventListener('click', () => (document.fullscreenElement ? unfull() : fullscreen()));
-        $('fx-view-play').addEventListener('click', toggleAll);
-        $('fx-view-prev').addEventListener('click', () => FP.prev());
-        $('fx-view-next').addEventListener('click', () => FP.next());
+        $('fx-view-play').addEventListener('click', playTap);
+        $('fx-view-prev').addEventListener('click', afterTap(() => FP.prev()));
+        $('fx-view-next').addEventListener('click', afterTap(() => FP.next()));
         document.addEventListener('fullscreenchange', () => {
             vizSize();
             const on = document.fullscreenElement === view;
@@ -1105,6 +1135,25 @@
         const off = FP.on(update);
         addEventListener('pagehide', off);
         drawRadio();
+
+        /* the sound board's tiles: all now for a link to one of its groups; in the first frame when the board is in sight
+           (or its panel is closed, where they cost little); else all at once when it comes within a quarter screen, and a
+           group at a time while the page is idle (each a short task, so a tap meanwhile isn't kept waiting) */
+        if (/^#fx-g-/.test(location.hash)) board();
+        else requestAnimationFrame(() => {
+            const box = $('fx-groups');
+            if (made || box.getBoundingClientRect().top < innerHeight + 100) { board(); return; }
+            const io = 'IntersectionObserver' in window ? new IntersectionObserver((en) => {
+                if (en.some((x) => x.isIntersecting)) { io.disconnect(); board(); }
+            }, { rootMargin: '0px 0px 25% 0px' }) : null;
+            if (io) io.observe(box);
+            const step = () => {
+                board(true);
+                if (made < groups.length) { if ('requestIdleCallback' in window) requestIdleCallback(step, { timeout: 2000 }); else setTimeout(step, 50); }
+                else if (io) io.disconnect();
+            };
+            if ('requestIdleCallback' in window) requestIdleCallback(step, { timeout: 4000 }); else setTimeout(step, 1500);
+        });
 
         /* a shared mix (?mix=rain:60,cafe:40) is loaded paused; play is one tap away */
         const url = new URL(location.href), shared = url.searchParams.get('mix');

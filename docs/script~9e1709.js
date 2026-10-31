@@ -2242,17 +2242,24 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     // A character in no font the site ships (বাং, 👋 and → in the chat) makes the browser search the system's fonts,
     // slowly, the first time it meets it in each font and weight: about 150 ms on a slow phone, which the first open of
     // the chat used to pay. These characters are laid out unseen in the site's fonts a few seconds after load, when the
-    // page is idle, so those searches are done when the chat opens.
+    // page is idle, so those searches are done when the chat opens. One character in one font and weight at a time, each
+    // in an idle moment of its own: all eighteen at once made a single task of 150-300 ms on a slow phone, and a tap that
+    // came then waited for all of it.
     // (Not on the visitor's first touch or scroll: the warm-up then landed in that tap's own frame and slowed the menu.)
+    const fallbackProbes = [];
+    ['Poppins', "'Fira Code',monospace"].forEach((f) => [400, 600, 700].forEach((w) => ['→', '👋', 'বাং'].forEach((c) => fallbackProbes.push([f, w, c]))));
     const warmFallbackFonts = () => {
+        const [f, w, c] = fallbackProbes.shift();
         const probe = document.createElement('div');
         probe.setAttribute('aria-hidden', 'true');
         probe.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;white-space:nowrap';
-        probe.innerHTML = ['Poppins', "'Fira Code',monospace"].map((f) => [400, 600, 700]
-            .map((w) => `<span style="font-family:${f};font-weight:${w}">→👋বাং</span>`).join('')).join('');
+        probe.innerHTML = `<span style="font-family:${f};font-weight:${w}">${c}</span>`;
         document.body.appendChild(probe);
         void probe.offsetWidth;
         probe.remove();
+        if (!fallbackProbes.length) return;
+        if ('requestIdleCallback' in window) requestIdleCallback(warmFallbackFonts, { timeout: 3000 });
+        else setTimeout(warmFallbackFonts, 50);
     };
     const warmLater = () => setTimeout(() => {
         if ('requestIdleCallback' in window) requestIdleCallback(warmFallbackFonts, { timeout: 3000 });

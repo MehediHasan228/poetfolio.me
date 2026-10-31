@@ -126,12 +126,27 @@ export async function initSlats() {
 }
 
 // without a GPU (PageSpeed's test machine has none) WebGL is drawn on the CPU, so the cover
-// starts with the visitor's first input; until then the CSS slat pattern shows
+// starts with the visitor's first input; until then the CSS slat pattern shows. It starts once that input has been
+// answered, after the frame that shows it: a press first ends (its click, or a scroll taking over), and the WebGL set-up
+// comes after the next frame. Set up inside a tap, it held a slow phone's first tap back by about 80 ms.
 const START_EVENTS = ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'];
+const PRESS_ENDS = ['click', 'pointercancel', 'touchcancel'];
+let begun = false;
 
-function startOnFirstInput() {
+function begin() {
+    if (begun) return;
+    begun = true;
+    PRESS_ENDS.forEach(t => window.removeEventListener(t, begin));
+    requestAnimationFrame(() => setTimeout(() => {
+        initSlats().catch(err => console.warn('MicroSlats load failed:', err));
+    }, 0));
+}
+
+function startOnFirstInput(e) {
     START_EVENTS.forEach(t => window.removeEventListener(t, startOnFirstInput));
-    initSlats().catch(err => console.warn('MicroSlats load failed:', err));
+    if (e.type !== 'pointerdown' && e.type !== 'touchstart') { begin(); return; }
+    PRESS_ENDS.forEach(t => window.addEventListener(t, begin, { passive: true }));
+    setTimeout(begin, 1000);   // a long press, or a press whose click never came
 }
 
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
