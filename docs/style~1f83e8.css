@@ -2148,7 +2148,7 @@ ai-orb-mascot.orb-paused *, ai-orb-mascot.orb-paused { animation-play-state: pau
     transform: translateY(0);
 }
 
-/* the footer: one row under a hairline, the copyright on the left, the DMCA badge and the Terminal button on the right */
+/* the footer: one centred row under a hairline, the copyright and the DMCA badge */
 footer {
     position: relative;
     padding: 28px 5%;
@@ -2158,7 +2158,7 @@ footer {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 12px 24px;
     max-width: 1200px;
     margin: 0 auto;
@@ -4081,25 +4081,6 @@ html :is(.dash-fp-pick, .fx-search, .fx-sleep, .cli-container) :is(input, select
         scroll-behavior: auto !important;
     }
 }
-
-/* the footer's Terminal button opens the CLI easter egg: a small outlined chip in the code face */
-.footer-cli {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 32px;
-    padding: 0 12px;
-    border: 1px solid var(--pf-line-strong);
-    border-radius: 999px;
-    background: none;
-    font-family: 'Fira Code', monospace;
-    font-size: 12.5px;
-    color: var(--pf-ink-3);
-    cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease;
-}
-.footer-cli i { font-size: 11px; }
-.footer-cli:hover { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent-ink) 50%, transparent); }
 
 /* phones: the tab bar is the footer, so the row is hidden (the footer stays as the space above the bar) */
 @media (max-width: 767.98px) {

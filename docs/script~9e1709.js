@@ -682,7 +682,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ==========================================
        8. CLI TERMINAL (EASTER EGG)
     ========================================== */
-    // Opened with the ` / ~ key (outside text fields) or the footer's Terminal button. Closed, the overlay is inert, so Tab
+    // Opened with the ` / ~ key (outside text fields). Closed, the overlay is inert, so Tab
     // never lands in it; open, focus goes to the prompt and stays inside, and Esc hands it back to whatever had it.
     const cliTerminal = document.getElementById('cli-terminal');
     const cliClose = document.getElementById('close-cli');
@@ -708,9 +708,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             cliReturnFocus = null;
         };
 
-        document.addEventListener('click', (e) => {
-            if (e.target instanceof Element && e.target.closest('[data-cli-open]')) openCli();
-        });
         document.addEventListener('keydown', (e) => {
             if ((e.key !== '`' && e.key !== '~') || e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
             if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;

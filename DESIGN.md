@@ -178,7 +178,7 @@ text keeps its size and place when Poppins arrives instead of jumping (mobile CL
 - **Figures** (Fira Code 600, 26px): the dashboard's key numbers.
 - **Title** (600, 17px): card and section headings (`1.5rem` for section titles).
 - **Body** (400, 14px, line-height 1.6): card text, lists. Long text up to ~70 characters a line.
-- **Label** (Fira Code 600, 12-12.5px, uppercase allowed): badges, meta counts, the footer's Terminal button.
+- **Label** (Fira Code 600, 12-12.5px, uppercase allowed): badges, meta counts.
 
 **The 12px Floor Rule.** Nothing on a phone is smaller than 12px, the tab bar's labels included (12px Poppins 500).
 
@@ -307,8 +307,8 @@ the hero portrait 26px. Buttons and header controls are full pills or circles. B
   (see Home hero). Dashboard rows: surface-2, 10-12px radius, 40px+ tall.
 
 ### Footer
-- One row under a hairline, max 1200px: the copyright (13px, Ink 3) left; the DMCA badge and the Terminal button
-  (an outlined Fira Code chip that opens the CLI) right. Hidden on phones, where the tab bar is the footer.
+- One centred row under a hairline, max 1200px: the copyright (13px, Ink 3) and the DMCA badge. Hidden on phones,
+  where the tab bar is the footer. The CLI has no button: it is an easter egg, opened with the ` / ~ key.
 
 ### Chat
 - Folded: the round AI face. Without a tab bar: a 56px face in the bottom-right corner, "Ask My AI" slides out beside
