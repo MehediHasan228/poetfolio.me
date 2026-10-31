@@ -398,26 +398,46 @@
             if (e.timeStamp - lastTap < 400) { lastTap = -1e9; swap(e.timeStamp); } else lastTap = e.timeStamp;
         });
 
+        // a tap shows in its own frame (play turns to pause, the visualizer button is pressed); what it sets going starts
+        // just after that frame: the audio engine (the first time, 100-500 ms on a slow phone), the mix, the visualizer.
+        // A timer set in the tap still counts as the tap for Safari's autoplay rule (up to 1 s), and Chrome runs it after
+        // the tap's frame. render() then shows what is true, also when a call failed
+        const showPlay = (on) => {
+            toggle.querySelector('i').className = 'fa-solid ' + (on ? 'fa-pause' : 'fa-play');
+            toggle.setAttribute('aria-label', on ? 'Pause' : 'Play');
+        };
         box.addEventListener('click', (e) => {
             const act = e.target.closest('[data-fp-act]');
             if (!act) return;
+            const what = act.dataset.fpAct, turnOn = !vizOn;
             try {
-                const st = fp.state();
-                const empty = !Object.keys(st.mix || {}).length && !st.radio;
-                if (act.dataset.fpAct === 'toggle') {
-                    if (isOn(st)) fp.pause();
-                    else if (empty) fp.usePreset(select.value || (presets[0] && presets[0].id));   // starts playing
-                    else fp.play();
-                } else if (act.dataset.fpAct === 'visual') {
-                    // the visuals move to the sound, so a silent player starts its mix as they come on
-                    const turnOn = !vizOn;
-                    if (turnOn && empty) fp.usePreset(select.value || (presets[0] && presets[0].id));
-                    else if (turnOn && !isOn(st)) fp.play();
-                    setViz(turnOn);
-                } else if (act.dataset.fpAct === 'prev') fp.prev();
-                else if (act.dataset.fpAct === 'next') fp.next();
-                else if (act.dataset.fpAct === 'shuffle') fp.shuffle();
-            } catch (err) {}
+                const on = isOn(fp.state());
+                if (what === 'toggle') showPlay(!on);
+                else if (what === 'visual') {
+                    stage.classList.toggle('is-viz', turnOn);
+                    vizBtn.setAttribute('aria-pressed', String(turnOn));
+                    if (turnOn) showPlay(true);
+                }
+            } catch (err) { return; }
+            setTimeout(() => {
+                try {
+                    const st = fp.state();
+                    const empty = !Object.keys(st.mix || {}).length && !st.radio;
+                    if (what === 'toggle') {
+                        if (isOn(st)) fp.pause();
+                        else if (empty) fp.usePreset(select.value || (presets[0] && presets[0].id));   // starts playing
+                        else fp.play();
+                    } else if (what === 'visual') {
+                        // the visuals move to the sound, so a silent player starts its mix as they come on
+                        if (turnOn && empty) fp.usePreset(select.value || (presets[0] && presets[0].id));
+                        else if (turnOn && !isOn(st)) fp.play();
+                        setViz(turnOn);
+                    } else if (what === 'prev') fp.prev();
+                    else if (what === 'next') fp.next();
+                    else if (what === 'shuffle') fp.shuffle();
+                } catch (err) {}
+                render();
+            }, 0);
         });
         select.addEventListener('change', () => {
             if (select.value === 'off') { stopSounds(); return; }

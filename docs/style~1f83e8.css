@@ -5136,6 +5136,15 @@ html body .bottom-nav { view-transition-name: tabbar; }
 @media (max-width: 767.98px) { html body > nav { view-transition-name: topbar; } }
 ::view-transition-old(tabbar), ::view-transition-new(tabbar),
 ::view-transition-old(topbar), ::view-transition-new(topbar) { animation: none; mix-blend-mode: normal; }
+/* the Library's section tabs hold still from one section to the next: the tapped tab is already the active one,
+   centred, when the page changes (LIB_JS), so the new row shows at once in its place and only the content under it
+   cross-fades. To or from a page without the row (the overview, the other pages) it fades with the page */
+html body .nl-tabs { view-transition-name: libtabs; }
+::view-transition-group(libtabs) { animation: none; }
+::view-transition-old(libtabs) { animation: none; opacity: 0; mix-blend-mode: normal; }
+::view-transition-new(libtabs) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(libtabs):only-child { animation: 120ms ease-out both vtFadeOut; opacity: 1; }
+::view-transition-new(libtabs):only-child { animation: 180ms ease-in both vtFadeIn; }
 ::view-transition-old(root) { animation: 120ms ease-out both vtFadeOut; }
 ::view-transition-new(root) { animation: 180ms ease-in both vtFadeIn; }
 @keyframes vtFadeOut { to { opacity: 0; } }
