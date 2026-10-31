@@ -61,11 +61,11 @@
         /* touch (DESIGN.md, Touch): no grey tap flash or double-tap wait; a pressed link dims at once and comes back over
            150 ms, and shrinks a little (scale, so nothing else moves) */
         a { -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
-        @media (hover:none) and (pointer:coarse) {
+        @media (hover:none), (pointer:coarse) {
             a { transition:opacity .15s ease-out; }
             a:active { opacity:.72; transition-duration:0s; }
         }
-        @media (hover:none) and (pointer:coarse) and (prefers-reduced-motion:no-preference) {
+        @media (hover:none) and (prefers-reduced-motion:no-preference), (pointer:coarse) and (prefers-reduced-motion:no-preference) {
             a { transition:border-color .2s ease, color .2s ease, box-shadow .2s ease, opacity .15s ease-out, scale .15s ease-out; }
             a:active { scale:.97; }
         }

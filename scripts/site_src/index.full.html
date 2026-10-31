@@ -563,9 +563,12 @@
                 var lib = pages('.nl-tabs a[href], .nl-stats a[href]');
                 if (!spec) { lib.forEach(fetchIn); return; }
                 var bar = mouse ? [] : pages('.bottom-nav a[href]', ['/projects/', '/contact/']);
-                var rules = { prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }], prefetch: [] };
+                /* never the files in /uploads/ (the CV is a PDF) */
+                var rules = { prerender: [{ where: { and: [{ href_matches: '/*' }, { not: { href_matches: '/uploads/*' } }] }, eagerness: 'moderate' }], prefetch: [] };
                 if (lib.length) rules.prefetch.push({ source: 'list', urls: lib });
-                if (bar.length) rules.prefetch.push({ source: 'list', urls: bar, eagerness: 'eager' });
+                /* immediate (a list's default), not eager: since Chrome 143 eager waits on a phone until a link to the page
+                   has been on screen, and the drawer's Projects and Contact never are */
+                if (bar.length) rules.prefetch.push({ source: 'list', urls: bar });
                 lib.concat(bar).forEach(function (h) { done[h] = 1; });
                 speculate(rules);
             };

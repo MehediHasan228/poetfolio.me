@@ -5452,7 +5452,7 @@ LIB_JS = """<script>
      when the page comes back from the back/forward cache */
   var tabRow = document.querySelector(".nl-tabs ul");
   if (tabRow) {
-    var ownTab = tabRow.querySelector("a.is-active"), tappedAt = -1e9;
+    var ownTab = tabRow.querySelector("a.is-active");
     var still = function (on) { tabRow.querySelectorAll("a, a *").forEach(function (x) { x.style.transition = on ? "none" : ""; }); };
     var markTab = function (a) {
       still(true);
@@ -5472,15 +5472,20 @@ LIB_JS = """<script>
       if (!a || a === ownTab || ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
       if ((a.target && a.target !== "_self") || a.hasAttribute("download") || a.origin !== location.origin) return;
       if (a.pathname === location.pathname && a.search === location.search) return;
-      tappedAt = performance.now();
       markTab(a);
       center(a, !matchMedia("(prefers-reduced-motion: reduce)").matches);
       setTimeout(function () { if (ev.defaultPrevented) ownBack(); }, 0);   /* asked after every listener has had the click */
     });
     addEventListener("pageshow", function (ev) { if (ev.persisted) ownBack(); });
-    /* a load that stops (Esc, the stop button); one replaced by a newer tap doesn't count */
+    /* a load that stops (Esc, the stop button), however soon after the tap. One replaced by a newer navigation doesn't
+       count: the newer one's navigate event comes in the same task as the older one's error, before or after it */
     if (window.navigation && navigation.addEventListener) {
-      navigation.addEventListener("navigateerror", function () { if (performance.now() - tappedAt > 400) ownBack(); });
+      var navAt = -1e9;
+      navigation.addEventListener("navigate", function () { navAt = performance.now(); });
+      navigation.addEventListener("navigateerror", function () {
+        var at = performance.now();
+        setTimeout(function () { if (Math.abs(navAt - at) > 50) ownBack(); }, 0);
+      });
     }
   }
 

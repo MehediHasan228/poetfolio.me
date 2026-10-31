@@ -878,7 +878,8 @@
         function markUnread(on) { const w = widget(); if (w) w.classList.toggle('has-unread', on); }
         function armClose() {
             clearTimeout(closeTimer);
-            if (el && document.visibilityState === 'visible' && !el.matches(':hover, :focus-within')) closeTimer = setTimeout(() => close(true), CLOSE_AFTER());
+            // a tap leaves :hover on a touch screen, so only a mouse resting on the bubble holds it open
+            if (el && document.visibilityState === 'visible' && !(FINE_POINTER.matches && el.matches(':hover')) && !el.matches(':focus-within')) closeTimer = setTimeout(() => close(true), CLOSE_AFTER());
         }
         function close(leaveDot) {
             run++; state = 'idle'; fromStill = false; clearTimeout(closeTimer); flashTitle(false); savedTitle = '';

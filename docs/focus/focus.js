@@ -924,7 +924,7 @@
 #tube-dock .td-bar { top: 100%; padding-top: 6px; transform: translateY(-5px); }
 #tube-dock:is(.td-show, :focus-within, .td-drag) :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; transition-delay: 0s; }
 @media (hover: hover) and (pointer: fine) { #tube-dock:hover :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; transition-delay: 0s; } }
-@media (hover: none) { #tube-dock :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; } }
+@media (hover: none), (pointer: coarse) { #tube-dock :is(.td-head, .td-bar) { opacity: 1; pointer-events: auto; transform: none; } }
 #tube-dock .td-pill { display: flex; align-items: center; gap: 2px; height: 42px; padding: 0 6px; border-radius: 14px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--text-primary, #f8fafc) 5%, transparent), transparent), var(--bg-color, #0b1120);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary, #f8fafc) 12%, transparent), 0 14px 30px -14px rgba(0, 0, 0, .55); }

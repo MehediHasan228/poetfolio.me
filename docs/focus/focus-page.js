@@ -1154,6 +1154,13 @@
             };
             if ('requestIdleCallback' in window) requestIdleCallback(step, { timeout: 4000 }); else setTimeout(step, 1500);
         });
+        /* a group's address typed in before the board is whole: the jump found nothing, so make it and go there */
+        addEventListener('hashchange', () => {
+            if (!/^#fx-g-/.test(location.hash) || made >= groups.length) return;
+            board();
+            const g = document.getElementById(location.hash.slice(1));
+            if (g) g.scrollIntoView({ block: 'start' });
+        });
 
         /* a shared mix (?mix=rain:60,cafe:40) is loaded paused; play is one tap away */
         const url = new URL(location.href), shared = url.searchParams.get('mix');

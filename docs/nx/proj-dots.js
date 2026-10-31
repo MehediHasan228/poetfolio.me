@@ -130,7 +130,7 @@
           mouse.active = true;
         }
         startLoop();
-      } else if (!card.matches(':hover')) {
+      } else if (!(FINE_POINTER.matches && card.matches(':hover'))) {
         isHovered = false;
         mouse.active = false;
       }

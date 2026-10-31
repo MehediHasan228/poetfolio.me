@@ -232,15 +232,18 @@ the hero portrait 26px. Buttons and header controls are full pills or circles. B
 touch screen a tap sets `:hover` and it stays until the next tap, so a hover lift or colour would stick to the tapped
 control (and on iOS a hover that shows something costs a second tap). `npm run check` fails on a `:hover` outside that
 condition. Hover-only scripts (the pointer-following card lights, the hover sound, the portrait's mouse parallax, the AI
-face's eyes and hover reaction) check the same media query; touch handlers stay.
-- **Press feedback,** under `(hover: none) and (pointer: coarse)` only (nothing changes with a mouse): a control dims to
+face's eyes and hover reaction) check the same media query, and so does a script that asks whether the pointer is still
+over something (`el.matches(':hover')`) before closing it; touch handlers stay.
+- **Touch is the opposite condition,** `(hover: none), (pointer: coarse)`, never `(hover: none)` alone: some phones
+  report a hovering pointer, and with that alone they would get neither the hover styles nor the touch ones.
+- **Press feedback,** under that touch condition only (nothing changes with a mouse): a control dims to
   0.72 the moment it is pressed and comes back on release, over 150ms unless it has a transition of its own; a box-like
   one (button, chip, pill, tab, card, row) also shrinks to 0.97 with the `scale` property, never `transform`, and not
   under reduced motion. A control that already presses in with its own transform (the button system, the player
   controls) keeps only that, and a tab-bar item never shrinks: its icon squeezes to 0.88 instead, like a native tab bar.
   Inline links in running text only dim; a native select presses with the label around it.
 - Whatever only a hover shows needs a touch path: a tap state (`.is-active`), `:focus-within`, or shown by default under
-  `(hover: none)`. The project cards' buttons open on a tap; the floating player's bars always show on touch.
+  the touch condition. The project cards' buttons open on a tap; the floating player's bars always show on touch.
 - No grey tap flash and no double-tap-zoom wait: every control has `-webkit-tap-highlight-color: transparent` and
   `touch-action: manipulation`; an explicit `touch-action` (a slider's `pan-y`, a drag handle's `none`) wins. iOS shows
   `:active` only when the page has a `touchstart` listener: the shared head adds an empty passive one.

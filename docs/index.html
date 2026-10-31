@@ -108,7 +108,7 @@
     <!-- Font Awesome 6.4.0, self-hosted: the fonts hold only the icons this site uses (rebuild them when adding an icon) -->
     <link rel="stylesheet" href="./vendor/fa/css/all.min.css?v=ec291c690a">
 
-    <link rel="stylesheet" href="./style~1f83e8.css?v=171ddc1802">
+    <link rel="stylesheet" href="./style~1f83e8.css?v=e93d5b23d7">
 
     <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -340,9 +340,9 @@
         </div>
         <p class="chat-foot">AI replies can be wrong · don't share personal info</p>
     </div>
-    <script src="./focus/focus.js?v=f79d7f79e0" defer></script>
-    <script src="./ai-orb-mascot.js?v=83e81bcc3e" defer></script>
-    <script src="./script~9e1709.js?v=02a287b6bf" defer></script>
+    <script src="./focus/focus.js?v=f7d0872936" defer></script>
+    <script src="./ai-orb-mascot.js?v=881cecf6c2" defer></script>
+    <script src="./script~9e1709.js?v=7f51c9d818" defer></script>
 
     <!-- Menu, tab bar and header behaviour. It sits at the end of the page: an inline script waits for the stylesheets, and
          placed above the hero it held the parser there, so the first frame showed the header without the hero -->
@@ -572,9 +572,12 @@
                 var lib = pages('.nl-tabs a[href], .nl-stats a[href]');
                 if (!spec) { lib.forEach(fetchIn); return; }
                 var bar = mouse ? [] : pages('.bottom-nav a[href]', ['/projects/', '/contact/']);
-                var rules = { prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }], prefetch: [] };
+                /* never the files in /uploads/ (the CV is a PDF) */
+                var rules = { prerender: [{ where: { and: [{ href_matches: '/*' }, { not: { href_matches: '/uploads/*' } }] }, eagerness: 'moderate' }], prefetch: [] };
                 if (lib.length) rules.prefetch.push({ source: 'list', urls: lib });
-                if (bar.length) rules.prefetch.push({ source: 'list', urls: bar, eagerness: 'eager' });
+                /* immediate (a list's default), not eager: since Chrome 143 eager waits on a phone until a link to the page
+                   has been on screen, and the drawer's Projects and Contact never are */
+                if (bar.length) rules.prefetch.push({ source: 'list', urls: bar });
                 lib.concat(bar).forEach(function (h) { done[h] = 1; });
                 speculate(rules);
             };

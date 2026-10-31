@@ -129,10 +129,13 @@ function checkStamps() {
     return failures;
 }
 
-// every :hover selector the site serves sits inside a (hover: hover) media condition, so only a mouse or trackpad ever
-// shows it: a tap on a touch screen sets :hover and it stays until the next tap, and a lifted or recoloured control
-// would stay that way (DESIGN.md, Touch). Read: every .css file, every inline <style>, and the stylesheets that a script
-// builds in a template literal (focus.js's player). :not(:hover) is not a hover style and passes.
+// every :hover selector the site serves sits inside a (hover: hover) and (pointer: fine) media condition, so only a mouse
+// or trackpad ever shows it: a tap on a touch screen sets :hover and it stays until the next tap, and a lifted or
+// recoloured control would stay that way (DESIGN.md, Touch). Read: every .css file, every inline <style>, and the
+// stylesheets that a script builds in a template literal (focus.js's player). :not(:hover) is not a hover style and
+// passes. A media list (a comma) or a `not` does not gate: the rule would still apply without the mouse.
+const FINE_HOVER = (prelude) => /^@media\b/i.test(prelude) && !/,|\bnot\b/i.test(prelude)
+    && /\(\s*hover\s*:\s*hover\s*\)/i.test(prelude) && /\(\s*pointer\s*:\s*fine\s*\)/i.test(prelude);
 function hoverRules(css) {
     const out = [];   // { selector, offset }
     const skipString = (i) => { const q = css[i]; for (let j = i + 1; j < css.length; j++) { if (css[j] === '\\') j++; else if (css[j] === q) return j + 1; } return css.length; };
@@ -162,7 +165,7 @@ function hoverRules(css) {
             }
             const prelude = css.slice(i, j).replace(/\/\*[\s\S]*?\*\//g, '').trim();
             if (/^@(media|supports|layer|container|document|scope)\b/i.test(prelude)) {
-                walk(j + 1, k, gated || (/^@media\b/i.test(prelude) && /\(\s*hover\s*:\s*hover\s*\)/i.test(prelude)));
+                walk(j + 1, k, gated || FINE_HOVER(prelude));
             } else if (!prelude.startsWith('@') && !gated) {
                 // a :hover that is not inside :not(…) makes the rule a hover style
                 const positive = prelude.replace(/:not\((?:[^()]|\([^()]*\))*\)/gi, '');
@@ -537,7 +540,7 @@ function launchOptions() {
 
     const hoverFails = checkHover();
     failures.push(...hoverFails);
-    step(`:hover outside a (hover: hover) media condition: ${hoverFails.length}`);
+    step(`:hover outside a (hover: hover) and (pointer: fine) media condition: ${hoverFails.length}`);
 
     if (!QUICK) {
         const themeJobs = pages.flatMap((p) => Object.keys(VIEWPORTS).flatMap((v) => THEMES.filter((t) => t !== 'dark').map((t) => [p, v, t])));

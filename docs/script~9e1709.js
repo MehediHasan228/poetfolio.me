@@ -1648,9 +1648,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (typeof playSound === 'function') playSound('message');
                 const mascot = getMascot();
                 if (mascot) mascot.triggerReaction('happy', 1800);
-                // tuck the panel away unless the visitor is still busy with it
+                // tuck the panel away unless the visitor is still busy with it (a mouse over it; a tap's :hover doesn't count)
                 setTimeout(() => {
-                    if (chatWidget.classList.contains('chat-expanded') && !chatInput.value && !chatWidget.matches(':hover')) toggleChat();
+                    if (chatWidget.classList.contains('chat-expanded') && !chatInput.value && !(FINE_POINTER.matches && chatWidget.matches(':hover'))) toggleChat();
                 }, 4500);
             }, 750);
         }

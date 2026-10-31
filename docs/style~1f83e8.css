@@ -6569,7 +6569,7 @@ html body .dash-focus .dash-btn[hidden]:not(#_btn) { display: none !important; }
 .dash-yt-hud { display: none; }
 .dash-yt.is-in .dash-yt-hud { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.28s ease, opacity 0.2s ease; }
 .dash-yt.is-in:is(.is-near, :has(:focus-visible)) .dash-yt-hud { grid-template-rows: 1fr; opacity: 1; }   /* keyboard focus keeps it up; a mouse click does not */
-@media (hover: none) { .dash-yt.is-in .dash-yt-hud { grid-template-rows: 1fr; opacity: 1; } }
+@media (hover: none), (pointer: coarse) { .dash-yt.is-in .dash-yt-hud { grid-template-rows: 1fr; opacity: 1; } }
 .dash-yt-hud-in { min-height: 0; overflow: hidden; }
 .dash-yt-hud-in > * { margin: 0; }
 .dash-yt-hud-in {
@@ -7000,7 +7000,7 @@ button.dash-tool:focus-visible { outline: 2px solid var(--accent-ink); outline-o
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
-@media (hover: none) and (pointer: coarse) {
+@media (hover: none), (pointer: coarse) {
     /* the site-wide colour transition (the * rule at the top) with the press's fade back added; a control with a
        transition of its own keeps it, and fades back with it when it covers opacity or all */
     :where(a[href], button, [role="button"], [role="tab"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], summary, label[for], label:has(> select)) {
@@ -7012,13 +7012,13 @@ button.dash-tool:focus-visible { outline: 2px solid var(--accent-ink); outline-o
         transition-duration: 0s !important;
     }
 }
-@media (hover: none) and (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+@media (hover: none) and (prefers-reduced-motion: no-preference), (pointer: coarse) and (prefers-reduced-motion: no-preference) {
     /* and a little smaller; the controls that already press in with their own transform keep only that */
     :is(a[href], button, [role="button"], [role="tab"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], summary, label[for], label:has(> select)):not(:is(
         .btn, .round, .mobile-contact-btn, .nl-cta, .r-cta-btn, .lib-cta, .btn-rail-top, .nl-more, .nl-shelf-visit, .nl-ghost, .f-btn,
         .dash-btn, .fx-btn, .hero-cta-ghost, .control-btn, .dash-nav, .dash-fp-ctrl > *, .dash-yt-ctrl button, .fp-btn, .td-main,
         .fx-play, .fx-glass, .fx-presets-pill, .fx-chip, .fx-icon, .fx-station, .pill.ai, .dm-chip, .chat-fit-card, .chat-example,
-        .bottom-nav a
+        .bottom-nav a, .dash-sat
     )):active:where(:not([aria-disabled="true"])) {
         scale: 0.97;
     }

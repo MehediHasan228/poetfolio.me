@@ -176,10 +176,10 @@
         /* touch (DESIGN.md, Touch): no grey tap flash or double-tap wait; a pressed control dims at once and comes back
            over 150 ms, and a button also shrinks a little (scale, so its own transform stays) */
         a[href], button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        @media (hover: none) and (pointer: coarse) {
+        @media (hover: none), (pointer: coarse) {
             :is(nav a.back, .btn):active { opacity: 0.72; transition-duration: 0s; }
         }
-        @media (hover: none) and (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+        @media (hover: none) and (prefers-reduced-motion: no-preference), (pointer: coarse) and (prefers-reduced-motion: no-preference) {
             nav a.back { transition: opacity 0.15s ease-out; }
             .btn { transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s ease-out, scale 0.15s ease-out; }
             .btn:active { scale: 0.97; }
