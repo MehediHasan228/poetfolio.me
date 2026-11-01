@@ -1729,6 +1729,13 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-artist { margin-top: 26px; }
 .nl-block { margin-top: 8px; }
 .nl-block + .nl-block { margin-top: 26px; }
+/* touch screens: a Library section below the first screen is laid out and painted only when it comes near (Bookmarks is
+   17,000px tall on a phone, Watch & Listen 8,000px), so a tab change paints sooner; auto keeps the size it last had.
+   Not with a mouse: this clips what a section paints outside itself, and a hovered card lifts with a shadow */
+@media (hover: none), (pointer: coarse) {
+  .nl-block ~ .nl-block, .nl-feats, .nl-bm-sec, .nl-ext, .nl-section + .nl-section { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
+  .nl-bm-sec { contain-intrinsic-size: auto 2000px; }   /* a bookmark group is about twice as tall */
+}
 .nl-block-title { margin: 0 0 12px; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink-2); }
 .nl-gap { margin-top: 36px; }
 .nl-block .nl-artist-head { margin-bottom: 12px; }

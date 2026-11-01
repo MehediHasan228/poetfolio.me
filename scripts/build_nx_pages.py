@@ -1440,6 +1440,13 @@ body.nx-page[data-page="profile"] .nx .rail::-webkit-scrollbar-thumb { backgroun
 .nl-artist { margin-top: 26px; }
 .nl-block { margin-top: 8px; }
 .nl-block + .nl-block { margin-top: 26px; }
+/* touch screens: a Library section below the first screen is laid out and painted only when it comes near (Bookmarks is
+   17,000px tall on a phone, Watch & Listen 8,000px), so a tab change paints sooner; auto keeps the size it last had.
+   Not with a mouse: this clips what a section paints outside itself, and a hovered card lifts with a shadow */
+@media (hover: none), (pointer: coarse) {
+  .nl-block ~ .nl-block, .nl-feats, .nl-bm-sec, .nl-ext, .nl-section + .nl-section { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
+  .nl-bm-sec { contain-intrinsic-size: auto 2000px; }   /* a bookmark group is about twice as tall */
+}
 .nl-block-title { margin: 0 0 12px; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink-2); }
 .nl-gap { margin-top: 36px; }
 .nl-block .nl-artist-head { margin-bottom: 12px; }
@@ -4380,10 +4387,14 @@ def work_tab():
         st_cls = {"Live": "is-live", "Live demo": "is-live", "In development": "is-dev", "Volunteer": "is-vol"}.get(status, "")
         st = f'<span class="work2-status {st_cls}"><i></i>{e(status)}</span>' if status else ""
         acts = ""
-        if site: acts += f'<a class="work2-btn" href="{site}" target="_blank" rel="noopener noreferrer">Live <span aria-hidden="true">&#8599;</span></a>'
-        if wa: acts += f'<a class="work2-btn" href="{wa}" target="_blank" rel="noopener noreferrer">Demo access <span aria-hidden="true">&#8599;</span></a>'
-        if code and code != GH: acts += f'<a class="work2-btn" href="{code}" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">&#8599;</span></a>'
-        acts += f'<button type="button" class="work2-btn is-ai" data-ask-project="{e(t)}"><span aria-hidden="true">&#10022;</span> Ask AI</button>'
+        # drawn, not typed: Poppins has no ↗ or ✦, and the first such character in a weight makes the browser search the
+        # system's fonts (140 ms at 4x CPU, paid by the first tap on WORK)
+        out_ico = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M8 5h11v11"/></svg>'
+        ai_ico = '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c.8 6.4 3.6 9.2 10 10-6.4.8-9.2 3.6-10 10-.8-6.4-3.6-9.2-10-10 6.4-.8 9.2-3.6 10-10z"/></svg>'
+        if site: acts += f'<a class="work2-btn" href="{site}" target="_blank" rel="noopener noreferrer">Live {out_ico}</a>'
+        if wa: acts += f'<a class="work2-btn" href="{wa}" target="_blank" rel="noopener noreferrer">Demo access {out_ico}</a>'
+        if code and code != GH: acts += f'<a class="work2-btn" href="{code}" target="_blank" rel="noopener noreferrer">Code {out_ico}</a>'
+        acts += f'<button type="button" class="work2-btn is-ai" data-ask-project="{e(t)}">{ai_ico} Ask AI</button>'
         chips = "".join(f'<span class="tag">{e(x)}</span>' for x in tags[:4])
         rows.append(f'<article class="work2-row" data-cats="{",".join(cats)}">'
                     f'<img class="work2-thumb" src="{img}" alt="" width="132" height="88" loading="lazy">'

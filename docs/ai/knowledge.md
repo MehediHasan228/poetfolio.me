@@ -3,7 +3,7 @@ Knowledge base for Mehedi Hasan's portfolio (https://mehedi.pro.bd). Generated f
 # Home (/)
 ## At a glance
 Dhaka GMT+6
-4 yrs 3 mos of experience 10 projects, 6 live 300+ companies on Jibika Plexus ~50% less manual work with LLMs 46 tools in the stack
+4 yrs 4 mos of experience 10 projects, 6 live 300+ companies on Jibika Plexus ~50% less manual work with LLMs 46 tools in the stack
 ### Projects
 by status and kind
 6 /10live
@@ -20,12 +20,12 @@ by status and kind
 See all 10 projects
 1 / 10
 ### Career
-4 yrs 3 mos
-- SAWAB Software Developer 4 mos Now
+4 yrs 4 mos
+- SAWAB Software Developer 5 mos Now
 - Jibika Software Developer & AI Specialist 1 yr 6 mos
 - Smart Software ERP Developer 1 yr
 - HBIZZ Documentation & IT Executive 1 yr 5 mos
-- TQF Voluntary Web Developer 2 yrs 10 mos Now
+- TQF Voluntary Web Developer 2 yrs 11 mos Now
 View profile
 ### Stack
 46 tools
@@ -84,10 +84,10 @@ First language.
 Speaking & listening
 Everyday conversation and listening.
 ## Experience
-4 yrs 3 mos overall · 4 full-time · 1 volunteer
+4 yrs 4 mos overall · 4 full-time · 1 volunteer
 ### Software Developer
 Current
-Jul 2026 – Present · 4 mos
+Jul 2026 – Present · 5 mos
 SAWAB Bangladesh · Full-time ·Dhaka, Bangladesh
 Scope
 module areas in the NGO ERP
@@ -108,7 +108,7 @@ less manual effort on HRM content, research and reporting, with humans approving
 - Supported client implementation, training and maintenance, keeping payroll current with government gazette updates.
 .NET Oracle Flutter LLM APIs HR & Payroll
 ### Voluntary Web Developer
-2024 – Present · 2 yrs 10 mos
+2024 – Present · 2 yrs 11 mos
 Tafseerul Quran Foundation (TQF) · Volunteer ·Bangladesh
 - Build and maintain the official TQF website (tqfbd.org) on WordPress: custom theme configuration, plugin management, security patching, performance optimisation and a mobile-responsive layout for a national non-profit audience.
 - Collaborate with the TQF team on digital-outreach strategy and social-media integration.
