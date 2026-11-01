@@ -5685,12 +5685,14 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
 .dash-kpi {
     position: relative;
     display: grid;
+    align-content: start;   /* a tile stretched to its row's height keeps figure and label together at the top */
     gap: 4px;
-    padding: 4px 20px;
+    padding: 4px clamp(12px, 9%, 20px);   /* 20px, less in the narrow tiles of 860-1279px windows */
     border-left: 1px solid var(--pf-line);
     text-decoration: none;
     color: inherit;
     transition: transform 0.2s ease;
+    container-type: inline-size;   /* the figure's size follows the tile's width (below) */
 }
 /* each figure opens where it comes from: it lifts, and an arrow comes in from the left */
 .dash-kpi::before {
@@ -5725,6 +5727,10 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
 .dash-kpi b {
     font-family: 'Fira Code', monospace;
     font-size: 26px;
+    /* one line, always: "4 yrs 11 mos" is 7.2em of Fira Code, so in a narrow tile (860-1279px windows) every figure
+       gets smaller together */
+    font-size: clamp(18px, 13.8cqi, 26px);
+    white-space: nowrap;
     font-weight: 600;
     line-height: 1.2;
     color: var(--accent-ink);
@@ -5733,6 +5739,12 @@ ai-orb-mascot:is([data-expression="excited"], [data-expression="happy"], [data-e
 .dash-kpi span {
     font-size: 13px;
     color: var(--pf-ink-3);
+}
+/* 681-859px windows fit four columns, which would leave the fifth figure alone on a row (with a divider before it):
+   three and two instead */
+@media (min-width: 681px) and (max-width: 859.98px) {
+    .dash-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 14px; }
+    .dash-kpi:nth-child(3n+1) { border-left: 0; }
 }
 
 /* projects: ring for the live share, bars for kinds, then three thumbnails */

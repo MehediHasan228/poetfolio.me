@@ -170,12 +170,17 @@ No other webfonts, with one exception: a page that shows Bangla text (today only
 Every Poppins stack names `'Poppins Fallback'` second: local Arial (or Liberation Sans, its metric twin) with
 `size-adjust` and ascent/descent/line-gap overrides per weight (400, 600, 700, measured on the site's own text), so
 text keeps its size and place when Poppins arrives instead of jumping (mobile CLS 0.028 → 0.001).
+A symbol Poppins lacks (↗, ✦, →) is an inline SVG, not a character: the first such character in a weight makes the
+browser search the system's fonts, about 140 ms on a slow phone, paid by whatever tap first shows it (the chat's
+→, 👋 and বাং are warmed up a few seconds after load instead, in script~).
 
 ### Hierarchy
 - **Display** (700, 4rem desktop, clamp to ~2.2rem on phones): the hero name only, alone in the h1.
 - **Subtitle** (Poppins 600, 28px on desktop, down to ~20px beside the photo, 18px on phones; line-height 1.3, in
   `--accent-ink`): the hero's role line, the h2 under the name. One line at every width from 360px.
-- **Figures** (Fira Code 600, 26px): the dashboard's key numbers.
+- **Figures** (Fira Code 600, 26px): the dashboard's key numbers. Always one line: in a narrow tile every figure of the
+  row shrinks together (container units, down to 18px; 20px on phones), and 681-859px windows lay the five out three
+  and two rather than four and one.
 - **Title** (600, 17px): card and section headings (`1.5rem` for section titles).
 - **Body** (400, 14px, line-height 1.6): card text, lists. Long text up to ~70 characters a line.
 - **Label** (Fira Code 600, 12-12.5px, uppercase allowed): badges, meta counts.
@@ -247,6 +252,9 @@ over something (`el.matches(':hover')`) before closing it; touch handlers stay.
 - No grey tap flash and no double-tap-zoom wait: every control has `-webkit-tap-highlight-color: transparent` and
   `touch-action: manipulation`; an explicit `touch-action` (a slider's `pan-y`, a drag handle's `none`) wins. iOS shows
   `:active` only when the page has a `touchstart` listener: the shared head adds an empty passive one.
+- On touch screens a Library section below the first screen (Bookmarks groups, Watch & Listen blocks, the Overview's
+  later sections) has `content-visibility: auto`, so a tab change lays out and paints only what is near the screen.
+  Never with a mouse: it clips whatever a section paints outside itself, and a hovered card lifts with a shadow.
 
 ## Components
 
