@@ -796,7 +796,7 @@
             if (!v) return null;
             const sel = v.selected;
             if (sel && /@|\+?\d[\d\s-]{7,}/.test(sel)) return { strong: true, say: 'Saving my contact? Smart move.', ask: ['WhatsApp is the fastest way to reach me. Want to say hi now?'], replies: [
-                { label: 'Open WhatsApp', href: 'https://wa.me/8801799447594?text=' + encodeURIComponent('Hi Mehedi, I found you through your portfolio.'), hearts: true },
+                { label: 'Open WhatsApp', href: 'https://wa.me/8801799447594?text=' + encodeURIComponent('Hi Mehedi (from mehedi.pro.bd), I found you through your portfolio.'), hearts: true },
                 { label: 'Ask something first', ai: 'What kind of work are you open to right now?' }, BYE('Later') ] };
             if (sel && v.selectedTech) return { strong: true, say: `You highlighted ${quote(sel)}.`, ask: [`Want to know how I use ${sel} in real work?`, `Curious where ${sel} fits in my systems?`], replies: [
                 { label: 'Yes, show me', hearts: true, ai: `How do you use ${sel} in your real projects?` },

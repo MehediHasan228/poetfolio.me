@@ -24,6 +24,7 @@ GH = "https://github.com/MehediHasan228"
 LI = "https://linkedin.com/in/mehedi-hasan-2859383b4"
 MAIL = "mehedihasan228.cse@gmail.com"
 WA = "https://wa.me/8801799447594"
+WA_WEB = WA + "?text=" + quote("Hi Mehedi (from mehedi.pro.bd), ")
 NAME = "Mehedi Hasan"
 
 # ------------------------------------------------------------------ DATA
@@ -169,7 +170,7 @@ PROJECTS = [
      ["Frappe", "ERPNext", "Next.js"], "fa-sitemap", "Live demo",
      # the demo is live; sign-in details are given on request over WhatsApp
      [("link", "https://sawab-erp-demo.tail5e47fb.ts.net/"),
-      ("whatsapp", WA + "?text=" + quote("Hi Mehedi, I'd like demo access to the SAWAB NGO ERP."))],
+      ("whatsapp", WA + "?text=" + quote("Hi Mehedi (from mehedi.pro.bd), I'd like demo access to the SAWAB NGO ERP."))],
      "../sawab_erp_dashboard.webp"),
     ("Karbar ERP", "Business suite for Bangladesh: accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), payroll with TDS and "
      "tax slabs, inventory, sales, purchases and project tracking.",
@@ -424,7 +425,7 @@ def rail(show_open=True, show_top=False):
          '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>'),
         ("LinkedIn", "in/mehedi-hasan-2859383b4", LI,
          '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>'),
-        ("WhatsApp", "+880 1799-447594", WA,
+        ("WhatsApp", "+880 1799-447594", WA_WEB,
          '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>'),
         ("Email", MAIL, f"mailto:{MAIL}",
          '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>'),
@@ -5592,7 +5593,7 @@ def people():
 
 def contact():
     reach = [("fa-solid fa-envelope", "Email", MAIL, f"mailto:{MAIL}"),
-             ("fa-brands fa-whatsapp", "WhatsApp", "+880 1799-447594", WA),
+             ("fa-brands fa-whatsapp", "WhatsApp", "+880 1799-447594", WA_WEB),
              ("fa-brands fa-linkedin", "LinkedIn", "in/mehedi-hasan-2859383b4", LI),
              ("fa-brands fa-github", "GitHub", "@MehediHasan228", GH),
              ("fa-solid fa-globe", "Portfolio", "mehedi.pro.bd", SITE),
@@ -5613,7 +5614,7 @@ def contact():
 <div class="svc-card"><span class="svc-ico"><i class="fa-regular fa-lightbulb"></i></span><h3>Paid consultation</h3><p>Architecture advice, code reviews and performance fixes for your NestJS, Laravel or AI-powered system.</p>
 <a class="btn btn-secondary" href="mailto:{MAIL}?subject=Consultation">Book a consultation <i class="fa-solid fa-arrow-right"></i></a></div>
 <div class="svc-card"><span class="svc-ico"><i class="fa-solid fa-video"></i></span><h3>1:1 call</h3><p>Career chats, mentoring, or a second opinion on what you're building.</p>
-<a class="btn btn-secondary" href="{WA}?text=Hi%20Mehedi%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener noreferrer">Book a call <i class="fa-solid fa-arrow-right"></i></a></div>
+<a class="btn btn-secondary" href="{WA}?text=Hi%20Mehedi%20%28from%20mehedi.pro.bd%29%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener noreferrer">Book a call <i class="fa-solid fa-arrow-right"></i></a></div>
 </div>
 <h2 class="work-title">Reach me</h2>
 <div class="reach">{rc}</div>
@@ -5881,7 +5882,7 @@ def home_dashboard():
     contact = (f'<article class="dash-tile dash-contact" id="contact"><div class="dash-contact-text">'
                f'<h3>Have an ERP, HR or AI project in mind?</h3>'
                f'<p class="dash-text">Tell me what you need. I work from Dhaka (GMT+6), remote-first.</p></div>'
-               f'<div class="dash-reach"><div class="dash-actions"><a class="dash-btn" href="{WA}" target="_blank" rel="noopener noreferrer">'
+               f'<div class="dash-reach"><div class="dash-actions"><a class="dash-btn" href="{WA_WEB}" target="_blank" rel="noopener noreferrer">'
                f'<i class="fa-brands fa-whatsapp"></i>Message on WhatsApp</a>'
                # the chat's project discussion: the AI weighs the brief against his real work (dash.js; the contact page without it)
                f'<a class="dash-btn is-ghost" href="./contact/" data-ai-discuss><i class="fa-solid fa-wand-magic-sparkles"></i>Discuss with my AI</a>'

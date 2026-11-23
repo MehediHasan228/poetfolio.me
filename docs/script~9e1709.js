@@ -1145,7 +1145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const projectsHref = onHome ? '#projects' : (location.pathname.indexOf('/projects/') !== -1 ? './' : './index.html#projects');
             const cvEl = document.getElementById('hero-link-cv');
             const cvHref = cvEl ? cvEl.getAttribute('href') : ((location.pathname.indexOf('/projects/') !== -1 ? '../' : './') + 'uploads/Mehedi_Hasan_CV.pdf?v=2');
-            const wa = (msg) => 'https://wa.me/8801799447594?text=' + encodeURIComponent(msg);
+            const wa = (msg) => 'https://wa.me/8801799447594?text=' + encodeURIComponent(/mehedi\.pro\.bd/i.test(msg) ? msg : msg.replace(/^Hi Mehedi,\s*/i, 'Hi Mehedi (from mehedi.pro.bd), '));
             const act = (href, label, ext) => `<a class="chat-action" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`;
             return {
                 about: {
@@ -1496,7 +1496,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const l = document.querySelector('a.logo-link');
             return l ? new URL(l.getAttribute('href'), location.href).href.replace(/index\.html$/, '').replace(/#.*$/, '') : location.origin + '/';
         };
-        const waHref = (msg) => 'https://wa.me/8801799447594?text=' + encodeURIComponent(msg);
+        const waHref = (msg) => 'https://wa.me/8801799447594?text=' + encodeURIComponent(/mehedi\.pro\.bd/i.test(msg) ? msg : (/^Hi Mehedi,\s*/i.test(msg) ? msg.replace(/^Hi Mehedi,\s*/i, 'Hi Mehedi (from mehedi.pro.bd), ') : '[from mehedi.pro.bd] ' + msg));
         const FIT_LABEL = {
             en: { strong: 'Strong fit', good: 'Good fit', partial: 'Partial fit', low: 'Low fit' },
             bn: { strong: 'খুব উপযুক্ত', good: 'উপযুক্ত', partial: 'আংশিক উপযুক্ত', low: 'কম উপযুক্ত' }
@@ -1508,7 +1508,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const act = (href, label, ext) => `<a class="chat-action" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`;
             return {
                 cv: act(cvEl ? cvEl.getAttribute('href') : root + 'uploads/Mehedi_Hasan_CV.pdf?v=2', 'Download CV'),
-                whatsapp: act('https://wa.me/8801799447594?text=' + encodeURIComponent('Hi Mehedi, I found you through your portfolio.'), 'WhatsApp', true),
+                whatsapp: act(waHref('Hi Mehedi (from mehedi.pro.bd), I found you through your portfolio.'), 'WhatsApp', true),
                 email: act('mailto:mehedihasan228.cse@gmail.com', 'Email'),
                 projects: act(root + 'projects/', 'See projects'),
                 contact: act(root + 'contact/', 'Contact')
@@ -1778,7 +1778,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         function offlineNote(txt) {
             const bn = /[\u0980-\u09FF]/.test(txt) || lang() === 'bn';
             const href = (sel, fallback) => { const a = document.querySelector(sel); return esc(a ? a.getAttribute('href') : fallback); };
-            const wa = `<a href="${href('a.whatsapp-btn', 'https://wa.me/8801799447594')}" target="_blank" rel="noopener">WhatsApp</a>`;
+            const wa = `<a href="${href('a.whatsapp-btn', 'https://wa.me/8801799447594?text=Hi%20Mehedi%20%28from%20mehedi.pro.bd%29%2C%20')}" target="_blank" rel="noopener">WhatsApp</a>`;
             const mail = href('a[href^="mailto:"]', 'mailto:mehedihasan228.cse@gmail.com');
             return `<p class="chat-offline-note">${OFFLINE_ICON}<span>` + (bn
                 ? `আমার AI এই মুহূর্তে অফলাইনে আছে — ${wa}-এ মেসেজ দিন বা <a href="${mail}">ইমেইল</a> করুন।`
@@ -1941,7 +1941,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="form-done" role="status">
                             <span class="form-done-ico" aria-hidden="true"><i class="fa-solid fa-check"></i></span>
                             <h3>Thanks, your message is on its way.</h3>
-                            <p>I read every message myself and will reply by email soon. For anything urgent, <a href="https://wa.me/8801799447594" target="_blank" rel="noopener">message me on WhatsApp</a>.</p>
+                            <p>I read every message myself and will reply by email soon. For anything urgent, <a href="https://wa.me/8801799447594?text=Hi%20Mehedi%20%28from%20mehedi.pro.bd%29%2C%20" target="_blank" rel="noopener">message me on WhatsApp</a>.</p>
                         </div>
                     `;
                     if (typeof playSound === 'function') playSound('success');
