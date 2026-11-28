@@ -93,8 +93,9 @@ from icons import BOTTOM_NAV, ico, bottom_nav
 PERSON_LD = """<script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Mehedi Hasan","url":"https://mehedi.pro.bd/",
 "image":"https://mehedi.pro.bd/uploads/hero_profile_1771668518.webp",
-"jobTitle":"AI-Native Software Engineer",
-"sameAs":["https://github.com/MehediHasan228"],"email":"mehedihasan228.cse@gmail.com",
+"jobTitle":"Founder & CEO, AI-Native Software Engineer",
+"worksFor":{"@type":"Organization","name":"Top System","url":"https://topsystem.bd"},
+"sameAs":["https://github.com/MehediHasan228","https://www.linkedin.com/in/mehedi-hasan-2859383b4","https://topsystem.bd/about"],"email":"mehedihasan228.cse@gmail.com",
 "address":{"@type":"PostalAddress","addressLocality":"Dhaka","addressCountry":"BD"}}
 </script>
 """

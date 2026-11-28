@@ -3,10 +3,11 @@ Knowledge base for Mehedi Hasan's portfolio (https://mehedi.pro.bd). Generated f
 # Home (/)
 ## At a glance
 Dhaka GMT+6
-4 yrs 4 mos of experience 10 projects, 6 live 300+ companies on Jibika Plexus ~50% less manual work with LLMs 46 tools in the stack
+4 yrs 4 mos of experience 11 projects, 7 live 300+ companies on Jibika Plexus ~50% less manual work with LLMs 46 tools in the stack
 ### Projects
 by status and kind
-6 /10live
+7 /11live
+- Top System & Top NGO ERP Live ERP · Web · AI
 - SAWAB NGO ERP Live demo ERP · Non-profit
 - Karbar ERP On GitHub ERP
 - SAWAB Bangladesh Platform Live Web · Non-profit
@@ -17,8 +18,8 @@ by status and kind
 - Savora: AI Hostel Management Live AI · Web
 - Tafseerul Quran Foundation Volunteer Web · Non-profit
 - HBIZZ Corporate Website Live Web
-See all 10 projects
-1 / 10
+See all 11 projects
+1 / 11
 ### Career
 4 yrs 4 mos
 - SAWAB Software Developer 5 mos Now
@@ -247,6 +248,10 @@ Non-profit WordPress Community tech
 
 # Projects and experiments (/projects/)
 Products I've designed, built and shipped: NGO and ERP platforms, AI automation and web projects.
+Live Live Preview
+### Top System & Top NGO ERP
+Software, AI automation and bilingual NGO ERP platform in Dhaka: custom enterprise software, HR & payroll, POS, web/mobile apps and multi-organisation NGO grant & fund accounting.
+Next.js Frappe AI
 Live demo Live Demo
 ### SAWAB NGO ERP
 Multi-organisation ERP and HRM for SAWAB and SAWAB Foundation: HR, ZKTeco attendance, payroll, NGOAB and donor grants, micro-investment, accounts and procurement.
@@ -255,7 +260,6 @@ View Code
 ### Karbar ERP
 Business suite for Bangladesh: accounting, NBR VAT (Mushak 6.3, 6.5, 6.6, 9.1), payroll with TDS and tax slabs, inventory, sales, purchases and project tracking.
 Laravel Filament ERP VAT
-Live Live Preview
 ### SAWAB Bangladesh Platform
 Production NGO portal for education, healthcare, WASH and humanitarian aid, with donation pipelines and a bilingual (Bangla/English) architecture on Node.js 22, PostgreSQL and Docker.
 Node.js PostgreSQL Docker
